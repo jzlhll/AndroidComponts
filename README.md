@@ -12,6 +12,15 @@
 ### 4. TabLayout小红点实现
 
 ### 5. viewPager2+fragment
+ offScreenLimit：预加载数量
+
+oratation：方向
+
+FragmentStateAdpater创建fragment的adapter
+
+结合TabLayout使用TabLayoutMediator，传入tablayout+vp2+回调{}
+
+   回调tab和position给你。
 
 ### 6. ViewPager
 
@@ -19,7 +28,8 @@
 
 ### 9. 2个UnitTest
 
-### 10. 新的WindowCompat，回调等
+### 10. WindowInsetsController, Compat
+https://blog.csdn.net/StjunF/article/details/121840122
 
 ### 11. FragmentContainViewer
 
