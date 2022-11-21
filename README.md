@@ -35,3 +35,14 @@ https://blog.csdn.net/StjunF/article/details/121840122
 
 ### 12. NavHostFragment
 
+### 13. View
+
+#### DrawableTextView
+
+androidx自带的CompatAPPTextView，只能设置
+
+```xml
+android:drawableStart="@drawable/ic_launcher_foreground"
+android:drawablePadding="20dp"
+```
+
