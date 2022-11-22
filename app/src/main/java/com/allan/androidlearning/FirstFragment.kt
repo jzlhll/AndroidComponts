@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.allan.androidlearning.databinding.FragmentFirstBinding
+import com.allan.androidlearning.views.RecyclerViewTester
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -26,7 +28,6 @@ class FirstFragment : Fragment() {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +36,8 @@ class FirstFragment : Fragment() {
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+
+        RecyclerViewTester().test(activity as AppCompatActivity, binding.layout)
     }
 
     override fun onDestroyView() {
