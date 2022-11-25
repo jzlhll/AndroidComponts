@@ -1,3 +1,9 @@
+### ValueAnimator
+
+
+
+
+
 ### ProgressIndicator
 
 CircularProgressIndicator & BaseProgressIndicator & LinearProgressIndicator
@@ -10,15 +16,30 @@ setIndeterminate 设置模糊模式。
 
 [CoordinatorLayout系列（二）AppBarLayout_whoami_I的博客-CSDN博客](https://blog.csdn.net/whoami_I/article/details/103220104/)
 
+
+
 ### CoordinatorLayout&Behavior
+
+
 
 通过实现Behavior接口，跟随dependency的动作进行变化。todo
 
 ### CoordinatorLayout&AppBarLayout
 
-* AppBarLayout
+#### AppBarLayout
 
-  是一个线性布局
+是一个线性布局
+
+##### layout_scrollFlags
+
+可以在
+
+1. 不添加，就是noscroll 完全不动
+2. "scroll"：RecyclerView向上滚动的时候，标记了的View也跟着滚动，等到标记了的View，滚出屏幕之后RecyclerView还在继续滚动，下拉的时候等到拉到RecyclerView的头部，标记了的View才会进入屏幕。可以多个view都添加。
+3. "scroll:enterAlways": 只要往下拉，TabLayout就会显示出来，不必等着RecyclerView到顶部才可以显示。效果不太是预期。
+4. 
+
+
 
 
 

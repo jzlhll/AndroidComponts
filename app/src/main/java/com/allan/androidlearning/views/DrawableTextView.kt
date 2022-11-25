@@ -3,12 +3,15 @@ package com.allan.androidlearning.views
 import android.content.Context
 import androidx.appcompat.widget.AppCompatTextView
 import android.graphics.drawable.Drawable
-import android.content.res.TypedArray
 import android.util.AttributeSet
 import com.allan.androidlearning.R
 
 /**
  * 可以自由控制 drawable 大小的 TextView
+ *  对于textView的二次补充；可以将四个角度的图片大小支持；
+ *  最后2个margin仅仅做了如果是左边图标的margin。有需要继续扩展。later。
+ *
+ *  参考代码test_drawable_textview.xml
  */
 class DrawableTextView : AppCompatTextView {
     private var mStartWidth: Int = 0
@@ -19,6 +22,9 @@ class DrawableTextView : AppCompatTextView {
     private var mEndHeight: Int = 0
     private var mBottomWidth: Int = 0
     private var mBottomHeight: Int = 0
+
+    private var mDrawableMarginStart:Int = 0
+    //private var mDrawableMarginEnd:Int = 0
 
     constructor(context: Context) : super(context) {}
 
@@ -41,6 +47,10 @@ class DrawableTextView : AppCompatTextView {
         mEndHeight = typedArray.getDimensionPixelOffset(R.styleable.DrawableTextView_drawableEndHeight, 0)
         mBottomWidth = typedArray.getDimensionPixelOffset(R.styleable.DrawableTextView_drawableBottomWidth, 0)
         mBottomHeight = typedArray.getDimensionPixelOffset(R.styleable.DrawableTextView_drawableBottomHeight, 0)
+
+        mDrawableMarginStart = typedArray.getDimensionPixelOffset(R.styleable.DrawableTextView_drawableMarginStart, 0)
+        //mDrawableMarginEnd = typedArray.getDimensionPixelOffset(R.styleable.DrawableTextView_drawableMarginEnd, 0)
+
         typedArray.recycle()
         setDrawablesSize()
     }
@@ -68,7 +78,7 @@ class DrawableTextView : AppCompatTextView {
 
     private fun setDrawableBounds(drawable: Drawable?, width: Int, height: Int) {
         drawable?.let {
-            it.setBounds(0, 0, width, height)
+            it.setBounds(mDrawableMarginStart, 0, width + mDrawableMarginStart, height)
             if (width == 0 || height == 0) {
                 val scale = it.intrinsicHeight.toDouble() / it.intrinsicWidth.toDouble()
                 val bounds = it.bounds

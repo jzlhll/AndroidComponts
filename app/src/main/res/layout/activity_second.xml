@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.allan.androidlearning.views.NestedCoordinatorLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:addStatesFromChildren="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
+        app:layout_insetEdge="none"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <ImageView
+            android:layout_width="80dp"
+            app:layout_scrollFlags="scroll|snap"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="80dp"/>
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:text="aaaaaaa"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#ffffff"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:layout_height="35dp"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:background="#eeeeee"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_width="wrap_content"
+        android:id="@+id/progress_icon"
+        app:indicatorSize="20dp"
+        android:layout_marginTop="125dp"
+        app:trackThickness="2dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"/>
+</com.allan.androidlearning.views.NestedCoordinatorLayout>
+
+<!--<com.allan.androidlearning.views.BindListView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:id="@+id/listview"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+<!--</com.allan.androidlearning.views.BindListView>-->

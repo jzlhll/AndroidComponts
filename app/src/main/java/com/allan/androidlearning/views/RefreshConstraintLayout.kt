@@ -1,28 +1,13 @@
 package com.allan.androidlearning.views
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.GestureDetectorCompat
-import androidx.core.view.forEach
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.progressindicator.CircularProgressIndicator
-import kotlin.math.abs
-import kotlin.math.max
+import androidx.core.view.NestedScrollingParent3
 
-class RefreshCoordinatorLayout : ConstraintLayout, GestureDetector.OnGestureListener {
-    companion object {
-        @JvmStatic
-        private val TAG = "allanRefreshLayout"
-    }
-
+abstract class RefreshConstraintLayout : ConstraintLayout, NestedScrollingParent3 {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -31,221 +16,118 @@ class RefreshCoordinatorLayout : ConstraintLayout, GestureDetector.OnGestureList
         defStyleAttr
     )
 
-    val progressIndicator by lazy(LazyThreadSafetyMode.NONE) { CircularProgressIndicator(context) }
-
-    init {
-        addRingView()
-        post {
-            forEachChild {
-                if (it is AppBarLayout) {
-                    setAppBarLayout(it)
-                }
-            }
-        }
-    }
-
-    private fun View.forEachChild(action: ((View) -> Unit)) {
-        action.invoke(this)
-        if (this is ViewGroup) {
-            this.forEach {
-                it.forEachChild(action)
-            }
-        }
-    }
-
-    private val gestureDetectorCompat by lazy(LazyThreadSafetyMode.NONE) { GestureDetectorCompat(context, this) }
-
+    private val TAG = "alland"
     /**
-     *是否支持下拉刷新
+     * 【重要】
+     *
+     * 当NSChild onTouchEvent(e)|onInterceptTouchEvent() Action.Down -> startNestedScroll()时, 会调用到该方法。
+     * 通过返回值告诉系统是否需要对后续的滚动进行处理。
+     *
+     * child和target的区别：
+     *
+     * 如果是嵌套两层如:NSParent包含一个LinearLayout，LinearLayout里面才是NSChild类型的View。这个时候，
+     * child指向LinearLayout，target指向NSChild；如果Parent直接就包含了NSChild，这个时候target和child都指向NSChild
+     *
+     * 【适合做什么？】
+     * 适合做一些停止动画的动作。
+     *
+     * @param child：该ViewParen的包含NestedScrollingChild的直接子View，如果只有一层嵌套，和target是同一个View
+     * @param target：本次嵌套滚动的NestedScrollingChild
+     * @param axes：滚动方向
+     * @param type: type of input
+     * @return true:表示我需要进行处理，后续的滚动会触发相应的回调。false: NSParent则不需要处理，后面也就不会进行相应的回调.
+     * 所以我们既然要做这个嵌套逻辑，就必须return true了。
      */
-    var enableRefresh = false
-
-    /**
-     * 添加下拉指示器
-     */
-    private fun addRingView() {
-        Log.d(TAG, "add ringView")
-        val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        lp.bottomToTop = LayoutParams.PARENT_ID
-        lp.startToStart = LayoutParams.PARENT_ID
-        lp.endToEnd = LayoutParams.PARENT_ID
-        lp.bottomMargin = 16
-        progressIndicator.indicatorSize = 20
-        progressIndicator.trackThickness = 2
-        addView(progressIndicator, lp)
-    }
-
-    private var isScrollTop = true
-
-    /**
-     * 触发下拉刷新的值
-     */
-    var pullRefreshValue = 80f
-
-    /**
-     * 实际滑动距离比例
-     */
-    var offsetRatio = 0.4f
-
-    private fun setAppBarLayout(appBarLayout: AppBarLayout) {
-        Log.d(TAG, "setAppBarLayout set changed listener")
-        appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
-            isScrollTop = verticalOffset == 0
-        })
-    }
-
-    private var needIntercept: Boolean? = null
-    private var currentX: Float = 0f
-    private var currentY: Float = 0f
-    private var isRefreshing = false
-
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        if (isRefreshing) {
-            return super.onInterceptTouchEvent(ev)
-        }
-        if (stopAnim.isRunning) {
-            return true
-        }
-        when (ev.action) {
-            MotionEvent.ACTION_DOWN -> {
-                needIntercept = null
-                currentX = ev.x
-                currentY = ev.y
-                progressIndicator.isIndeterminate = false
-                gestureDetectorCompat.onTouchEvent(ev)
-            }
-            MotionEvent.ACTION_MOVE -> {
-                if (needIntercept == null) {
-                    val offY = ev.y - currentY
-                    val offX = ev.x - currentX
-                    if (abs(offX) > abs(offY) * 2) {
-                        //当前为横向滑动
-                        needIntercept = false
-                    } else {
-                        if (offY != 0f) {
-                            needIntercept = offY > 0 && isScrollTop
-                        }
-                    }
-                }
-                if (needIntercept == true) {
-                    return true
-                }
-            }
-            MotionEvent.ACTION_UP,
-            MotionEvent.ACTION_CANCEL -> {
-                stopTouchEvent()
-            }
-        }
-        return super.onInterceptTouchEvent(ev)
-    }
-
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        ev ?: return super.onTouchEvent(ev)
-        if (isRefreshing) {
-            return super.onInterceptTouchEvent(ev)
-        }
-        if (stopAnim.isRunning) {
-            return super.onTouchEvent(ev)
-        }
-        when (ev.action) {
-            MotionEvent.ACTION_UP,
-            MotionEvent.ACTION_CANCEL -> {
-                stopTouchEvent()
-            }
-        }
-        return gestureDetectorCompat.onTouchEvent(ev)
-//        val offY = ev.y - currentY
-//        startPull(offY)
-//        when (ev.action) {
-//            MotionEvent.ACTION_UP,
-//            MotionEvent.ACTION_CANCEL -> {
-//                stopTouchEvent()
-//            }
-//            else -> {}
-//        }
-//        return true
-    }
-
-    private fun startPull(offY: Float) {
-        progressIndicator.visibility = if(enableRefresh) VISIBLE else GONE
-        val tY = offY * offsetRatio
-        val finalY = max(0f, progressIndicator.translationY + tY)
-        progressIndicator.progress = (100 * finalY / pullRefreshValue).toInt()
-        forEach {
-            it.translationY = finalY
-        }
+    override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
+        return isEnabled && isNestedScrollingEnabled
     }
 
     /**
-     * 通知滑动
+     * 【不重要】
+     * 如果onStartNestedScroll()方法返回的是true的话,那么紧接着就会调用该方法.它是让嵌套滚动在开始滚动之前,
+     * 让布局容器(viewGroup)或者它的父类执行一些配置的初始化的。
+     *
+     * 【适合做什么？】
+     * 适合做一些停止动画的动作。
      */
-    private val stopAnim = ObjectAnimator.ofFloat().apply {
-        duration = 320
-        addUpdateListener {
-            val v = it.animatedValue as Float
-            forEach { view ->
-                view.translationY = v
-            }
-        }
+    override fun onNestedScrollAccepted(child: View, target: View, axes: Int, type: Int) {
     }
 
     /**
-     * 设置刷新时候的监听
+     * 【重要】 预处理，子view处理前回调
+     *
+     * 【适合】：对于recyclerView做为NSChild，而我们写父控件来嵌套rcv。就在这里决策我们需要滑动consumed多少距离。
+     *
+     * 这个是NSParent2的接口。是需要我们自行配合recyclerView等实现了NSChild2的类来分析。
+     * 基本与上一致；onStartNestedScroll之后，在滑动之前。
+     *
+     * 当子view onTouchEvent(e) Action.MOVE -> dispatchNestedPreScroll() 会调用该方法。
+     * 每次都调用；而且是NSChild必定先丢过来给NSParent。
+     *
+     * 也就是在NestedScrollingChild在处理滑动之前，
+     * 会先将机会给NSParent处理。如果NSParent想先消费部分滚动距离，将消费的距离放入consumed
+     *
+     * @param dx：水平滑动距离
+     * @param dy：处置滑动距离
+     * @param consumed：表示Parent要消费的滚动距离,consumed[0]和consumed[1]分别表示父布局在x和y方向上消费的距离, 剩下的再给子view
      */
-    var onRefreshListener: Function0<Unit>? = null
+    override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
+        Log.d(TAG, "preScroll>>> dx$dx, dy$dy")
+    }
 
-    private fun stopTouchEvent() {
-        isRefreshing = enableRefresh && progressIndicator.translationY > pullRefreshValue
-        if (isRefreshing) {
-            progressIndicator.isIndeterminate = true
-            stopAnim.setFloatValues(progressIndicator.translationY, pullRefreshValue)
-            onRefreshListener?.invoke()
-        } else {
-            stopAnim.setFloatValues(progressIndicator.translationY, 0f)
-        }
-        if (stopAnim.isRunning) {
-            stopAnim.cancel()
-        }
-        stopAnim.start()
+    override fun onNestedScroll(
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int
+    ) {
+        onNestedScroll(
+            target,
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            type,
+            intArrayOf(0, 0)
+        )
     }
 
     /**
-     * 停止刷新
+     * 【重要】
+     *
+     * 回顾前面的：
+     * 第一，NSParent处理onNestedPreScroll消费一波；
+     * 第二，还有剩余的，则NSChild消费；
+     * 第三到了这里，是因为后续的MOVE持续的触发，然后，调用dispatchNestedScroll()方法时,会调用该方法。
+     * 也就是开始分发处理嵌套滑动了
+     *
+     * @param dxConsumed：已经被target消费掉的水平方向的滑动距离
+     * @param dyConsumed：已经被target消费掉的垂直方向的滑动距离
+     * @param dxUnconsumed：未被tagert消费掉的水平方向的滑动距离
+     * @param dyUnconsumed：未被tagert消费掉的垂直方向的滑动距离
+     * @param consumed 当前view消耗的值，剩下的再回调给父view
      */
-    fun stopRefresh() {
-        isRefreshing = false
-        progressIndicator.isIndeterminate = false
-        if (progressIndicator.translationY == 0f) {
-            return
-        }
-        if (stopAnim.isRunning) {
-            stopAnim.cancel()
-        }
-        stopAnim.setFloatValues(progressIndicator.translationY, 0f)
-        stopAnim.start()
+    override fun onNestedScroll(
+        target: View/*滚动的子view*/,
+        dxConsumed: Int/*子view已经消耗*/,
+        dyConsumed: Int/*子view已经消耗*/,
+        dxUnconsumed: Int/*子view未消耗*/,
+        dyUnconsumed: Int/*子view未消耗*/,
+        type: Int,
+        consumed: IntArray
+    ) {
+        Log.d(TAG, "preScroll>>> Consumed dx$dxConsumed, dy$dyConsumed Unconsumed dx$dxUnconsumed dy$dyUnconsumed")
     }
 
-    override fun onDown(p0: MotionEvent): Boolean {
-        return true
+    /**
+     * 停止滚动了,当NSChild，停止滑动，Action.UP，
+     * 调用stopNestedScroll()时会调用该方法。
+     *
+     * 适合做一些动画收尾工作。
+     */
+    override fun onStopNestedScroll(target: View, type: Int) {
     }
 
-    override fun onShowPress(p0: MotionEvent) {
-    }
-
-    override fun onSingleTapUp(p0: MotionEvent): Boolean {
-        return true
-    }
-
-    override fun onScroll(p0: MotionEvent, p1: MotionEvent, x: Float, y: Float): Boolean {
-        startPull(-y)
-        return true
-    }
-
-    override fun onLongPress(p0: MotionEvent) {
-    }
-
-    override fun onFling(p0: MotionEvent, p1: MotionEvent, p2: Float, p3: Float): Boolean {
-        return true
-    }
 }

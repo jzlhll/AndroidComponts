@@ -2,6 +2,7 @@
 ### [systemViews](./docs/systemViews.md)
 
 * [recyclerView](./docs/recylerView.md)需要单独的一个文档来介绍它的方方面面
+  * PaddingItemDecoration 用于添加item之间的space，和最上面的padding和最下面的padding
 * CoordinatorLayout&AppBarLayout
 * CoordinatorLayout&CollapsingToolbarLayout
 * CoordinatorLayout&Behavior
@@ -12,9 +13,12 @@
 ###  [自定义View](./docs/customViews.md)
 
 * DrawableTextView: 可以定制图标的大小的TextView，因为标准的AppCompatTextView只能设置位置不能设置大小。
+
 * SplashScreen:  todo
 
+* PaddingItemDecoration
 
+  
 
 
 
