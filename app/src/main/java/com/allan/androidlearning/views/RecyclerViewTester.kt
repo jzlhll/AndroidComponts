@@ -75,8 +75,12 @@ class Bean(var age:Int, var name:String) {
 
 class RecyclerViewTester {
     fun test(activity: AppCompatActivity, parent:ViewGroup? = null) {
+        test(activity, parent)
+    }
+
+    fun test(activity: AppCompatActivity, rcv:RecyclerView?, parent:ViewGroup) {
         activity.let {
-            val rv = RecyclerView(it)
+            val rv = rcv ?: RecyclerView(it)
             //3. 别忘记设置layoutManager
             rv.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             //rv.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -92,29 +96,6 @@ class RecyclerViewTester {
             val view = parent ?: activity.window.decorView
             if (view is ViewGroup) {
                 view.addView(rv)
-            }
-        }
-    }
-
-    fun testWithLayout(activity: AppCompatActivity, parent:ViewGroup? = null) {
-        activity.let {
-            val l = CoordinatorRvBinding.inflate(activity.layoutInflater)
-            val rv = l.recyclerview
-            //3. 别忘记设置layoutManager
-            rv.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            //rv.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            val adapter = MyRecyclerViewAdapter()
-            adapter.list = ArrayList<Bean>().also { list->
-                var i = 0
-                while(i++ < 100) {
-                    list.add(Bean(i, "Bob$i"))
-                }
-            }
-
-            rv.adapter = adapter
-            val view = parent ?: activity.window.decorView
-            if (view is ViewGroup) {
-                view.addView(l.root)
             }
         }
     }
