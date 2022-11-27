@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:ignore="MissingDefaultResource">
     <!-- 使用自定义的drawableStartHeight，和width来设置；通过drawablePadding来限制位置 -->
-    <com.allan.androidlearning.views.DrawableTextView
+    <com.allan.androidlearning.customviews.DrawableTextView
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.allan.androidlearning.views
+package com.allan.androidlearning.customviews
 
 import android.content.Context
 import androidx.appcompat.widget.AppCompatTextView

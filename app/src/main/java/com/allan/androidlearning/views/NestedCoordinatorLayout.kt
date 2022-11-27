@@ -11,8 +11,6 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 
 /**
- * author: allan.jiang
- * Time: 2022/11/25
  * Desc: 用于嵌套title，tabLayout的头部View+recyclerView的嵌套场景。
  * 并且用于下拉刷新的逻辑。
  */
@@ -31,8 +29,6 @@ open class NestedCoordinatorLayout : CoordinatorLayout{
 
     //当我回弹的时候，拦截掉触摸事件
     var abortTouch = false
-
-    private var realOffsetY = 0f
 
     enum class PullDownShrinkState {
         START,
@@ -60,6 +56,11 @@ open class NestedCoordinatorLayout : CoordinatorLayout{
      */
     var pullDownForceShrinkCallback:((ratio:Float, state:PullDownShrinkState)->Unit)? = null
 
+    /**
+     * 当拉动手松了。判断我们的目标子View是否位移过。必须设定这个参数。否则报错。
+     */
+    lateinit var pullDownIsTargetTranslated:(()->Boolean)
+
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         if (abortTouch) {
             return true
@@ -67,56 +68,51 @@ open class NestedCoordinatorLayout : CoordinatorLayout{
         return super.onInterceptTouchEvent(ev)
     }
 
-    private var animOffY = 0f
     private val stopAnim by lazy(LazyThreadSafetyMode.NONE) {
         ValueAnimator
             .ofInt(0, 0)
             .apply {
                 duration = pullDownAnimDuration
-            doOnStart {
-                abortTouch = true
-                animOffY = realOffsetY
-                pullDownShrinkCallback?.invoke(-realOffsetY, PullDownShrinkState.START)
+                doOnStart {
+                    abortTouch = true
+                    pullDownShrinkCallback?.invoke(1f, PullDownShrinkState.START)
+                }
+                addUpdateListener {
+                    val f = 1 - it.animatedFraction
+                    pullDownShrinkCallback?.invoke(f, PullDownShrinkState.MOVING)
+                }
+                doOnEnd {
+                    abortTouch = false
+                    pullDownShrinkCallback?.invoke(0f, PullDownShrinkState.END)
+                }
             }
-            addUpdateListener {
-                val f = 1 - it.animatedFraction
-                realOffsetY = (animOffY * f)
-                pullDownShrinkCallback?.invoke(-realOffsetY, PullDownShrinkState.MOVING)
-            }
-            doOnEnd {
-                abortTouch = false
-                pullDownShrinkCallback?.invoke(-realOffsetY, PullDownShrinkState.END)
-            }
-        }
     }
+
     private val forceResetAnim by lazy(LazyThreadSafetyMode.NONE) {
         ValueAnimator
-        .ofInt(0, 0)
-        .apply {
-            duration = pullDownAnimDuration * 2 / 3 //较快的直接回去
-            doOnStart {
-                abortTouch = true
-                animOffY = realOffsetY
-                pullDownForceShrinkCallback?.invoke(-realOffsetY, PullDownShrinkState.START)
+            .ofInt(0, 0)
+            .apply {
+                duration = pullDownAnimDuration
+                doOnStart {
+                    abortTouch = true
+                    pullDownForceShrinkCallback?.invoke(1f, PullDownShrinkState.START)
+                }
+                addUpdateListener {
+                    val f = 1 - it.animatedFraction
+                    pullDownForceShrinkCallback?.invoke(f, PullDownShrinkState.MOVING)
+                }
+                doOnEnd {
+                    abortTouch = false
+                    pullDownForceShrinkCallback?.invoke(0f, PullDownShrinkState.END)
+                }
             }
-            addUpdateListener {
-                val f = 1 - it.animatedFraction
-                realOffsetY = (animOffY * f)
-                pullDownForceShrinkCallback?.invoke(-realOffsetY, PullDownShrinkState.MOVING)
-            }
-            doOnEnd {
-                abortTouch = false
-                pullDownForceShrinkCallback?.invoke(0f, PullDownShrinkState.END)
-            }
-        }
     }
 
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
         if (isPullDownState()) {
             consumed[0] = dx
             consumed[1] = dy //这里我们进行全部消费，later: 虽然我认为没必要，子View也滑不动，因为我们只在顶部的时候往下拉的场景。
-            realOffsetY += dy //因为子View传导是一段一段的传递的，所以需要统计出总共滑动的距离
-            onPullDownTrigger(target, realOffsetY, consumed)
+            onPullDownMoving(target, dy.toFloat(), consumed)
         }
 
         super.onNestedPreScroll(target, dx, dy, consumed, type)
@@ -153,20 +149,21 @@ open class NestedCoordinatorLayout : CoordinatorLayout{
      * 当我们拉动下滑，还没有松手的时候，一直回调这个。
      * 可以考虑放开，继承干点别的事情。
      */
-    private fun onPullDownTrigger(target: View, realOffsetY: Float, consumed: IntArray) {
+    private fun onPullDownMoving(target: View, dy: Float, consumed: IntArray) {
         if(stopAnim.isRunning) stopAnim.cancel()
-        val offY = -realOffsetY
-        pullDownScrollingCallback?.invoke(offY)
+        pullDownScrollingCallback?.invoke(dy)
     }
 
     fun onPullDownReleased() {
         isOncePullDownScroll = PULL_DOWN_NONE
-        if (realOffsetY != 0f) {
+        if (pullDownIsTargetTranslated()) {
             stopAnim.start()
         }
     }
 
     fun forceResetAnim() {
-        forceResetAnim.start()
+        if (pullDownIsTargetTranslated()) {
+            forceResetAnim.start()
+        }
     }
 }

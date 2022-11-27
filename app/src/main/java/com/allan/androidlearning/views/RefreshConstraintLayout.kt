@@ -16,7 +16,8 @@ abstract class RefreshConstraintLayout : ConstraintLayout, NestedScrollingParent
         defStyleAttr
     )
 
-    private val TAG = "alland"
+    private val TAG:String = "RefreshCLayout"
+
     /**
      * 【重要】
      *

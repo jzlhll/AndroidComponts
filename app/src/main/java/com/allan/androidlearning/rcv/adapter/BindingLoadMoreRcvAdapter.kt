@@ -91,6 +91,19 @@ abstract class BindingLoadMoreRcvAdapter<DATA:Any, VH: BindingViewHolder<DATA, *
         }
     }
 
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        onScrollEndListener?.let {
+            if (position == itemCount - 1) it(position)
+        }
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+        onScrollEndListener?.let {
+            if (position == itemCount - 1) it(position)
+        }
+    }
+
     /**
      * 通过这个设定，框架期待loadMoreBean是一个假类型。也使用DATA这个类型的数据。
      */

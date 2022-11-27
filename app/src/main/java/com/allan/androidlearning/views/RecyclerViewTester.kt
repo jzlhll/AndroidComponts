@@ -1,17 +1,14 @@
 package com.allan.androidlearning.views
 
-import android.graphics.Color
-import android.graphics.Rect
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.allan.androidlearning.rcv.itemdecoration.PaddingItemDecoration
 
 //1. 定义Adapter实现类 并 实现3个函数onCreateViewHolder，onBindViewHolder，getItemCount
 class MyRecyclerViewAdapter : RecyclerView.Adapter<MyViewHolder>() {
@@ -101,62 +98,6 @@ class RecyclerViewTester {
                 val view = parent ?: activity.window.decorView
                 if (view is ViewGroup) {
                     view.addView(rv)
-                }
-            }
-        }
-    }
-}
-
-
-/**
- * @author: Qiu sj
- * @date: 2022/9/19 10:38
- * @description:
- */
-class PaddingItemDecoration : RecyclerView.ItemDecoration {
-    private var padding: Int
-    private var spacing: Int
-    private var isVertical: Boolean
-
-    constructor(padding: Int, spacing: Int, isVertical: Boolean) {
-        this.padding = padding
-        this.spacing = spacing
-        this.isVertical = isVertical
-    }
-
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-
-        val position = parent.getChildAdapterPosition(view) // item position
-        val count = parent.adapter?.itemCount ?: 0
-        if (isVertical) {
-            when (position) {
-                0 -> {
-                    outRect.top = padding
-                }
-                count - 1 -> {
-                    outRect.top = spacing
-                    outRect.bottom = padding
-                }
-                else -> {
-                    outRect.top = spacing
-                }
-            }
-        } else {
-            when (position) {
-                0 -> {
-                    outRect.left = padding
-                }
-                count - 1 -> {
-                    outRect.left = spacing
-                    outRect.right = padding
-                }
-                else -> {
-                    outRect.left = spacing
                 }
             }
         }

@@ -1,7 +1,11 @@
-# AndroidComponts
+# Android常用自定义View，组件和自用框架
+### [recyclerView](./docs/recylerView.md)
+
+需要单独的一个文档来介绍它的方方面面
+
 ### [systemViews](./docs/systemViews.md)
 
-* [recyclerView](./docs/recylerView.md)需要单独的一个文档来介绍它的方方面面
+* 
   * PaddingItemDecoration 用于添加item之间的space，和最上面的padding和最下面的padding
 * CoordinatorLayout&AppBarLayout
 * CoordinatorLayout&CollapsingToolbarLayout
@@ -10,9 +14,11 @@
 * CircularProgressIndicator & BaseProgressIndicator
 
 
-###  [自定义View](./docs/customViews.md)
+###  [自定义](./docs/customViews.md)
 
-* DrawableTextView: 可以定制图标的大小的TextView，因为标准的AppCompatTextView只能设置位置不能设置大小。
+* DrawableTextView
+
+  > 可以定制图标大小的TextView，因为标准的AppCompatTextView只能设置位置，不能设置大小。实现此自定义View。
 
 * SplashScreen:  todo
 
