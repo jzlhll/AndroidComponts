@@ -10,6 +10,7 @@
 * CoordinatorLayout&Behavior
 * GestureDetector接管onTouch事件处理更多细节事件 & OverScroller
 * CircularProgressIndicator & BaseProgressIndicator
+* ConstraintLayout，ImageView不支持layout_constraintBaseline_toBaselineOf
 
 
 ###  [自定义](./docs/customViews.md)
@@ -173,3 +174,16 @@ https://blog.csdn.net/yechaoa/article/details/125465158
 
 
 
+### LifeCycle
+
+
+
+### ToolBar
+
+[Android：Toolbar的图标尺寸问题 - Endv - 博客园 (cnblogs.com)](https://www.cnblogs.com/endv/p/11312866.html)
+
+
+
+### LitePal
+
+数据库
