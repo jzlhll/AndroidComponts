@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sql.SqlActivity">
+    <Button
+        android:id="@+id/sqlBtn1"
+        android:text="sqliteHelper\nCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/sqlBtn2"
+        android:layout_toRightOf="@id/sqlBtn1"
+        android:text="sqliteHelper\nAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/sqlBtn3"
+        android:layout_toRightOf="@id/sqlBtn2"
+        android:text="sqliteHelper\nDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>
