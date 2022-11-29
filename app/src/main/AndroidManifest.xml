@@ -37,12 +37,6 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AndroidLearning">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- &lt;!&ndash; <category android:name="android.intent.category.LAUNCHER" /> &ndash;&gt; -->
-            <!-- </intent-filter> -->
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -52,7 +46,6 @@
             android:exported="true"
             android:label="CompAct2"
             android:theme="@style/Theme.AndroidLearning">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -152,3 +152,7 @@ todo 今天必须完成。
   本人建议将数据bean设置到onCreateViewHolder的时候，设置到itemView上的tag。
 
   当click事件通过tag获取出数据，再行处理。
+
+### SpanSizeLookup
+clipToPadding
+updatePadding
