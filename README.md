@@ -13,6 +13,12 @@
 * ConstraintLayout，ImageView不支持layout_constraintBaseline_toBaselineOf
 
 
+
+* ShapeableImageView
+
+  [Android ShapeableImageView使用详解，告别shape、三方库_yechaoa的博客-CSDN博客_shapeableimageview](https://blog.csdn.net/yechaoa/article/details/117339632)
+
+
 ###  [自定义](./docs/customViews.md)
 
 * DrawableTextView
@@ -187,3 +193,42 @@ https://blog.csdn.net/yechaoa/article/details/125465158
 ### 数据库 Sqlite & LitePal & ROOM
 
 数据库
+
+### kotlin协程
+[协程](./docs/kotlinScope.md)
+
+
+
+### Fragment嵌套Fragment
+
+返回层级；child,parentFragmentManager；FragmentContainerView
+
+```
+addToBackStack
+```
+
+```
+setReorderingAllowed
+```
+
+FragmentContainerView注意事项：warning！！不能在Fragment里面使用重叠了
+
+```
+<!--  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout" --> 用来做merge的显示
+```
+
+
+
+style获取不到的问题
+
+
+
+### Kotlin
+
+kontlin被class by实现代理的类，函数，是不会走子类的。
+
+
+
+### TabLayout
+
+[Android原生TabLayout使用全解析，看这篇就够了_yechaoa的博客-CSDN博客_android tablayout](https://blog.csdn.net/yechaoa/article/details/122270969)

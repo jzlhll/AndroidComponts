@@ -21,4 +21,9 @@
 
         <attr name="drawableMarginStart" format="dimension"/>
     </declare-styleable>
+
+    <style name="CustomTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>

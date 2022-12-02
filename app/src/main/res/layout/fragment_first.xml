@@ -5,22 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
-
-    <com.allan.androidlearning.views.NestedLayout
-        android:id="@+id/layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <Button
-            android:id="@+id/button_first"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/next"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        />
-
-    </com.allan.androidlearning.views.NestedLayout>
+    <com.allan.androidlearning.views.MyTextView
+        android:layout_width="120dp"
+        android:text="adfjkadjf"
+        style="@style/CustomTextStyle"
+        android:layout_height="55dp">
+    </com.allan.androidlearning.views.MyTextView>
 </androidx.core.widget.NestedScrollView>
