@@ -14,5 +14,7 @@ class ThirdActivity : AppCompatActivity() {
         setContentView(R.layout.activity_third)
         val list: BindListView = findViewById(R.id.listview)
         RecyclerViewTester().test(this, list.recyclerView, list)
+
+
     }
 }

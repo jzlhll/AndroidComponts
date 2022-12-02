@@ -24,6 +24,12 @@ public void onBindViewHolder(@NonNull VH holder, int position,
 `onViewDetachedFromWindow`： view贴上去。
 `onViewAttachedToWindow` ：view下掉了。
 
+
+
+### LinearSnapHelper
+
+
+
 ### itemDecoration
 
 [RecyclerView系列之一ItemDecoration_Luckie stone的博客-CSDN博客_recyclerview.state](https://blog.csdn.net/suyimin2010/article/details/86550236)

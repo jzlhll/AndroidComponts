@@ -13,14 +13,35 @@
         android:theme="@style/Theme.AndroidLearning"
         tools:targetApi="31">
         <activity
+            android:name=".EntroActivity"
+            android:exported="true"
+            android:label="@string/title_activity_entro"
+            android:theme="@style/Theme.AndroidLearning.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.LiveDataActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AndroidLearning">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                &lt;!&ndash; <category android:name="android.intent.category.LAUNCHER" /> &ndash;&gt;-->
-<!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- &lt;!&ndash; <category android:name="android.intent.category.LAUNCHER" /> &ndash;&gt; -->
+            <!-- </intent-filter> -->
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -31,11 +52,6 @@
             android:exported="true"
             android:label="CompAct2"
             android:theme="@style/Theme.AndroidLearning">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -46,12 +62,6 @@
             android:exported="true"
             android:label="CompAct2"
             android:theme="@style/Theme.AndroidLearning">
-
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
