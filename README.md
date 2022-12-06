@@ -232,3 +232,36 @@ kontlin被class by实现代理的类，函数，是不会走子类的。
 ### TabLayout
 
 [Android原生TabLayout使用全解析，看这篇就够了_yechaoa的博客-CSDN博客_android tablayout](https://blog.csdn.net/yechaoa/article/details/122270969)
+
+### toolBar
+
+overFlowButton，当图标过多的时候，右边的三个点。
+
+[【Android】原来Toolbar还能这么用？Toolbar使用最全解析。网友：终于不用老是自定义标题栏啦_宾有为的博客-CSDN博客_toolbar使用](https://blog.csdn.net/baidu_41616022/article/details/117912975)
+
+[activity  | Android 开发者  | Android Developers (google.cn)](https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn)
+
+```kotlin
+toolbar?.let { it ->
+    it.navigationIcon = null
+    it.inflateMenu不生效了。无法工作。
+}
+```
+
+```kotlin
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    val menuHost = requireActivity()
+    menuHost.addMenuProvider(object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.close_menu, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            logd("todo impl")
+            return true
+        }
+    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+    super.onViewCreated(view, savedInstanceState)
+}
+```
