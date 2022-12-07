@@ -240,6 +240,7 @@ overFlowButton，当图标过多的时候，右边的三个点。
 [【Android】原来Toolbar还能这么用？Toolbar使用最全解析。网友：终于不用老是自定义标题栏啦_宾有为的博客-CSDN博客_toolbar使用](https://blog.csdn.net/baidu_41616022/article/details/117912975)
 
 [activity  | Android 开发者  | Android Developers (google.cn)](https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn)
+https://medium.com/tech-takeaways/how-to-migrate-the-deprecated-oncreateoptionsmenu-b59635d9fe10
 
 ```kotlin
 toolbar?.let { it ->

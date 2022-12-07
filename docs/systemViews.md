@@ -11,6 +11,8 @@ CircularProgressIndicator & BaseProgressIndicator & LinearProgressIndicator
 圆形和线性的进度条：
 
 setIndeterminate 设置模糊模式。
+app:indicatorColor="#1c64f2" 设置进度的指示色
+
 
 
 
