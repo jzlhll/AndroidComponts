@@ -223,12 +223,6 @@ style获取不到的问题
 
 
 
-### Kotlin
-
-kontlin被class by实现代理的类，函数，是不会走子类的。
-
-
-
 ### TabLayout
 
 [Android原生TabLayout使用全解析，看这篇就够了_yechaoa的博客-CSDN博客_android tablayout](https://blog.csdn.net/yechaoa/article/details/122270969)
@@ -266,3 +260,20 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 }
 ```
+
+
+
+### Handler
+
+IdleHandler
+
+同步消息，异步消息，屏障
+
+
+
+### 小细节
+
+* 子类必须调用父类。@CallSuper注解。
+
+* 能使用recyclerView自身解决就不要嵌套ScrollView。
+* kontlin被class by实现代理的类，函数，是不会走子类的。
