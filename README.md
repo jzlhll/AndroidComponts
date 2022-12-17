@@ -184,6 +184,12 @@ https://blog.csdn.net/yechaoa/article/details/125465158
 
 
 
+### OnBackPressedCallback
+
+getOnBackPressedDispatcher()
+
+
+
 ### ToolBar
 
 [Android：Toolbar的图标尺寸问题 - Endv - 博客园 (cnblogs.com)](https://www.cnblogs.com/endv/p/11312866.html)
@@ -274,6 +280,16 @@ IdleHandler
 ### 小细节
 
 * 子类必须调用父类。@CallSuper注解。
-
 * 能使用recyclerView自身解决就不要嵌套ScrollView。
 * kontlin被class by实现代理的类，函数，是不会走子类的。
+* TextView gravity不生效，因为设置了width=wrap，就被居中了，导致无法设置
+* java的bean：使用@Nullable注解，来标注，这样kotlin就知道他是？类型了。
+* 即使Kotlin申明了非空类型，而Gson照样赋空。
+
+
+
+### Kotlin Scope
+
+* GlobalScope: 全进程
+* MainScope：Activity
+
