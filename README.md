@@ -173,6 +173,8 @@ https://www.jianshu.com/p/c6f67961285e
 
 ### 11. FragmentContainViewer
 
+
+
 ### 12. NavHostFragment
 
 ### 13. Notification
@@ -286,11 +288,47 @@ IdleHandler
 ### 小细节
 
 * 子类必须调用父类。@CallSuper注解。
+
 * 能使用recyclerView自身解决就不要嵌套ScrollView。
+
 * kontlin被class by实现代理的类，函数，是不会走子类的。
+
 * TextView gravity不生效，因为设置了width=wrap，就被居中了，导致无法设置
+
 * java的bean：使用@Nullable注解，来标注，这样kotlin就知道他是？类型了。
+
 * 即使Kotlin申明了非空类型，而Gson照样赋空。
+
+* java初始化流程：
+
+  > 最基类构造函数->子类构造函数->...->你的类构造函数
+* Koltin初始化流程：
+  
+  > 最基类init()函数, 然后构造函数-> 子类init()函数，然后构造函数-> 你的类init函数，然后构造函数
+
+​	   总结下来就是，init{}只是将代码执行在构造函数的super之后，构造代码之后。
+
+* Kotlin init{}， 申明对象和构造函数的顺序：
+
+```kotlin
+constructor() {
+    //number = 3 //构造函数永远最后。
+}
+
+var number:Int = 1 //申明的变量和init看谁在后面，就以谁为准
+init {
+    number = 2
+}
+```
+
+init{}和申明变量，看谁放在后面以谁为准。
+
+如果构造函数有赋值，则以构造函数为准。因为他最晚。
+
+另外，如果是父类里面的变量则是以子类为准。
+
+> 父类申明变量，然后构造函数 -> 子类 init{}或申明，然后构造函数->....
+
 
 
 

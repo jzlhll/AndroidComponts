@@ -10,3 +10,10 @@ GlobalScope.launch{}，全局的协程，与app生命周期一致。容易内存
 
 实现CoroutineScope + launch{} 生命周期的绑定。
 
+
+
+### MainScope
+
+cancel（）
+
+就不能再工作了？TODO

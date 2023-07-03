@@ -156,3 +156,55 @@ todo 今天必须完成。
 ### SpanSizeLookup
 clipToPadding
 updatePadding
+
+
+
+### Margin Padding
+
+```kotlin
+initGridAdapterAndRcv(savedInstanceState: Bundle?,
+                                   viewLifecycleOwner:LifecycleOwner,
+                                   paddingLeft:Int = 7.5f.dp.toInt(), paddingRight:Int = 7.5f.dp.toInt(),
+                                   decoration: RecyclerView.ItemDecoration = GridTwoDownItemDecoration(10.dp, 10.dp)
+                ) {
+        val rcv = pullView.recyclerView
+        rcv.updatePadding(left = paddingLeft, right = paddingRight)
+        pullView.layoutManager = GridLayoutManager(rcv.context, 2).also {
+                //让loading变成占据2个。
+                it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        if (!adapter.supportLoadMore()) return 1
+
+                        return if (adapter is PullRefreshAndAutoLoadMore2Adapter && adapter.isLoadMoreHolder(position)) {
+                            2 //如果是
+                        } else {
+                            1
+                        }
+                    }
+                }
+            }
+rcv.addItemDecoration(decoration)
+    
+
+    /**
+ * 两竖item往下的Grid排列方式
+ * top表示两竖模式下的，两行之间的高度间隔；itemLeft是2个之间的距离。
+ */
+class GridTwoDownItemDecoration(private val top: Int, itemLeft: Int) : ItemDecoration() {
+    private val itemLeft:Int
+    init {
+        this.itemLeft = itemLeft / 2
+    }
+
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val itemPosition = parent.getChildAdapterPosition(view)
+        //进行左右分半，实现这个边距。否则，就会造成一边宽一边窄
+        if (itemPosition % 2 == 1) {
+            outRect.left = itemLeft
+        } else {
+            outRect.right = itemLeft
+        }
+        outRect.top = top
+    }
+}
+```
