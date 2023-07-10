@@ -5,6 +5,16 @@ pluginManagement {
         mavenCentral()
     }
 }
+
+///// start of extra params
+Properties properties = new Properties()
+InputStream inputStream = file('./local.properties').newDataInputStream()
+properties.load(inputStream)
+//全局的地方都可以使用这个来当做。
+gradle.ext.selfUserName = properties.getProperty('username')
+gradle.ext.selfPassword = properties.getProperty('password')
+///////end of extra params
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -14,3 +24,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AndroidLearning"
 include ':app'
+include ':Module-Android'
