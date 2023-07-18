@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
  * Date: 2023/7/10
  * Description TODO
  */
-abstract class BaseFragment : Fragment(), ICommon {
+abstract class BaseFragment : Fragment(), ICommon{
     /**
      * onCreateView
      */
