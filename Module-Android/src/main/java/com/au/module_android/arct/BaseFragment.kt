@@ -1,4 +1,4 @@
-package com.au.module_android.comp
+package com.au.module_android.arct
 
 import android.os.Bundle
 import android.view.LayoutInflater
