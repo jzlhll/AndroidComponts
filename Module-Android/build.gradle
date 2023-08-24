@@ -39,4 +39,7 @@ dependencies {
     implementation 'androidx.startup:startup-runtime:1.1.1'
 
     implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.tencent:mmkv-static:1.2.16'
+
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
 }

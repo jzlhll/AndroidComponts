@@ -2,9 +2,13 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals.app
 
+val isMainThread: Boolean
+    get() = Looper.getMainLooper() === Looper.myLooper()
 
 /**
  * 类型转换
@@ -37,9 +41,16 @@ fun Dialog.dp(value:Float):Float {
     return value * this.context.resources.displayMetrics.density
 }
 
+fun Context.dp(value:Float) : Float {
+    if (this is Activity) {
+        return this.dp(value)
+    }
+
+    return value.dpGlobal
+}
+
 /**
  * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
  */
-fun dpGlobal(value:Float):Int {
-    return (value * app.resources.displayMetrics.density).toInt()
-}
+val Float.dpGlobal:Float
+    get() = (this * app.resources.displayMetrics.density)

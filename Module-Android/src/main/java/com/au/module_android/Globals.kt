@@ -4,7 +4,9 @@ import android.app.Activity
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
+import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
 
 
@@ -24,6 +26,14 @@ object Globals {
      */
     val gson: Gson by lazy { Gson() }
 
+    /**
+     * 腾讯的数据存储库
+     */
+    val mmkv by lazy {
+        MMKV.initialize(app)
+        MMKV.defaultMMKV()
+    }
+
     internal lateinit var internalApp: Application
     /**
      * 全局application
@@ -40,5 +50,5 @@ object Globals {
         get() = activityList.lastOrNull()
 
     val secondTopActivity:Activity?
-        get() = if (internalActivityList.size >= 2) internalActivityList[internalActivityList.size - 2] else null
+        get() = activityList.secondLastOrNull()
 }

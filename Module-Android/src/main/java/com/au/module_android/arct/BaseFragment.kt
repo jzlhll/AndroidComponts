@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 /**
  * @author allan.jiang
  * Date: 2023/7/10
- * Description TODO
+ * Description 基础Fragment的通用
  */
 abstract class BaseFragment : Fragment(), ICommon{
     /**
@@ -24,9 +24,16 @@ abstract class BaseFragment : Fragment(), ICommon{
         return onCommonCreateView(inflater, container, savedInstanceState)
     }
 
-    private var mOnBackAction:(()->Unit)? = null
+    /**
+     *  如果想支持点击返回后，正常退出。则默认true。如何不想让它返回则返回true。
+     */
+    open val isNormalBackExit
+        get() = true
 
-    open fun initOnBackAction():(()->Unit)? = null
+    /**
+     *  如果想支持back，比如一些别的逻辑，比如堆栈自身内部返回处理。
+     */
+    open val customBackAction:(()->Unit)? = null
 
     /**
      * onViewCreated
@@ -34,20 +41,14 @@ abstract class BaseFragment : Fragment(), ICommon{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mOnBackAction = initOnBackAction()
-        if (mOnBackAction == null) {
-            mOnBackAction = {
-                requireActivity().finishAfterTransition()
-            }
-        }
-
-        if (mOnBackAction != null) {
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    mOnBackAction?.invoke()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                customBackAction?.invoke()
+                if (isNormalBackExit) {
+                    requireActivity().finishAfterTransition()
                 }
-            })
-        }
+            }
+        })
         onCommonAfterCreateView(this, savedInstanceState, resources)
     }
 

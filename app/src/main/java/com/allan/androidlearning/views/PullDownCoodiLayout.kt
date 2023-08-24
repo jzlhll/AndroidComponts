@@ -258,7 +258,7 @@ class PullDownCoodiLayout : ConstraintLayout, GestureDetector.OnGestureListener 
         return true
     }
 
-    override fun onScroll(p0: MotionEvent, p1: MotionEvent, x: Float, y: Float): Boolean {
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
         startPull(-y)
         return true
     }
@@ -266,7 +266,8 @@ class PullDownCoodiLayout : ConstraintLayout, GestureDetector.OnGestureListener 
     override fun onLongPress(p0: MotionEvent) {
     }
 
-    override fun onFling(p0: MotionEvent, p1: MotionEvent, p2: Float, p3: Float): Boolean {
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         return true
     }
+
 }
