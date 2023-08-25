@@ -24,8 +24,8 @@ import com.au.module_android.utils.dpGlobal
  * 这样Fragment可以自由追加额外控件。而不受限于具体某个xml。
  *
  * [initGridAdapterAndRcv] 支持
- * secondary二级页[com.typhur.typhur.ui.module.second.SecondaryFragment]
- * 和搜索结果页[com.typhur.typhur.ui.module.search.SearchResultFragment]
+ * secondary二级页[com.ui.module.second.SecondaryFragment]
+ * 和搜索结果页[com.ui.module.search.SearchResultFragment]
  * [initLinearAdapterAndRcv] 支持
  *
  */

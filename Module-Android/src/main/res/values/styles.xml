@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomTextView">
-        <attr name="fontMode" />
-        <attr name="isFontNum" />
-    </declare-styleable>
+    <!-- 一般的字体 -->
+    <style name="StyleNormalText">
+        <item name="android:textColor">@color/color_normal_text</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+    </style>
 </resources>

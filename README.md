@@ -337,3 +337,6 @@ init{}和申明变量，看谁放在后面以谁为准。
 * GlobalScope: 全进程
 * MainScope：Activity
 
+### Shadow
+https://inloop.github.io/shadow4android/
+

@@ -3,6 +3,7 @@ package com.au.module_android
 import android.app.Activity
 import android.app.Application
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
@@ -20,6 +21,12 @@ object Globals {
      * 主线程的Handler
      */
     val mainHandler by lazy { Handler(Looper.getMainLooper()) }
+
+    val backgroundHandler by lazy {
+        val handlerThread = HandlerThread("app-major-bg-thread")
+        handlerThread.start()
+        Handler(handlerThread.looper)
+    }
 
     /**
      * gson对象
@@ -52,3 +59,29 @@ object Globals {
     val secondTopActivity:Activity?
         get() = activityList.secondLastOrNull()
 }
+
+//----------------------handler start
+fun postToMainHandler(run:Runnable) {
+    Globals.mainHandler.post(run)
+}
+
+fun postToMainHandler(run:Runnable, delay:Long) {
+    Globals.mainHandler.postDelayed(run, delay)
+}
+
+fun removeFromMainHandler(run:Runnable) {
+    Globals.mainHandler.removeCallbacks(run)
+}
+
+fun postToBgHandler(run:Runnable) {
+    Globals.backgroundHandler.post(run)
+}
+
+fun postToBgHandler(run:Runnable, delay:Long) {
+    Globals.backgroundHandler.postDelayed(run, delay)
+}
+
+fun removeFromBgHandler(run:Runnable) {
+    Globals.backgroundHandler.removeCallbacks(run)
+}
+//----------------------handler end

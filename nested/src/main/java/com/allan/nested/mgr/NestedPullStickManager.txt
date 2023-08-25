@@ -1,7 +1,6 @@
 import android.util.Log
 import android.view.View
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.typhur.module.android.utils.dp
 import com.allan.nested.layout.NestedLayoutRefresher
 
 /**
