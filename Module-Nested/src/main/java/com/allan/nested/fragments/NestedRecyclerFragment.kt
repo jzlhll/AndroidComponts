@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.allan.nested.decoration.LinearLineItemDecoration
 import com.allan.nested.layout.NestedRecyclerViewLayout
-import com.au.module_android.arct.BaseBindingFragment
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
 import com.allan.nested.recyclerview.BaseAdapter
+import com.au.module_android.arct.BaseViewFragment
 
 /**
  * @author allan.jiang
@@ -27,7 +27,7 @@ import com.allan.nested.recyclerview.BaseAdapter
  * Description 使用NestedRecyclerViewLayout作为基础布局。
  *
  */
-abstract class NestedRecyclerFragment : BaseBindingFragment() {
+abstract class NestedRecyclerFragment : BaseViewFragment() {
     val nestedLayout by unsafeLazy {
         NestedRecyclerViewLayout(requireContext()).also {
             it.layoutParams = ViewGroup.LayoutParams(
@@ -57,7 +57,12 @@ abstract class NestedRecyclerFragment : BaseBindingFragment() {
         rcv.clipToPadding = false
     }
 
-    override fun onCommonAfterCreateView(owner: LifecycleOwner, savedInstanceState: Bundle?, resources: Resources) {
+    override fun onCommonAfterCreateView(
+        owner: LifecycleOwner,
+        savedInstanceState: Bundle?,
+        resources: Resources,
+        isViewBindingOrRootView: Boolean
+    ) {
         initRecyclerView(nestedLayout.recyclerView)
         nestedLayout.recyclerView.adapter = adapter
     }

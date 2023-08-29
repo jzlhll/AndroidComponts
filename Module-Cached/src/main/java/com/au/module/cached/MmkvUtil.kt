@@ -1,7 +1,6 @@
-package com.au.module_android.cache
+package com.au.module.cached
 
 import com.au.module_android.Globals.gson
-import com.au.module_android.Globals.mmkv
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 

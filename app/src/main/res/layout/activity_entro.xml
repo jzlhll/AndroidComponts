@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollFlags="scroll"
             app:contentScrim="?attr/colorPrimary"
             app:toolbarId="@+id/toolbar">
 

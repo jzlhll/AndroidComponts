@@ -18,7 +18,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class LiveDataFragment : BaseBindingFragment<ActivityLiveDataBinding>() {
     private val numbersVM by viewModels<NumbersViewModel>()
     private val TAG = LiveDataFragment::class.java.simpleName

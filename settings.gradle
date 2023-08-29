@@ -25,4 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "AndroidLearning"
 include ':app'
 include ':Module-Android'
-include ':nested'
+include ':Module-Nested'
+include ':Module-Cached'
