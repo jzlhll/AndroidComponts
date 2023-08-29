@@ -45,5 +45,10 @@ class JsonTest {
         val revertList2 = listStr.fromJsonList(Bean::class.java)
 
         logd("beans1 $bean1Str bean2str $bean2Str $listStr $revertList")
+
+        val str = ""
+        val bytes = str.toByte()
+
+
     }
 }

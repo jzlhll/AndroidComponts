@@ -43,10 +43,10 @@ private fun TextView.setFontFromAssets(context: Context, assetsPath: String?) {
 
 /**
  * 检查是否设置字体的粗体。
- * 这里支持，bold，mid，普通三种。查看typhur_attr.xml fontSizeMode的定义和isNumberFont的定义。
- * 这样的话，就可以给TyphurFontEdit，TyphurFontText设置三种模式的字体。
+ * 这里支持，bold，mid，普通三种。查看attr.xml fontSizeMode的定义和isNumberFont的定义。
+ * 这样的话，就可以给FontEdit，FontText设置三种模式的字体。
  *
- * xml中给TyphurFontEdit，TyphurFontText添加fontSizeMode、isNumberFont来实现粗体或者数字类型字体。
+ * xml中给FontEdit，FontText添加fontSizeMode、isNumberFont来实现粗体或者数字类型字体。
  * 代码中通过修改代码来实现。
  */
 fun TextView.checkBoldAndSetFont(cxt: Context, attrs: AttributeSet?) : TextViewCheckMode {

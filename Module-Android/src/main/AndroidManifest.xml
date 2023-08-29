@@ -14,5 +14,11 @@
                 android:name="com.au.module_android.init.FirstInitial"
                 android:value="androidx.startup" />
         </provider>
+
+        <activity
+            android:name="com.au.module_android.base.FragmentRootActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 </manifest>

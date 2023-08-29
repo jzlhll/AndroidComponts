@@ -14,10 +14,12 @@ import com.au.module_android.utils.ignoreError
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BaseActivity : AppCompatActivity(), ICommon{
+abstract class BaseViewActivity : AppCompatActivity(), ICommon {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }
+
+    var root:View? = null
 
     var isAutoHideIme:Boolean = false
         private set
@@ -35,11 +37,12 @@ abstract class BaseActivity : AppCompatActivity(), ICommon{
      */
     var object3:Any? = null
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
-        setContentView(onCommonCreateView(layoutInflater, null, savedInstanceState))
-        onCommonAfterCreateView(this, savedInstanceState, resources)
+        root = onCommonCreateView(layoutInflater, null, savedInstanceState)
+        setContentView(root)
+        onCommonAfterCreateView(this, savedInstanceState, resources, false)
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

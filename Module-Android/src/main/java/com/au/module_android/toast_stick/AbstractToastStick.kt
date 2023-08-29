@@ -25,7 +25,7 @@ abstract class AbstractToastStick<T, VB:ViewBinding> {
 
         val defaultOffsetY = 48f.dpGlobal
 
-        internal val globalToast = TyphurGlobalToast()
+        internal val globalToast = DefaultGlobalToast()
 
         val globalToastHeight:Int
             get() = globalToast.currentToastHeight

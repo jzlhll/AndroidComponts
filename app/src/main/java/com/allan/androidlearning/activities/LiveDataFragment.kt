@@ -1,34 +1,36 @@
 package com.allan.androidlearning.activities
 
-import android.R.string
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ScaleXSpan
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import com.allan.androidlearning.databinding.ActivityLiveDataBinding
 import com.allan.androidlearning.utils.logt
 import com.allan.androidlearning.utils.testGsonData
+import com.au.module_android.arct.BaseBindingFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class LiveDataActivity : AppCompatActivity() {
+class LiveDataFragment : BaseBindingFragment<ActivityLiveDataBinding>() {
     private val numbersVM by viewModels<NumbersViewModel>()
-    private val TAG = LiveDataActivity::class.java.simpleName
+    private val TAG = LiveDataFragment::class.java.simpleName
 
     private val list:MutableList<SpannableString> = mutableListOf()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityLiveDataBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCommonAfterCreateView(
+        owner: LifecycleOwner,
+        savedInstanceState: Bundle?,
+        resources: Resources,
+        isViewBindingOrView: Boolean
+    ) {
         //liveData 是粘性的。只有有值，一个直接observe进来的监听者立刻得到回调
 
         numbersVM.listData.observe(this,

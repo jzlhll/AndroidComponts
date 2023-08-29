@@ -56,7 +56,7 @@ fun toastGlobalCurrent(type:String?, message:String?, description:String?) {
 //----------------------
 data class TwoString(var first:String, var second:String)
 
-class TyphurGlobalToast : AbstractToastStick<TwoString, LayoutToastStickDemoBinding>() {
+class DefaultGlobalToast : AbstractToastStick<TwoString, LayoutToastStickDemoBinding>() {
 
     override fun createViewBinding(inflater: LayoutInflater, decorView: ViewGroup): LayoutToastStickDemoBinding {
         return LayoutToastStickDemoBinding.inflate(inflater, decorView, true)

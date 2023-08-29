@@ -8,25 +8,34 @@ import android.view.Window
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.au.module.android.R
 import com.au.module.android.databinding.LayoutToast1Binding
 import com.au.module.android.databinding.LayoutToast2Binding
+import com.au.module_android.Globals
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import java.util.*
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.collections.ArrayList
 import kotlin.math.max
 
 private val dismissToastRunnable = Runnable {
     dismissToast()
 }
 
-//isAlwaysShown表示是否常驻，则没有delay关闭的事情。则需要自行根据返回值，自行关闭，本类不做管理。
-//这里是创建布局，用于layout共享了icon，所以这里不需要icon
+private const val DROP_DOWN_TIME = 400L
+
+private var toastIndex = AtomicLong(1)
+
+private val toastAlreadyShownList by unsafeLazy { ArrayList<View?>(4) }
+
 @Synchronized
-private fun createToastBinding(view: ViewGroup?, duration: Long, lineNumber:Int,
-                               isAlwaysShown:Boolean = false): ViewBinding? {
+private fun createToastBinding(view: ViewGroup?, duration: Long, lineNumber:Int): ViewBinding? {
     view ?: return null
-    //view不存在，则不处理
     if (view.parent == null || !view.isAttachedToWindow) {
         return null
     }
@@ -37,31 +46,26 @@ private fun createToastBinding(view: ViewGroup?, duration: Long, lineNumber:Int,
     }
 
     val toast = binding.root
+    toast.tag = toastIndex.addAndGet(1)
     toast.invisible()
     toast.post {
         toast.translationY = -toast.height.toFloat()
         toast.visible()
-        var y = 48f.dpGlobal
+        val y = 48f.dpGlobal
         toast.animate()
             .translationY(y)
-            .setDuration(400)
+            .setDuration(DROP_DOWN_TIME)
             .withEndAction {
-                if (!isAlwaysShown) {
-                    //当到位了以后才添加到列表。
-                    synchronized(toastAlreadyStickList) {
-                        toastAlreadyStickList.add(toast)
-                    }
+                synchronized(toastAlreadyShownList) {
+                    toastAlreadyShownList.add(toast)
                 }
-
                 //到位后直接清理掉非当前的。
                 dismissToast(directlyRemove = true, clearCurrent = false)
             }
             .start()
     }
-    if (!isAlwaysShown) {
-        view.removeCallbacks(call)
-        view.postDelayed(call, duration)
-    }
+
+    view.postDelayed(dismissToastRunnable, duration)
 
     return binding
 }
@@ -90,31 +94,31 @@ fun dismissToast(toast:View?, directly:Boolean) {
  * 取消toast
  */
 private fun dismissToast(directlyRemove:Boolean = false, clearCurrent:Boolean = true) {
-    synchronized(toastAlreadyStickList) {
-        var sz = toastAlreadyStickList.count()
+    synchronized(toastAlreadyShownList) {
+        var sz = toastAlreadyShownList.count()
         while (sz-- > 0) {
-            val toast = toastAlreadyStickList[sz]
+            val toast = toastAlreadyShownList[sz]
             if (clearCurrent) {
                 dismissToast(toast, directlyRemove)
-                toastAlreadyStickList[sz] = null
+                toastAlreadyShownList[sz] = null
             } else if (toast?.tag != toastIndex.get()) {
                 dismissToast(toast, directlyRemove)
-                toastAlreadyStickList[sz] = null
+                toastAlreadyShownList[sz] = null
             }
         }
 
-        toastAlreadyStickList.removeAll { it == null }
+        toastAlreadyShownList.removeAll { it == null }
     }
 }
 
 private fun iconStrToId(icon:String?) = when(icon) {
-    "success"-> R.drawable.toast_success
-    "fail", "error" -> R.drawable.toast_error
-    "warn" -> R.drawable.toast_warn
+    "success"-> R.drawable.ic_successful
+    "fail", "error" -> R.drawable.ic_failure
+    "warn" -> R.drawable.ic_warning
     else -> -1
 }
 
-fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:String?, icon:String?, isAlwaysShown: Boolean = false): ViewBinding? {
+fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:String?, icon:String?): ViewBinding? {
     val msg:String
     val desc:String?
     if (message != null && description != null) {
@@ -132,10 +136,10 @@ fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:St
     }
 
     val lineNumber = if (desc == null) 1 else 2
-    val binding = createToastBinding(view, duration, lineNumber, isAlwaysShown=isAlwaysShown)
+    val binding = createToastBinding(view, duration, lineNumber)
 
     when (binding) {
-        is DialogTyphurToastPopup1Binding -> {
+        is LayoutToast1Binding -> {
             binding.text.text = msg
             val iconId = iconStrToId(icon)
             if (iconId > 0) {
@@ -146,7 +150,7 @@ fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:St
             }
         }
 
-        is DialogTyphurToastPopup2Binding -> {
+        is LayoutToast2Binding -> {
             binding.text.text = msg
             binding.desc.text = desc
             val iconId = iconStrToId(icon)
@@ -163,34 +167,26 @@ fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:St
 
 //---------------------以前的写法，start
 
-fun Fragment.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(appCompatActivity.window.decorView.asOrNull(), duration, msg, desc, null)
-
-fun Fragment.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
-
-fun Activity.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
+private fun Activity.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
     toastPopup(window.decorView.asOrNull(), duration, msg, desc, null)
 
-fun Activity.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
-
-fun Window.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(this.decorView.asOrNull(), duration, msg, desc, null)
+private fun Activity.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
 
 /**
  * 全局弹出toast，在最上面的activity上。
  */
 fun toastOnTop(@StringRes strId: Int, duration: Long = 2200) =
-    BaseGlobalConst.activityList.lastOrNull()?.toast(strId, duration)
+    Globals.activityList.lastOrNull()?.toast(strId, duration)
 /**
  * 全局弹出toast，在最上面的activity上。
  */
 fun toastOnTop(msg: String?, duration: Long = 2200, desc:String? = null) =
-    BaseGlobalConst.activityList.lastOrNull()?.toast(msg, duration, desc)
+    Globals.activityList.lastOrNull()?.toast(msg, duration, desc)
 //---------------------end
 
 //////全新写法使用Builder模式
 
-class TyphurToastBuilder {
+class DefaultToastBuilder {
     private var decorView:ViewGroup? = null
     private var mMsg:String? = null //如果有desc，则这是标题；如果没有desc就是它一行
     private var mDesc:String? = null //如果有msg，则这个是第二行；如果没有msg，则就是它一行
@@ -201,67 +197,67 @@ class TyphurToastBuilder {
     /**
      * 其一：从Activity中调用
      */
-    fun setOnActivity(activity: Activity?) : TyphurToastBuilder{
+    fun setOnActivity(activity: Activity?) : DefaultToastBuilder {
         decorView = activity?.window?.decorView.asOrNull()
         return this
     }
     /**
      * 其一：从Fragment中调用
      */
-    fun setOnFragment(fragment: Fragment) : TyphurToastBuilder{
-        decorView = fragment.appCompatActivity.window.decorView.asOrNull()
+    fun setOnFragment(fragment: Fragment) : DefaultToastBuilder {
+        decorView = fragment.requireActivity().window.decorView.asOrNull()
         return this
     }
 
-    fun setOnDialogFragment(fragment: Fragment) : TyphurToastBuilder{
-        val dialog = TyphurBottomSheetDialog.findTyphurBottomSheetDialog(fragment)
-        decorView = dialog?.findToastViewGroup()
-        return this
-    }
+//    fun setOnDialogFragment(fragment: Fragment) : DefaultToastBuilder{
+//        val dialog = BottomSheetDialog.findBottomSheetDialog(fragment)
+//        decorView = dialog?.findToastViewGroup()
+//        return this
+//    }
 
     /**
      * 其一：从最顶中调用
      */
-    fun setOnTop() : TyphurToastBuilder {
-        setOnActivity(BaseGlobalConst.activityList.lastOrNull())
+    fun setOnTop() : DefaultToastBuilder {
+        setOnActivity(Globals.activityList.lastOrNull())
         return this
     }
 
     /**
      * 其一：从次顶调用
      */
-    fun setOnSecondTop() : TyphurToastBuilder {
-        val list = BaseGlobalConst.activityList
+    fun setOnSecondTop() : DefaultToastBuilder {
+        val list = Globals.activityList
         setOnActivity(list[max(0, list.size - 2)])
         return this
     }
 
-    fun setMessage(msg:String?) : TyphurToastBuilder {
+    fun setMessage(msg:String?) : DefaultToastBuilder {
         mMsg = msg
         return this
     }
 
-    fun setDesc(desc:String?) : TyphurToastBuilder {
+    fun setDesc(desc:String?) : DefaultToastBuilder {
         mDesc = desc
         return this
     }
 
-    fun setIcon(@IconType icon:String?) : TyphurToastBuilder {
+    fun setIcon(@IconType icon:String?) : DefaultToastBuilder {
         mIcon = icon
         return this
     }
 
-    fun setDuration(duration: Long) : TyphurToastBuilder {
+    fun setDuration(duration: Long) : DefaultToastBuilder {
         mDuration = duration
         return this
     }
 
-    fun setAlwaysShown(shown:Boolean) : TyphurToastBuilder {
+    fun setAlwaysShown(shown:Boolean) : DefaultToastBuilder {
         mAlwaysShown = shown
         return this
     }
 
     fun toast() : View? {
-        return toastPopup(decorView, mDuration, mMsg, mDesc, mIcon, mAlwaysShown)?.root
+        return toastPopup(decorView, mDuration, mMsg, mDesc, mIcon)?.root
     }
 }

@@ -4,7 +4,6 @@
     android:orientation="vertical"
     android:padding="40dp"
     android:layout_height="match_parent">
-    <MyEditText></MyEditText>
 
     <TextView
         android:text="Sept 16, 2022 8"

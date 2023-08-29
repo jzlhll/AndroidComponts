@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BaseFragment : Fragment(), ICommon{
+abstract class BaseViewFragment : Fragment(), ICommon {
+    var root:View? = null
+
     /**
      * onCreateView
      */
@@ -21,7 +23,7 @@ abstract class BaseFragment : Fragment(), ICommon{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return onCommonCreateView(inflater, container, savedInstanceState)
+        return onCommonCreateView(layoutInflater, null, savedInstanceState).also { root = it }
     }
 
     /**
@@ -49,7 +51,7 @@ abstract class BaseFragment : Fragment(), ICommon{
                 }
             }
         })
-        onCommonAfterCreateView(this, savedInstanceState, resources)
+        onCommonAfterCreateView(this, savedInstanceState, resources, root != null)
     }
 
     /**
