@@ -1,0 +1,2 @@
+-keep public class com.typhur.module.nested.layout.* { *; }
+-keep public class com.typhur.module.nested.widget.* { *; }

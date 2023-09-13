@@ -7,6 +7,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
 
 object Globals {
@@ -20,26 +21,17 @@ object Globals {
      */
     val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
-    val backgroundHandler by lazy {
-        val handlerThread = HandlerThread("app-major-bg-thread")
-        handlerThread.start()
-        Handler(handlerThread.looper)
-    }
+    val backgroundHandler by lazy { createBackgroundHandler() }
 
     /**
      * gson对象
      */
     val gson: Gson by lazy { Gson() }
 
-
-    internal lateinit var internalApp: Application
     /**
      * 全局application
      */
-    val app: Application
-        get() = internalApp
-
-    private val internalActivityList = ArrayList<Activity>(8)
+    val app: Application get() = internalApp
 
     val activityList: ArrayList<Activity>
         get() = internalActivityList
@@ -49,6 +41,21 @@ object Globals {
 
     val secondTopActivity:Activity?
         get() = activityList.secondLastOrNull()
+
+    /**
+     * 腾讯的数据存储库
+     */
+    val mmkv by lazy { MMKV.initialize(app);MMKV.defaultMMKV() }
+
+    //内部参数
+    internal lateinit var internalApp: Application
+    internal val internalActivityList = ArrayList<Activity>(8)
+
+    private fun createBackgroundHandler() : Handler {
+        val handlerThread = HandlerThread("app-major-bg-thread")
+        handlerThread.start()
+        return Handler(handlerThread.looper)
+    }
 }
 
 //----------------------handler start
