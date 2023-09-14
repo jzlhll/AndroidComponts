@@ -1,13 +1,10 @@
 package com.au.module_flyablejson.apt;
 
-import static java.lang.reflect.Modifier.PRIVATE;
-
 import com.au.module_flyablejson.annotation.FlyableBeanAnnotation;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +16,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
@@ -119,6 +115,8 @@ public class FlyableJsonProcessor extends AbstractProcessor {
             JavaFile javaFile = JavaFile.builder(proxyInfo.packageName, proxyInfo.generateProxyClass())
                     .addFileComment("auto generateProxyClass code,can not modify")
                     .build();
+
+
             try {
                 javaFile.writeTo(filer);
             } catch (IOException e) {
