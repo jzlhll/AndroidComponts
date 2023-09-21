@@ -106,7 +106,7 @@ abstract class AbstractToastStick<T, VB:ViewBinding> {
      *
      */
     internal fun onActivityStopped(activity:Activity) {
-        dismissGlobalToastDirectly(activity)
+        dismissGlobalToastDirectly(activity, false)
     }
 
     /**
@@ -114,33 +114,40 @@ abstract class AbstractToastStick<T, VB:ViewBinding> {
      */
     internal fun onActivityStarted(activity: Activity) {
         val info = currentContext
-        if (info != null) {
+        if (info != null && findToast(activity) == null) {
             createToastBinding(activity, false, info)
         }
     }
 
-    @Synchronized
-    fun dismissGlobalToastDirectly(activity:Activity) {
-        lastGlobalToastType = null//清理数据
-        currentContext = null
+    private fun findToast(activity: Activity): View? {
         val window = activity.window
         val decorView = window.decorView
-        val toast = decorView.findViewWithTag<ViewGroup>(GLOBAL_VIEW_TOAST_FLAG)
-        decorView.asOrNull<ViewGroup>()?.removeView(toast)
+        return decorView.findViewWithTag<ViewGroup>(GLOBAL_VIEW_TOAST_FLAG);
+    }
+
+    @Synchronized
+    fun dismissGlobalToastDirectly(activity:Activity, clearData:Boolean) {
+        lastGlobalToastType = null//清理数据
+        if(clearData) currentContext = null
+        val window = activity.window
+        val decorView = window.decorView
+        findToast(activity)?.let {
+            decorView.asOrNull<ViewGroup>()?.removeView(it)
+        }
 
         currentToastHeight = 0
     }
 
     @Synchronized
-    fun dismissGlobalToast(activity:Activity) {
+    fun dismissGlobalToast(activity:Activity, clearData:Boolean) {
         if (!isMainThread) {
             postToMainHandler {
-                dismissGlobalToast(activity)
+                dismissGlobalToast(activity, clearData)
             }
         } else {
             lastGlobalToastType = null
             //清理数据
-            currentContext = null
+            if(clearData) currentContext = null
 
             val window = activity.window
             val decorView = window.decorView
@@ -167,7 +174,7 @@ abstract class AbstractToastStick<T, VB:ViewBinding> {
      */
     @Synchronized
     fun toastGlobal(type:String?, activity: Activity, content:T) {
-        dismissGlobalToastDirectly(activity)
+        dismissGlobalToastDirectly(activity, true)
 
         currentContext = content
         lastGlobalToastType = type

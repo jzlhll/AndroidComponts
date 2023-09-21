@@ -9,14 +9,14 @@ import com.au.module_android.click.onClick
 import com.au.module_android.toast_stick.AbstractToastStick.Companion.globalToast
 import com.au.module_android.utils.activity
 
-fun dismissGlobalToastDirectly(activity:Activity? = null) {
+fun dismissToastDirectlyGlobally(activity:Activity? = null) {
     val fixActivity = activity ?: Globals.activityList.lastOrNull() ?: return
-    globalToast.dismissGlobalToastDirectly(fixActivity)
+    globalToast.dismissGlobalToastDirectly(fixActivity, true)
 }
 
-fun dismissGlobalToast(activity:Activity? = null) {
+fun dismissToastGlobally(activity:Activity? = null) {
     val fixActivity = activity ?: Globals.activityList.lastOrNull() ?: return
-    globalToast.dismissGlobalToast(fixActivity)
+    globalToast.dismissGlobalToast(fixActivity, true)
 }
 
 fun toastGlobal(type:String?, activity: Activity, message:String?, description:String?) {
@@ -69,8 +69,8 @@ class DefaultGlobalToast : AbstractToastStick<TwoString, LayoutToastStickDemoBin
 
         binding.text.text = content.first
 
-        binding.closeBtn.onClick {
-            dismissGlobalToast(it.activity)
+        binding.closeBtn.onClick { v->
+            v.activity?.let { activity -> dismissGlobalToast(activity, true) }
         }
     }
 }
