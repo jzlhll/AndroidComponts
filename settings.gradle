@@ -18,8 +18,10 @@ gradle.ext.selfPassword = properties.getProperty('password')
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
-        mavenCentral()
+        //google()
+        //mavenCentral()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url 'https://www.jitpack.io' }
     }
 }
 rootProject.name = "AndroidLearning"

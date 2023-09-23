@@ -1,6 +1,6 @@
 package com.au.module_flyablejson.apt;
 
-import com.au.module_flyablejson.annotation.FlyableBeanAnnotation;
+import com.au.module_flyablejson.annotation.BeanFlyable;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 
@@ -63,7 +63,7 @@ public class FlyableJsonProcessor extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         //添加支持的注解
         HashSet<String> set = new HashSet<>();
-        set.add(FlyableBeanAnnotation.class.getCanonicalName());
+        set.add(BeanFlyable.class.getCanonicalName());
         return set;
     }
 
@@ -80,7 +80,7 @@ public class FlyableJsonProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         messager.printMessage(Diagnostic.Kind.NOTE, "process->>> " + annotations.size());
-        var elements = roundEnv.getElementsAnnotatedWith(FlyableBeanAnnotation.class);
+        var elements = roundEnv.getElementsAnnotatedWith(BeanFlyable.class);
         if (elements == null || elements.size() < 1) {//process()方法会调用3次，只有第一次有效，第2，3次调用的话生成.java文件会发生异常
             return true;
         }
