@@ -8,7 +8,16 @@ package com.au.module_android.simplelivedata
  *
  * 携带状态的LiveData，并且更新数据必定在主线程上。
  */
-open class StatusLiveData<T> : BaseLiveData<T>(), IOperator<T> {
+open class StatusLiveData<T> : BaseLiveData<T>, IOperator<T> {
+    constructor()
+    constructor(data:T?, @Status status:Int = Status.OVER_SUCCESS, code:Int?= null, msg:String? = null)
+            : super(RealDataWrap<T>().also {
+                it.data = data
+                it.status = status
+                it.code = code
+                it.message = msg
+            })
+
     override fun success(data: T?, code: Int?, msg: String?) {
         safeSetValue(data, Status.OVER_SUCCESS, code, msg)
     }

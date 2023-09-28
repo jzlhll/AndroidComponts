@@ -13,23 +13,9 @@
         android:theme="@style/Theme.AndroidLearning"
         tools:targetApi="31">
         <activity
-            android:name=".FragmentContainerActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activities.FontTestActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".EntroActivity"
             android:exported="true"
-            android:label="@string/title_activity_entro"
+            android:label="AllanComponents"
             android:theme="@style/Theme.AndroidLearning.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
@@ -41,22 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.LiveDataActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AndroidLearning">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
     </application>
 
 </manifest>

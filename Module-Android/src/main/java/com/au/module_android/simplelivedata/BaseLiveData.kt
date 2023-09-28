@@ -4,7 +4,10 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 
 @Deprecated("不得直接使用。请使用StatusLiveData。")
-abstract class BaseLiveData<T> : LiveData<RealDataWrap<T>>() {
+abstract class BaseLiveData<T> : LiveData<RealDataWrap<T>> {
+    constructor()
+    constructor(realDataWrap:RealDataWrap<T>) : super(realDataWrap)
+
     private var _wrap: RealDataWrap<T>? = null
 
     /**

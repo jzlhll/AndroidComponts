@@ -42,7 +42,7 @@ abstract class BaseViewActivity : AppCompatActivity(), ICommon {
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
         root = onCommonCreateView(layoutInflater, null, savedInstanceState)
         setContentView(root)
-        onCommonAfterCreateView(this, savedInstanceState, resources, false)
+        onCommonAfterCreateView(this, savedInstanceState, resources)
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

@@ -74,8 +74,7 @@ interface ICommon {
     fun onCommonAfterCreateView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
-        resources: Resources,
-        isViewBindingOrRootView:Boolean
+        resources: Resources
     ) {}
 
     /**

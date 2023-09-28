@@ -35,7 +35,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
-            android:text="Learning AndroidX"
+            android:text="AndroidX kotlin componts"
             android:textSize="16sp"
             android:gravity="center"
             android:layout_gravity="bottom|center_horizontal"

@@ -73,14 +73,18 @@ public final class ReflectionUtils {
     /**
      * 一直往父类获取私有成员变量的值
      */
-    public static Object iteratorGetPrivateFieldValue(Object instance, String filedName) {
-        for (Class<?> superClass = instance.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()) {
+    public static Object iteratorGetPrivateFieldValue(Object instance, String fieldName) {
+        Class<?> superClass = instance.getClass();
+        while (superClass != Object.class && superClass != null) {
             try {
-                Field field = superClass.getDeclaredField(filedName);
+                Field field;
+                field = superClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
                 return field.get(instance);
             } catch (NoSuchFieldException | IllegalAccessException e) {
+                //ignore
             }
+            superClass = superClass.getSuperclass();
         }
 
         return null;

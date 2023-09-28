@@ -51,7 +51,7 @@ abstract class BaseViewFragment : Fragment(), ICommon {
                 }
             }
         })
-        onCommonAfterCreateView(this, savedInstanceState, resources, root != null)
+        onCommonAfterCreateView(this, savedInstanceState, resources)
     }
 
     /**

@@ -17,19 +17,19 @@ import com.google.android.material.button.MaterialButton
 class EntroActivity : BaseBindingActivity<ActivityEntroBinding>() {
 
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
-        listOf(FontTestFragment::class.java, LiveDataFragment::class.java)
+        listOf(FontTestFragment::class.java,
+            LiveDataFragment::class.java)
     }
 
     override fun onCommonAfterCreateView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
-        resources: Resources,
-        isViewBindingOrRootView: Boolean
+        resources: Resources
     ) {
         setSupportActionBar(findViewById(R.id.toolbar))
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)
-            btn.text = fragmentClass.simpleName
+            btn.text = fragmentClass.simpleName.replace("Fragment", "Frg")
             btn.onClick {
                 FragmentRootActivity.startFragmentActivity(this, fragmentClass)
             }

@@ -17,8 +17,10 @@
 
         <activity
             android:name="com.au.module_android.base.FragmentRootActivity"
-            android:exported="false">
-        </activity>
+            android:configChanges="screenSize|keyboard|orientation|keyboardHidden|fontScale|locale|screenLayout|uiMode|navigation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

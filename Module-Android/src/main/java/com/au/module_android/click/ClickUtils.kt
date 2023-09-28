@@ -8,9 +8,11 @@ import com.au.module_android.globalPaddingClickTime
  */
 private var lastClickTime = 0L
 
-fun acceptClick(spaceTime:Long? = globalPaddingClickTime) : Boolean {
+fun acceptClick(spaceTime:Long? = null) : Boolean {
+
+    val space = spaceTime ?: globalPaddingClickTime
     val cur = System.currentTimeMillis()
-    if (cur - lastClickTime < (spaceTime ?: 0L)) {
+    if (cur - lastClickTime < space) {
         return false
     }
     lastClickTime = cur
