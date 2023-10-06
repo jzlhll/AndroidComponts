@@ -50,8 +50,8 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             delay(1000)
 
-            noStickData.postValue("new stick 11")
-            noStickDataDef.postValue("new stick 22")
+            noStickData.setValueSafe("new stick 11")
+            noStickDataDef.setValueSafe("new stick 22")
         }
     }
 }
