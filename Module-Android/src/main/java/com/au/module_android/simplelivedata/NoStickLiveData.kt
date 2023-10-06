@@ -1,37 +1,48 @@
 package com.au.module_android.simplelivedata
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.au.module_android.utils.ReflectionUtils
-import com.au.module_android.utils.asOrNull
 
-class NoStickLiveData<T> : MutableLiveData<T> {
+/**
+ * @author allan.jiang
+ * 不需要的粘性状态。
+ */
+open class NoStickLiveData<T> : SafeLiveData<T> {
     private var mVersion:Int
 
-    //发射拿到父类的field
-    private var mObservers:Iterable<MutableMap.MutableEntry<Observer<*>, *>>? = null
+    //反射拿到父类的field
+    private var mObservers:(Iterable<MutableMap.MutableEntry<Observer<*>, *>>)? = null
+
+    private fun requireMObservers() : Iterable<MutableMap.MutableEntry<Observer<*>, *>> {
+        val mOb = mObservers
+        if (mOb == null) {
+            val ob = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers")
+                    as Iterable<MutableMap.MutableEntry<Observer<*>, *>>
+            mObservers = ob
+            return ob
+        }
+        return mOb
+    }
 
     constructor() {
         mVersion = -1
-        mObservers = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers").asOrNull()
     }
     constructor(data:T?) : super(data) {
         mVersion = 0
-        mObservers = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers").asOrNull()
     }
 
     override fun setValue(value: T?) {
-        super.setValue(value)
         mVersion++
+        super.setValue(value)
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        super.observe(owner, NoStickObserverWrap(this, observer = observer))
+        super.observe(owner, NoStickWrapObserver(this, observer = observer))
     }
 
     override fun observeForever(observer: Observer<in T>) {
-        super.observeForever(NoStickObserverWrap(this, observer = observer))
+        super.observeForever(NoStickWrapObserver(this, observer = observer))
     }
 
     override fun removeObserver(observer: Observer<in T>) {
@@ -40,18 +51,18 @@ class NoStickLiveData<T> : MutableLiveData<T> {
     }
 
     private fun findObserverWrap(observer: Observer<in T>) : Observer<in T>? {
-        mObservers?.let { iter->
+        requireMObservers().let { iter->
             for ((key, _) in iter) {
-                val noStickObserverWrap = key as NoStickObserverWrap<*>
-                if (noStickObserverWrap.observer == observer) {
-                    return noStickObserverWrap as Observer<in T>
+                val wrap = key as NoStickWrapObserver<*>
+                if (wrap.observer == observer) {
+                    return wrap as Observer<in T>
                 }
             }
         }
         return null
     }
 
-    private class NoStickObserverWrap<T>(val self:NoStickLiveData<T>,
+    private class NoStickWrapObserver<T>(val self:NoStickLiveData<T>,
                                          val observer: Observer<in T>) : Observer<T> {
         private val version: Int = self.mVersion //标记进入的时候的版本
 

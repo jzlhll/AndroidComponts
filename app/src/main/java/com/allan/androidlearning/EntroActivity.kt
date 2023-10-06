@@ -31,7 +31,7 @@ class EntroActivity : BaseBindingActivity<ActivityEntroBinding>() {
             val btn = MaterialButton(this)
             btn.text = fragmentClass.simpleName.replace("Fragment", "Frg")
             btn.onClick {
-                FragmentRootActivity.startFragmentActivity(this, fragmentClass)
+                FragmentRootActivity.start(this, fragmentClass)
             }
             binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }

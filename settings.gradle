@@ -18,9 +18,9 @@ gradle.ext.selfPassword = properties.getProperty('password')
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        //google()
-        //mavenCentral()
-        maven { url "https://maven.aliyun.com/repository/public" }
+        google()
+        mavenCentral()
+        //maven { url "https://maven.aliyun.com/repository/public" }
         maven { url 'https://www.jitpack.io' }
     }
 }
@@ -29,7 +29,8 @@ include ':app'
 include ':Module-Android'
 include ':Module-Nested'
 include ':Module-Cached'
-include ':Module-FlyableJson'
-include ':Module-FlyableJsonAPT'
-include ':Module-FlyableJsonBase'
+//include ':Module-FlyableJson'
+//include ':Module-FlyableJsonAPT'
+//include ':Module-FlyableJsonBase'
 include ':jsbridge'
+include ':Module-Upgrade'

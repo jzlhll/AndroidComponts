@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.au.module.android.BuildConfig
-import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.simplelivedata.Status
 import com.au.module_android.simplelivedata.StatusLiveData
 import com.au.module_android.toast.toastOnTop

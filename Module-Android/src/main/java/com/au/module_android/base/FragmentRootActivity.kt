@@ -2,7 +2,7 @@ package com.au.module_android.base
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
 import com.au.module_android.arct.BaseViewActivity
+import com.au.module_android.permissions.IPermission
+import com.au.module_android.permissions.OwnerForResult
 
 /**
  * @author allan.jiang
@@ -29,28 +31,39 @@ class FragmentRootActivity : BaseViewActivity() {
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
          */
-        fun startFragmentActivity(context: Context,
-                                  fragmentClass:Class<out Fragment>,
-                                   arguments: Bundle? = null,
-                                   optionsCompat: ActivityOptionsCompat? = null,
-                                   intentBlock: (Intent) -> Unit = {
-                                       ActivityCompat.startActivity(
-                                           context,
-                                           it,
-                                           optionsCompat?.toBundle()
-                                       )
-                                   })  {
+        fun start(context: Context,
+                            fragmentClass:Class<out Fragment>,
+                            arguments: Bundle? = null,
+                            optionsCompat: ActivityOptionsCompat? = null)  {
             val intent = Intent(context, FragmentRootActivity::class.java)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
-            arguments?.let {
-                intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
-            }
-            intentBlock.invoke(intent)
-        }
-    }
+            if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
-    private fun parseFragmentClass() : Class<Fragment> { //不做保护，出问题直接报错。
-        return intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment>
+            ActivityCompat.startActivity(
+                context,
+                intent,
+                optionsCompat?.toBundle()
+            )
+        }
+
+        /**
+         * 把一个Fragment放到本Activity当做唯一的界面，并在返回的时候带上结果。
+         * <R> 代表你要返回的结果
+         */
+        fun <R> startForResult(context: Context,
+                               fragmentClass:Class<out Fragment>,
+                               ownerForResult: IPermission<Intent, R>,
+                               onResultCallback: (R) -> Unit,
+                               arguments: Bundle? = null,
+                               optionsCompat: ActivityOptionsCompat? = null) {
+            val intent = Intent(context, FragmentRootActivity::class.java)
+            intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
+            if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
+
+            ownerForResult.start(intent, optionsCompat) {
+                result-> onResultCallback(result)
+            }
+        }
     }
 
     override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -59,13 +72,12 @@ class FragmentRootActivity : BaseViewActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        v.id = View.generateViewId()
-
-        val fragmentClass = parseFragmentClass()
+        //v.id = View.generateViewId()
+        val fragmentClass = intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment>
         val instance = fragmentClass.getDeclaredConstructor().newInstance()
         instance.arguments = intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS)
         if (BuildConfig.DEBUG) {
-            Log.d(APP_TAG, "FragmentContainerActivity: ${fragmentClass.name} autoHideIme: $isAutoHideIme")
+            Log.d(APP_TAG, "FragmentRootActivity: ${fragmentClass.name} autoHideIme: $isAutoHideIme")
         }
         supportFragmentManager.beginTransaction().replace(v.id, instance).commit() //todo 增加tag。
         return v

@@ -60,8 +60,7 @@ abstract class NestedRecyclerFragment : BaseViewFragment() {
     override fun onCommonAfterCreateView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
-        resources: Resources,
-        isViewBindingOrRootView: Boolean
+        resources: Resources
     ) {
         initRecyclerView(nestedLayout.recyclerView)
         nestedLayout.recyclerView.adapter = adapter

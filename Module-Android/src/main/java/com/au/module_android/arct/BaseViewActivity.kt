@@ -17,7 +17,10 @@ import com.au.module_android.utils.ignoreError
 abstract class BaseViewActivity : AppCompatActivity(), ICommon {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
+        const val KEY_XML_LAYOUT_ID = "intent_xml_layout_id"
     }
+
+    protected open val isNotCacheFragment = true //不进行自动保存Fragment用于恢复。
 
     var root:View? = null
 
@@ -56,7 +59,7 @@ abstract class BaseViewActivity : AppCompatActivity(), ICommon {
         if (isAutoHideIme && ev?.action == MotionEvent.ACTION_DOWN) {
             val focusView = currentFocus
             if (focusView != null && isShouldHideInput(focusView, ev)) {
-                hideImeNew(window, focusView);
+                hideImeNew(window, focusView)
             }
         }
         return super.dispatchTouchEvent(ev)
@@ -74,4 +77,27 @@ abstract class BaseViewActivity : AppCompatActivity(), ICommon {
         }
         return false
     }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        if(isNotCacheFragment) removeCachedFragments(outState)
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if(isNotCacheFragment) removeCachedFragments(outState)
+    }
+
+    private fun removeCachedFragments(outState: Bundle) {
+        //清空保存Fragment的状态数据
+        if (false) { //非androidx
+            outState.putParcelable("android:support:fragments", null)
+            outState.putParcelable("android:fragments", null)
+        } else { //androidx
+            outState.getBundle("androidx.lifecycle.BundlableSavedStateRegistry.key")?.let {
+                it.remove("android:support:fragments")
+                it.remove("android:fragments")
+            }
+        }
+    }
+
 }
