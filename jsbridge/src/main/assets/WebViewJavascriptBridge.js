@@ -10,49 +10,13 @@
     var sendMessageQueue = [];
     var receiveMessageQueue = [];
     var messageHandlers = {};
+    var pageDataMap = {};
 
     var CUSTOM_PROTOCOL_SCHEME = 'yy';
     var QUEUE_HAS_MESSAGE = '__QUEUE_MESSAGE__/';
 
     var responseCallbacks = {};
     var uniqueId = 1;
-
-    var base64encodechars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    function base64encode(str) {
-        if (str === undefined) {
-            return str;
-        }
-
-        var out, i, len;
-        var c1, c2, c3;
-        len = str.length;
-        i = 0;
-        out = "";
-        while (i < len) {
-            c1 = str.charCodeAt(i++) & 0xff;
-            if (i == len) {
-                out += base64encodechars.charAt(c1 >> 2);
-                out += base64encodechars.charAt((c1 & 0x3) << 4);
-                out += "==";
-                break;
-            }
-            c2 = str.charCodeAt(i++);
-            if (i == len) {
-                out += base64encodechars.charAt(c1 >> 2);
-                out += base64encodechars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xf0) >> 4));
-                out += base64encodechars.charAt((c2 & 0xf) << 2);
-                out += "=";
-                break;
-            }
-            c3 = str.charCodeAt(i++);
-            out += base64encodechars.charAt(c1 >> 2);
-            out += base64encodechars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xf0) >> 4));
-            out += base64encodechars.charAt(((c2 & 0xf) << 2) | ((c3 & 0xc0) >> 6));
-            out += base64encodechars.charAt(c3 & 0x3f);
-        }
-        return out;
-    }
-
 
     function _createQueueReadyIframe(doc) {
         messagingIframe = doc.createElement('iframe');
@@ -133,43 +97,60 @@
         }
     }
 
+    //兼容多page。data自行传入
+    function handlerDirectlySend(message, data) {
+        var responseCallback;
+        //直接发送
+        if (message.callbackId) {
+            var callbackResponseId = message.callbackId;
+            responseCallback = function(responseData) {
+                _doSend({
+                    responseId: callbackResponseId,
+                    responseData: responseData
+                });
+            };
+        }
+
+        var handler = WebViewJavascriptBridge._messageHandler;
+        if (message.handlerName) {
+            handler = messageHandlers[message.handlerName];
+        }
+        //查找指定handler
+        try {
+            handler(data, responseCallback);
+        } catch (exception) {
+            if (typeof console != 'undefined') {
+                console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
+            }
+        }
+    }
+
     //提供给native使用,
     function _dispatchMessageFromNative(messageJSON) {
         setTimeout(function() {
             var message = JSON.parse(messageJSON);
-            var responseCallback;
             //java call finished, now need to call js callback function
-            if (message.responseId) {
-                responseCallback = responseCallbacks[message.responseId];
+            if (message.pageMask) {
+                if (message.pageIndex < message.pageTotal) {
+                    if (message.pageIndex == 1) {
+                        pageDataMap[message.pageMask] = message.data
+                    } else {
+                        pageDataMap[message.pageMask] = pageDataMap[message.pageMask] + message.data
+                    }
+                } else {
+                    var data = pageDataMap[message.pageMask] + message.data
+                    pageDataMap[message.pageMask] = null
+                    handlerDirectlySend(message, data)
+                }
+            } else if (message.responseId) {
+                var responseCallback = responseCallbacks[message.responseId];
                 if (!responseCallback) {
                     return;
                 }
                 responseCallback(message.responseData);
                 delete responseCallbacks[message.responseId];
             } else {
-                //直接发送
-                if (message.callbackId) {
-                    var callbackResponseId = message.callbackId;
-                    responseCallback = function(responseData) {
-                        _doSend({
-                            responseId: callbackResponseId,
-                            responseData: responseData
-                        });
-                    };
-                }
-
-                var handler = WebViewJavascriptBridge._messageHandler;
-                if (message.handlerName) {
-                    handler = messageHandlers[message.handlerName];
-                }
-                //查找指定handler
-                try {
-                    handler(message.data, responseCallback);
-                } catch (exception) {
-                    if (typeof console != 'undefined') {
-                        console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
-                    }
-                }
+                handlerDirectlySend(message, message.data)
             }
         });
     }

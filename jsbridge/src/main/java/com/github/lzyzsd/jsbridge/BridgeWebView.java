@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -97,22 +99,62 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 
     @Override
     public void send(String data, CallBackFunction responseCallback) {
-        doSend(null, data, responseCallback);
+        doSend(null, null, data, responseCallback);
     }
 
-    private void doSend(String handlerName, String data, CallBackFunction responseCallback) {
+    @Override
+    public void send(String data, @NonNull String pageMask, CallBackFunction responseCallback) {
+        doSend(null, pageMask, data, responseCallback);
+    }
+
+    private static final int MAX_PAGE_SIZE = 1024 * 1024;
+
+    private void doSend(String handlerName, String pageMask, String data, CallBackFunction responseCallback) {
+        int len = data.length();
+        int total = len / MAX_PAGE_SIZE;
+        if (len % MAX_PAGE_SIZE > 0) {
+            total++;
+        }
+        if (total > 1) {
+            int curSize = 0;
+            for (int i = 1; i < total ;i++) {
+                doSendInner(handlerName, pageMask, data.substring(curSize, curSize + MAX_PAGE_SIZE), responseCallback, i, total);
+                curSize = curSize + MAX_PAGE_SIZE;
+            }
+            doSendInner(handlerName, pageMask, data.substring(curSize), responseCallback, total, total);
+        } else {
+            doSendInner(handlerName, pageMask, data, responseCallback, 0, 0);
+        }
+    }
+
+    private void doSendInner(String handlerName, String pageMask, String data, CallBackFunction responseCallback,
+                             int pageIndex, int pageTotal) {
         Message m = new Message();
         if (!TextUtils.isEmpty(data)) {
             m.setData(data);
         }
-        if (responseCallback != null) {
+
+        if (!TextUtils.isEmpty(handlerName)) {
+            m.setHandlerName(handlerName);
+        }
+
+        boolean needSetCallback = true;
+        if (pageTotal > 0 && pageIndex > 0) {
+            m.setPageIndex(pageIndex);
+            m.setPageTotal(pageTotal);
+            m.setPageMask(String.format(BridgeUtil.PAGE_MASK_FORMAT, pageMask));
+            if (pageTotal > pageIndex) {
+                needSetCallback = false;
+            }
+        }
+
+
+        if (needSetCallback && responseCallback != null) {
             String callbackStr = String.format(BridgeUtil.CALLBACK_ID_FORMAT, ++uniqueId + (BridgeUtil.UNDERLINE_STR + SystemClock.currentThreadTimeMillis()));
             responseCallbacks.put(callbackStr, responseCallback);
             m.setCallbackId(callbackStr);
         }
-        if (!TextUtils.isEmpty(handlerName)) {
-            m.setHandlerName(handlerName);
-        }
+
         queueMessage(m);
     }
 
@@ -224,6 +266,10 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
      * @param callBack
      */
     public void callHandler(String handlerName, String data, CallBackFunction callBack) {
-        doSend(handlerName, data, callBack);
+        doSend(handlerName, null, data, callBack);
+    }
+
+    public void callHandlerPage(String handlerName, String pageMask, String data, CallBackFunction callBack) {
+        doSend(handlerName, pageMask, data, callBack);
     }
 }
