@@ -148,7 +148,6 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
             }
         }
 
-
         if (needSetCallback && responseCallback != null) {
             String callbackStr = String.format(BridgeUtil.CALLBACK_ID_FORMAT, ++uniqueId + (BridgeUtil.UNDERLINE_STR + SystemClock.currentThreadTimeMillis()));
             responseCallbacks.put(callbackStr, responseCallback);

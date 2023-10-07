@@ -4,8 +4,6 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module.android.R
@@ -18,7 +16,6 @@ import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
-import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.collections.ArrayList
 import kotlin.math.max
@@ -34,8 +31,7 @@ private var toastIndex = AtomicLong(1)
 private val toastAlreadyShownList by unsafeLazy { ArrayList<View?>(4) }
 
 @Synchronized
-private fun createToastBinding(view: ViewGroup?, duration: Long, lineNumber:Int): ViewBinding? {
-    view ?: return null
+private fun createToastBinding(view: ViewGroup, duration: Long, lineNumber:Int): ViewBinding? {
     if (view.parent == null || !view.isAttachedToWindow) {
         return null
     }
@@ -118,7 +114,7 @@ private fun iconStrToId(icon:String?) = when(icon) {
     else -> -1
 }
 
-fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:String?, icon:String?): ViewBinding? {
+private fun toastPopup(view: ViewGroup, duration: Long, message:String?, description:String?, icon:String?): ViewBinding? {
     val msg:String
     val desc:String?
     if (message != null && description != null) {
@@ -165,28 +161,7 @@ fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:St
     return binding
 }
 
-//---------------------以前的写法，start
-
-private fun Activity.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(window.decorView.asOrNull(), duration, msg, desc, null)
-
-private fun Activity.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
-
-/**
- * 全局弹出toast，在最上面的activity上。
- */
-fun toastOnTop(@StringRes strId: Int, duration: Long = 2200) =
-    Globals.activityList.lastOrNull()?.toast(strId, duration)
-/**
- * 全局弹出toast，在最上面的activity上。
- */
-fun toastOnTop(msg: String?, duration: Long = 2200, desc:String? = null) =
-    Globals.activityList.lastOrNull()?.toast(msg, duration, desc)
-//---------------------end
-
-//////全新写法使用Builder模式
-
-class DefaultToastBuilder {
+class ToastBuilder {
     private var decorView:ViewGroup? = null
     private var mMsg:String? = null //如果有desc，则这是标题；如果没有desc就是它一行
     private var mDesc:String? = null //如果有msg，则这个是第二行；如果没有msg，则就是它一行
@@ -197,15 +172,15 @@ class DefaultToastBuilder {
     /**
      * 其一：从Activity中调用
      */
-    fun setOnActivity(activity: Activity?) : DefaultToastBuilder {
+    fun setOnActivity(activity: Activity?) : ToastBuilder {
         decorView = activity?.window?.decorView.asOrNull()
         return this
     }
     /**
      * 其一：从Fragment中调用
      */
-    fun setOnFragment(fragment: Fragment) : DefaultToastBuilder {
-        decorView = fragment.requireActivity().window.decorView.asOrNull()
+    fun setOnFragment(fragment: Fragment) : ToastBuilder {
+        decorView = fragment.activity?.window?.decorView.asOrNull()
         return this
     }
 
@@ -218,7 +193,7 @@ class DefaultToastBuilder {
     /**
      * 其一：从最顶中调用
      */
-    fun setOnTop() : DefaultToastBuilder {
+    fun setOnTop() : ToastBuilder {
         setOnActivity(Globals.activityList.lastOrNull())
         return this
     }
@@ -226,38 +201,38 @@ class DefaultToastBuilder {
     /**
      * 其一：从次顶调用
      */
-    fun setOnSecondTop() : DefaultToastBuilder {
+    fun setOnSecondTop() : ToastBuilder {
         val list = Globals.activityList
         setOnActivity(list[max(0, list.size - 2)])
         return this
     }
 
-    fun setMessage(msg:String?) : DefaultToastBuilder {
+    fun setMessage(msg:String?) : ToastBuilder {
         mMsg = msg
         return this
     }
 
-    fun setDesc(desc:String?) : DefaultToastBuilder {
+    fun setDesc(desc:String?) : ToastBuilder {
         mDesc = desc
         return this
     }
 
-    fun setIcon(@IconType icon:String?) : DefaultToastBuilder {
+    fun setIcon(@IconType icon:String?) : ToastBuilder {
         mIcon = icon
         return this
     }
 
-    fun setDuration(duration: Long) : DefaultToastBuilder {
+    fun setDuration(duration: Long) : ToastBuilder {
         mDuration = duration
         return this
     }
 
-    fun setAlwaysShown(shown:Boolean) : DefaultToastBuilder {
+    fun setAlwaysShown(shown:Boolean) : ToastBuilder {
         mAlwaysShown = shown
         return this
     }
 
     fun toast() : View? {
-        return toastPopup(decorView, mDuration, mMsg, mDesc, mIcon)?.root
+        return if(decorView == null) null else toastPopup(decorView!!, mDuration, mMsg, mDesc, mIcon)?.root
     }
 }
