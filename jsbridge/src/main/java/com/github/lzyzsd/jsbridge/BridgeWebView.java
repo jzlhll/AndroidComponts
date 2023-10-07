@@ -103,11 +103,11 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
     }
 
     @Override
-    public void send(String data, @NonNull String pageMask, CallBackFunction responseCallback) {
+    public void sendPage(String data, @NonNull String pageMask, CallBackFunction responseCallback) {
         doSend(null, pageMask, data, responseCallback);
     }
 
-    private static final int MAX_PAGE_SIZE = 1024 * 1024;
+    private static final int MAX_PAGE_SIZE = 12 * 1024 / 10 * 1024; //1.2MB 最大2MB。给点余量。
 
     private void doSend(String handlerName, String pageMask, String data, CallBackFunction responseCallback) {
         int len = data.length();
