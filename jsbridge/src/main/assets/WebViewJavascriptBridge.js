@@ -160,7 +160,7 @@
                     log("_dispatchMessageFromNative responseId has page!");
                     if (message.pageIndex == 0) {
                         responseMessagesPageMap[rid] = message.responseData;
-                    } else if (message.pageIndex <= message.pageTotal) {
+                    } else if (message.pageIndex < message.pageTotal) {
                         responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
                     } else {
                         _dispatchMessageFromNativeResponse(rid, responseMessagesPageMap[rid] + message.responseData);
@@ -177,7 +177,7 @@
                     log("_dispatchMessageFromNative callbackId has page!")
                     if (message.pageIndex == 0) {
                         sendMessagesPageMap[cid] = message.data;
-                    } else if (message.pageIndex <= message.pageTotal) {
+                    } else if (message.pageIndex < message.pageTotal) {
                         sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;
                     } else {
                         _dispatchMessageFromNativeSend(cid, message.handlerName, sendMessagesPageMap[cid] + message.data);
