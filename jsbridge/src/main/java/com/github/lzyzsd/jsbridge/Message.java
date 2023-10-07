@@ -1,5 +1,8 @@
 package com.github.lzyzsd.jsbridge;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +16,7 @@ import java.util.List;
  *
  */
 public class Message {
+    private Message() {}
 
     private String callbackId; //callbackId
     private String responseId; //responseId
@@ -20,20 +24,111 @@ public class Message {
     private String data; //data of message
     private String handlerName; //name of handler
 
-    private String pageMask;
+    public Integer pageTotal = null; //总共的页数.使用Integer来可以当空使用。则与之前无异。
+    public Integer pageIndex = null; //当前页数。使用Integer来可以当空使用。则与之前无异。
 
-    private Integer pageTotal = null;
+    private static final int MAX_RESPONSE_MESSAGES_SIZE = 500 * 1024; //500KB. 最大其实只允许2MB。
 
-    private Integer pageIndex = null;
+    private static Message createSendDirectly(String callbackId, String data, String handlerName) {
+        Message m = new Message();
+        if (!TextUtils.isEmpty(callbackId)) {
+            m.setCallbackId(callbackId);
+        }
+        if (!TextUtils.isEmpty(handlerName)) {
+            m.setHandlerName(handlerName);
+        }
+        if (!TextUtils.isEmpty(data)) {
+            m.setData(data);
+        }
+        return m;
+    }
+
+    private static Message createSendPage(String callbackId, String data, String handlerName, int pageIndex, int pageTotal) {
+        Message m = new Message();
+        if (!TextUtils.isEmpty(callbackId)) {
+            m.setCallbackId(callbackId);
+        }
+        if (!TextUtils.isEmpty(handlerName)) {
+            m.setHandlerName(handlerName);
+        }
+        if (!TextUtils.isEmpty(data)) {
+            m.setData(data);
+        }
+        m.pageTotal = pageTotal;
+        m.pageIndex = pageIndex;
+        return m;
+    }
+
+    public static Message[] createSend(String callbackId, String data, String handlerName) {
+        int len = data.length();
+        int total = len / MAX_RESPONSE_MESSAGES_SIZE;
+        if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
+            total++;
+        }
+        if (total > 1) {
+            Log.d(BridgeUtil.TAG, "createSend page " + total + ", " + callbackId);
+            Message[] messages = new Message[total];
+            int i = 1;
+            int curSize = 0;
+            for (; i < total ;i++) {
+                messages[i - 1] = createSendPage(callbackId, data.substring(curSize, curSize + MAX_RESPONSE_MESSAGES_SIZE), handlerName, i, total);
+                curSize = curSize + MAX_RESPONSE_MESSAGES_SIZE;
+            }
+            messages[i - 1] = createSendPage(callbackId, data.substring(curSize), handlerName, i, total);
+            return messages;
+        } else {
+            Log.d(BridgeUtil.TAG, "createSend no page, " + callbackId);
+            return new Message[] {createSendDirectly(callbackId, data, handlerName)};
+        }
+    }
+
+    private static Message createResponseDirectly(String responseId, String responseData) {
+        Message responseMsg = new Message();
+        responseMsg.setResponseId(responseId);
+        responseMsg.setResponseData(responseData);
+        return responseMsg;
+    }
+
+    private static Message createResponsePage(String responseId, String responseData, int pageIndex, int pageTotal) {
+        Message responseMsg = new Message();
+        responseMsg.setResponseId(responseId);
+        responseMsg.setResponseData(responseData);
+        responseMsg.pageTotal = pageTotal;
+        responseMsg.pageIndex = pageIndex;
+        return responseMsg;
+    }
+
+    public static Message[] createResponse(String data, String responseId) {
+        int len = data.length();
+        int total = len / MAX_RESPONSE_MESSAGES_SIZE;
+        if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
+            total++;
+        }
+        if (total > 1) {
+            Log.d(BridgeUtil.TAG, "createResponse page " + total + ", " + responseId);
+            Message[] messages = new Message[total];
+            int i = 1;
+            int curSize = 0;
+            for (; i < total ;i++) {
+                messages[i - 1] = createResponsePage(responseId, data.substring(curSize, curSize + MAX_RESPONSE_MESSAGES_SIZE), i, total);
+                curSize = curSize + MAX_RESPONSE_MESSAGES_SIZE;
+            }
+            messages[i - 1] = createResponsePage(responseId, data.substring(curSize), i, total);
+            return messages;
+        } else {
+            Log.d(BridgeUtil.TAG, "createResponse no page, " + responseId);
+            return new Message[] {createResponseDirectly(responseId, data)};
+        }
+    }
 
     private final static String CALLBACK_ID_STR = "callbackId";
     private final static String RESPONSE_ID_STR = "responseId";
-    private final static String PAGE_MASK_STR = "pageMask";
-    private final static String PAGE_INDEX_STR = "pageIndex";
-    private final static String PAGE_TOTAL_STR = "pageTotal";
     private final static String RESPONSE_DATA_STR = "responseData";
     private final static String DATA_STR = "data";
     private final static String HANDLER_NAME_STR = "handlerName";
+
+    private final static String PAGE_TOTAL_STR = "pageTotal";
+    private final static String PAGE_INDEX_STR = "pageIndex";
 
     public String getResponseId() {
         return responseId;
@@ -66,46 +161,20 @@ public class Message {
         this.handlerName = handlerName;
     }
 
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public String getPageMask() {
-        return pageMask;
-    }
-    public void setPageMask(String pageMask) {
-        this.pageMask = pageMask;
-    }
-
-    public Integer getPageTotal() {
-        return pageTotal;
-    }
-    public void setPageTotal(Integer pageTotal) {
-        this.pageTotal = pageTotal;
-    }
-
     public String toJson() {
         JSONObject jsonObject= new JSONObject();
         try {
-            if(getCallbackId() != null) jsonObject.put(CALLBACK_ID_STR, getCallbackId());
+            jsonObject.put(CALLBACK_ID_STR, getCallbackId());
             jsonObject.put(DATA_STR, getData());
             jsonObject.put(HANDLER_NAME_STR, getHandlerName());
             jsonObject.put(RESPONSE_DATA_STR, getResponseData());
             jsonObject.put(RESPONSE_ID_STR, getResponseId());
 
-            if (getPageTotal() != null) {
-                jsonObject.put(PAGE_TOTAL_STR, getPageTotal());
+            if (pageTotal != null) {
+                jsonObject.put(PAGE_TOTAL_STR, pageTotal);
             }
-
-            if (getPageMask() != null) {
-                jsonObject.put(PAGE_MASK_STR, getPageMask());
-            }
-
-            if (getPageIndex() != null) {
-                jsonObject.put(PAGE_INDEX_STR, getPageIndex());
+            if (pageIndex != null) {
+                jsonObject.put(PAGE_INDEX_STR, pageIndex);
             }
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -114,27 +183,24 @@ public class Message {
         return null;
     }
 
-    public static Message toObject(JSONObject jsonObject) throws JSONException {
-        Message m =  new Message();
-        m.setHandlerName(jsonObject.has(HANDLER_NAME_STR) ? jsonObject.getString(HANDLER_NAME_STR):null);
-        m.setCallbackId(jsonObject.has(CALLBACK_ID_STR) ? jsonObject.getString(CALLBACK_ID_STR):null);
-        m.setResponseData(jsonObject.has(RESPONSE_DATA_STR) ? jsonObject.getString(RESPONSE_DATA_STR):null);
-        m.setResponseId(jsonObject.has(RESPONSE_ID_STR) ? jsonObject.getString(RESPONSE_ID_STR):null);
-        m.setData(jsonObject.has(DATA_STR) ? jsonObject.getString(DATA_STR):null);
-
-        m.setPageMask(jsonObject.has(PAGE_MASK_STR) ? jsonObject.getString(PAGE_MASK_STR) : null);
-        m.setPageIndex(jsonObject.has(PAGE_INDEX_STR) ? jsonObject.getInt(PAGE_INDEX_STR) : null);
-        m.setPageTotal(jsonObject.has(PAGE_TOTAL_STR) ? jsonObject.getInt(PAGE_TOTAL_STR) : null);
-        return m;
-    }
-
-    public static List<Message> toArrayList(String jsonStr){
+    public static List<Message> toArrayList(String jsonStr) {
         List<Message> list = new ArrayList<Message>();
         try {
             JSONArray jsonArray = new JSONArray(jsonStr);
             for(int i = 0; i < jsonArray.length(); i++){
+                Message m = new Message();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Message m = toObject(jsonObject);
+                m.setHandlerName(jsonObject.has(HANDLER_NAME_STR) ? jsonObject.getString(HANDLER_NAME_STR):null);
+                m.setCallbackId(jsonObject.has(CALLBACK_ID_STR) ? jsonObject.getString(CALLBACK_ID_STR):null);
+                m.setResponseData(jsonObject.has(RESPONSE_DATA_STR) ? jsonObject.getString(RESPONSE_DATA_STR):null);
+                m.setResponseId(jsonObject.has(RESPONSE_ID_STR) ? jsonObject.getString(RESPONSE_ID_STR):null);
+                m.setData(jsonObject.has(DATA_STR) ? jsonObject.getString(DATA_STR):null);
+                if (jsonObject.has(PAGE_INDEX_STR)) {
+                    m.pageIndex = jsonObject.getInt(PAGE_INDEX_STR);
+                }
+                if (jsonObject.has(PAGE_TOTAL_STR)) {
+                    m.pageTotal = jsonObject.getInt(PAGE_TOTAL_STR);
+                }
                 list.add(m);
             }
         } catch (JSONException e) {

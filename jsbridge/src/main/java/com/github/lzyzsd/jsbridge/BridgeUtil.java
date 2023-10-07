@@ -19,7 +19,6 @@ public class BridgeUtil {
     final static String SPLIT_MARK = "/";
 
     final static String CALLBACK_ID_FORMAT = "JAVA_CB_%s";
-    final static String PAGE_MASK_FORMAT = "JAVA_PAGE_MASK_%s";
     final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:WebViewJavascriptBridge._handleMessageFromNative('%s');";
     final static String JS_FETCH_QUEUE_FROM_JAVA = "javascript:WebViewJavascriptBridge._fetchQueue();";
     public final static String JAVASCRIPT_STR = "javascript:";
