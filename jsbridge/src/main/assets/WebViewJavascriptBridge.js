@@ -165,7 +165,7 @@
                 //追加处理分页
                 if (message.pageTotal) {
                     logd("_dispatchMessageFromNative responseId pageTotal " + message.pageIndex + "/" + message.pageTotal);
-                    if (message.pageIndex == 0) {
+                    if (message.pageIndex == 1) {
                         responseMessagesPageMap[rid] = message.responseData;
                     } else if (message.pageIndex < message.pageTotal) {
                         responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
@@ -182,7 +182,7 @@
                 //追加处理分页
                 if (message.pageTotal) {
                     logw("_dispatchMessageFromNative send pageTotal " + message.pageIndex + "/" + message.pageTotal);
-                    if (message.pageIndex == 0) {
+                    if (message.pageIndex == 1) {
                         sendMessagesPageMap[cid] = message.data;
                     } else if (message.pageIndex < message.pageTotal) {
                         sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;

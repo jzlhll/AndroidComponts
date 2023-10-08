@@ -27,7 +27,8 @@ public class Message {
     public Integer pageTotal = null; //总共的页数.使用Integer来可以当空使用。则与之前无异。
     public Integer pageIndex = null; //当前页数。使用Integer来可以当空使用。则与之前无异。
 
-    private static final int MAX_RESPONSE_MESSAGES_SIZE = 800 * 1024; //最大其实只允许2MB。
+    private static final int MAX_RESPONSE_MESSAGE_SIZE = 1024 * 1024; //最大其实只允许2MB。
+    private static final int MAX_SEND_MESSAGE_SIZE = 800 * 1024; //最大其实只允许2MB。
 
     private static Message createSendDirectly(String callbackId, String data, String handlerName) {
         Message m = new Message();
@@ -60,9 +61,10 @@ public class Message {
     }
 
     public static Message[] createSend(String callbackId, String data, String handlerName) {
+        int maxSize = MAX_SEND_MESSAGE_SIZE;
         int len = data.length();
-        int total = len / MAX_RESPONSE_MESSAGES_SIZE;
-        if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
+        int total = len / MAX_SEND_MESSAGE_SIZE;
+        if (len % maxSize > 0) {
             total++;
         }
 
@@ -73,8 +75,8 @@ public class Message {
             int i = 1;
             int curSize = 0;
             for (; i < total ;i++) {
-                messages[i - 1] = createSendPage(callbackId, data.substring(curSize, curSize + MAX_RESPONSE_MESSAGES_SIZE), handlerName, i, total);
-                curSize = curSize + MAX_RESPONSE_MESSAGES_SIZE;
+                messages[i - 1] = createSendPage(callbackId, data.substring(curSize, curSize + maxSize), handlerName, i, total);
+                curSize = curSize + maxSize;
             }
             messages[i - 1] = createSendPage(callbackId, data.substring(curSize), handlerName, i, total);
             return messages;
@@ -101,10 +103,11 @@ public class Message {
     }
 
     public static Message[] createResponse(String data, String responseId) {
+        int maxSize = MAX_RESPONSE_MESSAGE_SIZE;
         int len = data.length();
         Log.d(BridgeUtil.TAG, "createResponse: " + len);
-        int total = len / MAX_RESPONSE_MESSAGES_SIZE;
-        if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
+        int total = len / maxSize;
+        if (len % maxSize > 0) {
             total++;
         }
         if (total > 1) {
@@ -113,8 +116,8 @@ public class Message {
             int i = 1;
             int curSize = 0;
             for (; i < total ;i++) {
-                messages[i - 1] = createResponsePage(responseId, data.substring(curSize, curSize + MAX_RESPONSE_MESSAGES_SIZE), i, total);
-                curSize = curSize + MAX_RESPONSE_MESSAGES_SIZE;
+                messages[i - 1] = createResponsePage(responseId, data.substring(curSize, curSize + maxSize), i, total);
+                curSize = curSize + maxSize;
             }
             messages[i - 1] = createResponsePage(responseId, data.substring(curSize), i, total);
             return messages;
