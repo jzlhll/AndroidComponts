@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
@@ -19,11 +20,11 @@ import java.util.Map;
 @SuppressLint("SetJavaScriptEnabled")
 public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 
-    private final String TAG = "BridgeWebView";
+    public final String TAG = BridgeUtil.TAG;
 
     public static final String toLoadJs = "WebViewJavascriptBridge.js";
-    private Map<String, CallBackFunction> responseCallbacks = new HashMap<String, CallBackFunction>();
-    private Map<String, BridgeHandler> messageHandlers = new HashMap<String, BridgeHandler>();
+    private final Map<String, CallBackFunction> responseCallbacks = new HashMap<String, CallBackFunction>();
+    private final Map<String, BridgeHandler> messageHandlers = new HashMap<String, BridgeHandler>();
     BridgeHandler defaultHandler = new DefaultHandler();
 
     private List<Message> startupMessage = new ArrayList<Message>();
@@ -67,10 +68,12 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
         this.getSettings().setJavaScriptEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        WebView.setWebContentsDebuggingEnabled(true);
         this.setWebViewClient(generateBridgeWebViewClient());
+
+        registerHandler("logd", (data, function) -> Log.d(BridgeUtil.TAG, "<HtmlJSLog> " + data));
+        registerHandler("logw", (data, function) -> Log.w(BridgeUtil.TAG, "<HtmlJSLog> " + data));
+        registerHandler("loge", (data, function) -> Log.e(BridgeUtil.TAG, "<HtmlJSLog> " + data));
     }
 
     protected BridgeWebViewClient generateBridgeWebViewClient() {
@@ -128,6 +131,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         messageJson = messageJson.replaceAll("(?<=[^\\\\])(\")", "\\\\\"");
         String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            Log.d(TAG, "dispatchMessage: " + messageJson);
             this.loadUrl(javascriptCommand);
         }
     }
@@ -151,11 +155,12 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
                         final String callbackId = m.getCallbackId();
                         if (!TextUtils.isEmpty(callbackId)) {
                             responseFunction = dat -> {
-                                queueMessage(Message.createResponse(callbackId, dat));
+                                queueMessage(Message.createResponse(dat, callbackId));
                             };
                         } else {
                             responseFunction = dat -> {
                                 // do nothing
+                                Log.d(TAG, "do nothing in responseFunction");
                             };
                         }
                         BridgeHandler handler;

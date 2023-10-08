@@ -17,7 +17,6 @@ import com.au.module_android.utils.ignoreError
 abstract class BaseViewActivity : AppCompatActivity(), ICommon {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
-        const val KEY_XML_LAYOUT_ID = "intent_xml_layout_id"
     }
 
     protected open val isNotCacheFragment = true //不进行自动保存Fragment用于恢复。

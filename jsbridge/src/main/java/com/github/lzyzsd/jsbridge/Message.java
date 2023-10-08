@@ -27,7 +27,7 @@ public class Message {
     public Integer pageTotal = null; //总共的页数.使用Integer来可以当空使用。则与之前无异。
     public Integer pageIndex = null; //当前页数。使用Integer来可以当空使用。则与之前无异。
 
-    private static final int MAX_RESPONSE_MESSAGES_SIZE = 500 * 1024; //500KB. 最大其实只允许2MB。
+    private static final int MAX_RESPONSE_MESSAGES_SIZE = 800 * 1024; //最大其实只允许2MB。
 
     private static Message createSendDirectly(String callbackId, String data, String handlerName) {
         Message m = new Message();
@@ -65,6 +65,8 @@ public class Message {
         if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
             total++;
         }
+
+        Log.d(BridgeUtil.TAG, "createSend: " + len);
         if (total > 1) {
             Log.d(BridgeUtil.TAG, "createSend page " + total + ", " + callbackId);
             Message[] messages = new Message[total];
@@ -100,6 +102,7 @@ public class Message {
 
     public static Message[] createResponse(String data, String responseId) {
         int len = data.length();
+        Log.d(BridgeUtil.TAG, "createResponse: " + len);
         int total = len / MAX_RESPONSE_MESSAGES_SIZE;
         if (len % MAX_RESPONSE_MESSAGES_SIZE > 0) {
             total++;

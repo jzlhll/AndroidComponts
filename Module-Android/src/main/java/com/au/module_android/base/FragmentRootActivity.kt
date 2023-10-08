@@ -72,7 +72,7 @@ class FragmentRootActivity : BaseViewActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        //v.id = View.generateViewId()
+        v.id = View.generateViewId()
         val fragmentClass = intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment>
         val instance = fragmentClass.getDeclaredConstructor().newInstance()
         instance.arguments = intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS)

@@ -44,10 +44,30 @@
         return false;
     }
 
+    function logd(s) {
+        _doSend({
+                handlerName: 'logd',
+                data: s
+            });
+    }
+    function loge(s) {
+        _doSend({
+                handlerName: 'loge',
+                data: s
+            });
+    }
+    function logw(s) {
+        _doSend({
+                handlerName: 'logw',
+                data: s
+            });
+    }
+
     //set default messageHandler
     function init(messageHandler) {
         if (WebViewJavascriptBridge._messageHandler) {
-            throw new Error('WebViewJavascriptBridge.init called twice');
+            //throw new Error('WebViewJavascriptBridge.init called twice');
+            return;
         }
         WebViewJavascriptBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
@@ -100,7 +120,7 @@
     }
 
     function _dispatchMessageFromNativeResponse(responseId, responseData) {
-        responseCallback = responseCallbacks[responseId];
+        var responseCallback = responseCallbacks[responseId];
         if (!responseCallback) {
             return;
         }
@@ -135,56 +155,43 @@
         }
     }
 
-    function log(s1, s2) {
-        if (typeof console != 'undefined') {
-            console.log(s1, s2);
-        }
-    }
-
-    function log(s1) {
-        if (typeof console != 'undefined') {
-            console.log(s1);
-        }
-    }
-
     //提供给native使用,
     function _dispatchMessageFromNative(messageJSON) {
         setTimeout(function() {
             var message = JSON.parse(messageJSON);
             //java call finished, now need to call js callback function
             if (message.responseId) {
-                log("_dispatchMessageFromNative responseId ", message.responseId);
                 var rid = message.responseId;
                 //追加处理分页
-                if (message.pageTotal && message.pageTotal > 0) {
-                    log("_dispatchMessageFromNative responseId has page!");
+                if (message.pageTotal) {
+                    logd("_dispatchMessageFromNative responseId pageTotal " + message.pageIndex + "/" + message.pageTotal);
                     if (message.pageIndex == 0) {
                         responseMessagesPageMap[rid] = message.responseData;
                     } else if (message.pageIndex < message.pageTotal) {
                         responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
                     } else {
                         _dispatchMessageFromNativeResponse(rid, responseMessagesPageMap[rid] + message.responseData);
-                        responseMessagesPageMap[rid] = null;
+                        //responseMessagesPageMap[rid] = null;
                     }
                 } else {
-                    log("_dispatchMessageFromNative responseId no page");
+                    logd("_dispatchMessageFromNative responseId no page");
                     _dispatchMessageFromNativeResponse(rid, message.responseData);
                 }
             } else {
                 var cid = message.callbackId;
                 //追加处理分页
-                if (message.pageTotal && message.pageTotal > 0) {
-                    log("_dispatchMessageFromNative callbackId has page!")
+                if (message.pageTotal) {
+                    logd("_dispatchMessageFromNative send pageTotal " + message.pageIndex + "/" + message.pageTotal);
                     if (message.pageIndex == 0) {
                         sendMessagesPageMap[cid] = message.data;
                     } else if (message.pageIndex < message.pageTotal) {
                         sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;
                     } else {
                         _dispatchMessageFromNativeSend(cid, message.handlerName, sendMessagesPageMap[cid] + message.data);
-                        sendMessagesPageMap[cid] = null;
+                        //sendMessagesPageMap[cid] = null;
                     }
                 } else {
-                    log("_dispatchMessageFromNative callbackId no page");
+                    logd("_dispatchMessageFromNative send no page");
                     _dispatchMessageFromNativeSend(cid, message.handlerName, message.data);
                 }
             }
@@ -194,8 +201,10 @@
     //提供给native调用,receiveMessageQueue 在会在页面加载完后赋值为null,所以
     function _handleMessageFromNative(messageJSON) {
         if (receiveMessageQueue) {
+            logw("_handleMessageFromNative1");
             receiveMessageQueue.push(messageJSON);
         } else {
+            logw("_handleMessageFromNative2");
             _dispatchMessageFromNative(messageJSON);
         }
     }
@@ -203,6 +212,9 @@
     var WebViewJavascriptBridge = window.WebViewJavascriptBridge = {
         init: init,
         send: send,
+        logd: logd,
+        loge: loge,
+        logw: logw,
         registerHandler: registerHandler,
         callHandler: callHandler,
         _fetchQueue: _fetchQueue,

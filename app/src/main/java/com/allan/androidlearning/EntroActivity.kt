@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
+import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.arct.BaseBindingActivity
 import com.au.module_android.base.FragmentRootActivity
@@ -18,6 +19,7 @@ class EntroActivity : BaseBindingActivity<ActivityEntroBinding>() {
 
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
         listOf(FontTestFragment::class.java,
+            WebBridgeFragment::class.java,
             LiveDataFragment::class.java)
     }
 

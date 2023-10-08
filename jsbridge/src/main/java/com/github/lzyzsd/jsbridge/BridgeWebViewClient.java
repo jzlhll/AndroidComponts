@@ -43,7 +43,7 @@ public class BridgeWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         var url = request.getUrl().toString();
-        Log.d(BridgeUtil.TAG, "shouldOverrideUrlLoading: $url");
+        //Log.d(BridgeUtil.TAG, "shouldOverride UrlLoading: " + url);
         try {
             url = URLDecoder.decode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -84,7 +84,9 @@ public class BridgeWebViewClient extends WebViewClient {
     }
 
     private void loadJs(WebView view) {
+        Log.d(BridgeUtil.TAG, "load js!!");
         BridgeUtil.webViewLoadLocalJs(view, BridgeWebView.toLoadJs);
+        Log.d(BridgeUtil.TAG, "load js end!!");
 
         if (webView.getStartupMessage() != null) {
             for (Message m : webView.getStartupMessage()) {
