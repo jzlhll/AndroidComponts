@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
@@ -60,28 +59,18 @@ interface IUi {
     }
 
     /**
-     * onCommonCreateView的替代版。
-     * 不想使用泛型。则泛型ViewBinding，使用ViewBinding。通过该函数传入View当做界面的root。
-     */
-    fun onCreatingView(inflater: LayoutInflater,
-                       container: ViewGroup? = null,
-                       savedInstanceState: Bundle? = null) : View
-
-    /**
-     * 当view创建完毕。
-     * @param view 就是onCommonCreateView创建的view
-     */
-    fun onAfterCreatedView(
-        owner: LifecycleOwner,
-        savedInstanceState: Bundle?,
-        resources: Resources
-    )
-
-    /**
      * 检查是否是竖屏的。
      */
     fun checkScreenRotationIsPort(resources: Resources): Boolean {
         val metrics = resources.displayMetrics
         return metrics.widthPixels < metrics.heightPixels
     }
+
+    /**
+     * onCommonCreateView的替代版。
+     * 不想使用泛型。则泛型ViewBinding，使用ViewBinding。通过该函数传入View当做界面的root。
+     */
+    fun creatingView(inflater: LayoutInflater,
+                              container: ViewGroup? = null,
+                              savedInstanceState: Bundle? = null) : View
 }

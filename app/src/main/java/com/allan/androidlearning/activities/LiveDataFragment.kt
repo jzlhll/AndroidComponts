@@ -1,6 +1,5 @@
 package com.allan.androidlearning.activities
 
-import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
@@ -9,19 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.databinding.ActivityLiveDataBinding
 import com.allan.androidlearning.utils.logm
 import com.allan.androidlearning.utils.testGsonData
-import com.au.module_android.ui.AbsBindingFragment
 import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.ui.AbsBindingFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
-    override fun onAfterCreatedView(
-        owner: LifecycleOwner,
-        savedInstanceState: Bundle?,
-        resources: Resources,
-    ) {
+    override fun onAfterCreatedViewBinding(owner: LifecycleOwner, savedInstanceState: Bundle?, viewBinding: ActivityLiveDataBinding) {
         //liveData 是粘性的。只有有值，一个直接observe进来的监听者立刻得到回调
         viewModel.noStickData.observe(this) {
             logm("noStickLiveData receiver: $it")
@@ -30,7 +25,7 @@ class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
             logm("noStickLiveDefData receiver: $it")
         }
 
-        binding.changeBtn.setOnClickListener {
+        viewBinding.changeBtn.setOnClickListener {
             viewModel.changeData()
         }
 

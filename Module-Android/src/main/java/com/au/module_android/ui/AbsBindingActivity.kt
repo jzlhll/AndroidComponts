@@ -12,12 +12,13 @@ import com.au.module_android.ui.IUi.Companion.createViewBinding
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class AbsBindingActivity<VB: ViewBinding> : AbsViewActivity() {
+abstract class AbsBindingActivity<VB: ViewBinding> : AbsActivity(), IUiViewBinding<VB> {
     lateinit var binding:VB
 
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    final override fun creatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
+        onAfterCreatedViewBinding(this, savedInstanceState, vb)
         return vb.root
     }
 }

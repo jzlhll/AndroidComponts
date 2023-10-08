@@ -23,11 +23,7 @@ class EntroActivity : AbsBindingActivity<ActivityEntroBinding>() {
             LiveDataFragment::class.java)
     }
 
-    override fun onAfterCreatedView(
-        owner: LifecycleOwner,
-        savedInstanceState: Bundle?,
-        resources: Resources
-    ) {
+    override fun onAfterCreatedViewBinding(owner: LifecycleOwner, savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
         setSupportActionBar(findViewById(R.id.toolbar))
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)
@@ -35,9 +31,8 @@ class EntroActivity : AbsBindingActivity<ActivityEntroBinding>() {
             btn.onClick {
                 FragmentRootActivity.start(this, fragmentClass)
             }
-            binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            viewBinding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
-        binding.buttonsHost
+        viewBinding.buttonsHost
     }
-
 }
