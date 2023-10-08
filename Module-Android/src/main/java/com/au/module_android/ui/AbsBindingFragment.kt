@@ -11,7 +11,7 @@ import androidx.viewbinding.ViewBinding
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BaseBindingFragment<VB:ViewBinding> : BaseViewFragment() {
+abstract class AbsBindingFragment<VB:ViewBinding> : AbsViewFragment() {
     lateinit var binding:VB
 
     final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

@@ -19,7 +19,7 @@ import com.allan.nested.layout.NestedRecyclerViewLayout
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
 import com.allan.nested.recyclerview.BaseAdapter
-import com.au.module_android.ui.BaseViewFragment
+import com.au.module_android.ui.AbsViewFragment
 
 /**
  * @author allan.jiang
@@ -27,7 +27,7 @@ import com.au.module_android.ui.BaseViewFragment
  * Description 使用NestedRecyclerViewLayout作为基础布局。
  *
  */
-abstract class NestedRecyclerFragment : BaseViewFragment() {
+abstract class NestedRecyclerFragment : AbsViewFragment() {
     val nestedLayout by unsafeLazy {
         NestedRecyclerViewLayout(requireContext()).also {
             it.layoutParams = ViewGroup.LayoutParams(

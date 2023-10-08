@@ -2,7 +2,6 @@ package com.au.module_android.base
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,16 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
-import com.au.module_android.ui.BaseViewActivity
+import com.au.module_android.ui.AbsViewActivity
 import com.au.module_android.permissions.IPermission
-import com.au.module_android.permissions.OwnerForResult
 
 /**
  * @author allan.jiang
  * Date: 2023/8/29
  * Description 限制
  */
-class FragmentRootActivity : BaseViewActivity() {
+class FragmentRootActivity : AbsViewActivity() {
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"

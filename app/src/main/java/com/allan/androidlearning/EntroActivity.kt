@@ -9,13 +9,13 @@ import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
-import com.au.module_android.ui.BaseBindingActivity
+import com.au.module_android.ui.AbsBindingActivity
 import com.au.module_android.base.FragmentRootActivity
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.unsafeLazy
 import com.google.android.material.button.MaterialButton
 
-class EntroActivity : BaseBindingActivity<ActivityEntroBinding>() {
+class EntroActivity : AbsBindingActivity<ActivityEntroBinding>() {
 
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
         listOf(FontTestFragment::class.java,

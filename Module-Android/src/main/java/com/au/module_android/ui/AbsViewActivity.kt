@@ -14,7 +14,7 @@ import com.au.module_android.utils.ignoreError
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BaseViewActivity : AppCompatActivity(), IUi {
+abstract class AbsViewActivity : AppCompatActivity(), IUi {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }

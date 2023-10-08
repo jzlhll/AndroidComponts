@@ -12,7 +12,7 @@ import com.au.module_android.ui.IUi.Companion.createViewBinding
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BaseBindingActivity<VB: ViewBinding> : BaseViewActivity() {
+abstract class AbsBindingActivity<VB: ViewBinding> : AbsViewActivity() {
     lateinit var binding:VB
 
     override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

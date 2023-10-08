@@ -132,7 +132,6 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
             this.loadUrl(javascriptCommand);
-            evaluateJavascript();
         }
     }
 

@@ -9,14 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.databinding.ActivityLiveDataBinding
 import com.allan.androidlearning.utils.logm
 import com.allan.androidlearning.utils.testGsonData
-import com.au.module_android.ui.BaseBindingFragment
+import com.au.module_android.ui.AbsBindingFragment
 import com.au.module_android.simplelivedata.NoStickLiveData
-import com.au.module_android.simplelivedata.StatusLiveData
-import com.au.module_android.simplelivedata.StatusNoStickLiveData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LiveDataFragment : BaseBindingFragment<ActivityLiveDataBinding>() {
+class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
     override fun onAfterCreatedView(

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BaseViewFragment : Fragment(), IUi {
+abstract class AbsViewFragment : Fragment(), IUi {
     var root:View? = null
 
     /**

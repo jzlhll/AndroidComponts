@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.allan.androidlearning.databinding.ActivityJsHtmlBinding
-import com.au.module_android.ui.BaseBindingFragment
+import com.au.module_android.ui.AbsBindingFragment
 import com.au.module_android.click.onClick
 import com.github.lzyzsd.jsbridge.BridgeUtil
 import com.github.lzyzsd.jsbridge.DefaultHandler
@@ -16,7 +16,7 @@ import com.google.gson.Gson
  * @date :2023/10/8 10:26
  * @description:
  */
-class WebBridgeFragment : BaseBindingFragment<ActivityJsHtmlBinding>() {
+class WebBridgeFragment : AbsBindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1
 

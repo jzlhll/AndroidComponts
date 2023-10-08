@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
  * 简化和传入复杂的参数类型。
  * 主要使用场景为做为整个activity的唯一。
  */
-abstract class ParamsBindingFragment<Binding : ViewBinding> : BaseBindingFragment<Binding>() {
+abstract class ParamsBindingFragment<Binding : ViewBinding> : AbsBindingFragment<Binding>() {
 
     companion object {
         val paramsMap = ConcurrentHashMap<String, Any>()
