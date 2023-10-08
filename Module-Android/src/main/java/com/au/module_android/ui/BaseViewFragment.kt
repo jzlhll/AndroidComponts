@@ -1,4 +1,4 @@
-package com.au.module_android.arct
+package com.au.module_android.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BaseViewFragment : Fragment(), ICommon {
+abstract class BaseViewFragment : Fragment(), IUi {
     var root:View? = null
 
     /**
@@ -23,7 +23,7 @@ abstract class BaseViewFragment : Fragment(), ICommon {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return onCommonCreateView(layoutInflater, null, savedInstanceState).also { root = it }
+        return onCreatingView(layoutInflater, null, savedInstanceState).also { root = it }
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class BaseViewFragment : Fragment(), ICommon {
                 }
             }
         })
-        onCommonAfterCreateView(this, savedInstanceState, resources)
+        onAfterCreatedView(this, savedInstanceState, resources)
     }
 
     /**

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.arct.BaseViewActivity
+import com.au.module_android.ui.BaseViewActivity
 
 class NormalViewActivity : BaseViewActivity() {
     companion object {
@@ -26,7 +26,7 @@ class NormalViewActivity : BaseViewActivity() {
         }
     }
 
-    override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val mask = intent.getStringExtra(KEY_INTENT_MASK)
         val mask2 = intent.getStringExtra(KEY_INTENT_MASK2)
         val supply = actionMap.remove(mask + "_" + mask2) ?: throw RuntimeException("NormalViewActivity has no mask.")

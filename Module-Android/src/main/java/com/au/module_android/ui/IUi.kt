@@ -1,4 +1,4 @@
-package com.au.module_android.arct
+package com.au.module_android.ui
 
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType
 /**
  * 指导合并Fragment，activity，Dialog等主界面生命周期
  */
-interface ICommon {
+interface IUi {
     companion object {
         /**
          * 将class转为ParameterizedType，方便获取此类的类泛型
@@ -63,19 +63,19 @@ interface ICommon {
      * onCommonCreateView的替代版。
      * 不想使用泛型。则泛型ViewBinding，使用ViewBinding。通过该函数传入View当做界面的root。
      */
-    fun onCommonCreateView(inflater: LayoutInflater,
-                           container: ViewGroup? = null,
-                           savedInstanceState: Bundle? = null) : View
+    fun onCreatingView(inflater: LayoutInflater,
+                       container: ViewGroup? = null,
+                       savedInstanceState: Bundle? = null) : View
 
     /**
      * 当view创建完毕。
      * @param view 就是onCommonCreateView创建的view
      */
-    fun onCommonAfterCreateView(
+    fun onAfterCreatedView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
         resources: Resources
-    ) {}
+    )
 
     /**
      * 检查是否是竖屏的。

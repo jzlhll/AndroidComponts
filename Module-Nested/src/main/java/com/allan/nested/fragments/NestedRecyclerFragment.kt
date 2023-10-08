@@ -19,7 +19,7 @@ import com.allan.nested.layout.NestedRecyclerViewLayout
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
 import com.allan.nested.recyclerview.BaseAdapter
-import com.au.module_android.arct.BaseViewFragment
+import com.au.module_android.ui.BaseViewFragment
 
 /**
  * @author allan.jiang
@@ -57,7 +57,7 @@ abstract class NestedRecyclerFragment : BaseViewFragment() {
         rcv.clipToPadding = false
     }
 
-    override fun onCommonAfterCreateView(
+    override fun onAfterCreatedView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
         resources: Resources
@@ -66,7 +66,7 @@ abstract class NestedRecyclerFragment : BaseViewFragment() {
         nestedLayout.recyclerView.adapter = adapter
     }
 
-    override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return nestedLayout
     }
 

@@ -1,11 +1,9 @@
-package com.au.module_android.arct
+package com.au.module_android.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 /**
@@ -16,8 +14,8 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseBindingFragment<VB:ViewBinding> : BaseViewFragment() {
     lateinit var binding:VB
 
-    final override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val vb = ICommon.createViewBinding(javaClass, inflater, container, false) as VB
+    final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val vb = IUi.createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root
     }

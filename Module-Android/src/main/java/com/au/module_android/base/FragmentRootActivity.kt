@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
-import com.au.module_android.arct.BaseViewActivity
+import com.au.module_android.ui.BaseViewActivity
 import com.au.module_android.permissions.IPermission
 import com.au.module_android.permissions.OwnerForResult
 
@@ -66,7 +66,7 @@ class FragmentRootActivity : BaseViewActivity() {
         }
     }
 
-    override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v = FragmentContainerView(inflater.context)
         v.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,

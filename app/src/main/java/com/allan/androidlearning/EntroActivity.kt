@@ -9,7 +9,7 @@ import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
-import com.au.module_android.arct.BaseBindingActivity
+import com.au.module_android.ui.BaseBindingActivity
 import com.au.module_android.base.FragmentRootActivity
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.unsafeLazy
@@ -23,7 +23,7 @@ class EntroActivity : BaseBindingActivity<ActivityEntroBinding>() {
             LiveDataFragment::class.java)
     }
 
-    override fun onCommonAfterCreateView(
+    override fun onAfterCreatedView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
         resources: Resources

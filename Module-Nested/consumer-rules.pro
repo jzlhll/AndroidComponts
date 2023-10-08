@@ -1,2 +1,2 @@
--keep public class com.typhur.module.nested.layout.* { *; }
--keep public class com.typhur.module.nested.widget.* { *; }
+-keep public class com.allan.nested.layout.* { *; }
+-keep public class com.allan.nested.widget.* { *; }

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.databinding.ActivityLiveDataBinding
 import com.allan.androidlearning.utils.logm
 import com.allan.androidlearning.utils.testGsonData
-import com.au.module_android.arct.BaseBindingFragment
+import com.au.module_android.ui.BaseBindingFragment
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.simplelivedata.StatusLiveData
 import com.au.module_android.simplelivedata.StatusNoStickLiveData
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class LiveDataFragment : BaseBindingFragment<ActivityLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
-    override fun onCommonAfterCreateView(
+    override fun onAfterCreatedView(
         owner: LifecycleOwner,
         savedInstanceState: Bundle?,
         resources: Resources,

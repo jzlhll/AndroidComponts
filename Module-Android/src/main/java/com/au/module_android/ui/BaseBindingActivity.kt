@@ -1,11 +1,11 @@
-package com.au.module_android.arct
+package com.au.module_android.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.arct.ICommon.Companion.createViewBinding
+import com.au.module_android.ui.IUi.Companion.createViewBinding
 
 /**
  * @author allan.jiang
@@ -15,7 +15,7 @@ import com.au.module_android.arct.ICommon.Companion.createViewBinding
 abstract class BaseBindingActivity<VB: ViewBinding> : BaseViewActivity() {
     lateinit var binding:VB
 
-    override fun onCommonCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root

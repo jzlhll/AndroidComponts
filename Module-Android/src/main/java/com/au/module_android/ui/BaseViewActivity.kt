@@ -1,4 +1,4 @@
-package com.au.module_android.arct
+package com.au.module_android.ui
 
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -14,7 +14,7 @@ import com.au.module_android.utils.ignoreError
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BaseViewActivity : AppCompatActivity(), ICommon {
+abstract class BaseViewActivity : AppCompatActivity(), IUi {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }
@@ -42,9 +42,9 @@ abstract class BaseViewActivity : AppCompatActivity(), ICommon {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
-        root = onCommonCreateView(layoutInflater, null, savedInstanceState)
+        root = onCreatingView(layoutInflater, null, savedInstanceState)
         setContentView(root)
-        onCommonAfterCreateView(this, savedInstanceState, resources)
+        onAfterCreatedView(this, savedInstanceState, resources)
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

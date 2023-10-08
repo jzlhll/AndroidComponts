@@ -34,7 +34,7 @@ private fun Bundle.putAny(key:String, value:Any, isThrowException: Boolean = tru
                             "Illegal value array type $valueType"
                         )
                     } else {
-                        Log.e("typhur_firebase", "Illegal value array type $valueType")
+                        Log.e("allan", "Illegal value array type $valueType")
                     }
                 }
             }
@@ -43,7 +43,7 @@ private fun Bundle.putAny(key:String, value:Any, isThrowException: Boolean = tru
             if (isThrowException) {
                 throw IllegalArgumentException("Illegal value type List please use Array.")
             } else {
-                Log.e("typhur_firebase", "Illegal value type List please use Array.")
+                Log.e("allan", "Illegal value type List please use Array.")
             }
         }
         // Last resort. Also we must check this after Array<*> as all arrays are serializable.
@@ -68,7 +68,7 @@ private fun Bundle.putAny(key:String, value:Any, isThrowException: Boolean = tru
             if (isThrowException) {
                 throw IllegalArgumentException("Illegal value type $valueType ")
             } else {
-                Log.e("typhur_firebase", "Illegal value type $valueType ")
+                Log.e("allan", "Illegal value type $valueType ")
             }
         }
     }

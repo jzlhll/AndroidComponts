@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.allan.androidlearning.databinding.ActivityJsHtmlBinding
-import com.au.module_android.arct.BaseBindingFragment
+import com.au.module_android.ui.BaseBindingFragment
 import com.au.module_android.click.onClick
 import com.github.lzyzsd.jsbridge.BridgeUtil
 import com.github.lzyzsd.jsbridge.DefaultHandler
@@ -20,7 +20,7 @@ class WebBridgeFragment : BaseBindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1
 
-    override fun onCommonAfterCreateView(owner: LifecycleOwner, savedInstanceState: Bundle?, resources: Resources) {
+    override fun onAfterCreatedView(owner: LifecycleOwner, savedInstanceState: Bundle?, resources: Resources) {
         binding.button.onClick {
             binding.webView.callHandler("registerNative",
                 "jkadfjkfadjkfjk djkfj1290309 ajdfk mkadf12893918 " +
