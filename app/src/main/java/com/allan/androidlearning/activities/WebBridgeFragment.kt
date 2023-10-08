@@ -30,6 +30,12 @@ class WebBridgeFragment : BaseBindingFragment<ActivityJsHtmlBinding>() {
                         "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803 jadf adfasdf asdf dasfasd f" +
                         "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803 jadf adfasdf asdf adfdaf a afds" +
                         "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
+                        "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803  adf df asdr234 34165 547 65 cb" +
                         "djfkadsjfkadjf1 1920309 mlmz, ./d -1293-" + Math.random()) {
                 Log.d(BridgeUtil.TAG, "registerNative callback $it")
             }

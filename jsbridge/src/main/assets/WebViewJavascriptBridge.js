@@ -171,27 +171,27 @@
                         responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
                     } else {
                         _dispatchMessageFromNativeResponse(rid, responseMessagesPageMap[rid] + message.responseData);
-                        //responseMessagesPageMap[rid] = null;
+                        delete responseMessagesPageMap[rid];
                     }
                 } else {
-                    logd("_dispatchMessageFromNative responseId no page");
+                    logw("_dispatchMessageFromNative responseId no page");
                     _dispatchMessageFromNativeResponse(rid, message.responseData);
                 }
             } else {
                 var cid = message.callbackId;
                 //追加处理分页
                 if (message.pageTotal) {
-                    logd("_dispatchMessageFromNative send pageTotal " + message.pageIndex + "/" + message.pageTotal);
+                    logw("_dispatchMessageFromNative send pageTotal " + message.pageIndex + "/" + message.pageTotal);
                     if (message.pageIndex == 0) {
                         sendMessagesPageMap[cid] = message.data;
                     } else if (message.pageIndex < message.pageTotal) {
                         sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;
                     } else {
                         _dispatchMessageFromNativeSend(cid, message.handlerName, sendMessagesPageMap[cid] + message.data);
-                        //sendMessagesPageMap[cid] = null;
+                        delete sendMessagesPageMap[cid];
                     }
                 } else {
-                    logd("_dispatchMessageFromNative send no page");
+                    logw("_dispatchMessageFromNative send no page");
                     _dispatchMessageFromNativeSend(cid, message.handlerName, message.data);
                 }
             }
@@ -201,10 +201,8 @@
     //提供给native调用,receiveMessageQueue 在会在页面加载完后赋值为null,所以
     function _handleMessageFromNative(messageJSON) {
         if (receiveMessageQueue) {
-            logw("_handleMessageFromNative1");
             receiveMessageQueue.push(messageJSON);
         } else {
-            logw("_handleMessageFromNative2");
             _dispatchMessageFromNative(messageJSON);
         }
     }
