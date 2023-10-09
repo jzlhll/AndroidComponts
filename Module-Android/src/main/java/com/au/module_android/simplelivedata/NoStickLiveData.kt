@@ -18,9 +18,9 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
         val mOb = mObservers
         if (mOb == null) {
             val ob = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers")
-                    as Iterable<MutableMap.MutableEntry<Observer<*>, *>>
-            mObservers = ob
-            return ob
+            val nob = ob as Iterable<MutableMap.MutableEntry<Observer<*>, *>>
+            mObservers = nob
+            return nob
         }
         return mOb
     }
@@ -38,10 +38,12 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        requireMObservers()
         super.observe(owner, NoStickWrapObserver(this, observer = observer))
     }
 
     override fun observeForever(observer: Observer<in T>) {
+        requireMObservers()
         super.observeForever(NoStickWrapObserver(this, observer = observer))
     }
 

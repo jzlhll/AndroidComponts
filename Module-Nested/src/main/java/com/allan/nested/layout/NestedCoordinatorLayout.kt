@@ -23,7 +23,7 @@ open class NestedCoordinatorLayout : CoordinatorLayout {
     val refresher by lazy(LazyThreadSafetyMode.NONE) { NestedLayoutRefresher(this) }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "onInterceptTouchEvent ${ev?.y} ${ev?.action}")
+        if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "${refresher.abortTouch} onInterceptTouchEvent ${ev?.y} ${ev?.action}")
 
         if (refresher.abortTouch) {
             return true

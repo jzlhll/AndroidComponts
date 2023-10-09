@@ -62,7 +62,7 @@ public class Message {
 
     public static Message[] createSend(String callbackId, String data, String handlerName) {
         int maxSize = MAX_SEND_MESSAGE_SIZE;
-        int len = data.length();
+        int len = data == null ? 0 : data.length();
         int total = len / MAX_SEND_MESSAGE_SIZE;
         if (len % maxSize > 0) {
             total++;
@@ -104,7 +104,7 @@ public class Message {
 
     public static Message[] createResponse(String data, String responseId) {
         int maxSize = MAX_RESPONSE_MESSAGE_SIZE;
-        int len = data.length();
+        int len = data == null ? 0 : data.length();
         Log.d(BridgeUtil.TAG, "createResponse: " + len);
         int total = len / maxSize;
         if (len % maxSize > 0) {

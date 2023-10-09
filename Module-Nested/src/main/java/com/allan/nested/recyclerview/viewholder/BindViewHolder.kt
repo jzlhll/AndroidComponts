@@ -11,14 +11,25 @@ import com.au.module_android.click.onClick
  * Desc: DATA表示数据类型；BINDING代表绑定的Xml自动转换的java类ViewBinding子类。
  * 增加1个beanTag
  */
-abstract class BindViewHolder<DATA:Any, BINDING: ViewBinding>(val binding: BINDING, itemClick:((DATA?, index:Int)->Unit)? = null) : RecyclerView.ViewHolder(binding.root) {
+abstract class BindViewHolder<DATA:Any, BINDING: ViewBinding>(val binding: BINDING) : RecyclerView.ViewHolder(binding.root) {
     private var current:DATA? = null
 
-    init {
-        if (itemClick != null) {
-            binding.root.onClick {
-                itemClick.invoke(current, absoluteAdapterPosition)
-            }
+    private var mItemClick1:((DATA?, index:Int)->Unit)? = null
+    private var mItemClick2:((DATA?)->Unit)? = null
+
+    fun setHolderClick(click:(DATA?)->Unit) {
+        mItemClick1 = null
+        mItemClick2 = click
+        binding.root.onClick {
+            mItemClick2?.invoke(current)
+        }
+    }
+
+    fun setHolderClickWithAdapterPosition(click:(DATA?, adapterPosition:Int)->Unit) {
+        mItemClick1 = click
+        mItemClick2 = null
+        binding.root.onClick {
+            mItemClick1?.invoke(current, absoluteAdapterPosition)
         }
     }
 

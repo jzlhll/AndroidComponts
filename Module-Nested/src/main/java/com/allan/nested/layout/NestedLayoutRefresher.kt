@@ -99,11 +99,13 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
     }
 
     override fun refreshCompleted() {
+        if (DEBUG) Log.d(TAG, "refreshCompleted")
         val pm = pullManager
         abortTouch = false
         if (pm is INestedPullManager) {
             val delay = max(0L, atLeastShowLoadingTime - (System.currentTimeMillis() - abortTouchTimestamp))
             layout.postDelayed({
+                abortTouch = false
                 if (layout.isAttachedToWindow) {
                     pm.refreshCompleted()
                 }
