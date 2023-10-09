@@ -24,6 +24,9 @@ class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
         viewModel.noStickDataDef.observe(this) {
             logm("noStickLiveDefData receiver: $it")
         }
+        viewModel.noStickDataDef.observeUnStick(this) {
+            logm("noStickLive receiver: $it")
+        }
 
         viewBinding.changeBtn.setOnClickListener {
             viewModel.changeData()

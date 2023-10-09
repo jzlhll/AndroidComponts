@@ -72,19 +72,18 @@ public final class ReflectionUtils {
 
     /**
      * 一直往父类获取私有成员变量的值
+     * @param ignoreSelf true则直接查找父类。这样的话，我们就可以取同名了。
      */
-    public static Object iteratorGetPrivateFieldValue(Object instance, String fieldName) {
-        Class<?> superClass = instance.getClass();
-        while (superClass != Object.class && superClass != null) {
+    public static Object iteratorGetPrivateFieldValue(Object instance, String fieldName, boolean ignoreSelf) {
+        for (Class<?> superClass = ignoreSelf ? instance.getClass().getSuperclass() : instance.getClass();
+             superClass != null && superClass != Object.class;
+             superClass = superClass.getSuperclass()) {
             try {
-                Field field;
-                field = superClass.getDeclaredField(fieldName);
+                Field field = superClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
                 return field.get(instance);
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                //ignore
             }
-            superClass = superClass.getSuperclass();
         }
 
         return null;

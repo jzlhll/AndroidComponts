@@ -25,14 +25,16 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
         get() = idGen.incrementAndGet()
 
     //如果你的是android.util.LongSparseArray自行调整。
-    private var mFragmentsParent:androidx.collection.LongSparseArray<Fragment>? = null
+    private var mFragments:androidx.collection.LongSparseArray<Fragment>? = null
     private fun mFragmentsGet() : androidx.collection.LongSparseArray<Fragment> {
-        val mFragments = mFragmentsParent
-        if (mFragments == null) {
-            mFragmentsParent = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mFragments").asOrNull<androidx.collection.LongSparseArray<Fragment>>()
-            return mFragmentsParent!!
+        val frgs = mFragments
+        if (frgs == null) {
+            val r = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mFragments", true)
+                        .asOrNull<androidx.collection.LongSparseArray<Fragment>>()
+            mFragments = r
+            return r!!
         }
-        return mFragments
+        return frgs
     }
 
     /**

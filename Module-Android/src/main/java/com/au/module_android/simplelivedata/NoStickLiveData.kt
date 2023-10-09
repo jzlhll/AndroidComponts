@@ -11,13 +11,13 @@ import com.au.module_android.utils.ReflectionUtils
 open class NoStickLiveData<T> : SafeLiveData<T> {
     private var mVersion:Int
 
-    //反射拿到父类的field
+    //反射拿到父类的field mObservers。
     private var mObservers:(Iterable<MutableMap.MutableEntry<Observer<*>, *>>)? = null
 
     private fun requireMObservers() : Iterable<MutableMap.MutableEntry<Observer<*>, *>> {
         val mOb = mObservers
         if (mOb == null) {
-            val ob = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers")
+            val ob = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers", true)
             val nob = ob as Iterable<MutableMap.MutableEntry<Observer<*>, *>>
             mObservers = nob
             return nob
@@ -37,17 +37,18 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
         super.setValue(value)
     }
 
-    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        requireMObservers()
+    /**
+     * 追加不处理粘性的方式
+     */
+    fun observeUnStick(owner: LifecycleOwner, observer: Observer<in T>) {
         super.observe(owner, NoStickWrapObserver(this, observer = observer))
     }
 
-    override fun observeForever(observer: Observer<in T>) {
-        requireMObservers()
+    fun observeForeverUnStick(observer: Observer<in T>) {
         super.observeForever(NoStickWrapObserver(this, observer = observer))
     }
 
-    override fun removeObserver(observer: Observer<in T>) {
+    fun removeObserverUnStick(observer: Observer<in T>) {
         val wrap = findObserverWrap(observer) ?: return
         super.removeObserver(wrap)
     }
