@@ -22,7 +22,8 @@ interface IPermission<I, O> {
 
     fun start(
         intent: I,
-        option: ActivityOptionsCompat?,
-        onResultCallback: (O) -> Unit
+        option: ActivityOptionsCompat?
     )
+
+    var onResultCallback:((O) -> Unit)?
 }
