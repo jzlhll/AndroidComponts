@@ -40,25 +40,25 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
     /**
      * 追加不处理粘性的方式
      */
-    fun observeUnStick(owner: LifecycleOwner, observer: Observer<in T>) {
+    fun observeUnStick(owner: LifecycleOwner, observer: Observer<in T?>) {
         super.observe(owner, NoStickWrapObserver(this, observer = observer))
     }
 
-    fun observeForeverUnStick(observer: Observer<in T>) {
+    fun observeForeverUnStick(observer: Observer<in T?>) {
         super.observeForever(NoStickWrapObserver(this, observer = observer))
     }
 
-    fun removeObserverUnStick(observer: Observer<in T>) {
+    fun removeObserverUnStick(observer: Observer<in T?>) {
         val wrap = findObserverWrap(observer) ?: return
         super.removeObserver(wrap)
     }
 
-    private fun findObserverWrap(observer: Observer<in T>) : Observer<in T>? {
+    private fun findObserverWrap(observer: Observer<in T?>) : Observer<in T?>? {
         requireMObservers().let { iter->
             for ((key, _) in iter) {
                 val wrap = key as NoStickWrapObserver<*>
                 if (wrap.observer == observer) {
-                    return wrap as Observer<in T>
+                    return wrap as Observer<in T?>
                 }
             }
         }
@@ -66,7 +66,7 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
     }
 
     private class NoStickWrapObserver<T>(val self:NoStickLiveData<T>,
-                                         val observer: Observer<in T>) : Observer<T> {
+                                         val observer: Observer<in T?>) : Observer<T?> {
         private val version: Int = self.mVersion //标记进入的时候的版本
 
         override fun onChanged(t: T?) {

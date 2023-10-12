@@ -40,14 +40,14 @@ class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
 class MyViewModel : ViewModel() {
 
     val noStickData = NoStickLiveData<String>()
-    val noStickDataDef = NoStickLiveData<String>("StickDef")
+    val noStickDataDef = NoStickLiveData("StickDef")
 
     fun changeData() {
         viewModelScope.launch {
             delay(1000)
 
             noStickData.setValueSafe("new stick 11")
-            noStickDataDef.setValueSafe("new stick 22")
+            noStickDataDef.setValueSafe(null)
         }
     }
 }

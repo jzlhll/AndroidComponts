@@ -58,9 +58,7 @@ class FragmentRootActivity : AbsViewActivity() {
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
-            ownerForResult.start(intent, optionsCompat) {
-                result-> onResultCallback(result)
-            }
+            ownerForResult.start(intent, optionsCompat)
         }
     }
 
