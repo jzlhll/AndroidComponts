@@ -18,7 +18,7 @@ data class StatusData<T>(@Status var status:Int = Status.NONE, //状态
  * Date: 2023/2/15
  * Description 设计运行的模式
  */
-@IntDef(Status.RUNNING, Status.OVER_SUCCESS, Status.OVER_ERROR, Status.NONE)
+@IntDef(Status.RUNNING, Status.OVER_SUCCESS, Status.OVER_ERROR, Status.NONE, Status.PAGE_INIT_ERROR)
 @Retention(AnnotationRetention.BINARY)
 annotation class Status {
     companion object {
@@ -26,5 +26,6 @@ annotation class Status {
         const val RUNNING = 1 //开始了。
         const val OVER_SUCCESS = 0 //结束：成功。
         const val OVER_ERROR = -1 //结束：失败。
+        const val PAGE_INIT_ERROR = -2 //初始化error
     }
 }

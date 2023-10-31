@@ -1,6 +1,5 @@
 package com.allan.nested.fragments
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -57,11 +56,8 @@ abstract class NestedRecyclerFragment : AbsViewFragment() {
         rcv.clipToPadding = false
     }
 
-    override fun onAfterCreatedView(
-        owner: LifecycleOwner,
-        savedInstanceState: Bundle?,
-        resources: Resources
-    ) {
+    override fun onAfterCreatedView(owner: LifecycleOwner, savedInstanceState: Bundle?, rootView: View) {
+        super.onAfterCreatedView(owner, savedInstanceState, rootView)
         initRecyclerView(nestedLayout.recyclerView)
         nestedLayout.recyclerView.adapter = adapter
     }

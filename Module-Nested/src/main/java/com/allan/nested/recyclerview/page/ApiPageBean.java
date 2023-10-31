@@ -14,14 +14,14 @@ public class ApiPageBean<E> {
     /**
      * 总共的pageSize
      */
-    public int totalPage;
+    public int pages;
     /**
      * 当前的size
      */
     @Nullable
-    public List<E> data;
+    public List<E> records;
     /**
      * 当前的size
      */
-    public int currentPage;
+    public int current;
 }

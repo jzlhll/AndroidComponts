@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module.android.R
@@ -160,6 +161,9 @@ private fun toastPopup(view: ViewGroup, duration: Long, message:String?, descrip
     }
     return binding
 }
+
+fun toastOnTop(string: String, desc:String? = null, @IconType icon:String? = null, duration: Long = 2200) =
+    ToastBuilder().setOnTop().setMessage(string).setDesc(desc).setIcon(icon).setDuration(duration).toast()
 
 class ToastBuilder {
     private var decorView:ViewGroup? = null

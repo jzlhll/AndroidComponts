@@ -30,4 +30,12 @@ open class StatusLiveData<T> : SafeLiveData<StatusData<T>>, IOperator<T> {
     override fun running(data: T?, code: Int?, msg: String?) {
         setValueSafe(createRealDataWrap(data, Status.RUNNING, code, msg))
     }
+
+    fun isRunning() = value?.code == Status.RUNNING
+
+    fun isSuccess() = value?.code == Status.OVER_SUCCESS
+
+    fun isError() = value?.code == Status.OVER_ERROR
+
+    val data:T? = value?.data
 }

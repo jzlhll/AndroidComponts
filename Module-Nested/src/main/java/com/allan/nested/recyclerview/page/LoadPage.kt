@@ -1,13 +1,14 @@
 package com.allan.nested.recyclerview.page
 
+
 import android.util.SparseArray
 
 /**
- * 用于自动加载的分页实现，liveE监控的数据源
+ * 用于自动加载的分页实现，liveData监控的数据源
  */
-open class LoadPage<E:Any> {
+open class LoadPage<DATA:Any> {
     //记录每一页的数据,总是按照key的大小排序，key为当前页数
-    private val _pageMap = SparseArray<List<E>>(4)
+    private val _pageMap = SparseArray<List<DATA>>(4)
     private var _pageIndex = 1
     private var _isOver = true
 
@@ -16,14 +17,14 @@ open class LoadPage<E:Any> {
     val isOver get() = _isOver
     val isFirst get() = _pageIndex == 1
 
-    fun getPageByIndex(pageIndex:Int):List<E>? {
+    fun getPageByIndex(pageIndex:Int):List<DATA>? {
         return _pageMap.get(pageIndex)
     }
 
-    fun getAllPages(pageIndex:Int):List<E> {
+    fun getAllPages(pageIndex:Int):List<DATA> {
         var i = 1
         val num = _pageIndex
-        val ret = ArrayList<E>()
+        val ret = ArrayList<DATA>()
         while (i <= num) {
             getPageByIndex(i)?.let{ ret.addAll(it) }
             i++
@@ -35,7 +36,7 @@ open class LoadPage<E:Any> {
      * 最后一页不满。那么，就证明结束了。有的接口，不告诉我们是否是最后一页了。
      * 所以，通过isOver由外部控制
      */
-    fun appendPage(list:List<E>, isOver:Boolean) {
+    fun appendPage(list:List<DATA>, isOver:Boolean) {
         _pageIndex += 1 //注意先+后存。
         _pageMap.put(_pageIndex, list)
         _isOver = isOver
@@ -60,7 +61,7 @@ open class LoadPage<E:Any> {
     /**
      * 当第一次请求不为空；则调用这个。
      */
-    fun initPage(list:List<E>, isOver:Boolean) {
+    fun initPage(list:List<DATA>, isOver:Boolean) {
         _pageMap.clear()
         _pageIndex = 1
         _pageMap.put(_pageIndex, list)

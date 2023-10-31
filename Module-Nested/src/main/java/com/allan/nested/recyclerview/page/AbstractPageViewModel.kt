@@ -3,23 +3,22 @@ package com.allan.nested.recyclerview.page
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.au.module.android.BuildConfig
-import com.au.module_android.simplelivedata.Status
-import com.au.module_android.simplelivedata.StatusLiveData
+import com.allan.android.nested.BuildConfig
+import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.toast.toastOnTop
 import kotlinx.coroutines.launch
 
 /**
- * 抽象支持PageE的方式，appendDatas的数据源请求父类。
+ * 抽象支持PageBean的方式，appendDatas的数据源请求父类。
  */
-abstract class AbstractPageViewModel<E:Any> : ViewModel() {
+abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
     enum class LoadStatus {
         Emitted,
         NoMore,
         IsLoading,
     }
 
-    val pageData by lazy (LazyThreadSafetyMode.NONE) { StatusLiveData<LoadPage<E>>() }
+    val pageData by lazy (LazyThreadSafetyMode.NONE) { PageStatusLiveData<LoadPage<Bean>>() }
 
     /**
      * 请求的总共size。只会在realLoadData的第一页成功结果后，回调
@@ -37,12 +36,14 @@ abstract class AbstractPageViewModel<E:Any> : ViewModel() {
      * 真实进行请求数据的实现逻辑。
      * 已经进行了异常捕获
      */
-    abstract suspend fun realLoadData(currentPage: Int, pageSize: Int): ApiPageBean<E>
+    abstract suspend fun realLoadData(currentPage: Int, pageSize: Int): ApiPageBean<Bean>
     /**
      * 真实进行请求数据，如果想做异常处理，可以进行复写。
      */
     open fun realLoadDataError(message:String? = null) {
-        toastOnTop(message)
+        if (message != null) {
+            toastOnTop(message)
+        }
     }
 
     /**
@@ -50,20 +51,22 @@ abstract class AbstractPageViewModel<E:Any> : ViewModel() {
      * 默认框架：我们并不知道是否已经触底, 只能根据size判断。
      *
      */
-    private fun isCurrentPageLastPage(loadedCurrentPage:ApiPageBean<E>) : Boolean {
-        if(loadedCurrentPage.currentPage >= loadedCurrentPage.totalPage) return true
-        val data = loadedCurrentPage.data ?: return true
-        return data.size < pageSize
+    private fun isCurrentPageLastPage(loadedCurrentPage:ApiPageBean<Bean>) : Boolean {
+        if (loadedCurrentPage.current >= loadedCurrentPage.pages) {
+            return true
+        }
+        val records = loadedCurrentPage.records ?: return true
+        return records.size < pageSize
     }
 
     /**
      * 调用加载数据。true则变成init，即从page1开始加载；false则appendData
      */
     open fun loadPageData(initOrAppend:Boolean) : LoadStatus {
-        if(BuildConfig.DEBUG) Log.d("allan", "load PageData initOrAppend: $initOrAppend")
+        if(BuildConfig.DEBUG) Log.d("nested", "load PageData initOrAppend: $initOrAppend")
 
         val pageDataData = pageData.data
-        if (pageDataData != null && pageData.status == Status.RUNNING) {
+        if (pageDataData != null && pageData.isRunning()) {
             return LoadStatus.IsLoading
         }
 
@@ -71,48 +74,54 @@ abstract class AbstractPageViewModel<E:Any> : ViewModel() {
             return LoadStatus.NoMore
         }
 
-        if(BuildConfig.DEBUG) Log.d("allan", "loadPageData running...${pageData.data}")
+        if(BuildConfig.DEBUG) Log.d("nested", "loadPageData running...${pageData.data}")
         pageData.running()
         val currentPage = if(initOrAppend) firstPageIndex else (pageData.data?.nextPageIndex ?: firstPageIndex)
+
+        val myData = pageData.data ?: LoadPage()
         viewModelScope.launch {
-            val data = try {
-                if(BuildConfig.DEBUG) Log.d("allan", "real LoadData----$currentPage")
-                realLoadData(currentPage, pageSize) //返回获取到的数据
+            try {
+                if(BuildConfig.DEBUG) Log.d("nested", "real LoadData----$currentPage")
+                val data = realLoadData(currentPage, pageSize) //返回获取到的数据
+                val records = data.records
+
+                //todo 可以根据http结果data的page信息修改如下的isOver逻辑
+                if (initOrAppend) {
+                    if (records == null || records.size == 0) {
+                        if(BuildConfig.DEBUG) Log.d("nested", "init with empty")
+                        myData.initWithEmpty()
+                        totalSizeData.setValueSafe(0)
+                    } else {
+                        if(BuildConfig.DEBUG) Log.d("nested", "init with page")
+                        myData.initPage(records, isCurrentPageLastPage(data))
+                        totalSizeData.setValueSafe(data.pages)
+                    }
+                } else {
+                    if (records == null || records.size == 0) {
+                        if(BuildConfig.DEBUG) Log.d("nested", "append with end")
+                        myData.appendNullMaskEnd()
+                    } else {
+                        if(BuildConfig.DEBUG) Log.d("nested", "append with page")
+                        myData.appendPage(records, isCurrentPageLastPage(data))
+                    }
+                }
+
+                if(BuildConfig.DEBUG) Log.d("nested", "realLoadData success!")
+                pageData.success(myData)
             } catch (e: Throwable) {
-                e.printStackTrace()
-                if(BuildConfig.DEBUG) Log.d("allan", "real LoadData error----$currentPage")
+                //e.printStackTrace()
+                val errorMsg:String?
+                val errorCode:Int?
+                errorCode = -1
+                errorMsg = e.message
+                if(BuildConfig.DEBUG) Log.d("nested", "real LoadData error----$currentPage")
                 realLoadDataError(e.message)
-                null //出错后，返回null
+                if(BuildConfig.DEBUG) Log.d("nested", "load error!")
+                pageData.error(myData, errorCode, errorMsg)
             }
-
-            val myData = pageData.data ?: LoadPage()
-            //todo 可以根据http结果data的page信息修改如下的isOver逻辑
-            val list = data?.data
-            if (initOrAppend) {
-                if (list == null || list.size == 0) {
-                    if(BuildConfig.DEBUG) Log.d("allan", "init with empty")
-                    myData.initWithEmpty()
-                    totalSizeData.safeSetValue(0)
-                } else {
-                    if(BuildConfig.DEBUG) Log.d("allan", "init with page")
-                    myData.initPage(list, isCurrentPageLastPage(data))
-                    totalSizeData.safeSetValue(data.totalPage)
-                }
-            } else {
-                if (list == null || list.size == 0) {
-                    if(BuildConfig.DEBUG) Log.d("allan", "append with end")
-                    myData.appendNullMaskEnd()
-                } else {
-                    if(BuildConfig.DEBUG) Log.d("allan", "append with page")
-                    myData.appendPage(list, isCurrentPageLastPage(data))
-                }
-            }
-
-            if(BuildConfig.DEBUG) Log.d("allan", "realLoadData success!")
-            pageData.success(myData)
         }
 
-        if(BuildConfig.DEBUG) Log.d("allan", "start search load page data emitted.")
+        if(BuildConfig.DEBUG) Log.d("nested", "start search load page data emitted.")
         return LoadStatus.Emitted
     }
 }
