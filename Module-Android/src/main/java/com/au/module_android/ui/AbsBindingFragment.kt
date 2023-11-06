@@ -22,6 +22,6 @@ abstract class AbsBindingFragment<VB:ViewBinding> : AbsFragment(), IUiViewBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onAfterCreatedViewBinding(this, savedInstanceState, binding)
+        onAfterCreatedViewBinding(savedInstanceState, binding)
     }
 }

@@ -7,15 +7,16 @@ import android.widget.TextView
 import com.au.module.android.R
 
 /**
- * 全局字体默认文件
+ * 全局字体默认文件。可以自行更换任意一项，目前虽然一样。
  */
-const val FONT_NORMAL_PATH = "" //"fonts/XXX-Regular.otf"
-const val FONT_MEDIUM_PATH = "" //"fonts/XXX-Md.otf"
-const val FONT_BOLD_PATH = "" //"fonts/XXX-Bd.otf"
 
-const val FONT_NUMBER_PATH = "" //"fonts/XXX-Num.otf"
-const val FONT_NUMBER_MEDIUM_PATH = "" //"fonts/XXX-Num-Medium.otf"
-const val FONT_NUMBER_BOLD_PATH = "" //"fonts/XXX-Num-BD.otf"
+const val FONT_NORMAL_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_MEDIUM_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
+
+const val FONT_NUMBER_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_NUMBER_MEDIUM_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_NUMBER_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
 
 private val fontFaceMap by lazy { hashMapOf<String, Typeface>() }
 

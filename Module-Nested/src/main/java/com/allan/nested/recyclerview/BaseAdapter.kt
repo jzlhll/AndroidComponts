@@ -192,4 +192,14 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         ).invoke(null, LayoutInflater.from(parent.context), parent, false)
         return o as VB
     }
+
+    fun <VB:ViewBinding> create(clazz:Class<out ViewBinding>, parent: ViewGroup):VB {
+        val o = clazz.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.javaPrimitiveType
+        ).invoke(null, LayoutInflater.from(parent.context), parent, false)
+        return o as VB
+    }
 }

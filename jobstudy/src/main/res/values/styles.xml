@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--想要字体有粗，请命名为XXXBTextXXX。或者额外设置textStyle=bold
+        如果想要中粗，则必须命名为XXXMTextXXX 或者额外设置fontSizeMode=mid
+    因为FontUtils.kt 中有改。
+    -->
+    <!-- 间隔比较大的文字体。 -->
+    <style name="AUFontSpaceText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <!-- 大标题的样式。字体大小不做限定；自行设置；主要约束了行间距和颜色。 -->
+    <style name="AUTitleBText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- 一般的字体 -->
+    <style name="AUFontText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+    </style>
+
+    <!--显示成为中粗-->
+    <style name="AUFontMText" parent="AUFontText"/>
+
+    <!--显示成为粗-->
+    <style name="AUFontBText" parent="AUFontText"/>
+
+    <!-- minText 15sp 和 smallText 12sp默认灰色 -->
+    <style name="AUMinText">
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/color_text_gray</item>
+    </style>
+
+    <style name="AUSmallText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingMultiplier">1.02</item>
+        <item name="android:textColor">@color/color_text_gray</item>
+    </style>
+
+    <!-- 假装为输入框的Text样式 -->
+    <style name="AUFakeEditText" parent="AUFontText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">#F7F7F7</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- 》》》》》》》》分割线《《《《《《《《《《《《《《《《《《《 -->
+
+    <!--输入框的外部InputLayout的样式：配套的外部壳样式 必须先处理一次基础继承；
+        ColorStateList cursorColor =
+        MaterialColors.getColorStateListOrNull(getContext(), R.attr.colorControlActivated);
+
+        The reason why using android:theme works is because colorControlActivated is a theme attribute,
+        as opposed to a specific component attribute (e.g., hintTextColor).
+        One way you could customize a global theme attribute but only have that customization apply to a specific component
+        is to use our materialThemeOverlay functionality.
+    -->
+    <style name="Mine.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="colorControlActivated">@color/color_text_normal</item>
+    </style>
+
+    <style name="AUInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/input_board_color</item>
+        <item name="endIconTint">@color/input_text_color</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCollapsedPaddingTop">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <!--不给Layout有hint动画把hint放到editText上，并设置paddingVertical-->
+        <item name="hintEnabled">false</item>
+        <!--必须来一个theme才能让它改变-->
+        <!--        <item name="android:theme">@style/Mine.TextInputLayout.FilledBox</item>-->
+    </style>
+
+    <!--输入框的外部InputLayout的样式: 配套的内部EditText样式-->
+    <style name="AUEditInInputLayout">
+        <!--        <item name="boxBackgroundColor">@color/input_background_color</item>-->
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textColorHint">#cccccc</item>
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:textCursorDrawable">@drawable/input_text_cursor</item>
+    </style>
+
+    <!-- 单纯一个输入框，空白边框样式-->
+    <style name="AUBlankEditText">
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColorHint">#cccccc</item>
+        <item name="android:background">@drawable/corner_blank_board_e6_bg</item>
+        <item name="android:textCursorDrawable">@drawable/input_text_cursor</item>
+    </style>
+
+    <!-- 主题色背景，单个且长，左右下边距固定，文字大小颜色固定 -->
+    <style name="AUButtonPrimaryLong">
+        <item name="android:background">@drawable/corner_btn_primary_long</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/primary_btn_color</item>
+
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+
+        <item name="android:textStyle">normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+
+        <item name="fontMode">mid</item>
+    </style>
+
+    <!-- 有的地方需要一个类似disable的btn，却又支持点击 -->
+    <style name="AUButtonPrimaryDisabled" parent="AUButtonPrimaryLong">
+        <item name="android:background">@drawable/corner_btn_primary_long_disabled</item>
+        <item name="android:textColor">#CCCCCC</item>
+    </style>
+
+    <!-- 灰色长按钮-->
+    <style name="AUButtonGrayLong" parent="AUButtonPrimaryLong">
+        <item name="android:background">@drawable/corner_btn_gray</item>
+        <item name="android:textColor">@color/gray_btn_color</item>
+    </style>
+
+    <!-- 按钮v2.1 统一样式: 主题色短按钮-->
+    <style name="AUButtonPrimaryShort">
+        <item name="android:background">@drawable/corner_btn_primary_short</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/primary_btn_color</item>
+
+        <item name="android:layout_marginBottom">24dp</item>
+
+        <item name="android:textStyle">normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+
+        <item name="fontMode">mid</item>
+    </style>
+
+    <!-- 灰色短按钮-->
+    <style name="AUButtonGrayShort" parent="AUButtonPrimaryShort">
+        <item name="android:background">@drawable/corner_bg_gray_light</item>
+        <item name="android:textColor">@color/color_text_normal</item>
+    </style>
+</resources>

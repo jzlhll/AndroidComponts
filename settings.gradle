@@ -36,3 +36,6 @@ include ':jsbridge'
 include ':Module-Upgrade'
 include ':appcontentprovider'
 include ':appcontentresolver'
+
+include ':studyjob'
+include ':jobstudy'

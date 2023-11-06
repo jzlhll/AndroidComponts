@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class LiveDataFragment : AbsBindingFragment<ActivityLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
-    override fun onAfterCreatedViewBinding(owner: LifecycleOwner, savedInstanceState: Bundle?, viewBinding: ActivityLiveDataBinding) {
+    override fun onAfterCreatedViewBinding(savedInstanceState: Bundle?, viewBinding: ActivityLiveDataBinding) {
         //liveData 是粘性的。只有有值，一个直接observe进来的监听者立刻得到回调
         viewModel.noStickData.observe(this) {
             logm("noStickLiveData receiver: $it")

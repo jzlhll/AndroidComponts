@@ -18,7 +18,7 @@ abstract class AbsBindingActivity<VB: ViewBinding> : AbsActivity(), IUiViewBindi
     final override fun creatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
-        onAfterCreatedViewBinding(this, savedInstanceState, vb)
+        onAfterCreatedViewBinding(savedInstanceState, vb)
         return vb.root
     }
 }

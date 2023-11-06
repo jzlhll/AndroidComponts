@@ -23,7 +23,7 @@ class EntroActivity : AbsBindingActivity<ActivityEntroBinding>() {
             LiveDataFragment::class.java)
     }
 
-    override fun onAfterCreatedViewBinding(owner: LifecycleOwner, savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
+    override fun onAfterCreatedViewBinding(savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
         setSupportActionBar(findViewById(R.id.toolbar))
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)

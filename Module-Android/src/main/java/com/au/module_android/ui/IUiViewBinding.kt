@@ -17,7 +17,6 @@ interface IUiViewBinding<T:ViewBinding> {
      * 当view创建完毕。
      */
     fun onAfterCreatedViewBinding(
-        owner: LifecycleOwner,
         savedInstanceState: Bundle?,
         viewBinding: T
     ) {}
