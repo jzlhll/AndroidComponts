@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.postToMainHandler
 import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 import com.au.module_android.utils.isMainThread
 
 /**
@@ -23,7 +23,7 @@ abstract class AbstractToastStick<T, VB:ViewBinding> {
         //进入的下拉时间
         const val duration = 400L
 
-        val defaultOffsetY = 48f.dpGlobal
+        val defaultOffsetY = 48f.dp
 
         internal val globalToast = DefaultGlobalToast()
 

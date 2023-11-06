@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.recyclerview.widget.RecyclerView
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
@@ -37,10 +37,10 @@ class NestedRecyclerViewLayout : NestedConstraintLayout {
         lp.bottomToTop = PARENT_ID
         lp.startToStart = PARENT_ID
         lp.endToEnd = PARENT_ID
-        lp.bottomMargin = 16f.dpGlobal.toInt() //这样，就让indicator比top还要高16dp。就会比rcv慢再出现达成目的
+        lp.bottomMargin = 16f.dp.toInt() //这样，就让indicator比top还要高16dp。就会比rcv慢再出现达成目的
 
-        progressIndicator.indicatorSize = 20f.dpGlobal.toInt()
-        progressIndicator.trackThickness = 2f.dpGlobal.toInt()
+        progressIndicator.indicatorSize = 20f.dp.toInt()
+        progressIndicator.trackThickness = 2f.dp.toInt()
         progressIndicator.visibility = View.GONE
         addView(progressIndicator, lp)
     }
@@ -49,7 +49,7 @@ class NestedRecyclerViewLayout : NestedConstraintLayout {
         val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         recyclerView.overScrollMode = OVER_SCROLL_NEVER
         recyclerView.clipToPadding = false
-        recyclerView.setPadding(0, 0, 0, 30f.dpGlobal.toInt())
+        recyclerView.setPadding(0, 0, 0, 30f.dp.toInt())
 
         addView(recyclerView, 0, lp) //添加到了最底层
     }

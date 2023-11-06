@@ -1,18 +1,18 @@
 package com.allan.nested.layout
 
 import android.animation.ValueAnimator
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.allan.nested.mgr.INestedPull
 import com.allan.nested.mgr.INestedPullManager
 import com.allan.nested.mgr.NestedPullFakeManager
 import com.allan.nested.mgr.NestedPullSmoothManager
 import com.allan.nested.mgr.SmoothParams
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 import java.lang.Long.max
 
 /**
@@ -28,6 +28,17 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
     companion object {
         internal const val DEBUG = true
         internal const val TAG = "allan_nested"
+    }
+
+    init {
+        layout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+                resetRefreshCompleted() //恢复状态
+            }
+        })
     }
 
     //内部使用：用做于下拉状态的标志。表示我们是否接收本次为触发类型。
@@ -61,7 +72,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
      */
     override fun pullDownIsTargetTranslated() = pullManager.pullDownIsTargetTranslated()
 
-    private lateinit var pullManager: INestedPull
+    private lateinit var pullManager: INestedPullManager
 
     private var isDisablePullUpEffect = false
     private var isDisablePullDownEffect = false
@@ -75,7 +86,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
      */
     fun initEarlyAsFake(
         bePullView: View,
-        params: SmoothParams = SmoothParams(80f.dpGlobal.toInt(), 0.35f)
+        params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
     ) {
         pullManager = NestedPullFakeManager(this, bePullView, params)
     }
@@ -93,31 +104,27 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         bePullView: View,
         progressIndicator: CircularProgressIndicator?,
         isIndicatorChildOfBePullView: Boolean,
-        params: SmoothParams = SmoothParams(80f.dpGlobal.toInt(), 0.35f)
+        params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
     ) {
         pullManager = NestedPullSmoothManager(this, bePullView, progressIndicator, isIndicatorChildOfBePullView, params)
     }
 
+    private fun resetRefreshCompleted() {
+        abortTouch = false
+        pullManager.refreshCompleted()
+    }
+
     override fun refreshCompleted() {
         if (DEBUG) Log.d(TAG, "refreshCompleted")
-        val pm = pullManager
         abortTouch = false
-        if (pm is INestedPullManager) {
-            val delay = max(0L, atLeastShowLoadingTime - (System.currentTimeMillis() - abortTouchTimestamp))
-            layout.postDelayed({
-                abortTouch = false
-                if (layout.isAttachedToWindow) {
-                    pm.refreshCompleted()
-                }
-            }, delay)
-        }
+        val delay = max(0L, atLeastShowLoadingTime - (SystemClock.elapsedRealtime() - abortTouchTimestamp))
+        layout.postDelayed({
+            resetRefreshCompleted()
+        }, delay)
     }
 
     override fun setOnRefreshAction(onRefreshAction: (() -> Unit)?) {
-        val pm = pullManager
-        if (pm is INestedPullManager) {
-            pm.setOnRefreshAction(onRefreshAction)
-        }
+        pullManager.setOnRefreshAction(onRefreshAction)
     }
 
     override fun loadingData() = pullManager.loadingData()
@@ -150,7 +157,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
                 duration = looseFingerAnimDuration
                 doOnStart {
                     abortTouch = true
-                    abortTouchTimestamp = System.currentTimeMillis()
+                    abortTouchTimestamp = SystemClock.elapsedRealtime()
                     if (DEBUG) Log.d(TAG, "looseFinger Anim start")
                     pullDownLooseFingerCallback?.invoke(1f, PullDownShrinkState.START)
                 }
@@ -172,18 +179,10 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         if(DEBUG) Log.d(TAG, "$tag onHostNestedPreScroll $dy  ${consumed[0]}  ${consumed[1]}")
         //如果是接收了本次的refresh滑动模式；我们则将全部消费行为给到onPullDownMoving去处理。
         if (mIsATurnScrollAccept == PullDownState.Accept) {
-            if (dy < 0) {
-                if (!isDisablePullDownEffect) {
-                    consumed[0] = dx
-                    consumed[1] = dy //这里我们进行全部消费，later: 虽然我认为没必要，子View也滑不动，因为我们只在顶部的时候往下拉的场景。
-                    onPullDownMoving(target, dy.toFloat(), consumed)
-                }
-            } else {
-                if (!isDisablePullUpEffect) { //某些跟coordinateLayout联动的时候，需要禁用，使用默认的弹簧效果即可。
-                    consumed[0] = dx
-                    consumed[1] = dy
-                    onPullUpMoving(target, dy.toFloat(), consumed)
-                }
+            if (!isDisablePullDownEffect) {
+                consumed[0] = dx
+                consumed[1] = dy //这里我们进行全部消费，later: 虽然我认为没必要，子View也滑不动，因为我们只在顶部的时候往下拉的场景。
+                onPullDownMoving(target, dy.toFloat(), consumed)
             }
         }
     }
@@ -216,11 +215,6 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         pullDownScrollingCallback?.invoke(dy)
     }
 
-    private fun onPullUpMoving(target: View, dy: Float, consumed: IntArray) {
-        if(looseFingerAnim.isRunning) looseFingerAnim.cancel()
-        pullUpScrollingCallback?.invoke(dy)
-    }
-
     internal fun onHostPullDownReleased(tag:String? = null) {
         if(DEBUG) Log.d(TAG, "$tag on HostPullDownReleased")
         if (mIsATurnScrollAccept != PullDownState.Stopped) {
@@ -236,11 +230,6 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
      *
      */
     internal var pullDownScrollingCallback:((offY:Float)->Unit)? = null
-
-    /**
-     * 这里实现假弹簧，不做真实加载，即不触发加载动作。
-     */
-    internal var pullUpScrollingCallback:((offY:Float)->Unit)? = null
 
     /**
      * 当拉动动作结束，开始回弹。

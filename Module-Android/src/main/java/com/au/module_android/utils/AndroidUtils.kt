@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Looper
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals.app
 
@@ -61,11 +60,26 @@ fun Context.dp(value:Float) : Float {
         return this.dp(value)
     }
 
-    return value.dpGlobal
+    return value.dp
 }
 
 /**
  * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
  */
-val Float.dpGlobal:Float
+val Float.dp:Float
     get() = (this * app.resources.displayMetrics.density)
+
+val Float.dpInt:Int
+    get() = (this * app.resources.displayMetrics.density).toInt()
+
+/**
+ * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
+ */
+val Int.dp:Int
+    get() = (this.toFloat() * app.resources.displayMetrics.density).toInt()
+
+/**
+ * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
+ */
+val Int.dpFloat:Float
+    get() = this.toFloat() * app.resources.displayMetrics.density

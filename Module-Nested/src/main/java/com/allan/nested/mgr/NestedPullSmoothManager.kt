@@ -4,7 +4,7 @@ import android.util.Log
 import android.view.View
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.allan.nested.layout.NestedLayoutRefresher
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 
 /**
  * author: allan.jiang
@@ -26,7 +26,7 @@ internal class NestedPullSmoothManager
     private val bePullView: View,
     progressIndicator: CircularProgressIndicator?,
     private val isIndicatorChildOfBePullView: Boolean,
-    private val params: SmoothParams = SmoothParams(80f.dpGlobal.toInt(), 0.35f)
+    private val params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
 ): INestedPullManager {
     private val indicator: IndicatorBase
 
@@ -70,7 +70,7 @@ internal class NestedPullSmoothManager
         refresher.pullDownLooseFingerCallback = { fra, state ->
             when (state) {
                 NestedLayoutRefresher.PullDownShrinkState.START -> {
-                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink START $fra ${bePullView.translationY}")
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#shrink START $fra ${bePullView.translationY}")
                     if (!isLoadingData) {
                         val shouldRefresh = indicator.progress >= indicator.max //如果进度条超过，则可以加载。
                         val refreshAction = onRefreshAction
@@ -84,7 +84,7 @@ internal class NestedPullSmoothManager
 
                 NestedLayoutRefresher.PullDownShrinkState.MOVING -> {
                     //不管是不是触发了loadingData，位移都还原。
-                    if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink0MOVING $fra ${bePullView.translationY}")
+                    if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#shrink0MOVING $fra ${bePullView.translationY}")
                     bePullView.translationY = bePullView.translationY * fra
                     if (!isIndicatorChildOfBePullView) {
                         indicator.translationY = indicator.translationY * fra
@@ -96,7 +96,7 @@ internal class NestedPullSmoothManager
                     }
                 }
                 NestedLayoutRefresher.PullDownShrinkState.END -> {
-                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink END $fra ${bePullView.translationY}")
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#shrink END $fra ${bePullView.translationY}")
                     //不是一直转圈，则恢复; 或者是ResetForce，则代表我们已经加载了数据，也应该恢复
                     if(!isLoadingData) hideIndicator()
                     bePullView.translationY = 0f
@@ -114,25 +114,14 @@ internal class NestedPullSmoothManager
                 val translation2 = ny + indicator.translationY
                 indicator.translationY = translation2
 
-                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1 $translation2")
+                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#PullDown $translation1 $translation2")
             } else {
-                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1")
+                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#PullDown $translation1")
             }
 
             indicator.isIndeterminate = false
             showIndicator()
             indicator.progress = (indicator.max * translation1 / params.pullDownTriggerValue).toInt()
-        }
-
-        refresher.pullUpScrollingCallback = {dy ->
-            val ny = (-dy * params.realMoveRatio).toInt() shr 1 //再除以2。减少底部滑动
-            val translation1 = ny + bePullView.translationY
-            bePullView.translationY = translation1
-            if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown ${translation1}")
-
-            indicator.isIndeterminate = false
-            hideIndicator()
-            indicator.progress = 0
         }
     }
 

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module.android.R
@@ -12,7 +11,7 @@ import com.au.module.android.databinding.LayoutToast1Binding
 import com.au.module.android.databinding.LayoutToast2Binding
 import com.au.module_android.Globals
 import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.unsafeLazy
@@ -48,7 +47,7 @@ private fun createToastBinding(view: ViewGroup, duration: Long, lineNumber:Int):
     toast.post {
         toast.translationY = -toast.height.toFloat()
         toast.visible()
-        val y = 48f.dpGlobal
+        val y = 48f.dp
         toast.animate()
             .translationY(y)
             .setDuration(DROP_DOWN_TIME)

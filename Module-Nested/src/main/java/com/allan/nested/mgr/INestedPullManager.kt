@@ -4,7 +4,10 @@ package com.allan.nested.mgr
  * @author allan.jiang
  * Date: 2023/2/27
  */
-interface INestedPullManager : INestedPull {
+interface INestedPullManager {
+    fun loadingData():Boolean
+    fun pullDownIsTargetTranslated():Boolean
+
     /**
      * 不论成功失败都应该调用。这样才能停止刷新和结束拦截点击事件。
      */

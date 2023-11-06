@@ -12,7 +12,7 @@ import com.allan.nested.recyclerview.AutoLoadMore2BindRcvAdapter
 import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.allan.nested.recyclerview.page.AbstractPageViewModel
 import com.au.module_android.simplelivedata.Status
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 
 /**
  * 用于联动下拉刷新框架。
@@ -87,11 +87,11 @@ open class PageRecyclerOnlyManager<Bean:Any>(
      * 一种设定方式：Grid 2个一竖的显示方式
      */
     private fun initGridAdapterAndRcv(savedInstanceState: Bundle?,
-                                   viewLifecycleOwner: LifecycleOwner,
-                                   paddingLeft:Int = 7.5f.dpGlobal.toInt(), paddingRight:Int = 7.5f.dpGlobal.toInt(),
-                                   decoration: RecyclerView.ItemDecoration = GridTwoDownItemDecoration(
-                                       10f.dpGlobal.toInt(),
-                                       10f.dpGlobal.toInt()
+                                      viewLifecycleOwner: LifecycleOwner,
+                                      paddingLeft:Int = 7.5f.dp.toInt(), paddingRight:Int = 7.5f.dp.toInt(),
+                                      decoration: RecyclerView.ItemDecoration = GridTwoDownItemDecoration(
+                                       10f.dp.toInt(),
+                                       10f.dp.toInt()
                                    )
     ) {
         rcv.updatePadding(left = paddingLeft, right = paddingRight)
@@ -128,11 +128,11 @@ open class PageRecyclerOnlyManager<Bean:Any>(
      * 一种设定方式：Linear 模式
      */
     private fun initLinearAdapterAndRcv(savedInstanceState: Bundle?,
-                                     viewLifecycleOwner: LifecycleOwner,
-                                     paddingLeft:Int = 17f.dpGlobal.toInt(), paddingRight:Int = 20f.dpGlobal.toInt(),
-                                     decoration: RecyclerView.ItemDecoration = PaddingItemDecoration(
+                                        viewLifecycleOwner: LifecycleOwner,
+                                        paddingLeft:Int = 17f.dp.toInt(), paddingRight:Int = 20f.dp.toInt(),
+                                        decoration: RecyclerView.ItemDecoration = PaddingItemDecoration(
                                          0,
-                                         8f.dpGlobal.toInt(),
+                                         8f.dp.toInt(),
                                          true
                                      )
     ) {

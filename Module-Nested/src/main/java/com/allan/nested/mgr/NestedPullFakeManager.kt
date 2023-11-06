@@ -3,7 +3,7 @@ package com.allan.nested.mgr
 import android.util.Log
 import android.view.View
 import com.allan.nested.layout.NestedLayoutRefresher
-import com.au.module_android.utils.dpGlobal
+import com.au.module_android.utils.dp
 
 /**
  * author: allan.jiang
@@ -20,8 +20,8 @@ internal class NestedPullFakeManager
 (
     private val refresher: NestedLayoutRefresher,
     private val bePullView: View,
-    private val params: SmoothParams = SmoothParams(80f.dpGlobal.toInt(), 0.35f)
-)  : INestedPull {
+    private val params: SmoothParams = SmoothParams(80.dp, 0.35f)
+)  : INestedPullManager {
     init {
         initial()
     }
@@ -30,18 +30,22 @@ internal class NestedPullFakeManager
 
     override fun pullDownIsTargetTranslated() = bePullView.translationY != 0f
 
+    override fun refreshCompleted() {}
+
+    override fun setOnRefreshAction(onRefreshAction: (() -> Unit)?) {}
+
     private fun initial() {
         refresher.pullDownLooseFingerCallback = { fra, state ->
             when (state) {
                 NestedLayoutRefresher.PullDownShrinkState.START -> {
-                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink START $fra ${bePullView.translationY}")
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, ">shrink START $fra ${bePullView.translationY}")
                 }
                 NestedLayoutRefresher.PullDownShrinkState.MOVING -> {
                     bePullView.translationY = bePullView.translationY * fra
-                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink2MOVING $fra ${bePullView.translationY}")
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, ">shrink2MOVING $fra ${bePullView.translationY}")
                 }
                 NestedLayoutRefresher.PullDownShrinkState.END -> {
-                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink END $fra ${bePullView.translationY}")
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, ">shrink END $fra ${bePullView.translationY}")
                     bePullView.translationY = 0f
                 }
             }
@@ -52,14 +56,7 @@ internal class NestedPullFakeManager
             val translation1 = ny + bePullView.translationY
 
             bePullView.translationY = translation1
-            if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1")
-        }
-
-        refresher.pullUpScrollingCallback = {dy ->
-            val ny = (-dy * params.realMoveRatio).toInt() shr 1 //再除以2。减少底部滑动
-            val translation1 = ny + bePullView.translationY
-            bePullView.translationY = translation1
-            if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1")
+            if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, ">PullDown $translation1")
         }
     }
 }
