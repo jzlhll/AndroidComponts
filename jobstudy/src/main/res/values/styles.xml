@@ -160,4 +160,17 @@
         <item name="android:background">@drawable/corner_bg_gray_light</item>
         <item name="android:textColor">@color/color_text_normal</item>
     </style>
+
+
+    <!-- shapedImageView 圆角-->
+    <style name="shape_roundedCornerStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!-- shapedImageView  圆形 -->
+    <style name="shape_roundStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
 </resources>

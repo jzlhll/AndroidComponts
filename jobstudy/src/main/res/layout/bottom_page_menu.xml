@@ -27,4 +27,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivLogo"
         tools:text="@string/app_name" />
+
+    <com.au.module_android.text.CustomTextView
+        android:id="@+id/tvRedNumber"
+        style="@style/AUMinText"
+        android:layout_marginTop="-3dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:textSize="11sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:gravity="center"
+        android:background="@drawable/dot_red_round"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@id/ivLogo"
+        app:layout_constraintTop_toTopOf="@id/ivLogo"
+        tools:text="1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

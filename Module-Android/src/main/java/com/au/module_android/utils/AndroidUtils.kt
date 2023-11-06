@@ -7,7 +7,10 @@ import android.content.ContextWrapper
 import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.au.module_android.Globals
 import com.au.module_android.Globals.app
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 val isMainThread: Boolean
     get() = Looper.getMainLooper() === Looper.myLooper()
@@ -83,3 +86,53 @@ val Int.dp:Int
  */
 val Int.dpFloat:Float
     get() = this.toFloat() * app.resources.displayMetrics.density
+
+
+/**
+ * 获取缓存大小
+ */
+suspend fun getAppCacheSize(): String {
+    return withIoThread {
+        val cacheDir = Globals.app.cacheDir.getDirSize()
+        val externalCacheDir = Globals.app.externalCacheDir.getDirSize()
+        (cacheDir + externalCacheDir).formatLength()
+    }
+}
+
+/**
+ * 字节转为kb
+ */
+fun Long?.formatLength(): String {
+    val size = this?.toFloat() ?: return "0MB"
+    return when {
+        size < 1024 * 1024 * 1024 -> {//不足1g
+            "${(size / 1024 / 1024).keepTwoPoint()}MB"
+        }
+        else -> {
+            "${(size / 1024 / 1024 / 1024).keepTwoPoint()}GB"
+        }
+    }
+}
+
+/**
+ * 保留两位小数
+ */
+fun Float?.keepTwoPoint(roundingMode: RoundingMode = RoundingMode.HALF_EVEN): String {
+    this ?: return "0.00"
+    return this.toString().keepTwoPoint()
+}
+
+/**
+ * 保留两位小数
+ */
+fun String?.keepTwoPoint(roundingMode: RoundingMode = RoundingMode.HALF_EVEN): String {
+    return try {
+        if (this == null) {
+            "0.00"
+        } else {
+            BigDecimal(this).setScale(2, roundingMode)?.toString() ?: this
+        }
+    } catch (e: Throwable) {
+        "0.00"
+    }
+}

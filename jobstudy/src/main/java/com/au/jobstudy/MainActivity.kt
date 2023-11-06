@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.allan.nested.bottom_nav.BottomNavAdapter
 import com.allan.nested.bottom_nav.BottomPageBean
 import com.allan.nested.recyclerview.NoScrollLinearLayoutManager
+import com.allan.nested.viewpager2.simplePagerAdapter
 import com.au.jobstudy.databinding.ActivityMainBinding
 import com.au.jobstudy.databinding.BottomPageMenuBinding
 import com.au.module_android.Globals.app
@@ -28,7 +30,7 @@ class MainActivity : AbsBindingActivity<ActivityMainBinding>() {
         return insets
     }
 
-    private val bottomNavList = listOf<BottomPageBean>(
+    private val bottomNavList = listOf(
         BottomPageBean(true, R.string.bottom_home, R.drawable.ic_bottom_home, R.drawable.ic_bottom_home_select,
             app.getColor(R.color.color_text_gray),
             app.getColor(R.color.color_primary)),
@@ -40,7 +42,18 @@ class MainActivity : AbsBindingActivity<ActivityMainBinding>() {
             app.getColor(R.color.color_primary))
     )
 
+    private val pages = listOf(
+        MainHomeFragment::class.java, MainFriendsFragment::class.java, MainMineFragment::class.java
+    )
+
     override fun onAfterCreatedViewBinding(savedInstanceState: Bundle?, viewBinding: ActivityMainBinding) {
+        viewBinding.mainViewPager.offscreenPageLimit = 1
+        viewBinding.mainViewPager.simplePagerAdapter(this, pages) { _, fragment ->
+            fragment.getDeclaredConstructor().newInstance()
+        }
+
+        viewBinding.mainViewPager.isUserInputEnabled = false
+
         viewBinding.mainBottomNavRcv.layoutManager = NoScrollLinearLayoutManager(this).also { it.orientation = RecyclerView.HORIZONTAL }
         viewBinding.mainBottomNavRcv.adapter = BottomNavAdapter<BottomPageMenuBinding>(bottomNavList, BottomPageMenuBinding::class.java).also { adapter->
             adapter.bindWithBottomNav(viewBinding.mainViewPager, itemViewChangeFun = { viewBinding, bean->
