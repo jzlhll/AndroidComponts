@@ -1,7 +1,7 @@
 package com.allan.androidlearning.utils
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/1/11
  * Description TODO
  */

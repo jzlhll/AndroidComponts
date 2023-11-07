@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseSplashTheme" parent="Theme.SplashScreen">
+<!--   todo 继承修改     <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>-->
+        <item name="windowSplashScreenBackground">#ffffff</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat</item>
+        <item name="windowSplashScreenAnimationDuration">850</item>
+        <!--        <item name="android:windowBackground">@drawable/bg_splash_window</item>-->
+    </style>
+</resources>

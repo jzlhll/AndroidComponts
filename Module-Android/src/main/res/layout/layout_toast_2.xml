@@ -20,7 +20,7 @@
         android:layout_height="20dp"
         tools:src="@drawable/ic_successful"/>
 
-    <com.au.module_android.text.CustomTextView
+    <com.au.module_android.text.CustomFontText
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/desc"
         app:layout_constraintStart_toEndOf="@id/icon"
@@ -36,7 +36,7 @@
         android:textSize="13.5sp"
         tools:text="The title" />
 
-    <com.au.module_android.text.CustomTextView
+    <com.au.module_android.text.CustomFontText
         app:layout_constraintTop_toBottomOf="@id/text"
         app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintEnd_toEndOf="parent"

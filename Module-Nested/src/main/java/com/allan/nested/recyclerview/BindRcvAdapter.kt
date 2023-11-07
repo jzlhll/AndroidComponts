@@ -4,7 +4,7 @@ import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.module_android.utils.withMainThread
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/22
  * Desc: 简单的封装，提供diff算法；和一些增删改动的动作；提供基础list。
  *

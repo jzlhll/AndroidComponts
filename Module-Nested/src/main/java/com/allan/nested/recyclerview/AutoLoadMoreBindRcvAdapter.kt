@@ -7,7 +7,7 @@ import com.allan.nested.recyclerview.page.PullRefreshStatus
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/22
  * Desc: 基于BindRcvAdapter：简单的封装，提供diff算法；和一些增删改动的动作；提供基础list。进行二次扩展。
  *

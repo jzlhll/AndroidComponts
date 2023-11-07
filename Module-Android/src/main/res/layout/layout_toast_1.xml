@@ -21,7 +21,7 @@
         android:layout_height="20dp"
         tools:src="@drawable/ic_successful"/>
 
-    <com.au.module_android.text.CustomTextView
+    <com.au.module_android.text.CustomFontText
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"

@@ -5,10 +5,10 @@ import android.util.AttributeSet
 import com.google.android.material.textview.MaterialTextView
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/24
  */
-class CustomTextView : MaterialTextView {
+open class CustomFontText : MaterialTextView {
     private var mode:TextViewCheckMode
 
     var fontMode:FontMode

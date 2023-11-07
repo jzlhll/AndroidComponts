@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */

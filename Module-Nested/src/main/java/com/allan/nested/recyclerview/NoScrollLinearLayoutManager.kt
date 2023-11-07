@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/6 11:50
  * @description:
  */

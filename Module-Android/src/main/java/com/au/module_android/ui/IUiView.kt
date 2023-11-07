@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/10/8 17:40
  * @description:
  */

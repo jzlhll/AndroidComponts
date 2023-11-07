@@ -1,7 +1,7 @@
 package com.allan.nested.recyclerview.page
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/30
  * Desc:
  */

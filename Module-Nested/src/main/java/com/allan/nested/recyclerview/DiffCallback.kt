@@ -3,7 +3,7 @@ package com.allan.nested.recyclerview
 import androidx.recyclerview.widget.DiffUtil
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/23
  * Desc: 框架设计，由于Adapter设计，list中不存在多种Bean。所以compareItem已经处理完成。
  */

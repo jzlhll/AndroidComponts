@@ -6,7 +6,7 @@ import android.animation.PropertyValuesHolder
 import android.view.View
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/6 14:43
  * @description:
  */

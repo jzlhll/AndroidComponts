@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 /**
- * @author: Allan.jiang
+ * @author: Allan
  * @date: 2023.04.24
  * @description: 使用RecyclerView横向间距。比隔壁的类优势在于，有的时候，我们只需要处理最左最右的padding。
  *

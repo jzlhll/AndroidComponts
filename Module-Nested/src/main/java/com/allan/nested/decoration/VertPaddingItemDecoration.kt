@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 /**
- * @author: Allan.jiang
+ * @author: Allan
  * @date: 2023.04.24
  * @description: 竖条的单个Item的上下间距即可。
  *

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import com.au.module_android.utils.ALog
 
 interface IPermission<I, O> {
     fun initAtOnCreate(activity: AppCompatActivity)
@@ -15,7 +16,7 @@ interface IPermission<I, O> {
         when (val context = view.context) {
             is AppCompatActivity -> initAtOnCreate(context)
             else -> {
-                Log.d("allan", "no view's context? or not activity?")
+                Log.d(ALog.TAG, "no view's context? or not activity?")
             }
         }
     }

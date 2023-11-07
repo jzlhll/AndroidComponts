@@ -39,3 +39,4 @@ include ':appcontentresolver'
 
 include ':studyjob'
 include ':jobstudy'
+include ':Module-AndroidEx'

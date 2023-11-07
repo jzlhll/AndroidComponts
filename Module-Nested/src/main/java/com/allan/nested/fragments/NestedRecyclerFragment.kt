@@ -21,7 +21,7 @@ import com.allan.nested.recyclerview.BaseAdapter
 import com.au.module_android.ui.AbsViewFragment
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/2/21
  * Description 使用NestedRecyclerViewLayout作为基础布局。
  *

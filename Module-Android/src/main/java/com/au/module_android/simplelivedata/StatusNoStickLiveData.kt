@@ -1,7 +1,7 @@
 package com.au.module_android.simplelivedata
 
 /**
- * @author allan.jiang
+ * @author allan
  * 带状态的不需要粘性的LiveData。
  */
 class StatusNoStickLiveData<T> : NoStickLiveData<StatusData<T>?>, IOperator<T> {

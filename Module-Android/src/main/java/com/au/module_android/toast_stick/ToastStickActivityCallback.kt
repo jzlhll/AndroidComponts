@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.au.module_android.toast_stick.AbstractToastStick.Companion.globalToast
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/14
  * Description 全局Toast提醒
  */

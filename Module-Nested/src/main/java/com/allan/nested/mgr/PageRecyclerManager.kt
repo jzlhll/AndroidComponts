@@ -41,7 +41,7 @@ open class PageRecyclerManager<Bean:Any>(
         this.adapter.addDataChanged(object : IOnChangeListener {
             override fun onChange(info: DataExtraInfo) {
                 if (info is DataChangeExtraInfoInit) {
-                    Log.d("allan", "onInitDatasFinished")
+                    ALog.d("allan", "onInitDatasFinished")
                     layout.refresher.refreshCompleted()
                 }
             }

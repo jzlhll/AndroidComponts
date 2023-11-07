@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.au.module_android.Globals.activityList
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/18
  * Description 全局监听activity变化
  */

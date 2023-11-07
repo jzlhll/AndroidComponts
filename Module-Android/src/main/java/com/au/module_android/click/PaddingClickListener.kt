@@ -3,7 +3,7 @@ package com.au.module_android.click
 import android.view.View
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/24
  * Description 有间隔的点击事件
  */

@@ -12,7 +12,7 @@ import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/7/4
  * Description 指导基础类模板
  */

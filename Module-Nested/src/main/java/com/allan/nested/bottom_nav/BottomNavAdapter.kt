@@ -11,7 +11,7 @@ import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/6 14:51
  * @description:
  */

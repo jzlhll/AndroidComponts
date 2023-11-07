@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * @author Allan.Jiang
+ * @author Allan
  * desc: 用于反射调用代码
  */
 public final class ReflectionUtils {

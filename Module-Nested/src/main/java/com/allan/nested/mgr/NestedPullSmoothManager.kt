@@ -7,7 +7,7 @@ import com.allan.nested.layout.NestedLayoutRefresher
 import com.au.module_android.utils.dp
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/25
  * Desc: coordinatorLayout+RecyclerView+AppTabLayout形成滑动嵌套
  * 下拉刷新的帮助类。

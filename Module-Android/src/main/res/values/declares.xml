@@ -4,4 +4,18 @@
         <attr name="fontMode" />
         <attr name="isFontNum" />
     </declare-styleable>
+
+    <declare-styleable name="CustomImageTextView">
+        <attr name="drawableMarginStart" format="dimension"/>
+        <attr name="drawableMarginEnd" format="dimension"/>
+
+        <attr name="drawableStartWidth" format="dimension"/>
+        <attr name="drawableStartHeight" format="dimension"/>
+        <attr name="drawableTopWidth" format="dimension"/>
+        <attr name="drawableTopHeight" format="dimension"/>
+        <attr name="drawableEndWidth" format="dimension"/>
+        <attr name="drawableEndHeight" format="dimension"/>
+        <attr name="drawableBottomWidth" format="dimension"/>
+        <attr name="drawableBottomHeight" format="dimension"/>
+    </declare-styleable>
 </resources>

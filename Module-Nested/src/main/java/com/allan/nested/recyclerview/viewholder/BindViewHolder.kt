@@ -6,7 +6,7 @@ import androidx.viewbinding.ViewBinding
 import com.au.module_android.click.onClick
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/22
  * Desc: DATA表示数据类型；BINDING代表绑定的Xml自动转换的java类ViewBinding子类。
  * 增加1个beanTag

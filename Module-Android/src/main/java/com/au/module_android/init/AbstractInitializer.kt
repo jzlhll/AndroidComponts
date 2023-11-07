@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.startup.Initializer
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/7/20
  * Description 初始化，所有的初始化类，都继承它。
  * 这样好必须比FirstInitial晚。
@@ -21,9 +21,7 @@ abstract class AbstractInitializer : Initializer<Application> {
     abstract fun onCreate(app:Application)
 
     final override fun dependencies(): MutableList<Class<out Initializer<*>>> {
-        val list = subDependencies() ?: mutableListOf()
-        list.add(0, FirstInitial::class.java)
-        return list
+        return subDependencies() ?: mutableListOf()
     }
 
     open fun subDependencies(): MutableList<Class<out Initializer<*>>>? {return null}

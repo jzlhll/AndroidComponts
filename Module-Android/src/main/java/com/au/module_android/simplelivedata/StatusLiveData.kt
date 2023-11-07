@@ -1,7 +1,7 @@
 package com.au.module_android.simplelivedata
 
 /**
- * @author allan.jiang
+ * @author allan
  * 基础的带状态的LiveData。使用它。
  */
 open class StatusLiveData<T> : SafeLiveData<StatusData<T>>, IOperator<T> {

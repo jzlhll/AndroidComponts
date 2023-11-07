@@ -8,11 +8,6 @@
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
-
-            <!-- This entry makes ExampleLoggerInitializer discoverable. -->
-            <meta-data
-                android:name="com.au.module_android.init.FirstInitial"
-                android:value="androidx.startup" />
         </provider>
 
         <activity

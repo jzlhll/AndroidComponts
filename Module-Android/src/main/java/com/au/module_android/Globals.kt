@@ -48,7 +48,7 @@ object Globals {
     val mmkv by lazy { MMKV.initialize(app);MMKV.defaultMMKV() }
 
     //内部参数
-    internal lateinit var internalApp: Application
+    lateinit var internalApp: Application
     internal val internalActivityList = ArrayList<Activity>(8)
 
     private fun createBackgroundHandler() : Handler {

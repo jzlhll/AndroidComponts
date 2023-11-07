@@ -17,7 +17,7 @@ import com.au.module_android.ui.AbsViewActivity
 import com.au.module_android.permissions.IPermission
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/29
  * Description 限制
  */

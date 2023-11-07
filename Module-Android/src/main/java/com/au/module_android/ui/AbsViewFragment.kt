@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */

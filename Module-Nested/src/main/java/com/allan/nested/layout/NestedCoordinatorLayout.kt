@@ -10,7 +10,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/25
  * Desc: 组合 CircularProgressIndicator, RecyclerView + AppBarLayout 嵌套场景。
  * 实现用于下拉刷新，组合头前滑动和变幻的逻辑。

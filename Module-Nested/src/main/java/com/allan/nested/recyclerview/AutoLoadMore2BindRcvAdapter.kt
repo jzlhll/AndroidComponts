@@ -3,7 +3,7 @@ package com.allan.nested.recyclerview
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/22
  * Desc: 基于AutoLoadMoreBindRcvAdapter：再次添加底部的loadingItemView。
  *

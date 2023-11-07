@@ -10,6 +10,15 @@
         android:theme="@style/Theme.AndroidLearning">
         <activity
             android:name=".MainActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|orientation|screenLayout|uiMode|navigation"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:screenOrientation="portrait"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

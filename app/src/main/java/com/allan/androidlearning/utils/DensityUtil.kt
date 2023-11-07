@@ -3,7 +3,7 @@ package com.allan.androidlearning.utils
 import android.content.Context
 
 /**
- * author: allan.jiang
+ * author: allan
  * Time: 2022/11/25
  * Desc:
  */

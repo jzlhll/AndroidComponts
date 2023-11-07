@@ -16,7 +16,7 @@ import com.au.module_android.utils.dp
 import java.lang.Long.max
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/1/8
  *
  * 辅助一个XXXLayout, 让他成为1个可以下拉刷新的控件。比如辅助NestedCoordinatorLayout。

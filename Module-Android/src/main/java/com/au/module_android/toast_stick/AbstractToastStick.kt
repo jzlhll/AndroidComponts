@@ -11,7 +11,7 @@ import com.au.module_android.utils.dp
 import com.au.module_android.utils.isMainThread
 
 /**
- * @author allan.jiang
+ * @author allan
  * Date: 2023/8/14
  * Description 全局弹窗基础模板实现
  */

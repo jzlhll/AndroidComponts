@@ -9,10 +9,10 @@ import com.au.module_android.hooks.optimizeSpTask
 /**
  * 自动初始化
  */
-class FirstInitial : Initializer<Application> {
-    private val isInitSharedPrefHook = true
+class FirstInitial {
+    private val isInitSharedPrefHook = false
 
-    override fun create(context: Context): Application {
+    fun init(context: Context): Application {
         val app = context as Application
         Globals.internalApp = app
 
@@ -22,9 +22,4 @@ class FirstInitial : Initializer<Application> {
 
         return app
     }
-
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
-    }
-
 }
