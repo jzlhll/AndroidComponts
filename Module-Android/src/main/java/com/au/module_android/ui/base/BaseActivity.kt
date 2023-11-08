@@ -11,7 +11,7 @@ import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/8 10:26
  * @description:
  */

@@ -8,11 +8,11 @@ import com.allan.androidlearning.databinding.FragmentLiveDataBinding
 import com.allan.androidlearning.utils.logm
 import com.allan.androidlearning.utils.testGsonData
 import com.au.module_android.simplelivedata.NoStickLiveData
-import com.au.module_android.ui.AbsBindingFragment
+import com.au.module_android.ui.bindings.BindingFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LiveDataFragment : AbsBindingFragment<FragmentLiveDataBinding>() {
+class LiveDataFragment : BindingFragment<FragmentLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
     override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentLiveDataBinding) {

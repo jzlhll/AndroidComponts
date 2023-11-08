@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/7 14:32
  * @description:
  */

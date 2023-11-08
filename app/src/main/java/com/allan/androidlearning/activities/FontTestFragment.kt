@@ -1,8 +1,8 @@
 package com.allan.androidlearning.activities
 
 import com.allan.androidlearning.databinding.FragmentFontTestBinding
-import com.au.module_android.ui.AbsBindingFragment
+import com.au.module_android.ui.bindings.BindingFragment
 
-class FontTestFragment : AbsBindingFragment<FragmentFontTestBinding>() {
+class FontTestFragment : BindingFragment<FragmentFontTestBinding>() {
 
 }

@@ -1,7 +1,7 @@
 package com.au.jobstudy
 
 import com.au.jobstudy.databinding.FragmentMainMineBinding
-import com.au.module_android.ui.AbsBindingFragment
+import com.au.module_android.ui.bindings.BindingFragment
 
-class MainMineFragment : AbsBindingFragment<FragmentMainMineBinding>() {
+class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
 }

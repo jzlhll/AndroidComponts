@@ -6,7 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/8 10:38
  * @description:
  */

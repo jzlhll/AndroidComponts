@@ -1,9 +1,8 @@
-package com.au.module_android.ui
+package com.au.module_android.ui.base
 
 import android.os.Bundle
 import androidx.annotation.EmptySuper
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.ui.base.IUi
 
 /**
  * @author allan

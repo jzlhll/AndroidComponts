@@ -1,8 +1,9 @@
-package com.au.module_android.ui
+package com.au.module_android.ui.views
 
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
+import com.au.module_android.ui.base.IUiView
 import com.au.module_android.ui.base.BaseActivity
 
 /**
@@ -10,7 +11,7 @@ import com.au.module_android.ui.base.BaseActivity
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class AbsViewActivity : BaseActivity(), IUiView {
+abstract class ViewActivity : BaseActivity(), IUiView {
     lateinit var root:View
 
     @CallSuper

@@ -1,4 +1,4 @@
-package com.au.module_android.base
+package com.au.module_android.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,15 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
-import com.au.module_android.ui.AbsViewActivity
 import com.au.module_android.permissions.IPermission
+import com.au.module_android.ui.views.ViewActivity
 
 /**
  * @author allan
  * Date: 2023/8/29
  * Description 限制
  */
-class FragmentRootActivity : AbsViewActivity() {
+class FragmentRootActivity : ViewActivity() {
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"

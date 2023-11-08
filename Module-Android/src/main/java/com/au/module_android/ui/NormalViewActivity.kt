@@ -1,4 +1,4 @@
-package com.au.module_android.base
+package com.au.module_android.ui
 
 import android.content.Context
 import android.content.Intent
@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.ui.AbsViewActivity
+import com.au.module_android.ui.views.ViewActivity
 
-class NormalViewActivity : AbsViewActivity() {
+class NormalViewActivity : ViewActivity() {
     companion object {
         private const val KEY_INTENT_MASK = "intent_mask_str"
         private const val KEY_INTENT_MASK2 = "intent_mask_2"

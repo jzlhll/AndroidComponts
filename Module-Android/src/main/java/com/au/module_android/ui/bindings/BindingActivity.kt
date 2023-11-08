@@ -1,4 +1,4 @@
-package com.au.module_android.ui
+package com.au.module_android.ui.bindings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.viewbinding.ViewBinding
+import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.base.BaseActivity
+import com.au.module_android.ui.createViewBinding
 
 /**
  * @author allan
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class AbsBindingActivity<VB: ViewBinding> : BaseActivity(), IUiViewBinding<VB> {
+abstract class BindingActivity<VB: ViewBinding> : BaseActivity(), IUiViewBinding<VB> {
     lateinit var binding:VB
 
     @CallSuper

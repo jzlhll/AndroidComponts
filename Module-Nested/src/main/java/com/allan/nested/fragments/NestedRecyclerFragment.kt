@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.EmptySuper
 import androidx.core.view.updatePadding
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,7 @@ import com.allan.nested.layout.NestedRecyclerViewLayout
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
 import com.allan.nested.recyclerview.BaseAdapter
-import com.au.module_android.ui.AbsViewFragment
+import com.au.module_android.ui.views.ViewFragment
 
 /**
  * @author allan
@@ -26,7 +25,7 @@ import com.au.module_android.ui.AbsViewFragment
  * Description 使用NestedRecyclerViewLayout作为基础布局。
  *
  */
-abstract class NestedRecyclerFragment : AbsViewFragment() {
+abstract class NestedRecyclerFragment : ViewFragment() {
     val nestedLayout by unsafeLazy {
         NestedRecyclerViewLayout(requireContext()).also {
             it.layoutParams = ViewGroup.LayoutParams(

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--底部位移进入动画，底部位移退出动画-->
+    <style name="PopupWindowBottomIn">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_out</item>
+    </style>
+    <!--上面位移进入，上面位移退出-->
+    <style name="PopupWindowTopIn">
+        <item name="android:windowEnterAnimation">@anim/dialog_top_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_top_out</item>
+    </style>
+    <!--下方缩放进入，下方缩放退出-->
+    <style name="PopupWindowBottomScaleIn">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_scale_out</item>
+    </style>
+    <!--上面缩放进入，上面缩放退出-->
+    <style name="PopupWindowTopScaleIn">
+        <item name="android:windowEnterAnimation">@anim/dialog_top_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_top_scale_out</item>
+    </style>
+    <!--左上角向下缩放，左上角收回动画-->
+    <style name="PopupWindowScaleStartTopIn">
+        <item name="android:windowEnterAnimation">@anim/scale_in_start_top</item>
+        <item name="android:windowExitAnimation">@anim/scale_out_start_top</item>
+    </style>
+    <!--右上角向下缩放，右上角收回动画-->
+    <style name="PopupWindowScaleEndTopIn">
+        <item name="android:windowEnterAnimation">@anim/scale_in_end_top</item>
+        <item name="android:windowExitAnimation">@anim/scale_out_end_top</item>
+    </style>
+    <!--左下角向上缩放，左下角收回动画-->
+    <style name="PopupWindowScaleStartTopInToTop">
+        <item name="android:windowEnterAnimation">@anim/scale_in_start_top_to_top</item>
+        <item name="android:windowExitAnimation">@anim/scale_out_start_top_to_top</item>
+    </style>
+    <!--右下角向上缩放，右下角收回动画-->
+    <style name="PopupWindowScaleEndTopInToTop">
+        <item name="android:windowEnterAnimation">@anim/scale_in_end_top_to_top</item>
+        <item name="android:windowExitAnimation">@anim/scale_out_end_top_to_top</item>
+    </style>
+    <!--中间缩放，中间收回-->
+    <style name="AnimScaleCenter">
+        <item name="android:windowEnterAnimation">@anim/dialog_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_scale_out</item>
+    </style>
+</resources>

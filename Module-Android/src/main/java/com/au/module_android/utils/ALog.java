@@ -23,7 +23,9 @@ public final class ALog {
         Log.e(TAG, s);
     }
     public static void t(@NonNull String s) {
-        Log.d(TAG, "(mainThread=" + (Thread.currentThread() == Looper.getMainLooper().getThread()) + ") " + s);
+        var curThread = Thread.currentThread();
+        Log.d(TAG, String.format("thread(%d-%b) %s",
+                curThread.getId(), curThread == Looper.getMainLooper().getThread(), s));
     }
 
     public static void d(@NonNull String tag, @NonNull String s) {
@@ -36,7 +38,9 @@ public final class ALog {
         Log.e(TAG, tag + ": " + s);
     }
     public static void t(@NonNull String tag, @NonNull String s) {
-        Log.d(TAG, tag + ": (mainThread=" + (Thread.currentThread() == Looper.getMainLooper().getThread()) + ") " + s);
+        var curThread = Thread.currentThread();
+        Log.d(TAG, String.format("%s: thread(%d-%b) %s", tag,
+                curThread.getId(), curThread == Looper.getMainLooper().getThread(), s));
     }
 
     public static void stace(@NonNull String s) {

@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.au.module_android.Globals
 import com.au.module_android.utils.ALog
+import com.au.module_android.utils.asOrNull
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 
 object AppDataStore {
     /**
-     * @author allan.jiang
+     * @author allan
      * @date :2023/11/7 10:24
      * @description:
      */
@@ -45,11 +46,13 @@ object AppDataStore {
                 throw IllegalArgumentException("This type can be removed from DataStore")
             }
         }
-        val t = Globals.app.dataStore.data.filter {
+        val t = Globals.app.dataStore.data.map {
+            it.asMap().forEach { (t, u) ->
+                ALog.t("allData: $t -> $u")
+            }
             it.contains(prefKey)
         }.first()
-
-        return t.contains(prefKey)
+        return t
     }
 
     fun clear() {
@@ -72,26 +75,29 @@ object AppDataStore {
         }
     }
 
-    suspend inline fun <reified T> removeSuspend(key:String) {
+    suspend inline fun <reified T> removeSuspend(key:String) : T?{
+        var ret : T? = null
         Globals.app.dataStore.edit { setting ->
-            when (T::class.java) {
-                Int::class.java -> setting.remove(intPreferencesKey(key))
-                Long::class.java -> setting.remove(longPreferencesKey(key))
-                Double::class.java -> setting.remove(doublePreferencesKey(key))
-                Float::class.java -> setting.remove(floatPreferencesKey(key))
-                Boolean::class.java -> setting.remove(booleanPreferencesKey(key))
-                String::class.java -> setting.remove(stringPreferencesKey(key))
-                Set::class.java -> setting.remove(stringSetPreferencesKey(key)) //later: 这里不做二次检查了。默认就认为是stringSet
+            ret = when (T::class.java) {
+                Int::class.java -> setting.remove(intPreferencesKey(key)).asOrNull()
+                Long::class.java -> setting.remove(longPreferencesKey(key)).asOrNull()
+                Double::class.java -> setting.remove(doublePreferencesKey(key)).asOrNull()
+                Float::class.java -> setting.remove(floatPreferencesKey(key)).asOrNull()
+                Boolean::class.java -> setting.remove(booleanPreferencesKey(key)).asOrNull()
+                String::class.java -> setting.remove(stringPreferencesKey(key)).asOrNull()
+                Set::class.java -> setting.remove(stringSetPreferencesKey(key)).asOrNull() //later: 这里不做二次检查了。默认就认为是stringSet
                 else -> {
                     throw IllegalArgumentException("This type can be removed from DataStore")
                 }
             }
         }
+        return ret
     }
 
     /**
      * 因为我们用于保存，不应该使用lifeCycleScope来发起。有可能无法保存成功。应该使用全局scope。
      */
+    @Deprecated("不建议直接使用，因为可能协程被取消，除非你明白你的scope一定保存成功")
     suspend fun saveSuspend(key:String, value:Any) {
         ALog.t("1save suspend $key <to> $value")
         Globals.app.dataStore.edit { setting ->
