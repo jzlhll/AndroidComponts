@@ -46,7 +46,7 @@ class MainActivity : AbsBindingActivity<ActivityMainBinding>() {
         MainHomeFragment::class.java, MainFriendsFragment::class.java, MainMineFragment::class.java
     )
 
-    override fun onAfterCreatedViewBinding(savedInstanceState: Bundle?, viewBinding: ActivityMainBinding) {
+    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: ActivityMainBinding) {
         viewBinding.mainViewPager.offscreenPageLimit = 1
         viewBinding.mainViewPager.simplePagerAdapter(this, pages) { _, fragment ->
             fragment.getDeclaredConstructor().newInstance()

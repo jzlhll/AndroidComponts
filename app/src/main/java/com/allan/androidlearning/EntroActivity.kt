@@ -1,10 +1,8 @@
 package com.allan.androidlearning
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
@@ -23,7 +21,7 @@ class EntroActivity : AbsBindingActivity<ActivityEntroBinding>() {
             LiveDataFragment::class.java)
     }
 
-    override fun onAfterCreatedViewBinding(savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
+    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
         setSupportActionBar(findViewById(R.id.toolbar))
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)

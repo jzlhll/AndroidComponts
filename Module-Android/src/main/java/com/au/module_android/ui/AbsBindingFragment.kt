@@ -5,23 +5,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.au.module_android.ui.base.BaseFragment
 
 /**
  * @author allan
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class AbsBindingFragment<VB:ViewBinding> : AbsFragment(), IUiViewBinding<VB> {
+abstract class AbsBindingFragment<VB:ViewBinding> : BaseFragment(), IUiViewBinding<VB> {
     lateinit var binding:VB
 
-    final override fun creatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val vb = IUi.createViewBinding(javaClass, inflater, container, false) as VB
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return onCreatingView(layoutInflater, null, savedInstanceState)
+    }
+
+    final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onAfterCreatedViewBinding(savedInstanceState, binding)
+        afterViewCreated(savedInstanceState, binding)
     }
 }

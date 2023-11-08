@@ -3,16 +3,33 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <com.au.module_android.text.CustomButton
-        style="@style/CustomTextStyle"
-        android:id="@+id/clear"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clearBtn"
         android:text="clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.text.CustomFontText
-        android:id="@+id/clear"
-        android:text="clear"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveBtn"
+        android:text="save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/readBtn"
+        android:text="read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/containsBtn"
+        android:text="contains"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/removeKeyBtn"
+        android:text="removeKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

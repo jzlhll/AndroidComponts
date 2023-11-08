@@ -1,22 +1,21 @@
-package com.au.module_android.ui
+package com.au.module_android.ui.base
 
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
 /**
- * @author allan
- * Date: 2023/7/4
- * Description 指导基础类模板
+ * @author allan.jiang
+ * @date :2023/11/8 10:26
+ * @description:
  */
-abstract class AbsActivity : AppCompatActivity(), IUi {
+open class BaseActivity : AppCompatActivity() {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }
@@ -39,11 +38,10 @@ abstract class AbsActivity : AppCompatActivity(), IUi {
      */
     var object3:Any? = null
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
-        val v = creatingView(layoutInflater, null, savedInstanceState)
-        setContentView(v)
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

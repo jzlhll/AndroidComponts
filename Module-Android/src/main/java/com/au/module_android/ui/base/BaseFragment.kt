@@ -1,29 +1,16 @@
-package com.au.module_android.ui
+package com.au.module_android.ui.base
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 
 /**
- * @author allan
- * Date: 2023/7/10
- * Description 基础Fragment的通用
+ * @author allan.jiang
+ * @date :2023/11/8 10:38
+ * @description:
  */
-abstract class AbsFragment : Fragment(), IUi {
-    /**
-     * onCreateView
-     */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return creatingView(layoutInflater, null, savedInstanceState)
-    }
-
+open class BaseFragment : Fragment() {
     /**
      *  如果想支持back，比如一些别的逻辑，比如堆栈自身内部返回处理。
      *  return true则表示期待返回直接退出。或者默认customBackAction = null，也是直接返回。
