@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.au.module_android.ui.base.IUiView
-import com.au.module_android.ui.base.BaseFragment
+import com.au.module_android.ui.base.AbsFragment
 
 /**
  * @author allan
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class ViewFragment : BaseFragment(), IUiView {
+abstract class ViewFragment : AbsFragment(), IUiView {
     lateinit var root:View
 
     override fun onCreateView(

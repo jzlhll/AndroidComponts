@@ -5,12 +5,8 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 
-/**
- * @author allan
- * @date :2023/11/8 10:38
- * @description:
- */
-open class BaseFragment : Fragment() {
+@Deprecated("基础框架的一环，请使用BindingFragment或者ViewFragment")
+open class AbsFragment : Fragment() {
     /**
      *  如果想支持back，比如一些别的逻辑，比如堆栈自身内部返回处理。
      *  return true则表示期待返回直接退出。或者默认customBackAction = null，也是直接返回。

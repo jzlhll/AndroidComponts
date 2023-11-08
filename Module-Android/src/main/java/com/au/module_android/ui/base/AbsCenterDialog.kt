@@ -5,46 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.au.module.android.R
-import com.au.module_android.utils.ALog
 
 /**
  * @author allan
  * @date :2023/11/8 10:59
  * @description: 从中间弹出的样式Dialog
  */
-abstract class BaseCenterDialog : AppCompatDialogFragment(), IDialogFragment, IUi {
-    override val dialogWindowEnterMode = DialogEnterAnimMode.ScaleCenter
+@Deprecated("基础框架的一环，请使用BindingXXXDialog或者ViewXXXDialog")
+abstract class AbsCenterDialog : AppCompatDialogFragment(), IDialogFragment {
+    final override val dialogWindowEnterMode = DialogEnterAnimMode.ScaleCenter
+
+    private var mContentView:View? = null
+    private var mRootView:ViewGroup? = null
+
+    final override var rootView: ViewGroup?
+        get() = mRootView
+        set(value) {mRootView = value}
+    final override var contentView: View?
+        get() = mContentView
+        set(value) {mContentView = value}
+
+    final override fun self() = this
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //外部点击自动隐退父布局root
-        val root = TouchDismissView(inflater.context, this)
-        rootView = root
-        //创建我们想显示的布局，并贴到root上
-        contentView = onCreatingView(inflater, null, savedInstanceState)
-        root.addView(contentView)
-
-        //设置进入的样式
-        val dialogWindow = this.dialogWindow
-        if (dialogWindow != null) {
-            val anim = when (dialogWindowEnterMode) {
-                DialogEnterAnimMode.TopIn -> R.style.PopupWindowTopIn
-                DialogEnterAnimMode.BottomIn -> R.style.PopupWindowBottomIn
-                DialogEnterAnimMode.ScaleCenter -> R.style.AnimScaleCenter
-                else -> null
-            }
-            if (anim != null) {
-                dialogWindow.setWindowAnimations(anim)
-            }
-        } else {
-            ALog.e("dialog window is null")
-        }
-
-        return root
+        return onCreateViewSelf(inflater, container, savedInstanceState)
     }
 
 //    @CallSuper

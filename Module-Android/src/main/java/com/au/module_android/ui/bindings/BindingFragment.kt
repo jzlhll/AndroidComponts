@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.base.IUiViewBinding
-import com.au.module_android.ui.base.BaseFragment
+import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.createViewBinding
 
 /**
@@ -14,7 +14,7 @@ import com.au.module_android.ui.createViewBinding
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BindingFragment<VB:ViewBinding> : BaseFragment(), IUiViewBinding<VB> {
+abstract class BindingFragment<VB:ViewBinding> : AbsFragment(), IUiViewBinding<VB> {
     lateinit var binding:VB
 
     override fun onCreateView(

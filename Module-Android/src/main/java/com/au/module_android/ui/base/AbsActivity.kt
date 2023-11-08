@@ -10,12 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
-/**
- * @author allan
- * @date :2023/11/8 10:26
- * @description:
- */
-open class BaseActivity : AppCompatActivity() {
+@Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
+open class AbsActivity : AppCompatActivity() {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }
