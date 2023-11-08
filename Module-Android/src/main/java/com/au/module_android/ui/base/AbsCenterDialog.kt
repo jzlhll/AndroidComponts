@@ -15,15 +15,11 @@ import androidx.appcompat.app.AppCompatDialogFragment
 abstract class AbsCenterDialog : AppCompatDialogFragment(), IDialogFragment {
     final override val dialogWindowEnterMode = DialogEnterAnimMode.ScaleCenter
 
-    private var mContentView:View? = null
-    private var mRootView:ViewGroup? = null
+    private var mRootView:View? = null
 
-    final override var rootView: ViewGroup?
+    override var rootView: View?
         get() = mRootView
         set(value) {mRootView = value}
-    final override var contentView: View?
-        get() = mContentView
-        set(value) {mContentView = value}
 
     final override fun self() = this
 
