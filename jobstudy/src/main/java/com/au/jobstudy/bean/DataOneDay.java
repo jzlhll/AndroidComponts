@@ -1,22 +1,14 @@
 package com.au.jobstudy.bean;
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 科目，任务描述，是否完成，完成的时间点
  */
-public final class DataOneDay implements Serializable {
-    int index;
+public final class DataOneDay {
+    public static final List<DataItem> items = new ArrayList<>(4);
 
-    @NonNull
-    String subject;
-
-    @NonNull
-    String desc;
-
-    boolean complete;
-
-    long completeTime;
+    public long startTime;
+    public long endTime;
 }
