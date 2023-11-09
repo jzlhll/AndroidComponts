@@ -9,7 +9,8 @@ import com.au.module_android.ui.base.AbsBottomDialog
 import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.createViewBinding
 
-abstract class BindingBottomDialog<VB:ViewBinding> : AbsBottomDialog(), IUiViewBinding<VB>{
+abstract class BindingBottomDialog<VB:ViewBinding>(isAlwaysFullScreen:Boolean=false)
+        : AbsBottomDialog(isAlwaysFullScreen), IUiViewBinding<VB>{
     lateinit var binding:VB
 
     final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

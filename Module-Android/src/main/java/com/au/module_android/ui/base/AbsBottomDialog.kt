@@ -12,7 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 @Deprecated("基础框架的一环，请使用BindingXXXDialog或者ViewXXXDialog")
-abstract class AbsBottomDialog : BottomSheetDialogFragment(), IDialogFragment {
+abstract class AbsBottomDialog(private val isAlwaysFullScreen:Boolean = false)
+        : BottomSheetDialogFragment(), IDialogFragment {
     final override val dialogWindowEnterMode = DialogEnterAnimMode.None
 
     private var mRootView:View? = null
@@ -30,8 +31,6 @@ abstract class AbsBottomDialog : BottomSheetDialogFragment(), IDialogFragment {
     ): View {
         return onCreateViewSelf(inflater, container, savedInstanceState)
     }
-
-    open val isAlwaysFullScreen:Boolean = false
 
     override fun onStart() {
         super.onStart()

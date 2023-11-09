@@ -9,7 +9,8 @@ import com.au.module_android.ui.base.AbsBottomDialog
 import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.createViewBinding
 
-abstract class BindingBottomHeightDialog<VB:ViewBinding> : BindingBottomDialog<VB>(){
+abstract class BindingBottomHeightDialog<VB:ViewBinding>(isAlwaysFullScreen:Boolean=false)
+        : BindingBottomDialog<VB>(isAlwaysFullScreen){
     override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: VB) {
 
     }
