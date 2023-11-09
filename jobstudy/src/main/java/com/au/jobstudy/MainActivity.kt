@@ -55,7 +55,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
         viewBinding.mainBottomNavRcv.layoutManager = NoScrollLinearLayoutManager(this).also { it.orientation = RecyclerView.HORIZONTAL }
         viewBinding.mainBottomNavRcv.adapter = BottomNavAdapter<BottomPageMenuBinding>(bottomNavList, BottomPageMenuBinding::class.java).also { adapter->
-            adapter.bindWithBottomNav(viewBinding.mainViewPager, itemViewChangeFun = { viewBinding, bean->
+            adapter.bindWithBottomNav(viewBinding.mainViewPager,
+                itemViewChangeFun = { viewBinding, bean->
                 viewBinding.tvTitle.setText(bean.titleRes)
                 if (bean.isSelected) {
                     viewBinding.ivLogo.setImageResource(bean.selectIconRes)
@@ -64,7 +65,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     viewBinding.ivLogo.setImageResource(bean.iconRes)
                     viewBinding.tvTitle.setTextColor(bean.titleColor)
                 }
-            }, switchBtnAnimObjectApply = {
+            },
+                switchBtnAnimObjectApply = {
                 it.ivLogo
             })
         }

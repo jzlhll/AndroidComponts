@@ -18,6 +18,11 @@ const val FONT_NUMBER_PATH = "fonts/SourceHanSansSCNormal.otf"
 const val FONT_NUMBER_MEDIUM_PATH = "fonts/SourceHanSansSCNormal.otf"
 const val FONT_NUMBER_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
 
+/**
+ * 如果大部分都进行了自定义字体设置。则开启这个开关。其实常驻也没什么问题。
+ */
+const val FONT_NO_SPACE = true
+
 private val fontFaceMap by lazy { hashMapOf<String, Typeface>() }
 
 /**

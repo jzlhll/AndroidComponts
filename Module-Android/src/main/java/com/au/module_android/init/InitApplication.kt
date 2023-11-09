@@ -2,6 +2,8 @@ package com.au.module_android.init
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import com.au.module_android.utils.ALog
 
 /**
  * @author allan
@@ -10,8 +12,9 @@ import android.content.Context
  */
 open class InitApplication : Application() {
     override fun onCreate() {
-        super.onCreate()
+        ALog.d("init application")
         FirstInitial().init(this)
+        super.onCreate()
     }
 
     override fun attachBaseContext(base: Context?) {

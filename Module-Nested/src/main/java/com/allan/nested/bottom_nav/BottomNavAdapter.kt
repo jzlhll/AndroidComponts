@@ -2,13 +2,13 @@ package com.allan.nested.bottom_nav
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.viewbinding.ViewBinding
-import androidx.viewbinding.ViewBindings
 import androidx.viewpager2.widget.ViewPager2
 import com.allan.nested.anim.AnimationUtil
 import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_android.click.onTagClick
+import com.au.module_android.utils.asOrNull
 
 /**
  * @author allan
@@ -18,12 +18,14 @@ import com.allan.nested.recyclerview.viewholder.BindViewHolder
 class BottomNavAdapter<VB:ViewBinding>(data:List<BottomPageBean>, private val viewBindingClazz:Class<out ViewBinding>)
     : BindRcvAdapter<BottomPageBean, BottomNavHolder<VB>>() {
 
-    private lateinit var itemViewChangeFun:((VB, BottomPageBean)->Unit)
+    private lateinit var onBindViewHolderFun:((VB, BottomPageBean)->Unit)
 
     /**
      *  动画的目标
      */
     private var switchBtnAnimObjectApply:((VB)->View)? = null
+
+    private var viewPager2 : ViewPager2? = null
 
     init {
         this.datas.addAll(data)
@@ -38,25 +40,39 @@ class BottomNavAdapter<VB:ViewBinding>(data:List<BottomPageBean>, private val vi
    fun bindWithBottomNav(viewPager2:ViewPager2,
                          itemViewChangeFun:((VB, BottomPageBean)->Unit),
                          switchBtnAnimObjectApply:((VB)->View)? = null) {
-        this.itemViewChangeFun = itemViewChangeFun
+        this.onBindViewHolderFun = itemViewChangeFun
         this.switchBtnAnimObjectApply = switchBtnAnimObjectApply
+        this.viewPager2 = viewPager2
 
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val changedList = ArrayList<Int>()
-                for (i in 0 until datas.size) {
-                    val old = datas[i].isSelected
-                    val new = position == i
-                    datas[i].isSelected = new
-                    if (old != new) {
-                        changedList.add(i)
-                    }
-                }
-                changedList.forEach {
-                    this@BottomNavAdapter.notifyItemChanged(it)
-                }
+                changeWhenPageSelected(position)
             }
         })
+    }
+
+    private fun changeWhenPageSelected(position: Int) {
+        val changedList = ArrayList<Int>()
+        for (i in 0 until datas.size) {
+            val old = datas[i].isSelected
+            val new = position == i
+            datas[i].isSelected = new
+            if (old != new) {
+                changedList.add(i)
+            }
+        }
+        changedList.forEach {
+            this@BottomNavAdapter.notifyItemChanged(it)
+        }
+    }
+
+    private val bottomItemRootViewClick:(view: View, tag:Any)->Unit = { _, tag->
+        //使用tag来标记position,取出使用
+        val position = tag.asOrNull<Int>()
+        if (position != null) {
+            viewPager2?.setCurrentItem(position, false)
+            changeWhenPageSelected(position)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottomNavHolder<VB> {
@@ -70,7 +86,10 @@ class BottomNavAdapter<VB:ViewBinding>(data:List<BottomPageBean>, private val vi
     override fun onBindViewHolder(holder: BottomNavHolder<VB>, position: Int) {
         val b = this.datas[position]
         holder.bindData(b)
-        itemViewChangeFun.invoke(holder.binding as VB, b)
+        //每次新建一个click进去
+        holder.binding.root.setOnClickListener(null)
+        holder.binding.root.onTagClick(tag=position, wrapClick = bottomItemRootViewClick)
+        onBindViewHolderFun.invoke(holder.binding as VB, b)
 
         val apply = this.switchBtnAnimObjectApply
         if (apply != null) {

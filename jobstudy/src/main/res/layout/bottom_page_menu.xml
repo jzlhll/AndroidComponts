@@ -18,7 +18,7 @@
     <com.au.module_android.text.CustomFontText
         android:id="@+id/tvTitle"
         style="@style/AUMinText"
-        android:layout_marginTop="-3dp"
+        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:allowBackup="true"
+        android:name="com.au.module_android.init.InitApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
@@ -13,20 +13,26 @@
             android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|orientation|screenLayout|uiMode|navigation"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait"
-            android:exported="false">
-        </activity>
-
-        <activity
-            android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+<!--        <activity-->
+<!--            android:name=".SplashActivity"-->
+<!--            android:theme="@style/SplashTheme"-->
+<!--            android:screenOrientation="portrait"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
     </application>
 
 </manifest>

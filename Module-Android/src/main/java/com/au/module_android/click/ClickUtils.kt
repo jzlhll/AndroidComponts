@@ -27,3 +27,7 @@ fun View.onClick(c:(view: View)->Unit) = setOnClickListener(PaddingClickListener
  * 默认的全局设置
  */
 fun View.onClick(paddingTime:Long, c:(view: View)->Unit) = setOnClickListener(PaddingClickListener(paddingTime, c))
+
+fun View.onTagClick(tag:Any, wrapClick:(view: View, tag:Any) ->Unit) = setOnClickListener(PaddingTagClickListener(globalPaddingClickTime, tag, wrapClick))
+
+fun View.onTagClick(paddingTime:Long?, tag:Any, wrapClick:(view: View, tag:Any) ->Unit) = setOnClickListener(PaddingTagClickListener(paddingTime, tag, wrapClick))

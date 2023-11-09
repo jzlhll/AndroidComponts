@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.startup.Initializer
 import com.au.module_android.Globals
 import com.au.module_android.hooks.optimizeSpTask
+import com.au.module_android.utils.ALog
 
 /**
  * 自动初始化
@@ -14,6 +15,7 @@ class FirstInitial {
 
     fun init(context: Context): Application {
         val app = context as Application
+        ALog.d("first init....")
         Globals.internalApp = app
 
         if (isInitSharedPrefHook) {
