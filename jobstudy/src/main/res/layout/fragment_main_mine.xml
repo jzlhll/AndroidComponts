@@ -2,15 +2,184 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.imageview.ShapeableImageView
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toTopOf="parent"
+
+    <!-- 圆形背景 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/headImageHost"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        app:cardCornerRadius="36dp"
         android:layout_marginTop="40dp"
-        android:src="@drawable/ic_launcher"
-        app:shapeAppearance="@style/shape_roundedCornerStyle"
-        android:id="@+id/headImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher"
+            app:shapeAppearanceOverlay="@style/shape_circle_Style"
+            android:id="@+id/headImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"/>
+    </androidx.cardview.widget.CardView>
+
+    <com.au.module_android.text.CustomFontText
+        android:id="@+id/name"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="@id/headImageHost"
+        app:layout_constraintStart_toEndOf="@id/headImageHost"
+        style="@style/AUFontMText"
+        android:text="蒋添靖"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.text.CustomFontText
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/headImageHost"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:text="好孩子  >"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="#444444"
+        android:padding="3dp"
+        android:src="@drawable/ic_setting"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <View
+        android:id="@+id/normalFeatureHost"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:cardCornerRadius="8dp"
+        android:background="@drawable/ic_shadow_bg"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headImageHost"/>
+
+    <com.au.module_android.text.CustomFontText
+        android:id="@+id/normalFeatureTitle"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="@id/normalFeatureHost"
+        app:layout_constraintTop_toTopOf="@id/normalFeatureHost"
+        android:layout_marginTop="12dp"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="常用功能"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/normalFeatureImage1"
+        app:layout_constraintTop_toBottomOf="@id/normalFeatureTitle"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@id/normalFeatureTitle"
+        android:tint="#323232"
+        android:src="@drawable/ic_target"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+
+    <com.au.module_android.text.CustomFontText
+        app:layout_constraintStart_toStartOf="@id/normalFeatureImage1"
+        app:layout_constraintEnd_toEndOf="@id/normalFeatureImage1"
+        app:layout_constraintTop_toBottomOf="@id/normalFeatureImage1"
+        android:layout_marginTop="2dp"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:text="学习目标"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/normalFeatureImage2"
+        app:layout_constraintTop_toBottomOf="@id/normalFeatureTitle"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@id/normalFeatureTitle"
+        android:tint="#323232"
+        android:src="@drawable/ic_class"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+
+    <com.au.module_android.text.CustomFontText
+        app:layout_constraintStart_toStartOf="@id/normalFeatureImage2"
+        app:layout_constraintEnd_toEndOf="@id/normalFeatureImage2"
+        app:layout_constraintTop_toBottomOf="@id/normalFeatureImage2"
+        android:layout_marginTop="2dp"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:text="学习课程"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/helpFeatureHost"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:cardCornerRadius="8dp"
+        android:background="@drawable/ic_shadow_bg"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/normalFeatureHost"/>
+
+    <com.au.module_android.text.CustomFontText
+        android:id="@+id/helpFeatureTitle"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="@id/helpFeatureHost"
+        app:layout_constraintTop_toTopOf="@id/helpFeatureHost"
+        android:layout_marginTop="12dp"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="更多功能"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/helpFeatureImage1"
+        app:layout_constraintTop_toBottomOf="@id/helpFeatureTitle"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@id/helpFeatureTitle"
+        android:tint="#323232"
+        android:src="@drawable/ic_question"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+
+    <com.au.module_android.text.CustomFontText
+        app:layout_constraintStart_toEndOf="@id/helpFeatureImage1"
+        app:layout_constraintBottom_toBottomOf="@id/helpFeatureImage1"
+        app:layout_constraintTop_toTopOf="@id/helpFeatureImage1"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        style="@style/AUFontMText"
+        android:textSize="12sp"
+        android:text="帮助&amp;反馈"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.text.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/helpFeatureHost"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        style="@style/AUFontMText"
+        android:textColor="#999999"
+        android:textSize="11sp"
+        android:text="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

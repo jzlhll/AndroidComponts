@@ -162,15 +162,70 @@
     </style>
 
 
-    <!-- shapedImageView 圆角-->
-    <style name="shape_roundedCornerStyle">
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->
+    <style name="shape_round8dp_Style">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+        <!-- app:strokeColor
+app:strokeWidth -->
     </style>
 
-    <!-- shapedImageView  圆形 -->
-    <style name="shape_roundStyle">
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆形 -->
+    <style name="shape_circle_Style">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- tab layout -->
+
+    <style name="TabLayoutStyle">
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
+        <item name="tabMinWidth">8dp</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabTextAppearance">@style/AUTabText</item>
+        <item name="tabTextColor">#333333</item>
+        <item name="tabSelectedTextColor">@color/color_primary</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:overScrollMode">never</item>
+        <!--        <item name="tabIndicator">@drawable/tab_indicator</item>-->
+        <item name="tabIndicatorColor">@color/color_primary</item>
+        <item name="tabRippleColor">@null</item>
+    </style>
+
+    <!-- tab样式，圆圆的边，有框的样式 必须设置 null， color tansparent不行-->
+    <style name="TyphurTabLayoutNormally">
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabTextAppearance">@style/AUTabText</item>
+        <item name="tabTextColor">#393939</item>
+        <item name="tabSelectedTextColor">@color/color_primary</item>
+        <!--        <item name="android:backgroundTint">@android:color/white</item>-->
+        <item name="android:overScrollMode">never</item>
+        <!--        <item name="tabIndicator">@drawable/tab_indicator</item>-->
+        <item name="tabMinWidth">80dp</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabIndicatorHeight">1.5dp</item>
+        <item name="tabIndicator">@drawable/blue_round_line_indicator</item>
+        <item name="tabIndicatorColor">@color/color_primary</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabPaddingEnd">20dp</item>
+        <item name="tabPaddingStart">20dp</item>
+        <item name="tabMode">scrollable</item>
+    </style>
+
+    <style name="TabLayoutViewPagerIndicator" parent="TabLayoutStyle">
+        <item name="tabBackground">@android:color/transparent</item>
+        <item name="tabIndicatorColor">@android:color/transparent</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabMinWidth">0dp</item>
+        <item name="tabMode">auto</item>
+        <item name="tabPaddingStart">4dp</item>
+        <item name="tabPaddingEnd">4dp</item>
+    </style>
+
+    <style name="AUTabText" parent="AUFontMText">
+        <item name="android:textSize">16sp</item>
+        <!-- <item name="android:textStyle">bold</item>-->
     </style>
 </resources>
