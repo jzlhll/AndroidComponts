@@ -31,7 +31,7 @@ interface ISave {
     /**
      * 查询。可为空。
      */
-    fun readWeekData(week1:String):
+    fun readWeek(week1:String):DataOneWeek
 
-    fun readAllData():
+    fun readAllWeeks():List<DataOneWeek>
 }
