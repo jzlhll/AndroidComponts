@@ -26,12 +26,12 @@ interface ISave {
     /**
      * 删除一周的数据
      */
-    fun deleteOneWeek(day:String):Boolean
+    fun deleteOneWeek(week1:String):Boolean
 
     /**
      * 查询。可为空。
      */
-    fun readWeek(week1:String):DataOneWeek
+    fun readWeekData(week1:String):DataOneWeek?
 
-    fun readAllWeeks():List<DataOneWeek>
+    fun readAllData():List<DataOneWeek>
 }

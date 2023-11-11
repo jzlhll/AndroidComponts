@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.TextView
 import com.au.module.android.R
+import com.au.module_android.init.FirstInitial
 
 /**
  * 全局字体默认文件。可以自行更换任意一项，目前虽然一样。
@@ -21,7 +22,7 @@ const val FONT_NUMBER_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
 /**
  * 如果大部分都进行了自定义字体设置。则开启这个开关。其实常驻也没什么问题。
  */
-const val FONT_NO_SPACE = true
+val FONT_NO_SPACE = FirstInitial.isFontNoSpace
 
 private val fontFaceMap by lazy { hashMapOf<String, Typeface>() }
 

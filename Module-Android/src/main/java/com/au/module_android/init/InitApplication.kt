@@ -13,7 +13,7 @@ import com.au.module_android.utils.ALog
 open class InitApplication : Application() {
     override fun onCreate() {
         ALog.d("init application")
-        FirstInitial().init(this)
+        FirstInitial.init(this)
         super.onCreate()
     }
 

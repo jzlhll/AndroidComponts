@@ -1,11 +1,13 @@
 package com.au.module_android.ui.base
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.asOrNull
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -58,5 +60,11 @@ abstract class AbsBottomDialog(private val isAlwaysFullScreen:Boolean = false)
         bottomSheetBehavior.skipCollapsed = true
         //设置状态为展开
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).also {
+            ToutiaoScreenAdapter.attach(it)
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
@@ -36,6 +37,7 @@ open class AbsActivity : AppCompatActivity() {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
+        ToutiaoScreenAdapter.attach(this)
         super.onCreate(savedInstanceState)
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
     }

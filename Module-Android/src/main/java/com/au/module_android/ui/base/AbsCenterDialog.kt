@@ -1,10 +1,12 @@
 package com.au.module_android.ui.base
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 
 /**
  * @author allan
@@ -29,6 +31,12 @@ abstract class AbsCenterDialog : AppCompatDialogFragment(), IDialogFragment {
         savedInstanceState: Bundle?
     ): View {
         return onCreateViewSelf(inflater, container, savedInstanceState)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).also {
+            ToutiaoScreenAdapter.attach(it)
+        }
     }
 
 //    @CallSuper
