@@ -1,4 +1,4 @@
-package com.au.module_ausqlite.dmeo;
+package com.au.aulitesql.dmeo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.au.module_ausqlite.annotation;
+package com.au.aulitesql.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

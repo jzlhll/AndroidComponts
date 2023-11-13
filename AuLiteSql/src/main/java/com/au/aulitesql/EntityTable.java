@@ -1,4 +1,4 @@
-package com.au.module_ausqlite;
+package com.au.aulitesql;
 
 import android.provider.BaseColumns;
 
