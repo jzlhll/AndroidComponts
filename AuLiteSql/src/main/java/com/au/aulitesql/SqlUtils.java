@@ -2,8 +2,11 @@ package com.au.aulitesql;
 
 import static com.au.aulitesql.TableCreators.primaryKey;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,10 +30,14 @@ public final class SqlUtils {
         private static final String sqlRenameTable
                 = "ALTER TABLE %s RENAME TO %s";
 
+        public static final String AU_LITE_LOG_TABLE_NAME = "au_lite_log";
+
+        public static final String AU_LITE_LOG_FIELD_CREATE_SQL = "createSql";
+        public static final String AU_LITE_LOG_FIELD_TABLE_NAME = "tableName";
         public static final String sqlCreateLogTable
-                = "CREATE TABLE IF NOT EXISTS au_lite_log ("
-                    + "tableName TEXT PRIMARY KEY, \n" +
-                "createStr TEXT, \n" +
+                = "CREATE TABLE IF NOT EXISTS " + AU_LITE_LOG_TABLE_NAME + " (" +
+                AU_LITE_LOG_FIELD_TABLE_NAME + " TEXT PRIMARY KEY, \n" +
+                AU_LITE_LOG_FIELD_CREATE_SQL + " TEXT, \n" +
                 "extra TEXT);";
 
         /**
@@ -62,6 +69,44 @@ public final class SqlUtils {
             return exists;
         }
         return false;
+    }
+
+    @SuppressLint("Range")
+    @WorkerThread
+    public static Pair<String, Long> queryCreateSqlLog(@NonNull SQLiteDatabase db,@NonNull String tabName) {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SqlString.AU_LITE_LOG_TABLE_NAME,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String createSql = null;
+            long id = -1;
+            while (!cursor.isAfterLast()) {
+                if (tabName.equals(cursor.getString(cursor.getColumnIndex(SqlString.AU_LITE_LOG_FIELD_TABLE_NAME)))) {
+                    createSql = cursor.getString(cursor.getColumnIndex(SqlString.AU_LITE_LOG_FIELD_CREATE_SQL));
+                    id = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID));
+                    break;
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            return new Pair<>(createSql, id);
+        }
+        return null;
+    }
+
+    @WorkerThread
+    public static boolean updateCreateSqlLog(@NonNull SQLiteDatabase db, @NonNull String tabName, @NonNull String createSql) {
+        var oldData = queryCreateSqlLog(db, tabName);
+        var cv = new ContentValues();
+        cv.put(SqlString.AU_LITE_LOG_FIELD_CREATE_SQL, createSql);
+        cv.put(SqlString.AU_LITE_LOG_FIELD_TABLE_NAME, tabName);
+
+        if (oldData != null && oldData.p2 != -1) {
+            return db.update(SqlString.AU_LITE_LOG_TABLE_NAME, cv, BaseColumns._ID + " = ?",
+                    new String[] {String.valueOf(oldData.p2)}) > 0;
+        } else {
+            return db.insert(SqlString.AU_LITE_LOG_TABLE_NAME, null, cv) >= 0;
+        }
     }
 
     /**

@@ -17,4 +17,8 @@ public abstract class EntityTable implements BaseColumns {
     public void setId(long id) {
         this.id = id;
     }
+
+    public long writeToDb() {
+
+    }
 }

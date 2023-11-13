@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.CreatorInfo;
-import com.au.aulitesql.info.TableInfo;
+import com.au.aulitesql.info.TableAssetInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -56,7 +56,7 @@ public class AuLiteAutoMigrations {
                     //找到了同名的迁移
                     if (migOldTab.equals(oldTab)) {
                         //取出新的类对应的sql
-                        TableInfo newTableInfo = creators.getByTableClass(migNewClass);
+                        TableAssetInfo newTableInfo = creators.getByTableClass(migNewClass);
                         if (newTableInfo != null) {
                             IManualMigration mm = tablesMigrations.get(migOldTabToNewTabKey);
                             Cursor cursor = db.query(oldTab, null, null, null, null, null, null);

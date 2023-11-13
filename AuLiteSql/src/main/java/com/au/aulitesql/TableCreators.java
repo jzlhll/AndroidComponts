@@ -1,13 +1,18 @@
 package com.au.aulitesql;
 
 import static java.sql.DriverManager.println;
+
 import android.provider.BaseColumns;
+
 import androidx.annotation.WorkerThread;
+
 import com.au.aulitesql.annotation.AuAltName;
 import com.au.aulitesql.annotation.AuIgnore;
 import com.au.aulitesql.dmeo.DemoEntityTable;
+import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.CreatorInfo;
 import com.au.aulitesql.info.FieldInfo;
+import com.au.aulitesql.info.TableAssetInfo;
 import com.au.aulitesql.info.TableInfo;
 
 import java.lang.reflect.Constructor;
@@ -16,13 +21,24 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 public class TableCreators {
     //暂不支持其他。java.lang.Boolean....等等封装类型
-    private final HashMap<String, String> map = new HashMap<>();
+    private static final HashMap<String, String> map = new HashMap<>();
+    static {
+        map.put("boolean" , "BOOLEAN");
+        map.put("byte" , "INTEGER");
+        map.put("int" , "INTEGER");
+        map.put("short" , "INTEGER");
+        map.put("long" , "INTEGER");
+        map.put("float" , "FLOAT");
+        map.put("double" , "DOUBLE");
+        map.put("char" , "INTEGER");
+        map.put("String" , "TEXT");
+    }
+
     public static final String primaryKey =
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n";
     private static final String defaultTextItemTemplate =
@@ -40,22 +56,13 @@ public class TableCreators {
 
     public TableCreators(List<Class<? extends EntityTable>> entityTables) {
         creatorInfo = new CreatorInfo(entityTables);
-        map.put("boolean" , "BOOLEAN");
-        map.put("byte" , "INTEGER");
-        map.put("int" , "INTEGER");
-        map.put("short" , "INTEGER");
-        map.put("long" , "INTEGER");
-        map.put("float" , "FLOAT");
-        map.put("double" , "DOUBLE");
-        map.put("char" , "INTEGER");
-        map.put("String" , "TEXT");
     }
 
     @WorkerThread
-    public CreatorInfo collect() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    public CreatorAssetInfo collect() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         for (Class<? extends EntityTable> tab : creatorInfo.entityTables) {
             Constructor<?> dec = tab.getDeclaredConstructor();
-            TableInfo one = executeSqlCreateTab((EntityTable) dec.newInstance());
+            TableAssetInfo one = executeTableInfo((EntityTable) dec.newInstance());
             creatorInfo.tableInfoList.add(one);
         }
         creatorInfo.tableInfoList.sort((o1, o2) -> {
@@ -75,12 +82,12 @@ public class TableCreators {
         return creatorInfo;
     }
 
-    private Boolean isFieldTransient(Field field) {
+    private static Boolean isFieldTransient(Field field) {
         int modified = field.getModifiers();
         return (modified & Modifier.TRANSIENT) != 0;
     }
 
-    private List<Field> iterAllFields(EntityTable instance) {
+    private static List<Field> iterAllFields(EntityTable instance) {
         ArrayList<Field> allFields = new ArrayList<>();
 
         Class<?> clazz = instance.getClass();
@@ -92,25 +99,29 @@ public class TableCreators {
         return allFields;
     }
 
-    private TableInfo executeSqlCreateTab(EntityTable instance) throws IllegalAccessException {
-        TableInfo t = new TableInfo();
-
-        Class<? extends EntityTable> clazz = instance.getClass();
-        t.entityTable = clazz;
-        t.className = clazz.getSimpleName();
+    public static String tableNameFromClazz(Class<? extends EntityTable> clazz) {
+        var name = clazz.getSimpleName();
         //1. 替代tableName解析
         if (clazz.isAnnotationPresent(AuAltName.class)) {
             AuAltName annotation = clazz.getAnnotation(AuAltName.class);
             if (annotation != null) {
                 String value = annotation.value();
                 if (value != null && !value.isEmpty()) {
-                    t.name = value;
+                    name = value;
                 }
             }
         }
-        if (t.name == null) {
-            t.name = t.className;
-        }
+        return name;
+    }
+
+    public static TableInfo executeTableInfo(EntityTable instance) throws IllegalAccessException {
+        TableInfo t = new TableInfo();
+
+        Class<? extends EntityTable> clazz = instance.getClass();
+        t.entityTable = clazz;
+        t.className = clazz.getSimpleName();
+        //1. 替代tableName解析
+        t.name = tableNameFromClazz(clazz);
 
         StringBuilder sqlCreateTab = new StringBuilder("CREATE TABLE IF NOT EXISTS " + t.name + " (");
         println("sqlCreateTab " + sqlCreateTab);
@@ -154,87 +165,71 @@ public class TableCreators {
             }
 
             switch (type) {
-                case "long":
-                {
+                case "long" -> {
                     long defaultValue = field.getLong(instance);
                     if (defaultValue == 0L) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "int":
-                {
+                case "int" -> {
                     int defaultValue = field.getInt(instance);
                     if (defaultValue == 0) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "short":
-                {
+                case "short" -> {
                     short defaultValue = field.getShort(instance);
                     if (defaultValue == 0) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "byte":
-                {
+                case "byte" -> {
                     byte defaultValue = field.getByte(instance);
                     if (defaultValue == 0) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "char":
-                {
+                case "char" -> {
                     char defaultValue = field.getChar(instance);
                     if (defaultValue == 0) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "float":
-                {
+                case "float" -> {
                     float defaultValue = field.getFloat(instance);
                     if (defaultValue == 0f) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "double":
-                {
+                case "double" -> {
                     double defaultValue = field.getDouble(instance);
                     if (defaultValue == 0f) {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     } else {
                         fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
                     }
-                    break;
                 }
-                case "boolean":
-                {
+                case "boolean" -> {
                     boolean defaultValue = field.getBoolean(instance);
                     if (defaultValue) {
                         fi.sql = String.format(itemBoolTrueTemplate, fi.name);
                     } else {
                         fi.sql = String.format(itemTemplate, fi.name, map.get(type));
                     }
-                    break;
                 }
-                case "String" : {
+                case "String" -> {
                     Object o = field.get(instance);
                     String defaultValue = (o == null) ? null : o.toString();
                     if (defaultValue == null) {
@@ -244,11 +239,8 @@ public class TableCreators {
                     } else {
                         fi.sql = String.format(defaultTextItemTemplate, fi.name, defaultValue);
                     }
-                    break;
                 }
-                default: {
-                    throw new RuntimeException("不可能");
-                }
+                default -> throw new RuntimeException("不可能");
             }
 
             sqlCreateTab.append(fi.sql);
