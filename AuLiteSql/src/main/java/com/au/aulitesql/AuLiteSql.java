@@ -1,7 +1,10 @@
 package com.au.aulitesql;
 
+import static com.au.aulitesql.EntityTable._ID_WHERE_CAUSE;
 import static com.au.aulitesql.TableCreators.tableNameFromClazz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -19,35 +22,149 @@ import java.util.List;
 import java.util.Map;
 
 public class AuLiteSql {
-    public <T extends EntityTable> void saveAllData(List<T> data) {
-        
-    }
-
-    //随便传入一个空对象即可
-    @NonNull
-    public <T extends EntityTable> List<T> readAllData(@NonNull T instance) {
-        var tClass = instance.getClass();
-        var name = tableNameFromClazz(tClass);
+    /**
+     * 根据某个字段查询结果。
+     */
+    public static <T extends EntityTable, P> List<T> getAllFilter(Class<T> clazz, @NonNull String fieldName, P value,
+                                                        String groupBy, String having, String orderBy) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
-            var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
-            var list = new ArrayList<T>();
-            if (cursor != null && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    list.add(instance.fromOneLineCursor(cursor));
-                    cursor.moveToNext();
-                }
-                cursor.close();
-
-                return list;
+            var db = sqlHelper.getReadableDatabase();
+            var tableName = tableNameFromClazz(clazz);
+            var cursor = db.query(tableName, null, fieldName + "=?", new String[] {fieldName}, groupBy, having, orderBy);
+            List<T> list;
+            try {
+                list = cursorToData(cursor, clazz);
+            }catch (Exception e) {
+                e.printStackTrace();
+                list = Collections.emptyList();
             }
-        } else {
-            throw new RuntimeException("not init AuLiteSqliteHelper!");
+            cursor.close();
+            return list;
         }
         return Collections.emptyList();
     }
 
-    ////////
+    public static <T extends EntityTable> boolean deleteList(List<T> dataList) {
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+            db.beginTransaction();
+            for (var instance : dataList) {
+                ContentValues cv = new ContentValues();
+                instance.prepareDbData(cv);
+                var tableName = tableNameFromClazz(instance.getClass());
+                db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            return true;
+        }
+        return false;
+    }
+
+    static boolean deleteData(EntityTable instance) {
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+            var tableName = tableNameFromClazz(instance.getClass());
+            if (instance.getId() >= 0) {
+                return db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())}) >= 0;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static long saveData(EntityTable instance) {
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            instance.prepareDbData(cv);
+            var tableName = tableNameFromClazz(instance.getClass());
+            if (instance.getId() >= 0) {
+                db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+                return instance.getId();
+            } else {
+                return db.insert(tableName, null, cv);
+            }
+        }
+        return -1;
+    }
+
+    public <T extends EntityTable> boolean saveAllData(List<T> dataList) {
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+            db.beginTransaction();
+            for (var instance : dataList) {
+                ContentValues cv = new ContentValues();
+                instance.prepareDbData(cv);
+                var tableName = tableNameFromClazz(instance.getClass());
+                if (instance.getId() >= 0) {
+                    db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+                } else {
+                    db.insert(tableName, null, cv);
+                }
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            return true;
+        }
+        return false;
+    }
+
+    //随便传入一个空对象即可
+    @NonNull
+    public <T extends EntityTable> List<T> loadAllData(Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        var name = tableNameFromClazz(clazz);
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
+            List<T> list;
+            try {
+                list = cursorToData(cursor, clazz);
+            } catch (Exception e) {
+                e.printStackTrace();
+                list = Collections.emptyList();
+            }
+            cursor.close();
+            return list;
+        } else {
+            throw new RuntimeException("not init AuLiteSqliteHelper!");
+        }
+    }
+
+    //cursor没有关闭。
+    public static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        var list = new ArrayList<T>();
+        if (cursor != null && cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                var columns = cursor.getColumnNames();
+
+                T data = (T) clazz.getConstructors()[0].newInstance();
+
+                for (var columnName : columns) {
+                    var columnIndex = cursor.getColumnIndex(columnName);
+                    if (columnIndex >= 0) {
+                        if (columnName.equals(BaseColumns._ID)) {
+                            data.setId(cursor.getLong(columnIndex));
+                        } else {
+                            data.setFieldFromDbCursor(cursor, columnIndex, columnName);
+                        }
+                    }
+                }
+                list.add(data);
+                cursor.moveToNext();
+            }
+        }
+        return list;
+    }
+    //////////////////////////////////////////////
 
     private AuLiteSql() {}
 
@@ -94,16 +211,12 @@ public class AuLiteSql {
     @NonNull
     final AuLiteAssetAutoMigrations migrations = new AuLiteAssetAutoMigrations();
 
-    public static void delete() {
-        instance = null;
-    }
-
     public static AuLiteSql setTableClasses(List<Class<? extends EntityTable>> tables) {
         getInstance().allTabs = tables;
         return instance;
     }
 
-    public static AuLiteSql debugPrintAsset(List<Class<? extends EntityTable>> tables) {
+    public static AuLiteSql initDebugPrintAsset(List<Class<? extends EntityTable>> tables) {
         isDebugPrintAsset = true;
         getInstance().allTabs = tables;
         CreatorAssetInfo creatorInfo = null;

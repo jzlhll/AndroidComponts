@@ -16,8 +16,4 @@ open class InitApplication : Application() {
         FirstInitial.init(this)
         super.onCreate()
     }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
 }

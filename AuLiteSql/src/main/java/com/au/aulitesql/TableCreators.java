@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 import androidx.annotation.WorkerThread;
 
-import com.au.aulitesql.annotation.AuAltName;
+import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.annotation.AuIgnore;
 import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.CreatorInfo;
@@ -101,8 +101,8 @@ public class TableCreators {
     public static String tableNameFromClazz(Class<? extends EntityTable> clazz) {
         var name = clazz.getSimpleName();
         //1. 替代tableName解析
-        if (clazz.isAnnotationPresent(AuAltName.class)) {
-            AuAltName annotation = clazz.getAnnotation(AuAltName.class);
+        if (clazz.isAnnotationPresent(AuName.class)) {
+            AuName annotation = clazz.getAnnotation(AuName.class);
             if (annotation != null) {
                 String value = annotation.value();
                 if (value != null && !value.isEmpty()) {
@@ -146,8 +146,8 @@ public class TableCreators {
             fi.fieldName = field.getName();
             fi.dataType = SqlUtils.dataTypeToCursorDataType(type);
 
-            if (field.isAnnotationPresent(AuAltName.class)) {
-                AuAltName annotation = field.getAnnotation(AuAltName.class);
+            if (field.isAnnotationPresent(AuName.class)) {
+                AuName annotation = field.getAnnotation(AuName.class);
                 if (annotation != null) {
                     String v = annotation.value();
                     if (v != null && !v.isEmpty()) {

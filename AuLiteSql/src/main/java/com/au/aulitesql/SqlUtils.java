@@ -13,7 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //常用sql语句大全 或者 代码片段
 public final class SqlUtils {
@@ -54,7 +56,6 @@ public final class SqlUtils {
             return String.format(sqlRenameTable, tableName, tempPrefix + tableName);
         }
     }
-
 
     /**
      * 是否包含某个table
@@ -143,34 +144,32 @@ public final class SqlUtils {
 
     public static String cursorFieldTypeUpperMap(int fieldType) {
         switch (fieldType) {
-            case FIELD_TYPE_NULL:
-                throw new RuntimeException("暂不支持空值");
-            case FIELD_TYPE_BLOB:
-                throw new RuntimeException("暂不支持二进制");
-            case FIELD_TYPE_INTEGER:
+            case FIELD_TYPE_NULL -> throw new RuntimeException("暂不支持空值");
+            case FIELD_TYPE_BLOB -> throw new RuntimeException("暂不支持二进制");
+            case FIELD_TYPE_INTEGER -> {
                 return "long";
-            case FIELD_TYPE_FLOAT:
+            }
+            case FIELD_TYPE_FLOAT -> {
                 return "double";
-            case FIELD_TYPE_STRING:
+            }
+            case FIELD_TYPE_STRING -> {
                 return "String";
+            }
         }
         throw new RuntimeException("不可能");
     }
 
     public static String dataTypeUpperMap(String dataType) {
         switch (dataType) {
-            case "boolean":
-            case "byte":
-            case "int":
-            case "short":
-            case "long":
-            case "char":
+            case "boolean", "byte", "int", "short", "long", "char" -> {
                 return "long";
-            case "float":
-            case "double":
+            }
+            case "float", "double" -> {
                 return "double";
-            case "String":
+            }
+            case "String" -> {
                 return "String";
+            }
         }
         throw new RuntimeException("不可能");
     }
