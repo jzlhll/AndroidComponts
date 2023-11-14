@@ -8,7 +8,6 @@ import androidx.annotation.WorkerThread;
 
 import com.au.aulitesql.annotation.AuAltName;
 import com.au.aulitesql.annotation.AuIgnore;
-import com.au.aulitesql.dmeo.DemoEntityTable;
 import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.CreatorInfo;
 import com.au.aulitesql.info.FieldInfo;
@@ -255,15 +254,5 @@ public class TableCreators {
 
         t.sql = sqlCreateTab.toString();
         return t;
-    }
-
-    public static void main(String[] args) {
-        List<Class<? extends EntityTable>> list = new ArrayList<>();
-        list.add(DemoEntityTable.class);
-        try {
-            new TableCreators(list).collect();
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

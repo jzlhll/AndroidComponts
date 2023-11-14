@@ -177,18 +177,15 @@ public final class SqlUtils {
 
     public static int dataTypeToCursorDataType(String dataType) {
         switch (dataType) {
-            case "boolean":
-            case "byte":
-            case "int":
-            case "short":
-            case "long":
-            case "char":
+            case "boolean", "byte", "int", "short", "long", "char" -> {
                 return FIELD_TYPE_INTEGER;
-            case "float":
-            case "double":
+            }
+            case "float", "double" -> {
                 return FIELD_TYPE_FLOAT;
-            case "String":
+            }
+            case "String" -> {
                 return FIELD_TYPE_STRING;
+            }
         }
         throw new RuntimeException("不可能");
     }

@@ -1,6 +1,9 @@
 package com.au.aulitesql;
 
+import android.database.Cursor;
 import android.provider.BaseColumns;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author allan.jiang
@@ -18,7 +21,12 @@ public abstract class EntityTable implements BaseColumns {
         this.id = id;
     }
 
-    public long writeToDb() {
-
+    public long saveTo() {
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+        }
     }
+
+    public abstract <T extends EntityTable> T fromOneLineCursor(@NonNull Cursor cursor);
 }

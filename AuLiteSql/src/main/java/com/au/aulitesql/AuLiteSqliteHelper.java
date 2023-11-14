@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
     public static String assetFile;
 
     private final Context context;
+
+    public static AuLiteSqliteHelper sSqlHelper;
 
     /**
      * @return 第0行是名字，第1行是sqlCreate语句。第2行是第二个名字，第三行是sqlCreate语句。以此类推。
@@ -41,16 +44,20 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
     public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context;
+        sSqlHelper = this;
     }
 
     public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version, @Nullable DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
         this.context = context;
+        sSqlHelper = this;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         if (AuLiteSql.isDebugPrintAsset) {
+            throw new RuntimeException("Directly throw Exception, after collect asset " +
+                    "disable debug print asset.");
 //            CreatorInfo ci = AuLiteSql.getInstance().creatorInfo;
 //            if (ci != null) {
 //                for (TableInfo ti : ci.tableInfoList) {
@@ -68,7 +75,8 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
                 db.execSQL(creators.get(i+1));
                 //写入日志表，创建信息
                 var logCv = new ContentValues();
-                logCv.put(SqlUtils.SqlString.AU_LITE_LOG_CREATE_SQL, creators.get(i));
+                logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_CREATE_SQL, creators.get(i));
+                logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_TABLE_NAME, creators.get(i+1));
                 db.insert(SqlUtils.SqlString.AU_LITE_LOG_TABLE_NAME, null, logCv);
             }
         }
@@ -76,11 +84,21 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        AuLiteSql.getInstance().migrations.onVersionChange(AuLiteSql.getInstance().creatorInfo, db);
+        try {
+            AuLiteSql.getInstance().migrations.onVersionChange(
+                    new TableCreators(AuLiteSql.getInstance().allTabs).collect(), db);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        AuLiteSql.getInstance().migrations.onVersionChange(AuLiteSql.getInstance().creatorInfo, db);
+        try {
+            AuLiteSql.getInstance().migrations.onVersionChange(
+                    new TableCreators(AuLiteSql.getInstance().allTabs).collect(), db);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

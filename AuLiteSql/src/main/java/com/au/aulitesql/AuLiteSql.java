@@ -1,5 +1,8 @@
 package com.au.aulitesql;
 
+import static com.au.aulitesql.TableCreators.tableNameFromClazz;
+
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,14 +13,48 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AuLiteSql {
+    public <T extends EntityTable> void saveAllData(List<T> data) {
+        
+    }
+
+    //随便传入一个空对象即可
+    @NonNull
+    public <T extends EntityTable> List<T> readAllData(@NonNull T instance) {
+        var tClass = instance.getClass();
+        var name = tableNameFromClazz(tClass);
+        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        if (sqlHelper != null) {
+            var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
+            var list = new ArrayList<T>();
+            if (cursor != null && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    list.add(instance.fromOneLineCursor(cursor));
+                    cursor.moveToNext();
+                }
+                cursor.close();
+
+                return list;
+            }
+        } else {
+            throw new RuntimeException("not init AuLiteSqliteHelper!");
+        }
+        return Collections.emptyList();
+    }
+
+    ////////
+
     private AuLiteSql() {}
 
     private static AuLiteSql instance;
     static boolean isDebugPrintAsset = false;
+
+    List<Class<? extends EntityTable>> allTabs;
 
     public static AuLiteSql getInstance() {
         if (instance == null) {
@@ -26,7 +63,7 @@ public class AuLiteSql {
         return instance;
     }
 
-    private Gson sGon;
+    private Gson gson;
 
     /**
      * 你可以配置你全局的gson进来。在初始化阶段。
@@ -34,11 +71,14 @@ public class AuLiteSql {
      * @param gson
      */
     public static AuLiteSql initGson(@NonNull Gson gson) {
-        getInstance().sGon = gson;
+        getInstance().gson = gson;
         return instance;
     }
 
     public static Gson getGsonOrNew() {
+        if (instance != null && instance.gson != null) {
+            return instance.gson;
+        }
         return new GsonBuilder().create();
     }
 
@@ -51,8 +91,6 @@ public class AuLiteSql {
         return instance;
     }
 
-    CreatorAssetInfo creatorInfo;
-
     @NonNull
     final AuLiteAssetAutoMigrations migrations = new AuLiteAssetAutoMigrations();
 
@@ -60,18 +98,26 @@ public class AuLiteSql {
         instance = null;
     }
 
-    private static void debugPrintAsset(List<Class<? extends EntityTable>> tables) {
+    public static AuLiteSql setTableClasses(List<Class<? extends EntityTable>> tables) {
+        getInstance().allTabs = tables;
+        return instance;
+    }
+
+    public static AuLiteSql debugPrintAsset(List<Class<? extends EntityTable>> tables) {
         isDebugPrintAsset = true;
+        getInstance().allTabs = tables;
+        CreatorAssetInfo creatorInfo = null;
         try {
-            AuLiteSql.getInstance().creatorInfo = new TableCreators(tables).collect();
+            creatorInfo = new TableCreators(tables).collect();
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-        if (AuLiteSql.getInstance().creatorInfo != null) {
+        if (creatorInfo != null) {
             Log.w("AuLiteSql", "Please save to asset....to > auLiteSql/dbCreator.txt");
-            Log.w("AuLiteSql", AuLiteSql.getInstance().creatorInfo.saveToString());
+            Log.w("AuLiteSql", creatorInfo.saveToString());
             Log.w("AuLiteSql", "Please save to asset....end!");
         }
+        return instance;
     }
 
     public static void setAsset(String assetFile) {

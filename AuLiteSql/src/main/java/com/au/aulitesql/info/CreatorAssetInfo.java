@@ -16,7 +16,7 @@ public class CreatorAssetInfo {
     public final ArrayList<TableAssetInfo> tableInfoList = new ArrayList<>();
 
     public List<String> allTableNames() {
-        return tableInfoList.stream().map((Function<TableAssetInfo, String>) tableInfo -> tableInfo.name).collect(Collectors.toList());
+        return tableInfoList.stream().map(tableInfo -> tableInfo.name).collect(Collectors.toList());
     }
 
     @Nullable
