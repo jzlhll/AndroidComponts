@@ -1,7 +1,5 @@
 package com.au.aulitesql;
 
-import static com.au.aulitesql.TableCreators.primaryKey;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -13,9 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //常用sql语句大全 或者 代码片段
 public final class SqlUtils {
@@ -141,38 +137,13 @@ public final class SqlUtils {
     static final int FIELD_TYPE_STRING = 3;
 
     static final int FIELD_TYPE_BLOB = 4;
+    static final int FIELD_TYPE_LIST = 5;
+    static final int FIELD_TYPE_ARRAY_LIST = 6;
+    static final int FIELD_TYPE_SET = 7;
+    static final int FIELD_TYPE_HASH_SET = 8;
 
-    public static String cursorFieldTypeUpperMap(int fieldType) {
-        switch (fieldType) {
-            case FIELD_TYPE_NULL -> throw new RuntimeException("暂不支持空值");
-            case FIELD_TYPE_BLOB -> throw new RuntimeException("暂不支持二进制");
-            case FIELD_TYPE_INTEGER -> {
-                return "long";
-            }
-            case FIELD_TYPE_FLOAT -> {
-                return "double";
-            }
-            case FIELD_TYPE_STRING -> {
-                return "String";
-            }
-        }
-        throw new RuntimeException("不可能");
-    }
-
-    public static String dataTypeUpperMap(String dataType) {
-        switch (dataType) {
-            case "boolean", "byte", "int", "short", "long", "char" -> {
-                return "long";
-            }
-            case "float", "double" -> {
-                return "double";
-            }
-            case "String" -> {
-                return "String";
-            }
-        }
-        throw new RuntimeException("不可能");
-    }
+    static final int FIELD_TYPE_MAP = 9;
+    static final int FIELD_TYPE_HASH_MAP = 10;
 
     public static int dataTypeToCursorDataType(String dataType) {
         switch (dataType) {
@@ -184,6 +155,24 @@ public final class SqlUtils {
             }
             case "String" -> {
                 return FIELD_TYPE_STRING;
+            }
+            case "List" -> {
+                return FIELD_TYPE_LIST;
+            }
+            case "ArrayList" -> {
+                return FIELD_TYPE_ARRAY_LIST;
+            }
+            case "Set" -> {
+                return FIELD_TYPE_SET;
+            }
+            case "HashSet" -> {
+                return FIELD_TYPE_HASH_SET;
+            }
+            case "Map" -> {
+                return FIELD_TYPE_MAP;
+            }
+            case "HashMap" -> {
+                return FIELD_TYPE_HASH_MAP;
             }
         }
         throw new RuntimeException("不可能");

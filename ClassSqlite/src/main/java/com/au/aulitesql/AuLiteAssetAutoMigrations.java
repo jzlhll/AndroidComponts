@@ -8,23 +8,19 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
-import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.NamesPair;
-import com.au.aulitesql.info.TableAssetInfo;
+import com.au.aulitesql.info.TableInfo;
+import com.au.aulitesql.print.TableCreators;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class AuLiteAssetAutoMigrations {
     Map<Class<? extends EntityTable>, IManualMigration> tableInnersMigrations = null;
     Map<NamesPair, IManualMigration> tablesMigrations = null;
 
-    void onVersionChange(@NonNull CreatorAssetInfo newCreators, @NonNull SQLiteDatabase db) {
+    void onVersionChange(@NonNull TableCreators.CreatorInfo newCreators, @NonNull SQLiteDatabase db) {
         List<String> oldTabs = SqlUtils.allTableNames(db);
         List<String> newTabs = newCreators.allTableNames();
 
@@ -63,7 +59,7 @@ public class AuLiteAssetAutoMigrations {
             if (foundNamesParKey != null) {
                 IManualMigration mig = tablesMigrations.get(foundNamesParKey);
                 Class<? extends EntityTable> newClass = foundNamesParKey.newNameClass;
-                TableAssetInfo newTableInfo = newCreators.getByTableClass(newClass);
+                TableInfo newTableInfo = newCreators.getByTableClass(newClass);
 
                 //取出新的类对应的sql
                 Cursor cursor = db.rawQuery(oldTab, null);
@@ -124,6 +120,6 @@ public class AuLiteAssetAutoMigrations {
     }
 
     private static boolean isSame(Class<? extends EntityTable> clazz, String name) {
-        return TableCreators.tableNameFromClazz(clazz).equals(name);
+        return AuLiteSql.tableNameFromClazz(clazz).equals(name);
     }
 }

@@ -1,16 +1,16 @@
 package com.au.aulitesql;
 
 import static com.au.aulitesql.EntityTable._ID_WHERE_CAUSE;
-import static com.au.aulitesql.TableCreators.tableNameFromClazz;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.au.aulitesql.info.CreatorAssetInfo;
+import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,7 +21,38 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class AuLiteSql {
+public final class AuLiteSql {
+    private AuLiteSql() {}
+    public static AuLiteSql getInstance() {
+        if (instance == null) {
+            synchronized (AuLiteSql.class) {
+                if (instance == null) {
+                    instance = new AuLiteSql();
+                }
+            }
+        }
+        return instance;
+    }
+
+    static void destroy() {
+        instance = null;
+    }
+
+    public static String tableNameFromClazz(Class<? extends EntityTable> clazz) {
+        var name = clazz.getSimpleName();
+        //1. 替代tableName解析
+        if (clazz.isAnnotationPresent(AuName.class)) {
+            AuName annotation = clazz.getAnnotation(AuName.class);
+            if (annotation != null) {
+                String value = annotation.value();
+                if (value != null && !value.isEmpty()) {
+                    name = value;
+                }
+            }
+        }
+        return name;
+    }
+
     /**
      * 根据某个字段查询结果。
      */
@@ -45,14 +76,12 @@ public class AuLiteSql {
         return Collections.emptyList();
     }
 
-    public static <T extends EntityTable> boolean deleteList(List<T> dataList) {
+    public static <T extends EntityTable> boolean deleteAllData(List<T> dataList) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
             db.beginTransaction();
             for (var instance : dataList) {
-                ContentValues cv = new ContentValues();
-                instance.prepareDbData(cv);
                 var tableName = tableNameFromClazz(instance.getClass());
                 db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
             }
@@ -78,44 +107,66 @@ public class AuLiteSql {
         return false;
     }
 
-    static long saveData(EntityTable instance) {
+    static EntityTable saveData(EntityTable instance) {
+        return saveData(instance, new boolean[]{false});
+    }
+
+    /**
+     * @param status 请传入 new boolean[] {false}。用来接收插入是否成功结果。
+     */
+    static EntityTable saveData(EntityTable instance, @NonNull boolean[] status) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
+            status[0] = true;
             var db = sqlHelper.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            instance.prepareDbData(cv);
+            instance.pack(cv);
             var tableName = tableNameFromClazz(instance.getClass());
             if (instance.getId() >= 0) {
                 db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
-                return instance.getId();
+                return instance;
             } else {
-                return db.insert(tableName, null, cv);
+                var r = db.insert(tableName, null, cv);
+                if (r == -1) {
+                    Log.e("AuLiteSql", "error when saveData " + instance);
+                    status[0] = false;
+                }
+                instance.setId(r);
+                return instance;
             }
         }
-        return -1;
+        status[0] = false;
+        return null;
     }
 
-    public <T extends EntityTable> boolean saveAllData(List<T> dataList) {
+    public <T extends EntityTable> int saveAllData(List<T> dataList) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var successSize = 0;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
             db.beginTransaction();
             for (var instance : dataList) {
                 ContentValues cv = new ContentValues();
-                instance.prepareDbData(cv);
+                instance.pack(cv);
                 var tableName = tableNameFromClazz(instance.getClass());
                 if (instance.getId() >= 0) {
-                    db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+                    var r = db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+                    if(r > 0) successSize += r;
                 } else {
-                    db.insert(tableName, null, cv);
+                    var r = db.insert(tableName, null, cv);
+                    if (r == -1) {
+                        Log.e("AuLiteSql", "error when saveData " + instance);
+                    } else {
+                        successSize++;
+                    }
+                    instance.setId(r);
                 }
             }
 
             db.setTransactionSuccessful();
             db.endTransaction();
-            return true;
         }
-        return false;
+        return successSize;
     }
 
     //随便传入一个空对象即可
@@ -139,14 +190,14 @@ public class AuLiteSql {
         }
     }
 
-    //cursor没有关闭。
+    //cursor没有关闭。交给调用者关闭。谁打开谁关闭。
     public static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         var list = new ArrayList<T>();
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 var columns = cursor.getColumnNames();
 
-                T data = (T) clazz.getConstructors()[0].newInstance();
+                T data = (T) clazz.getConstructors()[0].newInstance(); //later 要求必须有空构造函数。
 
                 for (var columnName : columns) {
                     var columnIndex = cursor.getColumnIndex(columnName);
@@ -154,7 +205,7 @@ public class AuLiteSql {
                         if (columnName.equals(BaseColumns._ID)) {
                             data.setId(cursor.getLong(columnIndex));
                         } else {
-                            data.setFieldFromDbCursor(cursor, columnIndex, columnName);
+                            data.unpack(cursor, columnIndex, columnName);
                         }
                     }
                 }
@@ -164,77 +215,52 @@ public class AuLiteSql {
         }
         return list;
     }
-    //////////////////////////////////////////////
 
-    private AuLiteSql() {}
-
-    private static AuLiteSql instance;
-    static boolean isDebugPrintAsset = false;
-
-    List<Class<? extends EntityTable>> allTabs;
-
-    public static AuLiteSql getInstance() {
-        if (instance == null) {
-            instance = new AuLiteSql();
-        }
-        return instance;
-    }
-
-    private Gson gson;
-
-    /**
-     * 你可以配置你全局的gson进来。在初始化阶段。
-     * 否则，就将自行创建。
-     * @param gson
-     */
-    public static AuLiteSql initGson(@NonNull Gson gson) {
-        getInstance().gson = gson;
-        return instance;
-    }
+    /////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
 
     public static Gson getGsonOrNew() {
         if (instance != null && instance.gson != null) {
             return instance.gson;
         }
-        return new GsonBuilder().create();
+        instance.gson = new GsonBuilder().create();
+        return instance.gson;
     }
 
+    private static volatile AuLiteSql instance;
+    private Gson gson;
     int dbVersion = 1;
     String dbName = "au_sqlite.db";
-
-    public static AuLiteSql initDb(@NonNull String dbName, int dbVersion) {
-        getInstance().dbName = dbName;
-        instance.dbVersion = dbVersion;
-        return instance;
-    }
-
+    String assetFile;
     @NonNull
     final AuLiteAssetAutoMigrations migrations = new AuLiteAssetAutoMigrations();
 
-    public static AuLiteSql setTableClasses(List<Class<? extends EntityTable>> tables) {
-        getInstance().allTabs = tables;
-        return instance;
+    List<Class<? extends EntityTable>> currentAllTabs;
+
+    public AuLiteSql setDb(@NonNull String dbName, int dbVersion) {
+        this.dbName = dbName;
+        this.dbVersion = dbVersion;
+        return this;
     }
 
-    public static AuLiteSql initDebugPrintAsset(List<Class<? extends EntityTable>> tables) {
-        isDebugPrintAsset = true;
-        getInstance().allTabs = tables;
-        CreatorAssetInfo creatorInfo = null;
-        try {
-            creatorInfo = new TableCreators(tables).collect();
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
-        }
-        if (creatorInfo != null) {
-            Log.w("AuLiteSql", "Please save to asset....to > auLiteSql/dbCreator.txt");
-            Log.w("AuLiteSql", creatorInfo.saveToString());
-            Log.w("AuLiteSql", "Please save to asset....end!");
-        }
-        return instance;
+    /**
+     * 你可以配置你全局的gson进来。在初始化阶段。
+     * 否则，就将自行创建。
+     */
+    public AuLiteSql setGson(@NonNull Gson gson) {
+        this.gson = gson;
+        return this;
     }
 
-    public static void setAsset(String assetFile) {
-        AuLiteSqliteHelper.assetFile = assetFile;
+    public AuLiteSql setTableClasses(List<Class<? extends EntityTable>> tables) {
+        currentAllTabs = tables;
+        return this;
+    }
+
+    public AuLiteSql setAsset(String assetFile) {
+        this.assetFile = assetFile;
+        return this;
     }
 
     /**
@@ -242,9 +268,9 @@ public class AuLiteSql {
      *  （其实我是改了表名，然后新建同名新表，进行数据迁移）
      *  如果不设置该函数，则表内迁移，只会保留字段不变的内容。其他全部删除。
      */
-    public static AuLiteSql setTabInnerMigrations(Map<Class<? extends EntityTable>, IManualMigration> tableInners) {
-        AuLiteSql.getInstance().migrations.tableInnersMigrations = tableInners;
-        return instance;
+    public AuLiteSql setTabInnerMigrations(Map<Class<? extends EntityTable>, IManualMigration> tableInners) {
+        migrations.tableInnersMigrations = tableInners;
+        return this;
     }
 
     /**
@@ -257,8 +283,15 @@ public class AuLiteSql {
      *
      *  暂不支持，过于复杂的转换。比如，我就是存在某个同名老表，但是我就想将某个老表1，数据迁移到老表2中去。
      */
-    public static AuLiteSql setTabsMigrations(Map<NamesPair, IManualMigration> tables) {
-        AuLiteSql.getInstance().migrations.tablesMigrations = tables;
-        return instance;
+    public AuLiteSql setTabsMigrations(Map<NamesPair, IManualMigration> tables) {
+        migrations.tablesMigrations = tables;
+        return this;
+    }
+
+    /////////////////////////////////////
+    /////////////////////////////////////
+    /////////////////////////////////////
+    public AuLiteSqliteHelper start(Context applicationContext) {
+        return new AuLiteSqliteHelper(applicationContext, dbName, null, dbVersion);
     }
 }

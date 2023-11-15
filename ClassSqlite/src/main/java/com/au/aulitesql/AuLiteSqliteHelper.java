@@ -1,0 +1,92 @@
+package com.au.aulitesql;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+import com.au.aulitesql.print.TableCreators;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AuLiteSqliteHelper extends SQLiteOpenHelper {
+
+    private final Context context;
+
+    public static AuLiteSqliteHelper sSqlHelper;
+
+    public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+        this.context = context;
+        sSqlHelper = this;
+    }
+
+    public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version, @Nullable DatabaseErrorHandler errorHandler) {
+        super(context, name, factory, version, errorHandler);
+        this.context = context;
+        sSqlHelper = this;
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        //创建日志表
+        db.execSQL(SqlUtils.SqlString.sqlCreateLogTable);
+
+        //从asset文件中解析sql创建语句。
+        //var creators = creatorStringFromAssetFile();
+        //从collect() 结果中获取 sql创建语句。
+        var creators = TableCreators.collect(AuLiteSql.getInstance().currentAllTabs).saveToStrings();
+
+        for (int i = 0, size = creators.length; i < size; i+=2) {
+            //创建表
+            db.execSQL(creators[i+1]);
+            //写入日志表，创建信息
+            var logCv = new ContentValues();
+            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_CREATE_SQL, creators[i]);
+            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_TABLE_NAME, creators[i+1]);
+            db.insert(SqlUtils.SqlString.AU_LITE_LOG_TABLE_NAME, null, logCv);
+        }
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try {
+            AuLiteSql.getInstance().migrations.onVersionChange(
+                    new TableCreators(AuLiteSql.getInstance().currentAllTabs).collect(), db);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        onUpgrade(db, oldVersion, newVersion);
+    }
+
+    /**
+     * @return 第0行是名字，第1行是sqlCreate语句。第2行是第二个名字，第三行是sqlCreate语句。以此类推。
+     */
+    private String[] creatorStringFromAssetFile() {
+        List<String> r = new ArrayList<>();
+        try {
+            InputStream is = context.getAssets().open(AuLiteSql.getInstance().assetFile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while((line = reader.readLine()) != null) {
+                r.add(line);
+            }
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return r.toArray(new String[]{});
+    }
+}

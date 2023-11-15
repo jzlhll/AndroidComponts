@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.au.aulitesql.info.CreatorAssetInfo;
 import com.au.aulitesql.info.CreatorInfo;
-import com.au.aulitesql.info.TableAssetInfo;
 
 import java.util.List;
 import java.util.Map;

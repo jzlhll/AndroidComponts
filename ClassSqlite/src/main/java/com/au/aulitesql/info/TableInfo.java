@@ -7,8 +7,24 @@ import com.au.aulitesql.AuLiteSql;
 import com.au.aulitesql.EntityTable;
 import com.google.gson.Gson;
 
-public final class TableInfo extends TableAssetInfo {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TableInfo {
     public transient Class<? extends EntityTable> entityTable;
+
+    public String className;
+
+    public String name;
+
+    public final List<FieldInfo> fieldInfoList = new ArrayList<>();
+
+    public String sql;
+
+    public String toSave() {
+        Gson gson = AuLiteSql.getGsonOrNew();
+        return gson.toJson(this);
+    }
 
     public static TableInfo fromSave(@NonNull String save) {
         Gson gson = AuLiteSql.getGsonOrNew();
