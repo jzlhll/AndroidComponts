@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 import androidx.annotation.NonNull;
 
 import com.au.aulitesql.annotation.AuName;
+import com.google.gson.Gson;
 
 /**
  * @author allan.jiang
@@ -54,20 +55,17 @@ public abstract class EntityTable implements BaseColumns {
      * 与pack相反，这里是从数据库中提取出内容。类似的，也需要一类一层一层实现，去解析。<br>
      * 比如某个子类有2个字段：
      * <br>
-     * String name<br>
-     * AuAltName("altAge")<br>
-     * int age<br><br>
+     String name<br>
+     AuAltName("altAge")<br>
+     int age<br><br>
      * 则需要写为：<br>
-        when (columnName) {<br>
-            case "name":<br>
-               this.name = cursor.getString(columnIndex);<br>
-                break;<br>
-            case "altAge":<br>
-             this.age = cursor.getInt(columnIndex);<br>
-             break;<br>
-        }<br>
+        int columnId = cursor.getColumnIndex("name");  <br>
+        if (columnId >= 0) name = cursor.getString(columnId); <br>
+     <br>
+        columnId = cursor.getColumnIndex("altAge");  <br>
+        if (columnId >= 0) age = cursor.getInt(columnId); <br>
      */
-    public abstract void unpack(@NonNull Cursor cursor, int columnIndex, @NonNull String columnName);
+    public abstract void unpack(@NonNull Cursor cursor);
 
     /**
      * 日后，会被自动化。
@@ -89,5 +87,10 @@ public abstract class EntityTable implements BaseColumns {
     public long save() {
         AuLiteSql.saveData(this);
         return id;
+    }
+
+    @NonNull
+    public Gson gson() {
+        return AuLiteSql.getGsonOrNew();
     }
 }

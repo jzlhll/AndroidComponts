@@ -56,13 +56,13 @@ public final class AuLiteSql {
     /**
      * 根据某个字段查询结果。
      */
-    public static <T extends EntityTable, P> List<T> getAllFilter(Class<T> clazz, @NonNull String fieldName, P value,
+    public static <T extends EntityTable, P> List<T> loadAllData(Class<T> clazz, @NonNull String fieldName, P value,
                                                         String groupBy, String having, String orderBy) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getReadableDatabase();
             var tableName = tableNameFromClazz(clazz);
-            var cursor = db.query(tableName, null, fieldName + "=?", new String[] {fieldName}, groupBy, having, orderBy);
+            var cursor = db.query(tableName, null, fieldName + "=?", new String[] {String.valueOf(value)}, groupBy, having, orderBy);
             List<T> list;
             try {
                 list = cursorToData(cursor, clazz);
@@ -93,7 +93,7 @@ public final class AuLiteSql {
         return false;
     }
 
-    static boolean deleteData(EntityTable instance) {
+    public static boolean deleteData(EntityTable instance) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
@@ -107,14 +107,14 @@ public final class AuLiteSql {
         return false;
     }
 
-    static EntityTable saveData(EntityTable instance) {
+    public static EntityTable saveData(EntityTable instance) {
         return saveData(instance, new boolean[]{false});
     }
 
     /**
      * @param status 请传入 new boolean[] {false}。用来接收插入是否成功结果。
      */
-    static EntityTable saveData(EntityTable instance, @NonNull boolean[] status) {
+    public static EntityTable saveData(EntityTable instance, @NonNull boolean[] status) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
             status[0] = true;
@@ -139,7 +139,7 @@ public final class AuLiteSql {
         return null;
     }
 
-    public <T extends EntityTable> int saveAllData(List<T> dataList) {
+    public static <T extends EntityTable> int saveAllData(List<T> dataList) {
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         var successSize = 0;
         if (sqlHelper != null) {
@@ -171,7 +171,7 @@ public final class AuLiteSql {
 
     //随便传入一个空对象即可
     @NonNull
-    public <T extends EntityTable> List<T> loadAllData(Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+    public static <T extends EntityTable> List<T> loadAllData(Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         var name = tableNameFromClazz(clazz);
         var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
         if (sqlHelper != null) {
@@ -195,20 +195,10 @@ public final class AuLiteSql {
         var list = new ArrayList<T>();
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                var columns = cursor.getColumnNames();
-
                 T data = (T) clazz.getConstructors()[0].newInstance(); //later 要求必须有空构造函数。
-
-                for (var columnName : columns) {
-                    var columnIndex = cursor.getColumnIndex(columnName);
-                    if (columnIndex >= 0) {
-                        if (columnName.equals(BaseColumns._ID)) {
-                            data.setId(cursor.getLong(columnIndex));
-                        } else {
-                            data.unpack(cursor, columnIndex, columnName);
-                        }
-                    }
-                }
+                var columnID_id = cursor.getColumnIndex(BaseColumns._ID);
+                if (columnID_id >= 0) data.setId(cursor.getLong(columnID_id));
+                data.unpack(cursor);
                 list.add(data);
                 cursor.moveToNext();
             }
@@ -220,6 +210,7 @@ public final class AuLiteSql {
     /////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////
 
+    @NonNull
     public static Gson getGsonOrNew() {
         if (instance != null && instance.gson != null) {
             return instance.gson;
