@@ -4,15 +4,10 @@ import static com.au.aulitesql.AuLiteSql.tableNameFromClazz;
 import static com.au.aulitesql.EntityTable._ID_WHERE_CAUSE;
 
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +15,7 @@ import java.util.List;
  * @author allan.jiang
  * @date :2023/11/15 17:14
  */
-public class NormalDao implements IDao{
+public class DefaultDao implements IDao{
 
     @Override
     @NonNull
@@ -31,7 +26,7 @@ public class NormalDao implements IDao{
             var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
             List<E> list;
             try {
-                list = cursorToData(cursor, clazz);
+                list = IDao.cursorToData(cursor, clazz);
             } catch (Exception e) {
                 e.printStackTrace();
                 list = Collections.emptyList();
@@ -70,7 +65,7 @@ public class NormalDao implements IDao{
             var cursor = db.query(tableName, null, selection, selectionArgs, groupBy, having, orderBy);
             List<E> list;
             try {
-                list = cursorToData(cursor, clazz);
+                list = IDao.cursorToData(cursor, clazz);
             }catch (Exception e) {
                 e.printStackTrace();
                 list = Collections.emptyList();
@@ -89,7 +84,7 @@ public class NormalDao implements IDao{
             var cursor = db.rawQuery(sql, selectionArgs);
             List<E> list;
             try {
-                list = cursorToData(cursor, clazz);
+                list = IDao.cursorToData(cursor, clazz);
             }catch (Exception e) {
                 e.printStackTrace();
                 list = Collections.emptyList();
@@ -198,24 +193,4 @@ public class NormalDao implements IDao{
         return successSize;
     }
 
-    //cursor没有关闭。交给调用者关闭。谁打开谁关闭。
-    public static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        var list = new ArrayList<T>();
-        var constructors = clazz.getConstructors(); //later 要求必须有空构造函数。
-        Constructor<?> constructor = null;
-        if (constructors.length > 0) {
-            constructor = constructors[0];
-        }
-        if (cursor != null && cursor.moveToFirst() && constructor != null) {
-            while (!cursor.isAfterLast()) {
-                T data = (T) constructor.newInstance();
-                var columnID_id = cursor.getColumnIndex(BaseColumns._ID);
-                if (columnID_id >= 0) data.setId(cursor.getLong(columnID_id));
-                data.unpack(cursor);
-                list.add(data);
-                cursor.moveToNext();
-            }
-        }
-        return list;
-    }
 }

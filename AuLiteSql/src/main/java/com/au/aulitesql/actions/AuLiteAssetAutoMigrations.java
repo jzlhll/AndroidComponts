@@ -1,6 +1,6 @@
-package com.au.aulitesql;
+package com.au.aulitesql.actions;
 
-import static com.au.aulitesql.SqlUtils.SqlString.sqlDeleteTable;
+import static com.au.aulitesql.actions.SqlUtils.SqlString.sqlDeleteTable;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -8,19 +8,23 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import com.au.aulitesql.AuLiteSql;
+import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.IManualMigration;
+import com.au.aulitesql.info.Triple;
 import com.au.aulitesql.info.NamesPair;
+import com.au.aulitesql.info.Pair;
 import com.au.aulitesql.info.TableInfo;
-import com.au.aulitesql.print.TableCreators;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class AuLiteAssetAutoMigrations {
-    Map<Class<? extends EntityTable>, IManualMigration> tableInnersMigrations = null;
-    Map<NamesPair, IManualMigration> tablesMigrations = null;
+    public Map<Class<? extends EntityTable>, IManualMigration> tableInnersMigrations = null;
+    public Map<NamesPair, IManualMigration> tablesMigrations = null;
 
-    void onVersionChange(@NonNull TableCreators.CreatorInfo newCreators, @NonNull SQLiteDatabase db) {
+    public void onVersionChange(@NonNull TableCreators.CreatorInfo newCreators, @NonNull SQLiteDatabase db) {
         List<String> oldTabs = SqlUtils.allTableNames(db);
         List<String> newTabs = newCreators.allTableNames();
 

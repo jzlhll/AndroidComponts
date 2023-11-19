@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.au.aulitesql.print.TableCreators;
+import com.au.aulitesql.actions.SqlUtils;
+import com.au.aulitesql.actions.TableCreators;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

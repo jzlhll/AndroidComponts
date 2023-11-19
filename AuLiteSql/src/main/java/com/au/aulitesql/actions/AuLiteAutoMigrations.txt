@@ -1,6 +1,6 @@
 package com.au.aulitesql;
 
-import static com.au.aulitesql.SqlUtils.SqlString.sqlDeleteTable;
+import static com.au.aulitesql.actions.SqlUtils.SqlString.sqlDeleteTable;
 
 import android.content.ContentValues;
 import android.database.Cursor;

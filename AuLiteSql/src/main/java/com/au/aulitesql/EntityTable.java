@@ -17,8 +17,6 @@ import com.google.gson.Gson;
  * 数据库表类，必须有一个空构造函数。
  */
 public abstract class EntityTable implements BaseColumns {
-    protected final static NormalDao dao = new NormalDao();
-
     public static final String _ID_WHERE_CAUSE = BaseColumns._ID + " = ?";
 
     @AuName(BaseColumns._ID)
@@ -81,7 +79,7 @@ public abstract class EntityTable implements BaseColumns {
     public abstract void reset();
 
     public final boolean delete() {
-        var r = dao.delete(this);
+        var r = AuLiteSql.getInstance().dao.delete(this);
         reset();
         id = -1;
         return r;
@@ -91,7 +89,7 @@ public abstract class EntityTable implements BaseColumns {
      * 增加或者修改。
      */
     public final long save() {
-        dao.save(this);
+        AuLiteSql.getInstance().dao.save(this);
         return id;
     }
 

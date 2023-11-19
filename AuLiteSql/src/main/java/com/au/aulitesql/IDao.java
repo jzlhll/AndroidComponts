@@ -1,7 +1,13 @@
 package com.au.aulitesql;
 
+import android.database.Cursor;
+import android.provider.BaseColumns;
+
 import androidx.annotation.NonNull;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IDao {
@@ -36,4 +42,24 @@ public interface IDao {
     //////////////////////////////////
     //////////////////////////////////
 
+    //cursor没有关闭。交给调用者关闭。谁打开谁关闭。
+    static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        var list = new ArrayList<T>();
+        var constructors = clazz.getConstructors(); //later 要求必须有空构造函数。
+        Constructor<?> constructor = null;
+        if (constructors.length > 0) {
+            constructor = constructors[0];
+        }
+        if (cursor != null && cursor.moveToFirst() && constructor != null) {
+            while (!cursor.isAfterLast()) {
+                T data = (T) constructor.newInstance();
+                var columnID_id = cursor.getColumnIndex(BaseColumns._ID);
+                if (columnID_id >= 0) data.setId(cursor.getLong(columnID_id));
+                data.unpack(cursor);
+                list.add(data);
+                cursor.moveToNext();
+            }
+        }
+        return list;
+    }
 }

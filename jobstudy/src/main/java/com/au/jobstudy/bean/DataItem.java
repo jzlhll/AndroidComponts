@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.au.aulitesql.EntityTable;
-import com.au.aulitesql.GsonUtil;
+import com.au.aulitesql.actions.GsonUtil;
 
 import java.io.Serializable;
 import java.util.List;

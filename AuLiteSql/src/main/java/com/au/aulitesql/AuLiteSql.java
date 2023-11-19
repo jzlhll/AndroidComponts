@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.au.aulitesql.actions.AuLiteAssetAutoMigrations;
 import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
@@ -75,6 +76,13 @@ public final class AuLiteSql {
     public static AuLiteSqliteHelper sSqlHelper;
 
     private static volatile AuLiteSql instance;
+
+    /**
+     * 不做final，可以外部设置额外的dao。
+     */
+    @NonNull
+    public IDao dao = new DefaultDao();
+
     private Gson gson;
     int dbVersion = 1;
     String dbName = "au_sqlite.db";
@@ -134,10 +142,12 @@ public final class AuLiteSql {
         return this;
     }
 
-    /////////////////////////////////////
-    /////////////////////////////////////
-    /////////////////////////////////////
-    public AuLiteSqliteHelper start(Context applicationContext) {
-        return new AuLiteSqliteHelper(applicationContext, dbName, null, dbVersion);
+    public AuLiteSql setDao(@NonNull IDao dao) {
+        this.dao = dao;
+        return getInstance();
     }
+
+    /////////////////////////////////////
+    /////////////////////////////////////
+    /////////////////////////////////////
 }

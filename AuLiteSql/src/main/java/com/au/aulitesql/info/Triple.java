@@ -1,4 +1,4 @@
-package com.au.aulitesql;
+package com.au.aulitesql.info;
 
 import androidx.annotation.NonNull;
 

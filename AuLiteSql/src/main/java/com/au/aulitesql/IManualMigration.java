@@ -3,6 +3,8 @@ package com.au.aulitesql;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.au.aulitesql.info.Pair;
+
 public interface IManualMigration {
     /**
      * @param newTable 即你新的类名

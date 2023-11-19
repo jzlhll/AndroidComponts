@@ -1,4 +1,4 @@
-package com.au.aulitesql;
+package com.au.aulitesql.actions;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -9,6 +9,8 @@ import android.provider.BaseColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+
+import com.au.aulitesql.info.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +72,7 @@ public final class SqlUtils {
 
     @SuppressLint("Range")
     @WorkerThread
-    public static Pair<String, Long> queryCreateSqlLog(@NonNull SQLiteDatabase db,@NonNull String tabName) {
+    public static Pair<String, Long> queryCreateSqlLog(@NonNull SQLiteDatabase db, @NonNull String tabName) {
         Cursor cursor = db.rawQuery("SELECT * FROM " + SqlString.AU_LITE_LOG_TABLE_NAME,
                 null);
         if (cursor != null && cursor.moveToFirst()) {

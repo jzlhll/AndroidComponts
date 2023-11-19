@@ -1,4 +1,4 @@
-package com.au.aulitesql.print;
+package com.au.aulitesql.actions;
 
 import static com.au.aulitesql.AuLiteSql.tableNameFromClazz;
 import static java.sql.DriverManager.println;
@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.au.aulitesql.EntityTable;
-import com.au.aulitesql.SqlUtils;
 import com.au.aulitesql.annotation.AuIgnore;
 import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.info.FieldInfo;

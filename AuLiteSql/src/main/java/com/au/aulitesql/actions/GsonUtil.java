@@ -1,7 +1,8 @@
-package com.au.aulitesql;
+package com.au.aulitesql.actions;
 
 import androidx.annotation.NonNull;
 
+import com.au.aulitesql.AuLiteSql;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
