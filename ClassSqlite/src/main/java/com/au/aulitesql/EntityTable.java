@@ -17,20 +17,26 @@ import com.google.gson.Gson;
  * 数据库表类，必须有一个空构造函数。
  */
 public abstract class EntityTable implements BaseColumns {
+    protected final static NormalDao dao = new NormalDao();
+
     public static final String _ID_WHERE_CAUSE = BaseColumns._ID + " = ?";
 
     @AuName(BaseColumns._ID)
     private long id;
 
-    public long getId() {
+    public final long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public final void setId(long id) {
         this.id = id;
     }
 
-    public boolean isRealData() {
+    /**
+     *
+     * @return 本数据是否已经同步到数据库中。
+     */
+    public final boolean isSyncedToDb() {
         return id >= 0;
     }
 
@@ -74,18 +80,18 @@ public abstract class EntityTable implements BaseColumns {
      */
     public abstract void reset();
 
-    public boolean delete() {
-        var r = AuLiteSql.deleteData(this);
+    public final boolean delete() {
+        var r = dao.delete(this);
         reset();
         id = -1;
         return r;
     }
 
     /**
-     * 增加，修改。
+     * 增加或者修改。
      */
-    public long save() {
-        AuLiteSql.saveData(this);
+    public final long save() {
+        dao.save(this);
         return id;
     }
 

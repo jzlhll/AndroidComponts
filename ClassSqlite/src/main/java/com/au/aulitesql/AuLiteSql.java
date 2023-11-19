@@ -1,12 +1,6 @@
 package com.au.aulitesql;
 
-import static com.au.aulitesql.EntityTable._ID_WHERE_CAUSE;
-
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.BaseColumns;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,9 +9,6 @@ import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,159 +42,6 @@ public final class AuLiteSql {
             }
         }
         return name;
-    }
-
-    /**
-     * 根据某个字段查询结果。
-     */
-    public static <T extends EntityTable, P> List<T> loadAllData(Class<T> clazz, @NonNull String fieldName, P value,
-                                                        String groupBy, String having, String orderBy) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        if (sqlHelper != null) {
-            var db = sqlHelper.getReadableDatabase();
-            var tableName = tableNameFromClazz(clazz);
-            var cursor = db.query(tableName, null, fieldName + "=?", new String[] {String.valueOf(value)}, groupBy, having, orderBy);
-            List<T> list;
-            try {
-                list = cursorToData(cursor, clazz);
-            }catch (Exception e) {
-                e.printStackTrace();
-                list = Collections.emptyList();
-            }
-            cursor.close();
-            return list;
-        }
-        return Collections.emptyList();
-    }
-
-    public static <T extends EntityTable> boolean deleteAllData(List<T> dataList) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        if (sqlHelper != null) {
-            var db = sqlHelper.getWritableDatabase();
-            db.beginTransaction();
-            for (var instance : dataList) {
-                var tableName = tableNameFromClazz(instance.getClass());
-                db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
-            }
-
-            db.setTransactionSuccessful();
-            db.endTransaction();
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean deleteData(EntityTable instance) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        if (sqlHelper != null) {
-            var db = sqlHelper.getWritableDatabase();
-            var tableName = tableNameFromClazz(instance.getClass());
-            if (instance.getId() >= 0) {
-                return db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())}) >= 0;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static EntityTable saveData(EntityTable instance) {
-        return saveData(instance, new boolean[]{false});
-    }
-
-    /**
-     * @param status 请传入 new boolean[] {false}。用来接收插入是否成功结果。
-     */
-    public static EntityTable saveData(EntityTable instance, @NonNull boolean[] status) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        if (sqlHelper != null) {
-            status[0] = true;
-            var db = sqlHelper.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            instance.pack(cv);
-            var tableName = tableNameFromClazz(instance.getClass());
-            if (instance.getId() >= 0) {
-                db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
-                return instance;
-            } else {
-                var r = db.insert(tableName, null, cv);
-                if (r == -1) {
-                    Log.e("AuLiteSql", "error when saveData " + instance);
-                    status[0] = false;
-                }
-                instance.setId(r);
-                return instance;
-            }
-        }
-        status[0] = false;
-        return null;
-    }
-
-    public static <T extends EntityTable> int saveAllData(List<T> dataList) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        var successSize = 0;
-        if (sqlHelper != null) {
-            var db = sqlHelper.getWritableDatabase();
-            db.beginTransaction();
-            for (var instance : dataList) {
-                ContentValues cv = new ContentValues();
-                instance.pack(cv);
-                var tableName = tableNameFromClazz(instance.getClass());
-                if (instance.getId() >= 0) {
-                    var r = db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
-                    if(r > 0) successSize += r;
-                } else {
-                    var r = db.insert(tableName, null, cv);
-                    if (r == -1) {
-                        Log.e("AuLiteSql", "error when saveData " + instance);
-                    } else {
-                        successSize++;
-                    }
-                    instance.setId(r);
-                }
-            }
-
-            db.setTransactionSuccessful();
-            db.endTransaction();
-        }
-        return successSize;
-    }
-
-    //随便传入一个空对象即可
-    @NonNull
-    public static <T extends EntityTable> List<T> loadAllData(Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        var name = tableNameFromClazz(clazz);
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
-        if (sqlHelper != null) {
-            var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
-            List<T> list;
-            try {
-                list = cursorToData(cursor, clazz);
-            } catch (Exception e) {
-                e.printStackTrace();
-                list = Collections.emptyList();
-            }
-            cursor.close();
-            return list;
-        } else {
-            throw new RuntimeException("not init AuLiteSqliteHelper!");
-        }
-    }
-
-    //cursor没有关闭。交给调用者关闭。谁打开谁关闭。
-    public static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        var list = new ArrayList<T>();
-        if (cursor != null && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                T data = (T) clazz.getConstructors()[0].newInstance(); //later 要求必须有空构造函数。
-                var columnID_id = cursor.getColumnIndex(BaseColumns._ID);
-                if (columnID_id >= 0) data.setId(cursor.getLong(columnID_id));
-                data.unpack(cursor);
-                list.add(data);
-                cursor.moveToNext();
-            }
-        }
-        return list;
     }
 
     /////////////////////////////////////////////////////////////
