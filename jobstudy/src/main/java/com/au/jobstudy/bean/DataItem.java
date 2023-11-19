@@ -43,7 +43,7 @@ public final class DataItem extends EntityTable implements Serializable {
     public int minVoiceSec;
     public int maxVoiceSec;
 
-    public int day; //20230910
+    public String day; //20230910
 
     @Override
     public void reset() {
@@ -56,7 +56,7 @@ public final class DataItem extends EntityTable implements Serializable {
         minVideoSec = maxVideoSec = 0;
         minPicNum = maxPicNum = 0;
         minVoiceSec = maxVoiceSec = 0;
-        day = 0;
+        day = null;
     }
 
     @Override
@@ -116,7 +116,7 @@ public final class DataItem extends EntityTable implements Serializable {
         if (columnIndex >= 0) maxVoiceSec = cursor.getInt(columnIndex);
 
         columnIndex = cursor.getColumnIndex("day");
-        if (columnIndex >= 0) day = cursor.getInt(columnIndex);
+        if (columnIndex >= 0) day = cursor.getString(columnIndex);
     }
 
     public static final class MediaItem {

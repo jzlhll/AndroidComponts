@@ -25,6 +25,21 @@ public final class AuLiteSql {
         return instance;
     }
 
+    public synchronized AuLiteSqliteHelper openDataBase(Context cxt) {
+        var sql = AuLiteSql.getInstance();
+        if (sSqlHelper == null) {
+            sSqlHelper = new AuLiteSqliteHelper(cxt.getApplicationContext(),
+                    sql.dbName, null, sql.dbVersion);
+        }
+        return sSqlHelper;
+    }
+
+    public synchronized void closeDataBase() {
+        if (sSqlHelper != null) {
+            sSqlHelper.close();
+        }
+    }
+
     static void destroy() {
         instance = null;
     }
@@ -56,6 +71,8 @@ public final class AuLiteSql {
         instance.gson = new GsonBuilder().create();
         return instance.gson;
     }
+
+    public static AuLiteSqliteHelper sSqlHelper;
 
     private static volatile AuLiteSql instance;
     private Gson gson;

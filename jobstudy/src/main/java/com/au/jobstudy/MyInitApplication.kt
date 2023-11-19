@@ -1,6 +1,7 @@
 package com.au.jobstudy
 
 import com.au.aulitesql.AuLiteSql
+import com.au.jobstudy.bean.DataItem
 import com.au.module_android.init.InitApplication
 
 /**
@@ -13,7 +14,7 @@ class MyInitApplication : InitApplication() {
         super.onCreate()
         AuLiteSql.getInstance()
             .setDb("jobStudy", 1)
-            .setTableClasses()
+            .setTableClasses(listOf(DataItem::class.java))
 
     }
 }

@@ -21,18 +21,14 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
 
     private final Context context;
 
-    public static AuLiteSqliteHelper sSqlHelper;
-
     public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context;
-        sSqlHelper = this;
     }
 
     public AuLiteSqliteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version, @Nullable DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
         this.context = context;
-        sSqlHelper = this;
     }
 
     @Override

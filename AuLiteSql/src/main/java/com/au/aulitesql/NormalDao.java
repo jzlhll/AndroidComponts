@@ -26,7 +26,7 @@ public class NormalDao implements IDao{
     @NonNull
     public <E extends EntityTable> List<E> loadAll(Class<E> clazz) {
         var name = tableNameFromClazz(clazz);
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
             List<E> list;
@@ -63,7 +63,7 @@ public class NormalDao implements IDao{
     @Override
     public <E extends EntityTable> List<E> loadAll(Class<E> clazz, @NonNull String selection, @NonNull String[] selectionArgs,
                                                           String groupBy, String having, String orderBy) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getReadableDatabase();
             var tableName = tableNameFromClazz(clazz);
@@ -83,7 +83,7 @@ public class NormalDao implements IDao{
 
     @Override
     public <E extends EntityTable> List<E> rawLoadAll(Class<E> clazz, String sql, String[] selectionArgs) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getReadableDatabase();
             var cursor = db.rawQuery(sql, selectionArgs);
@@ -102,7 +102,7 @@ public class NormalDao implements IDao{
 
     @Override
     public <E extends EntityTable> int deleteAll(List<E> dataList) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         int count = 0;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
@@ -120,7 +120,7 @@ public class NormalDao implements IDao{
 
     @Override
     public boolean delete(EntityTable instance) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
             var tableName = tableNameFromClazz(instance.getClass());
@@ -143,7 +143,7 @@ public class NormalDao implements IDao{
      */
     @Override
     public EntityTable save(EntityTable instance, @NonNull boolean[] status) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             status[0] = true;
             var db = sqlHelper.getWritableDatabase();
@@ -169,7 +169,7 @@ public class NormalDao implements IDao{
 
     @Override
     public <E extends EntityTable> int saveAll(List<E> dataList) {
-        var sqlHelper = AuLiteSqliteHelper.sSqlHelper;
+        var sqlHelper = AuLiteSql.sSqlHelper;
         var successSize = 0;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
