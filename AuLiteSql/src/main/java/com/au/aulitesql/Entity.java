@@ -16,7 +16,7 @@ import com.google.gson.Gson;
  *
  * 数据库表类，必须有一个空构造函数。
  */
-public abstract class EntityTable implements BaseColumns {
+public abstract class Entity implements BaseColumns {
     public static final String _ID_WHERE_CAUSE = BaseColumns._ID + " = ?";
 
     @AuName(BaseColumns._ID)

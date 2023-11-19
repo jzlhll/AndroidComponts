@@ -12,5 +12,5 @@ public interface IManualMigration {
      *
      * @return 返回值，List就是你迁移后的新数据列表，我会帮你插入到新表中；Bool表示你是否要留存老表，如果是同名表自然无效。
      */
-    Pair<ContentValues, Boolean> onTableInnerMigrate(Class<? extends EntityTable> newTable, Cursor oldTableDataCursor);
+    Pair<ContentValues, Boolean> onTableInnerMigrate(Class<? extends Entity> newTable, Cursor oldTableDataCursor);
 }

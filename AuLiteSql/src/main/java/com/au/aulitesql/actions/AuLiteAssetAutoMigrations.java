@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 
 import com.au.aulitesql.AuLiteSql;
-import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.Entity;
 import com.au.aulitesql.IManualMigration;
 import com.au.aulitesql.info.Triple;
 import com.au.aulitesql.info.NamesPair;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class AuLiteAssetAutoMigrations {
-    public Map<Class<? extends EntityTable>, IManualMigration> tableInnersMigrations = null;
+    public Map<Class<? extends Entity>, IManualMigration> tableInnersMigrations = null;
     public Map<NamesPair, IManualMigration> tablesMigrations = null;
 
     public void onVersionChange(@NonNull TableCreators.CreatorInfo newCreators, @NonNull SQLiteDatabase db) {
@@ -62,7 +62,7 @@ public class AuLiteAssetAutoMigrations {
 
             if (foundNamesParKey != null) {
                 IManualMigration mig = tablesMigrations.get(foundNamesParKey);
-                Class<? extends EntityTable> newClass = foundNamesParKey.newNameClass;
+                Class<? extends Entity> newClass = foundNamesParKey.newNameClass;
                 TableInfo newTableInfo = newCreators.getByTableClass(newClass);
 
                 //取出新的类对应的sql
@@ -81,10 +81,10 @@ public class AuLiteAssetAutoMigrations {
         //5. 同名表，则先进行table校验。是否需要进行迁移。然后，进行表内迁移。
         //默认实现则，字段不对的，直接不保留。
         for (String tab : triple.p1) {
-            Class<? extends EntityTable> foundClass = null;
+            Class<? extends Entity> foundClass = null;
             IManualMigration foundMig = null;
             if (tableInnersMigrations != null && tableInnersMigrations.size() > 0) {
-                for (Class<? extends EntityTable> clazz : tableInnersMigrations.keySet()) {
+                for (Class<? extends Entity> clazz : tableInnersMigrations.keySet()) {
                     if (isSame(clazz, tab)) {
                         foundClass = clazz;
                         foundMig = tableInnersMigrations.get(foundClass);
@@ -123,7 +123,7 @@ public class AuLiteAssetAutoMigrations {
         db.endTransaction();
     }
 
-    private static boolean isSame(Class<? extends EntityTable> clazz, String name) {
+    private static boolean isSame(Class<? extends Entity> clazz, String name) {
         return AuLiteSql.tableNameFromClazz(clazz).equals(name);
     }
 }

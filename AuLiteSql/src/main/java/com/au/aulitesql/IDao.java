@@ -11,39 +11,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IDao {
-    <E extends EntityTable> List<E> loadAllFilter(Class<E> clazz, String fieldName, Object value);
-    <E extends EntityTable> List<E> loadAll(Class<E> clazz);
-    <E extends EntityTable> List<E> loadAll(Class<E> clazz, @NonNull String fieldName, Object value,
-                                                String groupBy, String having, String orderBy);
+    <E extends Entity> List<E> loadAllFilter(Class<E> clazz, String fieldName, Object value);
+    <E extends Entity> List<E> loadAll(Class<E> clazz);
+    <E extends Entity> List<E> loadAll(Class<E> clazz, @NonNull String fieldName, Object value,
+                                       String groupBy, String having, String orderBy);
 
-    <E extends EntityTable> List<E> loadAll(Class<E> clazz, @NonNull String selections, @NonNull String[] selectionArgs,
-                                                   String groupBy, String having, String orderBy);
+    <E extends Entity> List<E> loadAll(Class<E> clazz, @NonNull String selections, @NonNull String[] selectionArgs,
+                                       String groupBy, String having, String orderBy);
 
-    <E extends EntityTable> List<E> rawLoadAll(Class<E> clazz, String sql, String[] selectionArgs);
-
-    //////////////////////////////////
-    //////////////////////////////////
-
-    <E extends EntityTable> int deleteAll(List<E> dataList);
-
-    boolean delete(EntityTable instance);
+    <E extends Entity> List<E> rawLoadAll(Class<E> clazz, String sql, String[] selectionArgs);
 
     //////////////////////////////////
     //////////////////////////////////
 
-    EntityTable save(EntityTable instance);
+    <E extends Entity> int deleteAll(List<E> dataList);
+
+    boolean delete(Entity instance);
+
+    //////////////////////////////////
+    //////////////////////////////////
+
+    Entity save(Entity instance);
 
     /**
      * @param status 请传入 new boolean[] {false}。用来接收插入是否成功结果。
      */
-    EntityTable save(EntityTable instance, @NonNull boolean[] status);
-    <E extends EntityTable> int saveAll(List<E> dataList);
+    Entity save(Entity instance, @NonNull boolean[] status);
+    <E extends Entity> int saveAll(List<E> dataList);
 
     //////////////////////////////////
     //////////////////////////////////
 
     //cursor没有关闭。交给调用者关闭。谁打开谁关闭。
-    static <T extends EntityTable> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+    @NonNull
+    static <T extends Entity> List<T> cursorToData(Cursor cursor, Class<T> clazz) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         var list = new ArrayList<T>();
         var constructors = clazz.getConstructors(); //later 要求必须有空构造函数。
         Constructor<?> constructor = null;

@@ -1,7 +1,7 @@
 package com.au.aulitesql;
 
 import static com.au.aulitesql.AuLiteSql.tableNameFromClazz;
-import static com.au.aulitesql.EntityTable._ID_WHERE_CAUSE;
+import static com.au.aulitesql.Entity._ID_WHERE_CAUSE;
 
 import android.content.ContentValues;
 import android.util.Log;
@@ -19,7 +19,7 @@ public class DefaultDao implements IDao{
 
     @Override
     @NonNull
-    public <E extends EntityTable> List<E> loadAll(Class<E> clazz) {
+    public <E extends Entity> List<E> loadAll(Class<E> clazz) {
         var name = tableNameFromClazz(clazz);
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
@@ -29,7 +29,7 @@ public class DefaultDao implements IDao{
                 list = IDao.cursorToData(cursor, clazz);
             } catch (Exception e) {
                 e.printStackTrace();
-                list = Collections.emptyList();
+                list = null;
             }
             cursor.close();
             return list;
@@ -39,7 +39,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public <E extends EntityTable> List<E> loadAllFilter(Class<E> clazz, String fieldName, Object fieldValue) {
+    public <E extends Entity> List<E> loadAllFilter(Class<E> clazz, String fieldName, Object fieldValue) {
         return loadAll(clazz, fieldName, fieldValue, null, null, null);
     }
 
@@ -47,8 +47,8 @@ public class DefaultDao implements IDao{
      * 根据某个字段查询结果。
      */
     @Override
-    public <E extends EntityTable> List<E> loadAll(Class<E> clazz, @NonNull String fieldName, Object value,
-                                                      String groupBy, String having, String orderBy) {
+    public <E extends Entity> List<E> loadAll(Class<E> clazz, @NonNull String fieldName, Object value,
+                                              String groupBy, String having, String orderBy) {
         return loadAll(clazz, fieldName + "= ?", new String[] {String.valueOf(value)}, groupBy, having, orderBy);
     }
 
@@ -56,8 +56,8 @@ public class DefaultDao implements IDao{
      * 根据 标准接口，某个字段查询结果。
      */
     @Override
-    public <E extends EntityTable> List<E> loadAll(Class<E> clazz, @NonNull String selection, @NonNull String[] selectionArgs,
-                                                          String groupBy, String having, String orderBy) {
+    public <E extends Entity> List<E> loadAll(Class<E> clazz, @NonNull String selection, @NonNull String[] selectionArgs,
+                                              String groupBy, String having, String orderBy) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getReadableDatabase();
@@ -77,7 +77,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public <E extends EntityTable> List<E> rawLoadAll(Class<E> clazz, String sql, String[] selectionArgs) {
+    public <E extends Entity> List<E> rawLoadAll(Class<E> clazz, String sql, String[] selectionArgs) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getReadableDatabase();
@@ -96,7 +96,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public <E extends EntityTable> int deleteAll(List<E> dataList) {
+    public <E extends Entity> int deleteAll(List<E> dataList) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         int count = 0;
         if (sqlHelper != null) {
@@ -114,7 +114,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public boolean delete(EntityTable instance) {
+    public boolean delete(Entity instance) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
@@ -129,7 +129,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public EntityTable save(EntityTable instance) {
+    public Entity save(Entity instance) {
         return save(instance, new boolean[]{false});
     }
 
@@ -137,7 +137,7 @@ public class DefaultDao implements IDao{
      * @param status 请传入 new boolean[] {false}。用来接收插入是否成功结果。
      */
     @Override
-    public EntityTable save(EntityTable instance, @NonNull boolean[] status) {
+    public Entity save(Entity instance, @NonNull boolean[] status) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             status[0] = true;
@@ -163,7 +163,7 @@ public class DefaultDao implements IDao{
     }
 
     @Override
-    public <E extends EntityTable> int saveAll(List<E> dataList) {
+    public <E extends Entity> int saveAll(List<E> dataList) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         var successSize = 0;
         if (sqlHelper != null) {

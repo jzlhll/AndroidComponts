@@ -1,6 +1,6 @@
 package com.au.aulitesql.info;
 
-import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.Entity;
 
 /**
  * @author allan.jiang
@@ -8,11 +8,11 @@ import com.au.aulitesql.EntityTable;
  * @description:
  */
 public class NamesPair {
-    public NamesPair(String oldName, Class<? extends EntityTable> newNameClass) {
+    public NamesPair(String oldName, Class<? extends Entity> newNameClass) {
         this.oldName = oldName;
         this.newNameClass = newNameClass;
     }
 
     public final String oldName;
-    public final Class<? extends EntityTable> newNameClass;
+    public final Class<? extends Entity> newNameClass;
 }

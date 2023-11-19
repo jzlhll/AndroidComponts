@@ -4,14 +4,14 @@ package com.au.aulitesql.info;
 import androidx.annotation.NonNull;
 
 import com.au.aulitesql.AuLiteSql;
-import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.Entity;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableInfo {
-    public transient Class<? extends EntityTable> entityTable;
+    public transient Class<? extends Entity> entityTable;
 
     public String className;
 

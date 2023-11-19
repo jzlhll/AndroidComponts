@@ -6,7 +6,7 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.Entity;
 import com.au.aulitesql.actions.GsonUtil;
 
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 科目，任务描述，是否完成，完成的时间点
  */
-public final class DataItem extends EntityTable implements Serializable {
+public final class DataItem extends Entity implements Serializable {
     public int index;
 
     @NonNull

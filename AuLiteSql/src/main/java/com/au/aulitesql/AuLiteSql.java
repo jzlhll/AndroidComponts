@@ -1,6 +1,9 @@
 package com.au.aulitesql;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -36,16 +39,17 @@ public final class AuLiteSql {
     }
 
     public synchronized void closeDataBase() {
-        if (sSqlHelper != null) {
-            sSqlHelper.close();
+        var helper = sSqlHelper;
+        if (helper != null) {
+            getHandler().removeCallbacksAndMessages(null);
+
+            synchronized (helper) {
+                helper.close();
+            }
         }
     }
 
-    static void destroy() {
-        instance = null;
-    }
-
-    public static String tableNameFromClazz(Class<? extends EntityTable> clazz) {
+    public static String tableNameFromClazz(Class<? extends Entity> clazz) {
         var name = clazz.getSimpleName();
         //1. 替代tableName解析
         if (clazz.isAnnotationPresent(AuName.class)) {
@@ -90,7 +94,7 @@ public final class AuLiteSql {
     @NonNull
     final AuLiteAssetAutoMigrations migrations = new AuLiteAssetAutoMigrations();
 
-    List<Class<? extends EntityTable>> currentAllTabs;
+    List<Class<? extends Entity>> currentAllTabs;
 
     public AuLiteSql setDb(@NonNull String dbName, int dbVersion) {
         this.dbName = dbName;
@@ -107,7 +111,7 @@ public final class AuLiteSql {
         return this;
     }
 
-    public AuLiteSql setTableClasses(List<Class<? extends EntityTable>> tables) {
+    public AuLiteSql setTableClasses(List<Class<? extends Entity>> tables) {
         currentAllTabs = tables;
         return this;
     }
@@ -122,7 +126,7 @@ public final class AuLiteSql {
      *  （其实我是改了表名，然后新建同名新表，进行数据迁移）
      *  如果不设置该函数，则表内迁移，只会保留字段不变的内容。其他全部删除。
      */
-    public AuLiteSql setTabInnerMigrations(Map<Class<? extends EntityTable>, IManualMigration> tableInners) {
+    public AuLiteSql setTabInnerMigrations(Map<Class<? extends Entity>, IManualMigration> tableInners) {
         migrations.tableInnersMigrations = tableInners;
         return this;
     }
@@ -142,10 +146,30 @@ public final class AuLiteSql {
         return this;
     }
 
+    public AuLiteSql setThreadLoop(Looper looper) {
+        subHandler = new Handler(looper);
+        return this;
+    }
+
     public AuLiteSql setDao(@NonNull IDao dao) {
         this.dao = dao;
         return getInstance();
     }
+
+    private volatile Handler subHandler;
+    public Handler getHandler() {
+        if (subHandler == null) {
+            synchronized (this) {
+                if (subHandler == null) {
+                    HandlerThread handlerThread = new HandlerThread("auLiteSql-Thread");
+                    handlerThread.start();
+                    subHandler = new Handler(handlerThread.getLooper());
+                }
+            }
+        }
+        return subHandler;
+    }
+
 
     /////////////////////////////////////
     /////////////////////////////////////

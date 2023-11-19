@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import com.au.aulitesql.EntityTable;
+import com.au.aulitesql.Entity;
 import com.au.aulitesql.annotation.AuIgnore;
 import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.info.FieldInfo;
@@ -31,14 +31,14 @@ import java.util.stream.Collectors;
  */
 public final class TableCreators {
     public static final class CreatorInfo {
-        public CreatorInfo(@NonNull List<Class<? extends EntityTable>> entityTables) {
+        public CreatorInfo(@NonNull List<Class<? extends Entity>> entityTables) {
             this.entityTables = entityTables;
         }
 
-        public final transient List<Class<? extends EntityTable>> entityTables;
+        public final transient List<Class<? extends Entity>> entityTables;
 
         @Nullable
-        public TableInfo getByTableClass(@NonNull Class<? extends EntityTable> clazz) {
+        public TableInfo getByTableClass(@NonNull Class<? extends Entity> clazz) {
             String name = tableNameFromClazz(clazz);
             for (TableInfo tableInfo : tableInfoList) {
                 if (tableInfo instanceof TableInfo && ((TableInfo) tableInfo).entityTable.equals(clazz)) {
@@ -143,15 +143,15 @@ public final class TableCreators {
 
     private final CreatorInfo creatorInfo;
 
-    public TableCreators(List<Class<? extends EntityTable>> entityTables) {
+    public TableCreators(List<Class<? extends Entity>> entityTables) {
         creatorInfo = new CreatorInfo(entityTables);
     }
 
     @WorkerThread
     public CreatorInfo collect() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        for (Class<? extends EntityTable> tab : creatorInfo.entityTables) {
+        for (Class<? extends Entity> tab : creatorInfo.entityTables) {
             Constructor<?> dec = tab.getDeclaredConstructor();
-            TableInfo one = executeTableInfo((EntityTable) dec.newInstance());
+            TableInfo one = executeTableInfo((Entity) dec.newInstance());
             creatorInfo.tableInfoList.add(one);
         }
         creatorInfo.tableInfoList.sort((o1, o2) -> {
@@ -176,14 +176,14 @@ public final class TableCreators {
         return (modified & Modifier.TRANSIENT) != 0;
     }
 
-    private static List<Field> iterAllFields(EntityTable instance) {
+    private static List<Field> iterAllFields(Entity instance) {
         return iterAllFields(instance.getClass());
     }
 
     private static List<Field> iterAllFields(Class<?> clazz) {
         ArrayList<Field> allFields = new ArrayList<>();
 
-        while (clazz != null && clazz != EntityTable.class) {
+        while (clazz != null && clazz != Entity.class) {
             Field[] fields = clazz.getDeclaredFields();
             Collections.addAll(allFields, fields);
             clazz = clazz.getSuperclass();
@@ -194,17 +194,17 @@ public final class TableCreators {
     private static List<Field> allFields(Class<?> clazz) {
         ArrayList<Field> allFields = new ArrayList<>();
 
-        if (clazz != null && clazz != EntityTable.class) {
+        if (clazz != null && clazz != Entity.class) {
             Field[] fields = clazz.getDeclaredFields();
             Collections.addAll(allFields, fields);
         }
         return allFields;
     }
 
-    public static TableInfo executeTableInfo(EntityTable instance) throws IllegalAccessException {
+    public static TableInfo executeTableInfo(Entity instance) throws IllegalAccessException {
         TableInfo t = new TableInfo();
 
-        Class<? extends EntityTable> clazz = instance.getClass();
+        Class<? extends Entity> clazz = instance.getClass();
         t.entityTable = clazz;
         t.className = clazz.getSimpleName();
         //1. 替代tableName解析
@@ -348,7 +348,7 @@ public final class TableCreators {
         return t;
     }
 
-    public static void collectPrint(List<Class<? extends EntityTable>> tables) {
+    public static void collectPrint(List<Class<? extends Entity>> tables) {
         CreatorInfo creatorInfo = collect(tables);
         if (creatorInfo != null) {
             Log.w("AuLiteSql", "Please save to asset....to > auLiteSql/dbCreator.txt");
@@ -357,7 +357,7 @@ public final class TableCreators {
         }
     }
 
-    public static CreatorInfo collect(List<Class<? extends EntityTable>> tables) {
+    public static CreatorInfo collect(List<Class<? extends Entity>> tables) {
         try {
             return new TableCreators(tables).collect();
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
@@ -369,9 +369,9 @@ public final class TableCreators {
     /**
      * 帮你实现好该类的三大函数。
      */
-    private static void printClassFunctions(Class<? extends EntityTable> clazz) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    private static void printClassFunctions(Class<? extends Entity> clazz) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         Constructor<?> dec = clazz.getDeclaredConstructor();
-        var instance = (EntityTable) dec.newInstance();
+        var instance = (Entity) dec.newInstance();
         List<Field> allFields = allFields(clazz);
         int total = allFields.size();
 
