@@ -11,5 +11,9 @@ import com.au.module_android.init.InitApplication
 class MyInitApplication : InitApplication() {
     override fun onCreate() {
         super.onCreate()
+        AuLiteSql.getInstance()
+            .setDb("jobStudy", 1)
+            .setTableClasses()
+
     }
 }

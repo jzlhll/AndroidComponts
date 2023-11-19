@@ -87,10 +87,10 @@ public final class AuLiteSql {
         return this;
     }
 
-    public AuLiteSql setAsset(String assetFile) {
-        this.assetFile = assetFile;
-        return this;
-    }
+//    public AuLiteSql setAsset(String assetFile) {
+//        this.assetFile = assetFile;
+//        return this;
+//    }
 
     /**
      *  设置表内有变化的情况进行内部迁移。
