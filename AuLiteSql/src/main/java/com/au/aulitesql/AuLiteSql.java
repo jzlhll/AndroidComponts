@@ -15,6 +15,10 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public final class AuLiteSql {
     private AuLiteSql() {}
@@ -96,6 +100,43 @@ public final class AuLiteSql {
 
     List<Class<? extends Entity>> currentAllTabs;
 
+    /**
+     * 使用单个handler还是使用子线程池模式
+     */
+    private boolean useHandlerOrThreadPool = true;
+
+    private Executor threadPoolExecutor;
+
+    private volatile Handler subHandler;
+
+    public AuLiteSql useHandlerMode() {
+        useHandlerOrThreadPool = true;
+        return this;
+    }
+
+    public AuLiteSql useThreadPool() {
+        useHandlerOrThreadPool = false;
+        return this;
+    }
+
+    public AuLiteSql useHandlerMode(Looper looper) {
+        useHandlerOrThreadPool = true;
+        subHandler = new Handler(looper);
+        return this;
+    }
+
+    public AuLiteSql useHandlerMode(Handler subHandler) {
+        useHandlerOrThreadPool = true;
+        this.subHandler = subHandler;
+        return this;
+    }
+
+    public AuLiteSql useThreadPool(Executor executor) {
+        useHandlerOrThreadPool = false;
+        threadPoolExecutor = executor;
+        return this;
+    }
+
     public AuLiteSql setDb(@NonNull String dbName, int dbVersion) {
         this.dbName = dbName;
         this.dbVersion = dbVersion;
@@ -146,18 +187,20 @@ public final class AuLiteSql {
         return this;
     }
 
-    public AuLiteSql setThreadLoop(Looper looper) {
-        subHandler = new Handler(looper);
-        return this;
-    }
-
     public AuLiteSql setDao(@NonNull IDao dao) {
         this.dao = dao;
         return getInstance();
     }
 
-    private volatile Handler subHandler;
-    public Handler getHandler() {
+    public void execute(Runnable runnable) {
+        if (useHandlerOrThreadPool) {
+            getHandler().post(runnable);
+        } else {
+
+        }
+    }
+
+    private Handler getHandler() {
         if (subHandler == null) {
             synchronized (this) {
                 if (subHandler == null) {
@@ -170,6 +213,11 @@ public final class AuLiteSql {
         return subHandler;
     }
 
+    private Executor getThreadPoolExecutor() {
+        if () {
+
+        }
+    }
 
     /////////////////////////////////////
     /////////////////////////////////////

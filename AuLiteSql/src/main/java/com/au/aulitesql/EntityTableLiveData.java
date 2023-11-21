@@ -1,6 +1,5 @@
 package com.au.aulitesql;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
