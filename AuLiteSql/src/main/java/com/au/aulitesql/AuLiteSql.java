@@ -2,13 +2,14 @@ package com.au.aulitesql;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
 import com.au.aulitesql.actions.AuLiteAssetAutoMigrations;
+import com.au.aulitesql.actions.DefaultDao;
 import com.au.aulitesql.annotation.AuName;
+import com.au.aulitesql.executor.RunnableExecutor;
 import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,9 +17,6 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public final class AuLiteSql {
     private AuLiteSql() {}
@@ -45,9 +43,8 @@ public final class AuLiteSql {
     public synchronized void closeDataBase() {
         var helper = sSqlHelper;
         if (helper != null) {
-            getHandler().removeCallbacksAndMessages(null);
-
             synchronized (helper) {
+                runnableExecutor.close();
                 helper.close();
             }
         }
@@ -100,40 +97,30 @@ public final class AuLiteSql {
 
     List<Class<? extends Entity>> currentAllTabs;
 
-    /**
-     * 使用单个handler还是使用子线程池模式
-     */
-    private boolean useHandlerOrThreadPool = true;
-
-    private Executor threadPoolExecutor;
-
-    private volatile Handler subHandler;
+    private final RunnableExecutor runnableExecutor = new RunnableExecutor();
 
     public AuLiteSql useHandlerMode() {
-        useHandlerOrThreadPool = true;
+        runnableExecutor.useHandlerMode();
         return this;
     }
 
     public AuLiteSql useThreadPool() {
-        useHandlerOrThreadPool = false;
+        runnableExecutor.useThreadPool();
         return this;
     }
 
     public AuLiteSql useHandlerMode(Looper looper) {
-        useHandlerOrThreadPool = true;
-        subHandler = new Handler(looper);
+        runnableExecutor.useHandlerMode(looper);
         return this;
     }
 
     public AuLiteSql useHandlerMode(Handler subHandler) {
-        useHandlerOrThreadPool = true;
-        this.subHandler = subHandler;
+        runnableExecutor.useHandlerMode(subHandler);
         return this;
     }
 
     public AuLiteSql useThreadPool(Executor executor) {
-        useHandlerOrThreadPool = false;
-        threadPoolExecutor = executor;
+        runnableExecutor.useThreadPool(executor);
         return this;
     }
 
@@ -193,30 +180,7 @@ public final class AuLiteSql {
     }
 
     public void execute(Runnable runnable) {
-        if (useHandlerOrThreadPool) {
-            getHandler().post(runnable);
-        } else {
-
-        }
-    }
-
-    private Handler getHandler() {
-        if (subHandler == null) {
-            synchronized (this) {
-                if (subHandler == null) {
-                    HandlerThread handlerThread = new HandlerThread("auLiteSql-Thread");
-                    handlerThread.start();
-                    subHandler = new Handler(handlerThread.getLooper());
-                }
-            }
-        }
-        return subHandler;
-    }
-
-    private Executor getThreadPoolExecutor() {
-        if () {
-
-        }
+        runnableExecutor.execute(runnable);
     }
 
     /////////////////////////////////////

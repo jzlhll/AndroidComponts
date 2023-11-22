@@ -23,7 +23,7 @@ public class EntityTableLiveData<E extends Entity> {
      * 加载整张表
      */
     public EntityTableLiveData<?> loadTable() {
-        AuLiteSql.getInstance().getHandler().post(()->{
+        AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getInstance().dao.loadAll(entityClass);
             liveData.postValue(list);
         });

@@ -1,4 +1,4 @@
-package com.au.aulitesql;
+package com.au.aulitesql.actions;
 
 import static com.au.aulitesql.AuLiteSql.tableNameFromClazz;
 import static com.au.aulitesql.Entity._ID_WHERE_CAUSE;
@@ -8,6 +8,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.au.aulitesql.AuLiteSql;
+import com.au.aulitesql.Entity;
+import com.au.aulitesql.IDao;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +19,7 @@ import java.util.List;
  * @author allan.jiang
  * @date :2023/11/15 17:14
  */
-public class DefaultDao implements IDao{
+public class DefaultDao implements IDao {
 
     @Override
     @NonNull
