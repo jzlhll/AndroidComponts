@@ -12,6 +12,7 @@ import com.au.aulitesql.AuLiteSql;
 import com.au.aulitesql.Entity;
 import com.au.aulitesql.IDao;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class DefaultDao implements IDao {
                 list = IDao.cursorToData(cursor, clazz);
             } catch (Exception e) {
                 e.printStackTrace();
-                list = null;
+                throw new RuntimeException("cursor to data error!!");
             }
             cursor.close();
             return list;
@@ -118,6 +119,27 @@ public class DefaultDao implements IDao {
     }
 
     @Override
+    public <E extends Entity> List<E> deleteAllBackDeleted(List<E> dataList) {
+        var deleteList = new ArrayList<E>();
+        var sqlHelper = AuLiteSql.sSqlHelper;
+        if (sqlHelper != null) {
+            var db = sqlHelper.getWritableDatabase();
+            db.beginTransaction();
+            for (var instance : dataList) {
+                var tableName = tableNameFromClazz(instance.getClass());
+                var r = db.delete(tableName, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
+                if (r > 0) {
+                    deleteList.add(instance);
+                }
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
+        return deleteList;
+    }
+
+    @Override
     public boolean delete(Entity instance) {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
@@ -129,6 +151,23 @@ public class DefaultDao implements IDao {
                 return true;
             }
         }
+        return false;
+    }
+
+    @Override
+    public <E extends Entity> boolean clear(Class<E> clazz) {
+        var sqlHelper = AuLiteSql.sSqlHelper;
+        var tableName = tableNameFromClazz(clazz);
+        try {
+            if (sqlHelper != null) {
+                var db = sqlHelper.getWritableDatabase();
+                db.execSQL(String.format("DELETE FROM %s;", tableName));
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
@@ -168,8 +207,13 @@ public class DefaultDao implements IDao {
 
     @Override
     public <E extends Entity> int saveAll(List<E> dataList) {
+        return saveAllBackSavedList(dataList).size();
+    }
+
+    @Override
+    public <E extends Entity> List<E> saveAllBackSavedList(List<E> dataList) {
         var sqlHelper = AuLiteSql.sSqlHelper;
-        var successSize = 0;
+        var saveList = new ArrayList<E>();
         if (sqlHelper != null) {
             var db = sqlHelper.getWritableDatabase();
             db.beginTransaction();
@@ -179,13 +223,13 @@ public class DefaultDao implements IDao {
                 var tableName = tableNameFromClazz(instance.getClass());
                 if (instance.getId() >= 0) {
                     var r = db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
-                    if(r > 0) successSize += r;
+                    if(r > 0) saveList.add(instance);
                 } else {
                     var r = db.insert(tableName, null, cv);
                     if (r == -1) {
                         Log.e("AuLiteSql", "error when saveData " + instance);
                     } else {
-                        successSize++;
+                        saveList.add(instance);
                     }
                     instance.setId(r);
                 }
@@ -194,7 +238,6 @@ public class DefaultDao implements IDao {
             db.setTransactionSuccessful();
             db.endTransaction();
         }
-        return successSize;
+        return saveList;
     }
-
 }

@@ -25,6 +25,9 @@ public interface IDao {
     //////////////////////////////////
 
     <E extends Entity> int deleteAll(List<E> dataList);
+    <E extends Entity> List<E> deleteAllBackDeleted(List<E> dataList);
+
+    <E extends Entity> boolean clear(Class<E> clazz);
 
     boolean delete(Entity instance);
 
@@ -38,6 +41,7 @@ public interface IDao {
      */
     Entity save(Entity instance, @NonNull boolean[] status);
     <E extends Entity> int saveAll(List<E> dataList);
+    <E extends Entity> List<E> saveAllBackSavedList(List<E> dataList);
 
     //////////////////////////////////
     //////////////////////////////////

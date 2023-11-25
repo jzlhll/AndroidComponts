@@ -85,8 +85,16 @@ public final class AuLiteSql {
     /**
      * 不做final，可以外部设置额外的dao。
      */
+    private static IDao dao = new DefaultDao();
+
+    public static void setDao(@NonNull IDao dao) {
+        AuLiteSql.dao = dao;
+    }
+
     @NonNull
-    public IDao dao = new DefaultDao();
+    public static IDao getDao() {
+        return dao;
+    }
 
     private Gson gson;
     int dbVersion = 1;
@@ -172,11 +180,6 @@ public final class AuLiteSql {
     public AuLiteSql setTabsMigrations(Map<NamesPair, IManualMigration> tables) {
         migrations.tablesMigrations = tables;
         return this;
-    }
-
-    public AuLiteSql setDao(@NonNull IDao dao) {
-        this.dao = dao;
-        return getInstance();
     }
 
     public void execute(Runnable runnable) {

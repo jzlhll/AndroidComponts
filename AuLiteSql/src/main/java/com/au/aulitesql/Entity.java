@@ -79,7 +79,7 @@ public abstract class Entity implements BaseColumns {
     public abstract void reset();
 
     public final boolean delete() {
-        var r = AuLiteSql.getInstance().dao.delete(this);
+        var r = AuLiteSql.getDao().delete(this);
         reset();
         id = -1;
         return r;
@@ -89,7 +89,7 @@ public abstract class Entity implements BaseColumns {
      * 增加或者修改。
      */
     public final long save() {
-        AuLiteSql.getInstance().dao.save(this);
+        AuLiteSql.getDao().save(this);
         return id;
     }
 
