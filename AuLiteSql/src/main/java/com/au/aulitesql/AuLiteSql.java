@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.au.aulitesql.actions.AuLiteAssetAutoMigrations;
 import com.au.aulitesql.actions.DefaultDao;
 import com.au.aulitesql.annotation.AuName;
-import com.au.aulitesql.executor.RunnableExecutor;
+import com.au.aulitesql.executor.AuLiteRunExecutor;
 import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,7 +44,7 @@ public final class AuLiteSql {
         var helper = sSqlHelper;
         if (helper != null) {
             synchronized (helper) {
-                runnableExecutor.close();
+                exec.close();
                 helper.close();
             }
         }
@@ -97,30 +97,30 @@ public final class AuLiteSql {
 
     List<Class<? extends Entity>> currentAllTabs;
 
-    private final RunnableExecutor runnableExecutor = new RunnableExecutor();
+    private final AuLiteRunExecutor exec = new AuLiteRunExecutor();
 
     public AuLiteSql useHandlerMode() {
-        runnableExecutor.useHandlerMode();
+        exec.useHandlerMode();
         return this;
     }
 
     public AuLiteSql useThreadPool() {
-        runnableExecutor.useThreadPool();
+        exec.useThreadPool();
         return this;
     }
 
     public AuLiteSql useHandlerMode(Looper looper) {
-        runnableExecutor.useHandlerMode(looper);
+        exec.useHandlerMode(looper);
         return this;
     }
 
     public AuLiteSql useHandlerMode(Handler subHandler) {
-        runnableExecutor.useHandlerMode(subHandler);
+        exec.useHandlerMode(subHandler);
         return this;
     }
 
     public AuLiteSql useThreadPool(Executor executor) {
-        runnableExecutor.useThreadPool(executor);
+        exec.useThreadPool(executor);
         return this;
     }
 
@@ -180,7 +180,7 @@ public final class AuLiteSql {
     }
 
     public void execute(Runnable runnable) {
-        runnableExecutor.execute(runnable);
+        exec.execute(runnable);
     }
 
     /////////////////////////////////////
