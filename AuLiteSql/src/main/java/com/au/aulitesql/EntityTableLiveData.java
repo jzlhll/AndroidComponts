@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.au.aulitesql.actions.ICallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ import java.util.List;
  * @param <Ent>
  */
 public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<Ent> {
+    private final List<Ent> origData = new ArrayList<>();
+
     private final MutableLiveData<List<Ent>> liveData;
     public EntityTableLiveData(MutableLiveData<List<Ent>> liveData, Class<Ent> entityClass) {
         super(entityClass);
@@ -22,6 +25,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void loadAllFilter(String fieldName, Object value, ICallback<List<Ent>> callback) {
         AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getDao().loadAllFilter(entityClass, fieldName, value);
+            origData.clear();
+            origData.addAll(list);
             liveData.postValue(list);
             callback.callback(list);
         });
@@ -31,6 +36,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void loadAll(ICallback<List<Ent>> callback) {
         AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getDao().loadAll(entityClass);
+            origData.clear();
+            origData.addAll(list);
             liveData.postValue(list);
             callback.callback(list);
         });
@@ -40,6 +47,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void loadAll(@NonNull String fieldName, Object value, String groupBy, String having, String orderBy, ICallback<List<Ent>> callback) {
         AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getDao().loadAll(entityClass, fieldName, value, groupBy, having, orderBy);
+            origData.clear();
+            origData.addAll(list);
             liveData.postValue(list);
             callback.callback(list);
         });
@@ -49,6 +58,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void loadAll(@NonNull String selections, @NonNull String[] selectionArgs, String groupBy, String having, String orderBy, ICallback<List<Ent>> callback) {
         AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getDao().loadAll(entityClass, selections, selectionArgs, groupBy, having, orderBy);
+            origData.clear();
+            origData.addAll(list);
             liveData.postValue(list);
             callback.callback(list);
         });
@@ -58,6 +69,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void rawLoadAll(String sql, String[] selectionArgs, ICallback<List<Ent>> callback) {
         AuLiteSql.getInstance().execute(()->{
             var list = AuLiteSql.getDao().rawLoadAll(entityClass, sql, selectionArgs);
+            origData.clear();
+            origData.addAll(list);
             liveData.postValue(list);
             callback.callback(list);
         });
@@ -67,12 +80,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void deleteAll(List<Ent> dataList, ICallback<Integer> deleteCountCallback) {
         AuLiteSql.getInstance().execute(()->{
             var deletedList = AuLiteSql.getDao().deleteAllBackDeleted(dataList);
-            var curList = liveData.getValue();
-            if (curList != null) {
-                deletedList.forEach(curList::remove);
-            }
-
-            liveData.postValue(curList);
+            deletedList.forEach(origData::remove);
+            liveData.postValue(new ArrayList<>(origData));
             deleteCountCallback.callback(deletedList.size());
         });
     }
@@ -81,13 +90,25 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void delete(Ent instance, ICallback<Boolean> deleteSuccessCallback) {
         AuLiteSql.getInstance().execute(()->{
             var suc = AuLiteSql.getDao().delete(instance);
-            var curList = liveData.getValue();
-            if (suc && curList != null) {
-                curList.remove(instance);
+            if (suc) {
+                origData.remove(instance);
             }
 
-            liveData.postValue(curList);
+            liveData.postValue(new ArrayList<>(origData));
             deleteSuccessCallback.callback(suc);
+        });
+    }
+
+    @Override
+    public void clear(ICallback<Boolean> clearSuccessCallback) {
+        AuLiteSql.getInstance().execute(()->{
+            var suc = AuLiteSql.getDao().clear(entityClass);
+            if (suc) {
+                origData.clear();
+                liveData.postValue(new ArrayList<>(origData));
+            }
+
+            clearSuccessCallback.callback(suc);
         });
     }
 
@@ -95,12 +116,11 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void save(Ent instance, ICallback<Boolean> saveSuccessCallback) {
         AuLiteSql.getInstance().execute(()->{
             var ins = AuLiteSql.getDao().save(instance);
-            var curList = liveData.getValue();
-            if (ins != null && curList != null) {
-                curList.add(instance);
+            if (ins != null) {
+                origData.add(instance);
             }
 
-            liveData.postValue(curList);
+            liveData.postValue(new ArrayList<>(origData));
             saveSuccessCallback.callback(ins != null);
         });
     }
@@ -109,14 +129,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
     public void saveAll(List<Ent> dataList, ICallback<Integer> saveSuccessCountCallback) {
         AuLiteSql.getInstance().execute(()->{
             var savedList = AuLiteSql.getDao().saveAllBackSavedList(dataList);
-            var curList = liveData.getValue();
-            if (curList != null) {
-                curList.addAll(savedList);
-            } else {
-                curList = savedList;
-            }
-
-            liveData.postValue(curList);
+            origData.addAll(savedList);
+            liveData.postValue(new ArrayList<>(origData));
             saveSuccessCountCallback.callback(savedList.size());
         });
     }

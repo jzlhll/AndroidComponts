@@ -58,6 +58,8 @@ public abstract class BaseEntityTableDao<E extends Entity> {
 
     public abstract void delete(E instance, ICallback<Boolean> deleteSuccessCallback);
 
+    public abstract void clear(ICallback<Boolean> clearSuccessCallback);
+
     ///////////////////save/////////////////
     public void save(E instance) {
         save(instance, null);
