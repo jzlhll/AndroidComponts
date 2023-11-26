@@ -6,9 +6,9 @@ import com.au.aulitesql.actions.ICallback;
 
 import java.util.List;
 
-public abstract class BaseEntityTableDao<E extends Entity> {
+public abstract class BaseEntityList<E extends Entity> {
     public final Class<E> entityClass;
-    public BaseEntityTableDao(Class<E> clazz) {
+    public BaseEntityList(Class<E> clazz) {
         this.entityClass = clazz;
     }
 

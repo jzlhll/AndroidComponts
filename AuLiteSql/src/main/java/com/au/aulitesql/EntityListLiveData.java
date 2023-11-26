@@ -12,11 +12,11 @@ import java.util.List;
  * 加载整张表的LiveData。并且当更新其中的数据或者插入有变化的时候，会得到通知。
  * @param <Ent>
  */
-public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<Ent> {
+public class EntityListLiveData<Ent extends Entity> extends BaseEntityList<Ent> {
     private final List<Ent> origData = new ArrayList<>();
 
     private final MutableLiveData<List<Ent>> liveData;
-    public EntityTableLiveData(MutableLiveData<List<Ent>> liveData, Class<Ent> entityClass) {
+    public EntityListLiveData(MutableLiveData<List<Ent>> liveData, Class<Ent> entityClass) {
         super(entityClass);
         this.liveData = liveData;
     }
@@ -92,9 +92,9 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
             var suc = AuLiteSql.getDao().delete(instance);
             if (suc) {
                 origData.remove(instance);
+                liveData.postValue(new ArrayList<>(origData));
             }
 
-            liveData.postValue(new ArrayList<>(origData));
             deleteSuccessCallback.callback(suc);
         });
     }
@@ -118,9 +118,8 @@ public class EntityTableLiveData<Ent extends Entity> extends BaseEntityTableDao<
             var ins = AuLiteSql.getDao().save(instance);
             if (ins != null) {
                 origData.add(instance);
+                liveData.postValue(new ArrayList<>(origData));
             }
-
-            liveData.postValue(new ArrayList<>(origData));
             saveSuccessCallback.callback(ins != null);
         });
     }
