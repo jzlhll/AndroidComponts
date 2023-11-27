@@ -1,15 +1,18 @@
 package com.au.jobstudy.util
 
-/**
- * 进行偏差时间计算。比如凌晨3点前，算成前一天的。
- */
-fun Long.toToDay(offsetHour:Int = 3) : String{
-    return ""
-}
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-/**
- * 将传入的时间，转换为那一周的日期2023-09-11
- */
-fun convertTimeToWeek1() : String{
-    return ""
+private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+private const val START_DAY = 20231127
+
+fun timeToDay(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time))
+
+
+fun timeToWeekStartDay(time:Long = System.currentTimeMillis()) : String {
+    val curDay = DAY_FORMAT.format(Date(time))
+    val curDayInt = curDay.toInt()
+    val weekStartDay = curDayInt - ((curDayInt - START_DAY) % 7)
+    return "$weekStartDay"
 }

@@ -1,72 +1,96 @@
 package com.au.jobstudy.bean
 
-import java.lang.RuntimeException
+import com.au.jobstudy.bean.DataItem.MediaItem
+import com.au.module_android.utils.unsafeLazy
 
-enum class Subject {
-    Chinese,
-    EnglishWrite,
-    Read,
-    Science,
-    Maths,
-    Every53Maths,
-    Every53Chinese,
-    Every53English,
-}
+fun fillDataItemMode(dataItem: DataItem, mode:CheckupDescMode) {
+    dataItem.desc = mode.desc
+    for (m in mode.modes) {
+        if (m.type == MediaItem.TYPE_VOICE) {
+            dataItem.minVoiceSec = m.min
+            dataItem.maxVoiceSec = m.max
+        }
 
-private const val Chinese = "语文"
-private const val EnglishWrite = "英语拼写"
-private const val Read = "课外阅读"
-private const val Science = "科学"
-private const val Maths = "数学"
-private const val Every53Maths = "53天天练-数学"
-private const val Every53Chinese = "53天天练-语文"
-private const val Every53English = "53天天练-英语"
+        if (m.type == MediaItem.TYPE_PIC) {
+            dataItem.minPicNum = m.min
+            dataItem.maxPicNum = m.max
+        }
 
-fun Subject.subjectToName():String {
-    return when (this) {
-        Subject.Chinese-> Chinese
-        Subject.EnglishWrite->EnglishWrite
-        Subject.Read->Read
-        Subject.Science->Science
-        Subject.Maths->Maths
-        Subject.Every53Maths->Every53Maths
-        Subject.Every53Chinese->Every53Chinese
-        Subject.Every53English->Every53English
+        if (m.type == MediaItem.TYPE_VIDEO) {
+            dataItem.minVideoSec = m.min
+            dataItem.maxVideoSec = m.max
+        }
     }
 }
 
-internal fun String.nameToSubject():Subject {
-    return when (this) {
-        Chinese ->Subject.Chinese
-        EnglishWrite->Subject.EnglishWrite
-        Read->Subject.Read
-        Science->Subject.Science
-        Maths->Subject.Maths
-        Every53Maths->Subject.Every53Maths
-        Every53Chinese->Subject.Every53Chinese
-        Every53English->Subject.Every53English
-        else -> throw RuntimeException("no this.")
+sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, val actions:Array<CheckupDescMode>) {
+    fun randomOneAction() : CheckupDescMode {
+        val size = actions.size
+        return actions[(Math.random() * size).toInt()]
     }
+
+    object Chinese : Subject("语文", 0, 4,
+        actions = arrayOf(
+            CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 200, 400))),
+            CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课所有生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 320))),
+        ))
+    object EnglishWrite : Subject("英语拼写", 5, 10,
+        actions = arrayOf(
+        CheckupDescMode("从英语书本上找，8个单词，每个抄2遍。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+    ))
+    object Science : Subject("科学", 11, 19,
+        actions = arrayOf(
+        CheckupDescMode("找3个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 220, 480))),
+        CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 200, 480))),
+    ))
+//    object Maths : Subject("数学", 26, 30, arrayOf(
+//        CheckupDescMode("读课本3个。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 220, 480))),
+//    ))
+    object Every53Maths : Subject("53天天练-数学", 20, 40,
+        actions = arrayOf(
+        CheckupDescMode("做三页并自我检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("做两页并自我检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+    ))
+    object Every53English : Subject("53天天练-英语", 41, 45,
+        actions = arrayOf(
+        CheckupDescMode("做一课。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+    ))
+    object Every53Chinese : Subject("53天天练-语文", 46, 50,
+        actions = arrayOf(
+        CheckupDescMode("做一课。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+    ))
 }
 
-//概率出现题目
-private val percentMap = hashMapOf(
-    Subject.Chinese to 5,
-    Subject.EnglishWrite to 5,
-    Subject.Read to 10,
-    Subject.Science to 20,
-    Subject.Maths to 10,
-    Subject.Every53Maths to 20,
-    Subject.Every53Chinese to 10,
-    Subject.Every53English to 10
-)
+private val allSubjects by unsafeLazy {
+    listOf(Subject.Chinese, Subject.EnglishWrite, Subject.Science,
+        Subject.Every53Maths, Subject.Every53Chinese, Subject.Every53English)
+}
 
-fun Subject.percent():Int {
-    var allPercent = 0
-    percentMap.forEach { (_, percent) -> allPercent += percent }
-    if (allPercent != 100) {
-        throw RuntimeException("各个科目的总概率设置错误！")
+fun nameToSubject(name:String) : Subject {
+    for (subj in allSubjects) {
+        if (subj.name == name) {
+            return subj
+        }
     }
+    throw RuntimeException()
+}
 
-    return percentMap[this]!!
+fun randomGetSubject() : Subject {
+    val random = (Math.random() * 56)
+    for (subj in allSubjects) {
+        if (random>=subj.randomStart && random <= subj.randomEnd) {
+            return subj
+        }
+    }
+    throw RuntimeException()
+}
+
+fun randomGetTwoSubjects() : Array<Subject> {
+    val first = randomGetSubject()
+    var second = randomGetSubject()
+    if (second == first) {
+        second = randomGetSubject()
+    }
+    return arrayOf(first, second)
 }

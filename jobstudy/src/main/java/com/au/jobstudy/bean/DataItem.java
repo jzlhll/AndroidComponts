@@ -3,6 +3,7 @@ package com.au.jobstudy.bean;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * 科目，任务描述，是否完成，完成的时间点
  */
+@Keep
 public final class DataItem extends Entity implements Serializable {
     public int index;
 
@@ -43,7 +45,11 @@ public final class DataItem extends Entity implements Serializable {
     public int minVoiceSec;
     public int maxVoiceSec;
 
+    public int checkUpMode;
+
     public String day; //20230910
+
+    public String weekStartDay; //20231127就是一个星期一
 
     @Override
     public void reset() {
@@ -56,7 +62,9 @@ public final class DataItem extends Entity implements Serializable {
         minVideoSec = maxVideoSec = 0;
         minPicNum = maxPicNum = 0;
         minVoiceSec = maxVoiceSec = 0;
+        checkUpMode = 0;
         day = null;
+        weekStartDay = null;
     }
 
     @Override
@@ -74,7 +82,9 @@ public final class DataItem extends Entity implements Serializable {
         cv.put("maxPicNum", maxPicNum);
         cv.put("minVoiceSec", minVoiceSec);
         cv.put("maxVoiceSec", maxVoiceSec);
+        cv.put("checkUpMode", checkUpMode);
         cv.put("day", day);
+        cv.put("weekStartDay", weekStartDay);
     }
 
     @Override
@@ -117,12 +127,22 @@ public final class DataItem extends Entity implements Serializable {
 
         columnIndex = cursor.getColumnIndex("day");
         if (columnIndex >= 0) day = cursor.getString(columnIndex);
+
+        columnIndex = cursor.getColumnIndex("day");
+        if (columnIndex >= 0) day = cursor.getString(columnIndex);
+
+        columnIndex = cursor.getColumnIndex("weekStartDay");
+        if (columnIndex >= 0) weekStartDay = cursor.getString(columnIndex);
+
+        columnIndex = cursor.getColumnIndex("checkUpMode");
+        if (columnIndex >= 0) checkUpMode = cursor.getInt(columnIndex);
     }
 
+    @Keep
     public static final class MediaItem {
-        public static final int TYPE_VIDEO = 1;
-        public static final int TYPE_VOICE = 2;
-        public static final int TYPE_PIC = 3;
+        public static final int TYPE_VIDEO = 0x1;
+        public static final int TYPE_VOICE = 0x2;
+        public static final int TYPE_PIC = 0x4;
 
         public int type;
 
