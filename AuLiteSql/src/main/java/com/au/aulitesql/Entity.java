@@ -78,21 +78,6 @@ public abstract class Entity implements BaseColumns {
      */
     public abstract void reset();
 
-    public final boolean delete() {
-        var r = AuLiteSql.getDao().delete(this);
-        reset();
-        id = -1;
-        return r;
-    }
-
-    /**
-     * 增加或者修改。
-     */
-    public final long save() {
-        AuLiteSql.getDao().save(this);
-        return id;
-    }
-
     @NonNull
     public Gson gson() {
         return AuLiteSql.getGsonOrNew();

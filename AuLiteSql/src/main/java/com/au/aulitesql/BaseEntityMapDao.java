@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseEntityMap<K, E extends Entity> {
+public abstract class BaseEntityMapDao<K, E extends Entity> {
     public final Class<E> entityClass;
     public final String keyField;
 
-    public BaseEntityMap(Class<E> clazz, String keyField) {
+    public BaseEntityMapDao(Class<E> clazz, String keyField) {
         this.entityClass = clazz;
         this.keyField = keyField;
     }

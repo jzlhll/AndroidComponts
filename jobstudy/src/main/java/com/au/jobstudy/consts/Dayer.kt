@@ -1,0 +1,48 @@
+package com.au.jobstudy.consts
+
+import com.au.jobstudy.util.anyDayToWeekStartDay
+import com.au.jobstudy.util.timeToDayInt
+
+/**
+ * @author allan.jiang
+ * @date :2023/11/27 10:48
+ * @description:
+ */
+class Dayer {
+    companion object {
+        val currentDayer = Dayer()
+    }
+
+    lateinit var currentDay:String
+    var currentDayInt:Int = 0
+    var weekStartDayInt:Int = 0
+    lateinit var weekStartDay:String
+
+    constructor() {
+        init(timeToDayInt())
+    }
+
+    constructor(anyDay:String) {
+        init(anyDay.toInt())
+    }
+
+    constructor(anyDay:Int) {
+        init(anyDay)
+    }
+
+    private fun init(anyDay: Int) {
+        currentDay = anyDay.toString()
+        currentDayInt = anyDay
+
+        weekStartDay = anyDayToWeekStartDay(currentDay)
+        weekStartDayInt = weekStartDay.toInt()
+    }
+
+    fun changeToToday() {
+        val cur = Dayer()
+        currentDayer.currentDayInt = cur.currentDayInt
+        currentDayer.currentDay = cur.currentDay
+        currentDayer.weekStartDayInt = cur.weekStartDayInt
+        currentDayer.weekStartDay = cur.weekStartDay
+    }
+}

@@ -1,9 +1,11 @@
-package com.au.aulitesql;
+package com.au.aulitesql.dao;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
 
+import com.au.aulitesql.AuLiteSql;
+import com.au.aulitesql.BaseEntityMapDao;
+import com.au.aulitesql.Entity;
 import com.au.aulitesql.actions.ICallback;
 
 import java.lang.reflect.Field;
@@ -15,21 +17,23 @@ import java.util.Map;
 /**
  * 加载整张表的LiveData。并且当更新其中的数据或者插入有变化的时候，会得到通知。
  */
-public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> {
+public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMapDao<K, E> {
     private final Map<K, E> origData = new HashMap<>();
-
-    private final MutableLiveData<HashMap<K, E>> liveData;
 
     private Field keyFieldField;
     private final String keyField;
 
-    public EntityMapLiveData(MutableLiveData<HashMap<K, E>> liveData, Class<E> entityClass,@NonNull String keyField) {
+    public DefEntityMapDao(Class<E> entityClass, @NonNull String keyField) {
         super(entityClass, keyField);
-        this.liveData = liveData;
         this.keyField = keyField;
     }
 
+    public abstract void onNewMapGenerated(HashMap<K, E> map);
+
     private Field getKeyField() {
+        if (keyFieldField != null) {
+            return keyFieldField;
+        }
         for (Class<?> superClass = entityClass;
              superClass != null && superClass != Object.class;
              superClass = superClass.getSuperclass()) {
@@ -61,7 +65,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 map.put(getKeyFieldValue(item), item);
             }
             origData.putAll(map);
-            liveData.postValue(map);
+            onNewMapGenerated(map);
             callback.callback(map);
         });
     }
@@ -76,7 +80,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 map.put(getKeyFieldValue(item), item);
             }
             origData.putAll(map);
-            liveData.postValue(map);
+            onNewMapGenerated(map);
             callback.callback(map);
         });
     }
@@ -91,7 +95,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 map.put(getKeyFieldValue(item), item);
             }
             origData.putAll(map);
-            liveData.postValue(map);
+            onNewMapGenerated(map);
             callback.callback(map);
         });
     }
@@ -106,7 +110,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 map.put(getKeyFieldValue(item), item);
             }
             origData.putAll(map);
-            liveData.postValue(map);
+            onNewMapGenerated(map);
             callback.callback(map);
         });
     }
@@ -121,7 +125,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 map.put(getKeyFieldValue(item), item);
             }
             origData.putAll(map);
-            liveData.postValue(map);
+            onNewMapGenerated(map);
             callback.callback(map);
         });
     }
@@ -137,7 +141,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 }
             }
             var count = AuLiteSql.getDao().deleteAll(shouldDeletedList);
-            liveData.postValue(new HashMap<>(origData));
+            onNewMapGenerated(new HashMap<>(origData));
             //todo 可能对不上size
             deleteCountCallback.callback(count);
         });
@@ -152,7 +156,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
                 suc = AuLiteSql.getDao().delete(value);
             }
             if (suc) {
-                liveData.postValue(new HashMap<>(origData));
+                onNewMapGenerated(new HashMap<>(origData));
             }
             deleteSuccessCallback.callback(suc);
         });
@@ -164,7 +168,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
             var suc = false;
             suc = AuLiteSql.getDao().delete(value);
             if (suc) {
-                liveData.postValue(new HashMap<>(origData));
+                onNewMapGenerated(new HashMap<>(origData));
             }
             deleteSuccessCallback.callback(suc);
         });
@@ -176,7 +180,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
             var suc = AuLiteSql.getDao().clear(entityClass);
             if (suc) {
                 origData.clear();
-                liveData.postValue(new HashMap<>());
+                onNewMapGenerated(new HashMap<>());
             }
 
             clearSuccessCallback.callback(suc);
@@ -189,7 +193,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
             var ins = AuLiteSql.getDao().save(value);
             if (ins != null) {
                 origData.put(key, value);
-                liveData.postValue(new HashMap<>(origData));
+                onNewMapGenerated(new HashMap<>(origData));
             }
 
             saveSuccessCallback.callback(ins != null);
@@ -202,7 +206,7 @@ public class EntityMapLiveData<K, E extends Entity> extends BaseEntityMap<K, E> 
             var savedList = AuLiteSql.getDao().saveAllBackSavedList(new ArrayList<>(map.values()));
             //todo 可能size对不上。
             origData.putAll(map);
-            liveData.postValue(new HashMap<>(origData));
+            onNewMapGenerated(new HashMap<>(origData));
             saveSuccessCountCallback.callback(savedList.size());
         });
     }

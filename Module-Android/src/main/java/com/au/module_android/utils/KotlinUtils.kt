@@ -1,10 +1,12 @@
 package com.au.module_android.utils
 
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
@@ -34,6 +36,15 @@ suspend inline fun <T> withIoThread(crossinline block: suspend () -> T): T {
         }
     } else {
         block.invoke()
+    }
+}
+
+/**
+ * 在io线程操作
+ */
+suspend inline fun <T> awaitOnIoThread(crossinline block: (CancellableContinuation<T>) -> Unit): T {
+    return withIoThread {
+        suspendCancellableCoroutine(block)
     }
 }
 
