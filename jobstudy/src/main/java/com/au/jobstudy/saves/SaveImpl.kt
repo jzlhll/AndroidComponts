@@ -29,7 +29,7 @@ class SaveImpl : ISave {
 
                     val twoSubjects = randomGetTwoSubjects()
                     val firstCheck = twoSubjects[0].randomOneAction()
-                    val secondCheck = twoSubjects[0].randomOneAction()
+                    val secondCheck = twoSubjects[1].randomOneAction()
 
                     val dataItem1 = DataItem().apply {
                         day = aday

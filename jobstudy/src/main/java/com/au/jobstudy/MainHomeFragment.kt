@@ -6,9 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.layout.SimpleItemsLayout
+import com.au.jobstudy.bean.subjectToColor
+import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
+import com.au.jobstudy.databinding.HomeCheckItemBinding
+import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
 import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
+import com.au.jobstudy.home.CheckPointUiData
 import com.au.jobstudy.home.ThisWeekUiData
 import com.au.jobstudy.util.currentDay
 import com.au.jobstudy.util.currentTimeToHello
@@ -24,6 +29,28 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         binding.mineName.text = userName
 
         viewModel = ViewModelProvider(requireActivity())[GlobalDataViewModel::class.java]
+
+        binding.checkPointList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)->ViewBinding) {
+            override fun invoke(layoutInflate: LayoutInflater, me: SimpleItemsLayout, attachedToParent: Boolean, data: Any): ViewBinding {
+                return when (val uiData = data as CheckPointUiData) {
+                    is CheckPointUiData.Title -> {
+                        HomeCheckItemTitleBinding.inflate(layoutInflate, me, attachedToParent).also {
+                            it.workTitle.text = uiData.str
+                        }
+                    }
+
+                    is CheckPointUiData.Item -> {
+                        HomeCheckItemBinding.inflate(layoutInflate, me, attachedToParent).also {
+                            it.subjectText.text = uiData.dataItem.subject
+                            it.descText.text = uiData.dataItem.desc
+                            val color = subjectToColor(uiData.dataItem.subject)
+                            it.subjectColor.setBackgroundColor(color)
+                        }
+                    }
+                }
+            }
+
+        }
 
         binding.thisWeekList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)->ViewBinding) {
             override fun invoke(layoutInflate: LayoutInflater, me: SimpleItemsLayout, attachedToParent: Boolean, data: Any): ViewBinding {
@@ -77,9 +104,9 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
         binding.title.text = String.format(getString(R.string.name_hello_format), userName, currentTimeToHello())
 
-        val curDay = currentDay()
+        val curDay = Dayer()
         lifecycleScope.launch {
-            val weekData = viewModel.getWeekData(curDay)
+            val weekData = viewModel.getWeekData(curDay.currentDay)
             val arr = viewModel.dataListToCompletedCount(weekData)
             for (a in arr) {
                 binding.thisWeekList.addItem(a)
@@ -87,7 +114,23 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         }
 
         lifecycleScope.launch {
-            val todayData = viewModel.getDay(curDay)
+            val yestDay = viewModel.getDay("" + (curDay.currentDayInt - 1))
+            val yestNoCompleteDay = yestDay.filter { !it.complete }
+            if (yestNoCompleteDay.isNotEmpty()) {
+                binding.checkPointList.addItem(CheckPointUiData.Title("昨天还有未完成的任务~~~"))
+                yestNoCompleteDay.forEach {
+                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
+                }
+            }
+
+            val todayData = viewModel.getDay(curDay.currentDay)
+            val todayNotComplete = todayData.filter { !it.complete }
+            if (todayNotComplete.isNotEmpty()) {
+                binding.checkPointList.addItem(CheckPointUiData.Title("今天的任务："))
+                todayNotComplete.forEach {
+                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
+                }
+            }
         }
     }
 }

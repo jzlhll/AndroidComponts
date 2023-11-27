@@ -1,5 +1,6 @@
 package com.au.jobstudy.bean
 
+import com.au.jobstudy.R
 import com.au.jobstudy.bean.DataItem.MediaItem
 import com.au.module_android.utils.unsafeLazy
 
@@ -93,4 +94,15 @@ fun randomGetTwoSubjects() : Array<Subject> {
         second = randomGetSubject()
     }
     return arrayOf(first, second)
+}
+
+fun subjectToColor(subject:String):Int {
+    return when (nameToSubject(subject)) {
+        Subject.Chinese-> R.color.color_chinese
+        Subject.Every53Chinese-> R.color.color_chinese
+        Subject.Science-> R.color.color_science
+        Subject.Every53Maths-> R.color.color_math
+        Subject.EnglishWrite-> R.color.color_english
+        Subject.Every53English-> R.color.color_english
+    }
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="start"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="66dp"
+    tools:ignore="MissingDefaultResource">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/subjectColor"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
+            tools:background="@color/color_chinese"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+
+        <com.au.module_android.text.CustomFontText
+            app:layout_constraintStart_toEndOf="@id/subjectColor"
+            app:layout_constraintTop_toTopOf="@id/subjectColor"
+            app:layout_constraintBottom_toBottomOf="@id/subjectColor"
+            android:id="@+id/subjectText"
+            android:layout_marginStart="4dp"
+            tools:text="5-3天天练"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.text.CustomFontText
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn"
+            app:layout_constraintTop_toBottomOf="@id/subjectText"
+            android:id="@+id/descText"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="14dp"
+            tools:text="5-3天天练Desc"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="4dp"
+            android:padding="8dp"
+            android:layout_width="45dp"
+            android:src="@drawable/ic_b_next"
+            android:layout_height="45dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

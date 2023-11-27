@@ -84,6 +84,7 @@
         android:layout_width="36dp"
         android:id="@+id/pic3"
         android:src="@drawable/ic_star"
+        android:visibility="invisible"
         android:layout_height="36dp"/>
 
     <com.au.module_android.text.CustomFontText

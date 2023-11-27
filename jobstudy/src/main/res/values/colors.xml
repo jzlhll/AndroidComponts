@@ -13,4 +13,9 @@
     <color name="color_gray_light">#f0f0f0</color>
 
     <color name="color_dot_red">#DC2525</color>
+
+    <color name="color_chinese">#f0a912</color>
+    <color name="color_math">#2C57ED</color>
+    <color name="color_english">#9471D3</color>
+    <color name="color_science">#009688</color>
 </resources>
