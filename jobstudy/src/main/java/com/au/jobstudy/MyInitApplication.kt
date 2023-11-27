@@ -15,6 +15,7 @@ class MyInitApplication : InitApplication() {
         AuLiteSql.getInstance()
             .setDb("jobStudy", 1)
             .setTableClasses(listOf(DataItem::class.java))
+            .useThreadPool()
             .openDataBase(this)
     }
 }

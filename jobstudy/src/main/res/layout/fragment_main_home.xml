@@ -30,7 +30,7 @@
             android:text="今天，天气，气温"
             android:layout_marginTop="12dp"
             android:textSize="16sp"
-            android:textColor="#414141"
+            android:textColor="#555555"
             android:layout_height="wrap_content"/>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -42,6 +42,7 @@
             android:layout_height="32dp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/headBlockHost"
             android:background="@drawable/small_shadow_bg"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/weather"
@@ -75,7 +76,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
-                android:text="蒋添靖"
+                android:text="#Name"
                 android:textSize="18sp"
                 android:textColor="#212121"
                 android:layout_height="wrap_content"/>
@@ -92,51 +93,71 @@
                 android:textColor="#414141"
                 android:layout_height="wrap_content"/>
 
+            <View
+                android:id="@+id/mineGrayLine"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/mineScholl"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="#cccccc"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/mineCheckPointImage"
                 android:layout_width="32dp"
-                app:layout_constraintEnd_toEndOf="@id/mineHeadImageHost"
+                app:layout_constraintStart_toStartOf="@id/mineHeadImageHost"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/mineScholl"
+                app:layout_constraintTop_toBottomOf="@id/mineGrayLine"
                 android:src="@drawable/ic_checkpoint"
                 android:layout_height="32dp"/>
 
             <com.au.module_android.text.CustomFontText
                 android:id="@+id/mineWeeklyText"
-                app:layout_constraintStart_toStartOf="@id/mineScholl"
+                app:layout_constraintStart_toEndOf="@id/mineCheckPointImage"
                 app:layout_constraintTop_toTopOf="@id/mineCheckPointImage"
                 app:layout_constraintBottom_toBottomOf="@id/mineCheckPointImage"
                 android:layout_marginStart="6dp"
                 android:layout_width="wrap_content"
-                android:text="本周。。。"
+                android:text="@string/this_week_works_list"
                 android:textSize="16sp"
                 android:textColor="#414141"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:id="@+id/mineGrayLine"
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/mineCheckPointImage"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
-                android:background="#cccccc"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
             <com.allan.nested.layout.SimpleItemsLayout
-                android:id="@+id/mineList"
-                app:layout_constraintTop_toBottomOf="@id/mineGrayLine"
+                android:id="@+id/thisWeekList"
+                app:layout_constraintTop_toBottomOf="@id/mineWeeklyText"
                 android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 tools:layout_height="50dp"
                 android:layout_height="wrap_content"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.au.module_android.text.CustomFontText
+            android:id="@+id/todayCheckTitle"
+            app:layout_constraintTop_toBottomOf="@id/headBlockHost"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:layout_width="wrap_content"
+            android:text="@string/today_works"
+            android:textSize="18sp"
+            android:textColor="#212121"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.text.CustomFontText
+            android:layout_marginTop="20dp"
+            android:id="@+id/lookWeeklyText"
+            android:text="任务完成情况 >"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/todayCheckTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <com.allan.nested.layout.SimpleItemsLayout
             android:id="@+id/checkPointList"
-            app:layout_constraintTop_toBottomOf="@id/mineHost"
-            android:layout_marginTop="18dp"
+            app:layout_constraintTop_toBottomOf="@id/lookWeeklyText"
+            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             tools:layout_height="50dp"
             android:layout_height="wrap_content"/>

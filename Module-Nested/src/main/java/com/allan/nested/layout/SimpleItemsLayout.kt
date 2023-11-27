@@ -24,7 +24,7 @@ class SimpleItemsLayout : LinearLayout {
     private val inflater: LayoutInflater
 
     //请务必初始化。
-    lateinit var itemInflateCreator : ((LayoutInflater, SimpleItemsLayout, Boolean, data:Any)->ViewBinding)
+    lateinit var itemInflateCreator : ((layoutInflate:LayoutInflater, me:SimpleItemsLayout, attachedToParent:Boolean, data:Any)->ViewBinding)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {

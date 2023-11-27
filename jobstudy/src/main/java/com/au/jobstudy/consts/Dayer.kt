@@ -9,10 +9,6 @@ import com.au.jobstudy.util.timeToDayInt
  * @description:
  */
 class Dayer {
-    companion object {
-        val currentDayer = Dayer()
-    }
-
     lateinit var currentDay:String
     var currentDayInt:Int = 0
     var weekStartDayInt:Int = 0
@@ -36,13 +32,5 @@ class Dayer {
 
         weekStartDay = anyDayToWeekStartDay(currentDay)
         weekStartDayInt = weekStartDay.toInt()
-    }
-
-    fun changeToToday() {
-        val cur = Dayer()
-        currentDayer.currentDayInt = cur.currentDayInt
-        currentDayer.currentDay = cur.currentDay
-        currentDayer.weekStartDayInt = cur.weekStartDayInt
-        currentDayer.weekStartDay = cur.weekStartDay
     }
 }

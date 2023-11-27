@@ -27,6 +27,8 @@ displayMetrics density: 1.75 densityDpi: 280 scaledDensity: 1.75
 displayMetrics widthPixels: 1200 heightPixels: 1836
  */
 object ToutiaoScreenAdapter {
+    private const val DEFAULT_UE_SIZE = 390 //设计稿以360px为准
+
     private var systemDensity:Float = 1f //大小
     private var systemScaleDensity:Float = 1f//字体大小
 
@@ -34,11 +36,11 @@ object ToutiaoScreenAdapter {
     private var targetScaleDensity:Float = 1f
     private var targetDensityDpi:Int = 160
 
-    private var ueExceptWidthPx = 720 //设计稿以360为准
+    private var ueExceptWidthPx = DEFAULT_UE_SIZE
 
     private lateinit var application:Application
 
-    fun init(app:Application, expectWidthPx:Int=720) {
+    fun init(app:Application, expectWidthPx:Int=DEFAULT_UE_SIZE) {
         this.application = app
         this.ueExceptWidthPx = expectWidthPx
 

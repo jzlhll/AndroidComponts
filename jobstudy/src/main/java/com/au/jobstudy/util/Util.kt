@@ -11,6 +11,8 @@ fun timeToDayInt(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Dat
 
 fun timeToDay(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time))
 
+val currentDay = DAY_FORMAT.format(Date(System.currentTimeMillis()))
+
 fun timeToWeekStartDay(time:Long = System.currentTimeMillis()) : String {
     val curDay = DAY_FORMAT.format(Date(time))
     val curDayInt = curDay.toInt()

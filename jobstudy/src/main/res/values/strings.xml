@@ -3,4 +3,6 @@
     <string name="bottom_home">打卡</string>
     <string name="bottom_boardcast">朋友圈</string>
     <string name="bottom_mine">我的</string>
+    <string name="today_works">今天的任务如下：</string>
+    <string name="this_week_works_list">本周完成了如下任务，棒棒的！</string>
 </resources>
