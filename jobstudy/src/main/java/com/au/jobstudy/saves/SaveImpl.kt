@@ -34,14 +34,14 @@ class SaveImpl : ISave {
                     val dataItem1 = DataItem().apply {
                         day = aday
                         this.weekStartDay = weekStartDay
-                        index = 0
+                        orderIndex = 0
                         subject = twoSubjects[0].name
                         fillDataItemMode(this, firstCheck)
                     }
                     val dataItem2 = DataItem().apply {
                         day = aday
                         this.weekStartDay = weekStartDay
-                        index = 1
+                        orderIndex = 1
                         subject = twoSubjects[1].name
                         fillDataItemMode(this, secondCheck)
                     }
@@ -49,10 +49,10 @@ class SaveImpl : ISave {
                     list.add(dataItem2)
                 }
 
-                weekDao.saveAll(list)
-                allWeeksDao[weekStartDay] = weekDao
-
-                cancellableContinuation.resume(list)
+                weekDao.saveAll(list) {
+                    allWeeksDao[weekStartDay] = weekDao
+                    cancellableContinuation.resume(list)
+                }
             }
         }
 

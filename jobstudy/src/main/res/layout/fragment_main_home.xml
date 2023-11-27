@@ -17,7 +17,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="20dp"
-            android:text="晚安,%s"
+            android:text="@string/name_hello_format"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -76,7 +76,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
-                android:text="#Name"
+                tools:text="#Name"
                 android:textSize="18sp"
                 android:textColor="#212121"
                 android:layout_height="wrap_content"/>
@@ -131,6 +131,11 @@
                 android:layout_width="match_parent"
                 tools:layout_height="50dp"
                 android:layout_height="wrap_content"/>
+
+            <Space
+                app:layout_constraintTop_toBottomOf="@id/thisWeekList"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.au.module_android.text.CustomFontText

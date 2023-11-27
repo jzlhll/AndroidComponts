@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Keep
 public final class DataItem extends Entity implements Serializable {
-    public int index;
+    public int orderIndex;
 
     @NonNull
     public String subject = "";
@@ -53,7 +53,7 @@ public final class DataItem extends Entity implements Serializable {
 
     @Override
     public void reset() {
-        index = 0;
+        orderIndex = 0;
         subject = "";
         desc = "";
         complete = false;
@@ -69,7 +69,7 @@ public final class DataItem extends Entity implements Serializable {
 
     @Override
     public void pack(@NonNull ContentValues cv) {
-        cv.put("index", index);
+        cv.put("orderIndex", orderIndex);
         cv.put("subject", subject);
         cv.put("desc", desc);
         cv.put("complete", complete);
@@ -89,8 +89,8 @@ public final class DataItem extends Entity implements Serializable {
 
     @Override
     public void unpack(@NonNull Cursor cursor) {
-        int columnIndex = cursor.getColumnIndex("index");
-        if (columnIndex >= 0) index = cursor.getInt(columnIndex);
+        int columnIndex = cursor.getColumnIndex("orderIndex");
+        if (columnIndex >= 0) orderIndex = cursor.getInt(columnIndex);
 
         columnIndex = cursor.getColumnIndex("subject");
         if (columnIndex >= 0) subject = cursor.getString(columnIndex);

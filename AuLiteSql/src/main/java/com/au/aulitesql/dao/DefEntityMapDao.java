@@ -66,7 +66,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             }
             origData.putAll(map);
             onNewMapGenerated(map);
-            callback.callback(map);
+            if (callback != null) callback.callback(map);
         });
     }
 
@@ -81,7 +81,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             }
             origData.putAll(map);
             onNewMapGenerated(map);
-            callback.callback(map);
+            if (callback != null) callback.callback(map);
         });
     }
 
@@ -96,7 +96,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             }
             origData.putAll(map);
             onNewMapGenerated(map);
-            callback.callback(map);
+            if (callback != null) callback.callback(map);
         });
     }
 
@@ -111,7 +111,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             }
             origData.putAll(map);
             onNewMapGenerated(map);
-            callback.callback(map);
+            if (callback != null) callback.callback(map);
         });
     }
 
@@ -126,7 +126,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             }
             origData.putAll(map);
             onNewMapGenerated(map);
-            callback.callback(map);
+            if (callback != null) callback.callback(map);
         });
     }
 
@@ -143,7 +143,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             var count = AuLiteSql.getDao().deleteAll(shouldDeletedList);
             onNewMapGenerated(new HashMap<>(origData));
             //todo 可能对不上size
-            deleteCountCallback.callback(count);
+            if (deleteCountCallback != null) deleteCountCallback.callback(count);
         });
     }
 
@@ -158,7 +158,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             if (suc) {
                 onNewMapGenerated(new HashMap<>(origData));
             }
-            deleteSuccessCallback.callback(suc);
+            if (deleteSuccessCallback != null) deleteSuccessCallback.callback(suc);
         });
     }
 
@@ -170,7 +170,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             if (suc) {
                 onNewMapGenerated(new HashMap<>(origData));
             }
-            deleteSuccessCallback.callback(suc);
+            if (deleteSuccessCallback != null) deleteSuccessCallback.callback(suc);
         });
     }
 
@@ -183,7 +183,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
                 onNewMapGenerated(new HashMap<>());
             }
 
-            clearSuccessCallback.callback(suc);
+            if (clearSuccessCallback != null) clearSuccessCallback.callback(suc);
         });
     }
 
@@ -196,7 +196,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
                 onNewMapGenerated(new HashMap<>(origData));
             }
 
-            saveSuccessCallback.callback(ins != null);
+            if (saveSuccessCallback != null) saveSuccessCallback.callback(ins != null);
         });
     }
 
@@ -207,7 +207,7 @@ public abstract class DefEntityMapDao<K, E extends Entity> extends BaseEntityMap
             //todo 可能size对不上。
             origData.putAll(map);
             onNewMapGenerated(new HashMap<>(origData));
-            saveSuccessCountCallback.callback(savedList.size());
+            if (saveSuccessCountCallback != null) saveSuccessCountCallback.callback(savedList.size());
         });
     }
 }

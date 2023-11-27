@@ -23,7 +23,7 @@ final class ThreadPoolExecutor implements Executor {
     @Override
     public void execute(Runnable command) {
         var newRun = new NewRunnable(command);
-        threadPoolExecutor.execute(newRun);
+        getThreadPoolExecutor().execute(newRun);
     }
 
     private class NewRunnable implements Runnable {

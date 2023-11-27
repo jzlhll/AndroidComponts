@@ -30,7 +30,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             origData.clear();
             origData.addAll(list);
             onNewListGenerated(list);
-            callback.callback(list);
+            if (callback != null) callback.callback(list);
         });
     }
 
@@ -41,7 +41,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             origData.clear();
             origData.addAll(list);
             onNewListGenerated(list);
-            callback.callback(list);
+            if (callback != null) callback.callback(list);
         });
     }
 
@@ -52,7 +52,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             origData.clear();
             origData.addAll(list);
             onNewListGenerated(list);
-            callback.callback(list);
+            if (callback != null) callback.callback(list);
         });
     }
 
@@ -63,7 +63,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             origData.clear();
             origData.addAll(list);
             onNewListGenerated(list);
-            callback.callback(list);
+            if (callback != null) callback.callback(list);
         });
     }
 
@@ -74,7 +74,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             origData.clear();
             origData.addAll(list);
             onNewListGenerated(list);
-            callback.callback(list);
+            if (callback != null) callback.callback(list);
         });
     }
 
@@ -84,7 +84,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             var deletedList = AuLiteSql.getDao().deleteAllBackDeleted(dataList);
             deletedList.forEach(origData::remove);
             onNewListGenerated(origData);
-            deleteCountCallback.callback(deletedList.size());
+            if(deleteCountCallback != null) deleteCountCallback.callback(deletedList.size());
         });
     }
 
@@ -97,7 +97,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
                 onNewListGenerated(origData);
             }
 
-            deleteSuccessCallback.callback(suc);
+            if(deleteSuccessCallback != null) deleteSuccessCallback.callback(suc);
         });
     }
 
@@ -110,7 +110,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
                 onNewListGenerated(origData);
             }
 
-            clearSuccessCallback.callback(suc);
+            if(clearSuccessCallback != null) clearSuccessCallback.callback(suc);
         });
     }
 
@@ -122,7 +122,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
                 origData.add(instance);
                 onNewListGenerated(origData);
             }
-            saveSuccessCallback.callback(ins != null);
+            if (saveSuccessCallback != null) saveSuccessCallback.callback(ins != null);
         });
     }
 
@@ -132,7 +132,7 @@ public abstract class DefEntityListDao<E extends Entity> extends BaseEntityListD
             var savedList = AuLiteSql.getDao().saveAllBackSavedList(dataList);
             origData.addAll(savedList);
             onNewListGenerated(origData);
-            saveSuccessCountCallback.callback(savedList.size());
+            if(saveSuccessCountCallback != null) saveSuccessCountCallback.callback(savedList.size());
         });
     }
 

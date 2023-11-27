@@ -75,7 +75,7 @@ public final class TableCreators {
          */
         public String saveToString() {
             var strs = saveToStrings();
-            String enter = "\n";
+            String enter = "\\n";
             int enterLen = enter.length();
             boolean has = false;
             StringBuilder sb = new StringBuilder();
@@ -110,6 +110,14 @@ public final class TableCreators {
                 ret.add(tableInfo.toSave());
             }
 
+            return ret.toArray(new String[] {});
+        }
+
+        public String[] allSqlsAfterSorted() {
+            List<String> ret = new ArrayList<>();
+            for (TableInfo tableInfo : tableInfoList) {
+                ret.add(tableInfo.sql);
+            }
             return ret.toArray(new String[] {});
         }
     }
@@ -226,10 +234,6 @@ public final class TableCreators {
             }
 
             String type = field.getType().getSimpleName();
-            if (!map.containsKey(type)) {
-                throw new RuntimeException("请移除非基本类型的数据结构！$type");
-            }
-
             FieldInfo fi = new FieldInfo();
             fi.fieldName = field.getName();
             fi.dataType = SqlUtils.dataTypeToCursorDataType(type);
@@ -383,9 +387,6 @@ public final class TableCreators {
             }
 
             String type = field.getType().getSimpleName();
-            if (!map.containsKey(type)) {
-                throw new RuntimeException("请移除非基本类型的数据结构！$type");
-            }
 
             FieldInfo fi = new FieldInfo();
             fi.fieldName = field.getName();

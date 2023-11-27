@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 public final class AuLiteSql {
+    public static final String TAG = AuLiteSql.class.getSimpleName();
+
     private AuLiteSql() {}
     public static AuLiteSql getInstance() {
         if (instance == null) {

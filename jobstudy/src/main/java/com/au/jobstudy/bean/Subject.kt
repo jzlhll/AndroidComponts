@@ -29,13 +29,13 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
         return actions[(Math.random() * size).toInt()]
     }
 
-    object Chinese : Subject("语文", 0, 4,
+    object Chinese : Subject("语文", 0, 5,
         actions = arrayOf(
             CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 200, 400))),
             CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课所有生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
             CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 320))),
         ))
-    object EnglishWrite : Subject("英语拼写", 5, 10,
+    object EnglishWrite : Subject("英语拼写", 6, 10,
         actions = arrayOf(
         CheckupDescMode("从英语书本上找，8个单词，每个抄2遍。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
     ))
@@ -77,7 +77,7 @@ fun nameToSubject(name:String) : Subject {
 }
 
 fun randomGetSubject() : Subject {
-    val random = (Math.random() * 56)
+    val random = (Math.random() * 51).toInt()
     for (subj in allSubjects) {
         if (random>=subj.randomStart && random <= subj.randomEnd) {
             return subj

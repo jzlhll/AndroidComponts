@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -40,15 +41,17 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
         //从asset文件中解析sql创建语句。
         //var creators = creatorStringFromAssetFile();
         //从collect() 结果中获取 sql创建语句。
-        var creators = TableCreators.collect(AuLiteSql.getInstance().currentAllTabs).saveToStrings();
+        var creators = TableCreators.collect(AuLiteSql.getInstance().currentAllTabs).tableInfoList;
 
-        for (int i = 0, size = creators.length; i < size; i+=2) {
+        for (int i = 0, size = creators.size(); i < size; i++) {
+            var tableInfo = creators.get(i);
+            Log.d(AuLiteSql.TAG, "onCreate Db Str: " + tableInfo.name + ",, " + tableInfo.sql);
             //创建表
-            db.execSQL(creators[i+1]);
+            db.execSQL(tableInfo.sql);
             //写入日志表，创建信息
             var logCv = new ContentValues();
-            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_CREATE_SQL, creators[i]);
-            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_TABLE_NAME, creators[i+1]);
+            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_CREATE_SQL, tableInfo.sql);
+            logCv.put(SqlUtils.SqlString.AU_LITE_LOG_FIELD_TABLE_NAME, tableInfo.name);
             db.insert(SqlUtils.SqlString.AU_LITE_LOG_TABLE_NAME, null, logCv);
         }
     }

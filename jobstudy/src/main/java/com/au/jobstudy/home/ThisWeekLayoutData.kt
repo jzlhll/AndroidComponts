@@ -7,5 +7,7 @@ import com.au.jobstudy.bean.Subject
  * @date :2023/11/27 16:11
  * @description:
  */
-class ThisWeekLayoutData(val num:Int)
-class ThisWeekEachLayoutData(val eachStars:Array<Pair<Subject, Int>>)
+sealed class ThisWeekUiData {
+    class ThisWeekLayoutData(val num:Int) : ThisWeekUiData()
+    class ThisWeekEachLayoutData(val eachStars:Array<Pair<Subject, Int>>) : ThisWeekUiData()
+}
