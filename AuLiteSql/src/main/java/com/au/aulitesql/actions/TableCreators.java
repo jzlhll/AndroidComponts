@@ -41,10 +41,10 @@ public final class TableCreators {
         public TableInfo getByTableClass(@NonNull Class<? extends Entity> clazz) {
             String name = tableNameFromClazz(clazz);
             for (TableInfo tableInfo : tableInfoList) {
-                if (tableInfo instanceof TableInfo && ((TableInfo) tableInfo).entityTable.equals(clazz)) {
+                if (tableInfo != null && ((TableInfo) tableInfo).entityTable.equals(clazz)) {
                     return tableInfo;
                 }
-                if (tableInfo.name.equals(name)) {
+                if (tableInfo != null && tableInfo.name.equals(name)) {
                     return tableInfo;
                 }
             }
@@ -123,7 +123,7 @@ public final class TableCreators {
     }
 
     //暂不支持其他。java.lang.Boolean....等等封装类型
-    private static final HashMap<String, String> map = new HashMap<>();
+    public static final HashMap<String, String> map = new HashMap<>();
     static {
         map.put("boolean" , "BOOLEAN");
         map.put("byte" , "INTEGER");
@@ -138,16 +138,17 @@ public final class TableCreators {
 
     public static final String primaryKey =
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,\n";
-    private static final String defaultTextItemTemplate =
+    public static final String defaultTextItemTemplate =
             "%s TEXT DEFAULT \"%s\""; //字段  defaultValue
-    private static final String notNullTextItemTemplate = "%s TEXT NOT NULL"; //字段
-    private static final String textTemplate = "%s TEXT"; //字段
-    private static final String itemDefaultTemplate = "%s %s DEFAULT %s"; //字段 类型 defaultValue
-    private static final String itemTemplate = "%s %s"; //字段 类型
+    public static final String notNullTextItemTemplate = "%s TEXT NOT NULL"; //字段
+    public static final String textTemplate = "%s TEXT"; //字段
+    public static final String itemDefaultTemplate = "%s %s DEFAULT %s"; //字段 类型 defaultValue
+    public static final String itemTemplate = "%s %s"; //字段 类型
+    public static final String itemBlobTemplate = "%s BLOB"; //字段 blob
 
-    private static final String itemBoolTrueTemplate = "%s BOOLEAN DEFAULT TRUE"; //字段
-    private static final String split = ", \n";
-    private static final String end = "\n)";
+    public static final String itemBoolTrueTemplate = "%s BOOLEAN DEFAULT TRUE"; //字段
+    public static final String split = ", \n";
+    public static final String end = "\n)";
 
     private final CreatorInfo creatorInfo;
 
@@ -228,269 +229,49 @@ public final class TableCreators {
 
         for (int i = 0; i < total; i++) {
             Field field = allFields.get(i);
+            boolean beIgnore = isFieldTransient(field) || field.isAnnotationPresent(AuIgnore.class);
 
-            if (isFieldTransient(field) || field.isAnnotationPresent(AuIgnore.class)) {
-                continue;
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
             }
 
-            String type = field.getType().getSimpleName();
-            FieldInfo fi = new FieldInfo();
-            fi.fieldName = field.getName();
-            fi.dataType = SqlUtils.dataTypeToCursorDataType(type);
+            String fieldName = field.getName();
+            String typeName = field.getType().getSimpleName();
+            String name = fieldName;
+
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
 
             if (field.isAnnotationPresent(AuName.class)) {
                 AuName annotation = field.getAnnotation(AuName.class);
                 if (annotation != null) {
                     String v = annotation.value();
                     if (v != null && !v.isEmpty()) {
-                        fi.name = v;
+                        name = v;
                     }
                 }
             }
-            if (fi.name == null) {
-                fi.name = field.getName();
-            }
 
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
+            int dataType = SqlUtils.dataTypeToCursorDataType(name + "(" + fieldName + ")", typeName);
+            String[] sql = {null};
+            Object[] defaultVal = {null};
+            SqlUtils.getSqlAndDefaultValue(typeName, field, instance, name, sql, defaultVal);
 
-            switch (type) {
-                case "long" -> {
-                    long defaultValue = field.getLong(instance);
-                    if (defaultValue == 0L) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "int" -> {
-                    int defaultValue = field.getInt(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "short" -> {
-                    short defaultValue = field.getShort(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "byte" -> {
-                    byte defaultValue = field.getByte(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "char" -> {
-                    char defaultValue = field.getChar(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "float" -> {
-                    float defaultValue = field.getFloat(instance);
-                    if (defaultValue == 0f) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "double" -> {
-                    double defaultValue = field.getDouble(instance);
-                    if (defaultValue == 0f) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "boolean" -> {
-                    boolean defaultValue = field.getBoolean(instance);
-                    if (defaultValue) {
-                        fi.sql = String.format(itemBoolTrueTemplate, fi.name);
-                    } else {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    }
-                }
-                case "String" -> {
-                    Object o = field.get(instance);
-                    String defaultValue = (o == null) ? null : o.toString();
-                    if (defaultValue == null) {
-                        fi.sql = String.format(textTemplate, fi.name);
-                    } else if (defaultValue.isEmpty()) {
-                        fi.sql = String.format(notNullTextItemTemplate, fi.name);
-                    } else {
-                        fi.sql = String.format(defaultTextItemTemplate, fi.name, defaultValue);
-                    }
-                }
+            String sqlStr = sql[0];
+            Object defaultValue = defaultVal[0];
 
-                case "List", "ArrayList", "Map", "HashMap", "Set", "HashSet" -> {
-                    fi.sql = String.format(textTemplate, fi.name);
-                }
-                default -> throw new RuntimeException("不可能");
-            }
-
-            sqlCreateTab.append(fi.sql);
+            sqlCreateTab.append(sqlStr);
             if (i < total - 1) {
                 sqlCreateTab.append(split);
             } else {
                 sqlCreateTab.append(end);
             }
 
-            t.fieldInfoList.add(fi);
+            t.fieldInfoList.add(new FieldInfo(field, fieldName, dataType, sqlStr, beIgnore, name, defaultValue));
         }
 
         t.sql = sqlCreateTab.toString();
         return t;
-    }
-
-    public static void collectPrint(List<Class<? extends Entity>> tables) {
-        CreatorInfo creatorInfo = collect(tables);
-        if (creatorInfo != null) {
-            Log.w("AuLiteSql", "Please save to asset....to > auLiteSql/dbCreator.txt");
-            Log.w("AuLiteSql", creatorInfo.saveToString());
-            Log.w("AuLiteSql", "Please save to asset....end!");
-        }
-    }
-
-    public static CreatorInfo collect(List<Class<? extends Entity>> tables) {
-        try {
-            return new TableCreators(tables).collect();
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 帮你实现好该类的三大函数。
-     */
-    private static void printClassFunctions(Class<? extends Entity> clazz) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        Constructor<?> dec = clazz.getDeclaredConstructor();
-        var instance = (Entity) dec.newInstance();
-        List<Field> allFields = allFields(clazz);
-        int total = allFields.size();
-
-        for (int i = 0; i < total; i++) {
-            Field field = allFields.get(i);
-
-            if (isFieldTransient(field) || field.isAnnotationPresent(AuIgnore.class)) {
-                continue;
-            }
-
-            String type = field.getType().getSimpleName();
-
-            FieldInfo fi = new FieldInfo();
-            fi.fieldName = field.getName();
-            fi.dataType = SqlUtils.dataTypeToCursorDataType(type);
-
-            if (field.isAnnotationPresent(AuName.class)) {
-                AuName annotation = field.getAnnotation(AuName.class);
-                if (annotation != null) {
-                    String v = annotation.value();
-                    if (v != null && !v.isEmpty()) {
-                        fi.name = v;
-                    }
-                }
-            }
-            if (fi.name == null) {
-                fi.name = field.getName();
-            }
-
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
-
-            switch (type) {
-                case "long" -> {
-                    long defaultValue = field.getLong(instance);
-                    if (defaultValue == 0L) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "int" -> {
-                    int defaultValue = field.getInt(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "short" -> {
-                    short defaultValue = field.getShort(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "byte" -> {
-                    byte defaultValue = field.getByte(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "char" -> {
-                    char defaultValue = field.getChar(instance);
-                    if (defaultValue == 0) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "float" -> {
-                    float defaultValue = field.getFloat(instance);
-                    if (defaultValue == 0f) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "double" -> {
-                    double defaultValue = field.getDouble(instance);
-                    if (defaultValue == 0f) {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    } else {
-                        fi.sql = String.format(itemDefaultTemplate, fi.name, map.get(type), defaultValue);
-                    }
-                }
-                case "boolean" -> {
-                    boolean defaultValue = field.getBoolean(instance);
-                    if (defaultValue) {
-                        fi.sql = String.format(itemBoolTrueTemplate, fi.name);
-                    } else {
-                        fi.sql = String.format(itemTemplate, fi.name, map.get(type));
-                    }
-                }
-                case "String" -> {
-                    Object o = field.get(instance);
-                    String defaultValue = (o == null) ? null : o.toString();
-                    if (defaultValue == null) {
-                        fi.sql = String.format(textTemplate, fi.name);
-                    } else if (defaultValue.isEmpty()) {
-                        fi.sql = String.format(notNullTextItemTemplate, fi.name);
-                    } else {
-                        fi.sql = String.format(defaultTextItemTemplate, fi.name, defaultValue);
-                    }
-                }
-
-                case "List", "ArrayList", "Map", "HashMap", "Set", "HashSet" -> {
-                    fi.sql = String.format(textTemplate, fi.name);
-                }
-                default -> throw new RuntimeException("不可能");
-            }
-        }
     }
 }

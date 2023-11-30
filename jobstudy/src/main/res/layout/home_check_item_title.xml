@@ -6,7 +6,6 @@
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:paddingVertical="10dp"
-    android:background="#f4f4ff"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="MissingDefaultResource">

@@ -14,7 +14,7 @@ open class SafeLiveData<T> : LiveData<T> {
     /**
      * 不论如何都放到主线程。
      */
-    fun setValueSafe(data:T?) {
+    open fun setValueSafe(data:T?) {
         if (Looper.getMainLooper() === Looper.myLooper()) {
             setValue(data)
         } else {

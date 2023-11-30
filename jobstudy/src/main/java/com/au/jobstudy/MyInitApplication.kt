@@ -5,7 +5,7 @@ import com.au.jobstudy.bean.DataItem
 import com.au.module_android.init.InitApplication
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/14 14:05
  * @description:
  */

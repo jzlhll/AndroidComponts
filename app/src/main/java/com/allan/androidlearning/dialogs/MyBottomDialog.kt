@@ -5,7 +5,7 @@ import com.allan.androidlearning.databinding.DialogDemoBinding
 import com.au.module_android.ui.bindings.BindingBottomDialog
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/8 18:19
  * @description:
  */

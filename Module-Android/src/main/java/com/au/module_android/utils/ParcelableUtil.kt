@@ -10,7 +10,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/10/30 16:15
  * @description: 工具类。用来序列化和反序列化为文字。
  */

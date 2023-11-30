@@ -13,45 +13,51 @@ import kotlin.coroutines.resume
 class SaveImpl : ISave {
     private val allWeeksDao = HashMap<String, EntityListDao<DataItem>>()
 
-    private suspend fun generateWeekData(weekStartDay: String) : List<DataItem> {
+    private suspend fun generateOrLoadFromDb(weekStartDay: String) : List<DataItem> {
         val weekDao =
             if (allWeeksDao.containsKey(weekStartDay))
                 allWeeksDao[weekStartDay]!!
             else
-                EntityListDao(DataItem::class.java)
-
-        return awaitOnIoThread { cancellableContinuation->
-            weekDao.loadAllFilter("weekStartDay", weekStartDay) {
-                val weekStartDayInt = weekStartDay.toInt()
-                val list = ArrayList<DataItem>()
-                for (i in 0 until  7) {
-                    val aday = (weekStartDayInt + i).toString()
-
-                    val twoSubjects = randomGetTwoSubjects()
-                    val firstCheck = twoSubjects[0].randomOneAction()
-                    val secondCheck = twoSubjects[1].randomOneAction()
-
-                    val dataItem1 = DataItem().apply {
-                        day = aday
-                        this.weekStartDay = weekStartDay
-                        orderIndex = 0
-                        subject = twoSubjects[0].name
-                        fillDataItemMode(this, firstCheck)
-                    }
-                    val dataItem2 = DataItem().apply {
-                        day = aday
-                        this.weekStartDay = weekStartDay
-                        orderIndex = 1
-                        subject = twoSubjects[1].name
-                        fillDataItemMode(this, secondCheck)
-                    }
-                    list.add(dataItem1)
-                    list.add(dataItem2)
+                EntityListDao(DataItem::class.java).also {
+                    allWeeksDao[weekStartDay] = it
                 }
 
-                weekDao.saveAll(list) {
-                    allWeeksDao[weekStartDay] = weekDao
-                    cancellableContinuation.resume(list)
+        return awaitOnIoThread { cancellableContinuation->
+            weekDao.loadAllFilter("weekStartDay", weekStartDay) { dbList->
+                val targetList:List<DataItem>
+                if (dbList.isNotEmpty()) {
+                    targetList = dbList
+                } else {
+                    val weekStartDayInt = weekStartDay.toInt()
+                    targetList = ArrayList()
+                    for (i in 0 until  7) {
+                        val aday = (weekStartDayInt + i).toString()
+
+                        val twoSubjects = randomGetTwoSubjects()
+                        val firstCheck = twoSubjects[0].randomOneAction()
+                        val secondCheck = twoSubjects[1].randomOneAction()
+
+                        val dataItem1 = DataItem().apply {
+                            day = aday
+                            this.weekStartDay = weekStartDay
+                            orderIndex = 0
+                            subject = twoSubjects[0].name
+                            fillDataItemMode(this, firstCheck)
+                        }
+                        val dataItem2 = DataItem().apply {
+                            day = aday
+                            this.weekStartDay = weekStartDay
+                            orderIndex = 1
+                            subject = twoSubjects[1].name
+                            fillDataItemMode(this, secondCheck)
+                        }
+                        targetList.add(dataItem1)
+                        targetList.add(dataItem2)
+                    }
+
+                    weekDao.saveAll(targetList) {
+                        cancellableContinuation.resume(targetList)
+                    }
                 }
             }
         }
@@ -68,8 +74,8 @@ class SaveImpl : ISave {
             }
         }
 
-        //新生成
-        return generateWeekData(dayWeekStart)
+        //新生成 or 从db中提取
+        return generateOrLoadFromDb(dayWeekStart)
     }
 
     override suspend fun updateOneDay(item: DataItem): Boolean {

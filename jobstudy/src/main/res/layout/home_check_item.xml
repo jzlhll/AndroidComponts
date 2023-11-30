@@ -11,7 +11,9 @@
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
     android:layout_width="match_parent"
-    android:layout_height="66dp"
+    android:layout_height="wrap_content"
+    android:maxHeight="100dp"
+    android:minHeight="66dp"
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +36,8 @@
             app:layout_constraintBottom_toBottomOf="@id/subjectColor"
             android:id="@+id/subjectText"
             android:layout_marginStart="4dp"
+            android:lines="1"
+            android:maxLines="1"
             tools:text="5-3天天练"
             android:textSize="16sp"
             android:textColor="#333333"
@@ -47,6 +51,7 @@
             android:id="@+id/descText"
             android:layout_marginTop="8dp"
             android:layout_marginStart="14dp"
+            android:maxLines="3"
             tools:text="5-3天天练Desc"
             android:textColor="#212121"
             android:textSize="16sp"

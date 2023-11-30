@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.layout.SimpleItemsLayout
+import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.subjectToColor
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
@@ -15,9 +16,9 @@ import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
 import com.au.jobstudy.home.CheckPointUiData
 import com.au.jobstudy.home.ThisWeekUiData
-import com.au.jobstudy.util.currentDay
-import com.au.jobstudy.util.currentTimeToHello
+import com.au.jobstudy.util.currentTimeToHelloGood
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.visible
 import kotlinx.coroutines.launch
 
@@ -96,40 +97,63 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             }
         }
 
+        viewModel.busLiveData.observe(this) {bus->
+            bus.foreach { key, content ->
+                when (key) {
+                    "getWeekData" -> {
+                        val list = content.real.asOrNull<List<DataItem>>()
+                        if (list != null) {
+                            val arr = viewModel.dataListToCompletedCount(list)
+                            for (a in arr) {
+                                binding.thisWeekList.addItem(a)
+                            }
+                        }
+                    }
 
+                    "getDay-Yesterday" -> {
+                        val yestDay = content.real.asOrNull<List<DataItem>>()
+                        if (yestDay != null) {
+                            val yestNoCompleteDay = yestDay.filter { !it.complete }
+                            if (yestNoCompleteDay.isNotEmpty()) {
+                                binding.checkPointList.addItem(CheckPointUiData.Title("昨天还有未完成的任务~~~"))
+                                yestNoCompleteDay.forEach {
+                                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
+                                }
+                            }
+                        }
+                    }
+                    "getDay-Today" -> {
+                        val todayData = content.real.asOrNull<List<DataItem>>()
+                        if (todayData != null) {
+                            val todayNotComplete = todayData.filter { !it.complete }
+                            if (todayNotComplete.isNotEmpty()) {
+                                binding.checkPointList.addItem(CheckPointUiData.Title("今天的任务："))
+                                todayNotComplete.forEach {
+                                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
+                                }
+                            }
+                        }
+                    }
+                }
+                true
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
-        binding.title.text = String.format(getString(R.string.name_hello_format), userName, currentTimeToHello())
+        val time = String.format(getString(R.string.name_hello_format), userName, currentTimeToHelloGood())
 
-        val curDay = Dayer()
-        lifecycleScope.launch {
-            val weekData = viewModel.getWeekData(curDay.currentDay)
-            val arr = viewModel.dataListToCompletedCount(weekData)
-            for (a in arr) {
-                binding.thisWeekList.addItem(a)
-            }
-        }
+        if (binding.title.text != time) {
+            binding.title.text = time
+            val curDay = Dayer()
+            lifecycleScope.launch {
+                viewModel.getWeekData(curDay.currentDay)
 
-        lifecycleScope.launch {
-            val yestDay = viewModel.getDay("" + (curDay.currentDayInt - 1))
-            val yestNoCompleteDay = yestDay.filter { !it.complete }
-            if (yestNoCompleteDay.isNotEmpty()) {
-                binding.checkPointList.addItem(CheckPointUiData.Title("昨天还有未完成的任务~~~"))
-                yestNoCompleteDay.forEach {
-                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
-                }
-            }
+                viewModel.getDay("" + (curDay.currentDayInt - 1), "getDay-Yesterday")
 
-            val todayData = viewModel.getDay(curDay.currentDay)
-            val todayNotComplete = todayData.filter { !it.complete }
-            if (todayNotComplete.isNotEmpty()) {
-                binding.checkPointList.addItem(CheckPointUiData.Title("今天的任务："))
-                todayNotComplete.forEach {
-                    binding.checkPointList.addItem(CheckPointUiData.Item(it))
-                }
+                viewModel.getDay(curDay.currentDay, "getDay-Today")
             }
         }
     }

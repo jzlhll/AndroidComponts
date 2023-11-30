@@ -11,7 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/9 13:57
  * @description:
  */

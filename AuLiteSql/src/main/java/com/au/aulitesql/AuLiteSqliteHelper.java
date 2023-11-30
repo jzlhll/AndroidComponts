@@ -41,7 +41,7 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
         //从asset文件中解析sql创建语句。
         //var creators = creatorStringFromAssetFile();
         //从collect() 结果中获取 sql创建语句。
-        var creators = TableCreators.collect(AuLiteSql.getInstance().currentAllTabs).tableInfoList;
+        var creators = AuLiteSql.getInstance().getCreateInfo().tableInfoList;
 
         for (int i = 0, size = creators.size(); i < size; i++) {
             var tableInfo = creators.get(i);
@@ -58,12 +58,7 @@ public class AuLiteSqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        try {
-            AuLiteSql.getInstance().migrations.onVersionChange(
-                    new TableCreators(AuLiteSql.getInstance().currentAllTabs).collect(), db);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException(e);
-        }
+        AuLiteSql.getInstance().migrations.onVersionChange(AuLiteSql.getInstance().getCreateInfo(), db);
     }
 
     @Override

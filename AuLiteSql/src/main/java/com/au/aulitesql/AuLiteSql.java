@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 
 import com.au.aulitesql.actions.AuLiteAssetAutoMigrations;
 import com.au.aulitesql.actions.DefaultDao;
+import com.au.aulitesql.actions.TableCreators;
 import com.au.aulitesql.annotation.AuName;
 import com.au.aulitesql.executor.AuLiteRunExecutor;
 import com.au.aulitesql.info.NamesPair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -52,7 +55,12 @@ public final class AuLiteSql {
         }
     }
 
+    private static final HashMap<Class<?>, String> cachedTableNameFromClazz = new HashMap<>(4);
+
     public static String tableNameFromClazz(Class<? extends Entity> clazz) {
+        if (cachedTableNameFromClazz.containsKey(clazz)) {
+            return cachedTableNameFromClazz.get(clazz);
+        }
         var name = clazz.getSimpleName();
         //1. 替代tableName解析
         if (clazz.isAnnotationPresent(AuName.class)) {
@@ -64,6 +72,7 @@ public final class AuLiteSql {
                 }
             }
         }
+        cachedTableNameFromClazz.put(clazz, name);
         return name;
     }
 
@@ -105,7 +114,24 @@ public final class AuLiteSql {
     @NonNull
     final AuLiteAssetAutoMigrations migrations = new AuLiteAssetAutoMigrations();
 
-    List<Class<? extends Entity>> currentAllTabs;
+    private List<Class<? extends Entity>> currentAllTabs;
+    private volatile TableCreators.CreatorInfo createInfo;
+
+    @NonNull
+    public TableCreators.CreatorInfo getCreateInfo() {
+        try {
+            if (createInfo == null) {
+                synchronized (this) {
+                    if (createInfo == null) {
+                        createInfo = new TableCreators(currentAllTabs).collect();
+                    }
+                }
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+        return createInfo;
+    }
 
     private final AuLiteRunExecutor exec = new AuLiteRunExecutor();
 

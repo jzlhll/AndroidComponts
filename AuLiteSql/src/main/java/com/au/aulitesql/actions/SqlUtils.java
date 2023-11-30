@@ -1,5 +1,7 @@
 package com.au.aulitesql.actions;
 
+import static com.au.aulitesql.actions.TableCreators.*;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -11,7 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.au.aulitesql.info.Pair;
+import com.au.aulitesql.util.CursorUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,20 +79,22 @@ public final class SqlUtils {
     public static Pair<String, Long> queryCreateSqlLog(@NonNull SQLiteDatabase db, @NonNull String tabName) {
         Cursor cursor = db.rawQuery("SELECT * FROM " + SqlString.AU_LITE_LOG_TABLE_NAME,
                 null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String createSql = null;
-            long id = -1;
-            while (!cursor.isAfterLast()) {
+        if (cursor != null) {
+            String[] createSql = {null};
+            long[] id = {-1};
+
+            CursorUtil.iterateCursor(cursor, (itemCursor)->{
                 if (tabName.equals(cursor.getString(cursor.getColumnIndex(SqlString.AU_LITE_LOG_FIELD_TABLE_NAME)))) {
-                    createSql = cursor.getString(cursor.getColumnIndex(SqlString.AU_LITE_LOG_FIELD_CREATE_SQL));
-                    id = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID));
-                    break;
+                    createSql[0] = cursor.getString(cursor.getColumnIndex(SqlString.AU_LITE_LOG_FIELD_CREATE_SQL));
+                    id[0] = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID));
+                    return true;
                 }
-                cursor.moveToNext();
-            }
+                return false;
+            });
+
             cursor.close();
 
-            return new Pair<>(createSql, id);
+            return new Pair<>(createSql[0], id[0]);
         }
         return null;
     }
@@ -147,12 +153,13 @@ public final class SqlUtils {
     static final int FIELD_TYPE_MAP = 9;
     static final int FIELD_TYPE_HASH_MAP = 10;
 
-    public static int dataTypeToCursorDataType(String dataType) {
+    public static int dataTypeToCursorDataType(String tag, String dataType) {
         switch (dataType) {
-            case "boolean", "byte", "int", "short", "long", "char" -> {
+            case "boolean", "byte", "int", "short", "long", "char",
+                    "Boolean", "Byte", "Integer", "Short", "Long", "Character"-> {
                 return FIELD_TYPE_INTEGER;
             }
-            case "float", "double" -> {
+            case "float", "double", "Float", "Double" -> {
                 return FIELD_TYPE_FLOAT;
             }
             case "String" -> {
@@ -176,7 +183,119 @@ public final class SqlUtils {
             case "HashMap" -> {
                 return FIELD_TYPE_HASH_MAP;
             }
+            case "byte[]"-> {
+                return FIELD_TYPE_BLOB;
+            }
         }
-        throw new RuntimeException("不可能");
+        throw new RuntimeException(tag + " please do not set as type:" + dataType);
+    }
+    
+    public static void getSqlAndDefaultValue(@NonNull String type,
+                              @NonNull Field field,
+                              @NonNull Object instance,
+                              @NonNull String name,
+                              String[] sql,
+                              Object[] defaultVal) throws IllegalAccessException {
+        var map = TableCreators.map;
+        String createSql = null;
+        switch (type) {
+            case "long", "Long" -> {
+                long defaultValue = field.getLong(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0L) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "int", "Integer" -> {
+                int defaultValue = field.getInt(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "short", "Short" -> {
+                short defaultValue = field.getShort(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "byte", "Byte" -> {
+                byte defaultValue = field.getByte(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "char", "Character" -> {
+                char defaultValue = field.getChar(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "float", "Float" -> {
+                float defaultValue = field.getFloat(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0f) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "double", "Double" -> {
+                double defaultValue = field.getDouble(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue == 0f) {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                } else {
+                    createSql = String.format(itemDefaultTemplate, name, map.get(type), defaultValue);
+                }
+            }
+            case "boolean", "Boolean" -> {
+                boolean defaultValue = field.getBoolean(instance);
+                defaultVal[0] = defaultValue;
+                if (defaultValue) {
+                    createSql = String.format(itemBoolTrueTemplate, name);
+                } else {
+                    createSql = String.format(itemTemplate, name, map.get(type));
+                }
+            }
+            case "String" -> {
+                Object o = field.get(instance);
+                String defaultValue = (o == null) ? null : o.toString();
+                defaultVal[0] = defaultValue;
+                if (defaultValue == null) {
+                    createSql = String.format(textTemplate, name);
+                } else if (defaultValue.isEmpty()) {
+                    createSql = String.format(notNullTextItemTemplate, name);
+                } else {
+                    createSql = String.format(defaultTextItemTemplate, name, defaultValue);
+                }
+            }
+
+            case "List", "ArrayList", "Map", "HashMap", "Set", "HashSet" -> {
+                createSql = String.format(textTemplate, name);
+                defaultVal[0] = null; // 复杂类型都是空。
+            }
+
+            case "byte[]" -> {
+                createSql = String.format(itemBlobTemplate, name);
+                defaultVal[0] = null; // 复杂类型都是空。
+            }
+            default -> throw new RuntimeException("Entity field not support >"+ name + "<: >>>" + type);
+        }
+
+        sql[0] = createSql;
     }
 }

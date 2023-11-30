@@ -1,21 +1,31 @@
 package com.au.aulitesql.info;
 
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Objects;
 
-public final class FieldInfo implements Serializable {
-    public String fieldName;
-    //int boolean, long ,...
-    public int dataType;
+@Keep
+public final class FieldInfo {
+    public final boolean beIgnore;
+    @NonNull
+    public final Field field;
 
-    public String name;
+    @NonNull
+    public final String fieldName;
+    //int boolean, long ,...
+    public final int dataType;
+    @NonNull
+    public final String name;
+
+    public final Object defaultValue;
 
     //不要了，而是写在sqlStr里面
     // public T defaultValue;
-
-    public String sql;
+    @NonNull
+    public final String sql;
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -26,5 +36,17 @@ public final class FieldInfo implements Serializable {
                     && Objects.equals(sql, other.sql);
         }
         return false;
+    }
+
+    public FieldInfo(@NonNull Field field, @NonNull String fieldName, int dataType,
+                     @NonNull String sql, boolean beIgnore,
+                     @NonNull String name, Object defaultValue) {
+        this.field = field;
+        this.fieldName = fieldName;
+        this.dataType = dataType;
+        this.name = name;
+        this.defaultValue = defaultValue;
+        this.sql = sql;
+        this.beIgnore = beIgnore;
     }
 }

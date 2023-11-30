@@ -1,40 +1,26 @@
 package com.au.jobstudy
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.Subject
 import com.au.jobstudy.bean.nameToSubject
 import com.au.jobstudy.home.ThisWeekUiData
 import com.au.jobstudy.saves.ISave
+import com.au.jobstudy.saves.ISaveViewModel
 import com.au.jobstudy.saves.SaveImpl
+import com.au.module_android.simplelivedata.BusLiveData
+import kotlinx.coroutines.launch
 
 /**
  * @author allan.jiang
  * @date :2023/11/27 15:36
  * @description:
  */
-class GlobalDataViewModel : ViewModel(), ISave {
-    val saved = SaveImpl()
+class GlobalDataViewModel : ViewModel(), ISaveViewModel {
+    private val saved:ISave = SaveImpl()
 
-    override suspend fun getWeekData(day: String): List<DataItem> {
-        return saved.getDay(day)
-    }
-
-    override suspend fun updateOneDay(item: DataItem): Boolean {
-        return saved.updateOneDay(item)
-    }
-
-    override suspend fun deleteOneDay(day: String): Boolean {
-        return saved.deleteOneDay(day)
-    }
-
-    override suspend fun deleteOneWeek(day: String): Boolean {
-        return saved.deleteOneWeek(day)
-    }
-
-    override suspend fun getDay(day: String): List<DataItem> {
-        return saved.getDay(day)
-    }
+    val busLiveData = BusLiveData()
 
     fun dataListToCompletedCount(list:List<DataItem>) : Array<Any> {
         var totalCount = 0
@@ -83,4 +69,40 @@ class GlobalDataViewModel : ViewModel(), ISave {
         }
         return returnList.toTypedArray()
     }
+
+    override fun getWeekData(day: String, mask:String?) {
+        viewModelScope.launch {
+            val list = saved.getWeekData(day)
+            busLiveData.publishSuccess(mask?:"getWeekData", list)
+        }
+    }
+
+    override fun updateOneDay(item: DataItem, mask:String?) {
+        viewModelScope.launch {
+            val r = saved.updateOneDay(item)
+            busLiveData.publishSuccess(mask?:"updateOneDay", r)
+        }
+    }
+
+    override fun deleteOneDay(day: String, mask:String?) {
+        viewModelScope.launch {
+            val r = saved.getWeekData(day)
+            busLiveData.publishSuccess(mask?:"deleteOneDay", r)
+        }
+    }
+
+    override fun deleteOneWeek(day: String, mask:String?) {
+        viewModelScope.launch {
+            val r = saved.getWeekData(day)
+            busLiveData.publishSuccess(mask?:"deleteOneWeek", r)
+        }
+    }
+
+    override fun getDay(day: String, mask:String?) {
+        viewModelScope.launch {
+            val list = saved.getWeekData(day)
+            busLiveData.publishSuccess(mask?:"getDay", list)
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ package com.au.aulitesql.actions;
 
 import static com.au.aulitesql.AuLiteSql.tableNameFromClazz;
 import static com.au.aulitesql.Entity._ID_WHERE_CAUSE;
+import static com.au.aulitesql.util.CursorUtil.cursorToData;
 
 import android.content.ContentValues;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.au.aulitesql.AuLiteSql;
 import com.au.aulitesql.Entity;
 import com.au.aulitesql.IDao;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +31,12 @@ public class DefaultDao implements IDao {
         var sqlHelper = AuLiteSql.sSqlHelper;
         if (sqlHelper != null) {
             var cursor = sqlHelper.getReadableDatabase().rawQuery("select * from " + name, null);
-            List<E> list;
+            List<E> list = null;
             try {
-                list = IDao.cursorToData(cursor, clazz);
-            } catch (Exception e) {
+                list = cursorToData(cursor, clazz);
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
-                throw new RuntimeException("cursor to data error!!");
+                list = Collections.emptyList();
             }
             cursor.close();
             return list;
@@ -70,8 +72,8 @@ public class DefaultDao implements IDao {
             var cursor = db.query(tableName, null, selection, selectionArgs, groupBy, having, orderBy);
             List<E> list;
             try {
-                list = IDao.cursorToData(cursor, clazz);
-            }catch (Exception e) {
+                list = cursorToData(cursor, clazz);
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
                 list = Collections.emptyList();
             }
@@ -89,8 +91,8 @@ public class DefaultDao implements IDao {
             var cursor = db.rawQuery(sql, selectionArgs);
             List<E> list;
             try {
-                list = IDao.cursorToData(cursor, clazz);
-            }catch (Exception e) {
+                list = cursorToData(cursor, clazz);
+            }catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
                 list = Collections.emptyList();
             }
@@ -186,7 +188,11 @@ public class DefaultDao implements IDao {
             status[0] = true;
             var db = sqlHelper.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            instance.pack(cv);
+            try {
+                instance.pack(cv);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             var tableName = tableNameFromClazz(instance.getClass());
             if (instance.getId() >= 0) {
                 db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
@@ -219,7 +225,11 @@ public class DefaultDao implements IDao {
             db.beginTransaction();
             for (var instance : dataList) {
                 ContentValues cv = new ContentValues();
-                instance.pack(cv);
+                try {
+                    instance.pack(cv);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
                 var tableName = tableNameFromClazz(instance.getClass());
                 if (instance.getId() >= 0) {
                     var r = db.update(tableName, cv, _ID_WHERE_CAUSE, new String[] {String.valueOf(instance.getId())});
