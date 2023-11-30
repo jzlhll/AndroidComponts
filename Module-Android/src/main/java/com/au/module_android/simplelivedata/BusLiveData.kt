@@ -28,16 +28,4 @@ class BusLiveData : NoStickLiveData<Bus>(Bus()) {
         return value!!.foreach(action)
     }
 
-    override fun setValueSafe(data: Bus?) {
-        throw IllegalAccessException("Please use publishSuccess or publishError function.")
-    }
-
-    override fun setValue(value: Bus?) {
-        throw IllegalAccessException("Please use publishSuccess or publishError function.")
-    }
-
-    override fun getValue(): Bus? {
-        throw IllegalAccessException("Please use fetch function.")
-    }
-
 }

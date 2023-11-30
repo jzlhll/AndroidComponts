@@ -10,6 +10,7 @@ import com.au.jobstudy.saves.ISave
 import com.au.jobstudy.saves.ISaveViewModel
 import com.au.jobstudy.saves.SaveImpl
 import com.au.module_android.simplelivedata.BusLiveData
+import com.au.module_android.utils.ALog
 import kotlinx.coroutines.launch
 
 /**
@@ -73,6 +74,7 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
     override fun getWeekData(day: String, mask:String?) {
         viewModelScope.launch {
             val list = saved.getWeekData(day)
+            ALog.d("get week data $list")
             busLiveData.publishSuccess(mask?:"getWeekData", list)
         }
     }
@@ -101,6 +103,7 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
     override fun getDay(day: String, mask:String?) {
         viewModelScope.launch {
             val list = saved.getWeekData(day)
+            ALog.d("getDay $day--< $list")
             busLiveData.publishSuccess(mask?:"getDay", list)
         }
     }

@@ -27,6 +27,7 @@ class SaveImpl : ISave {
                 val targetList:List<DataItem>
                 if (dbList.isNotEmpty()) {
                     targetList = dbList
+                    cancellableContinuation.resume(targetList)
                 } else {
                     val weekStartDayInt = weekStartDay.toInt()
                     targetList = ArrayList()

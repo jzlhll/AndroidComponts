@@ -148,13 +148,9 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         if (binding.title.text != time) {
             binding.title.text = time
             val curDay = Dayer()
-            lifecycleScope.launch {
-                viewModel.getWeekData(curDay.currentDay)
-
-                viewModel.getDay("" + (curDay.currentDayInt - 1), "getDay-Yesterday")
-
-                viewModel.getDay(curDay.currentDay, "getDay-Today")
-            }
+            viewModel.getWeekData(curDay.currentDay)
+            viewModel.getDay("" + (curDay.currentDayInt - 1), "getDay-Yesterday")
+            viewModel.getDay(curDay.currentDay, "getDay-Today")
         }
     }
 }

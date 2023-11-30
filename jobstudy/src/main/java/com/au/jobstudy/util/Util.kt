@@ -1,12 +1,75 @@
 package com.au.jobstudy.util
 
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+
 private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
 private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.getDefault())
-private const val START_DAY = 20231127
+
+fun longToDate(timestamp: Long) = Date(timestamp)
+
+fun longToDate() = Date(System.currentTimeMillis())
+
+fun longToCalendar(timestamp: Long): Calendar {
+    val timeStampCalendar = Calendar.getInstance()
+    timeStampCalendar.timeInMillis = timestamp
+    return timeStampCalendar
+}
+
+fun longToCalendar(): Calendar {
+    val timeStampCalendar = Calendar.getInstance()
+    timeStampCalendar.timeInMillis = System.currentTimeMillis()
+    return timeStampCalendar
+}
+
+fun getFirstWeekData(dataTime: Date): String {
+    /**
+     * 转为calendar格式
+     * calendar.get(Calendar.MONTH)+1  calendar中的月份以0开头
+     * Calendar.DAY_OF_WEEK 当前日期是所在周的第几天（以周日为一周的第一天）
+     * Calendar.DATE 当前日期是几号
+     */
+    val week: MutableList<String> = ArrayList(8)
+    val calendar = Calendar.getInstance()
+    calendar.time = dataTime
+
+    // 如果是周日
+    if (calendar[Calendar.DAY_OF_WEEK] == Calendar.SUNDAY) {
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+    }
+    // 获取当前日期是当周的第i天
+    val i = calendar[Calendar.DAY_OF_WEEK] - 1
+
+    // 获取当前日期所在周的第一天
+    calendar.add(Calendar.DATE, -i + 1)
+    return DAY_FORMAT.format(calendar.time)
+}
+
+fun getWeekData(dataTime: Date): List<String> {
+    val week: MutableList<String> = ArrayList(8)
+    val calendar = Calendar.getInstance()
+    calendar.time = dataTime
+
+    // 如果是周日
+    if (calendar[Calendar.DAY_OF_WEEK] == Calendar.SUNDAY) {
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+    }
+    // 获取当前日期是当周的第i天
+    val i = calendar[Calendar.DAY_OF_WEEK] - 1
+
+    // 获取当前日期所在周的第一天
+    calendar.add(Calendar.DATE, -i + 1)
+    for (j in 0..6) {
+        if (j > 0) {
+            calendar.add(Calendar.DATE, 1)
+        }
+        week.add(DAY_FORMAT.format(calendar.time))
+    }
+    return week
+}
 
 fun timeToDayInt(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time)).toInt()
 
@@ -14,18 +77,12 @@ fun timeToDay(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(t
 
 fun currentDay() = DAY_FORMAT.format(Date(System.currentTimeMillis()))
 
-fun timeToWeekStartDay(time:Long = System.currentTimeMillis()) : String {
-    val curDay = DAY_FORMAT.format(Date(time))
-    val curDayInt = curDay.toInt()
-    val weekStartDay = curDayInt - ((curDayInt - START_DAY) % 7)
-    return "$weekStartDay"
-}
+fun timeToWeekStartDay(time:Long? = null) = getFirstWeekData(Date(time ?: System.currentTimeMillis()))
 
-fun anyDayToWeekStartDay(anyDay:String) : String {
-    val dayInt = anyDay.toInt()
-    val weekStartDay = dayInt - ((dayInt - START_DAY) % 7)
-    return "$weekStartDay"
-}
+/**
+ * anyDay必须是20231201的格式。即yyyyMMdd
+ */
+fun anyDayToWeekStartDay(anyDay:String) = getFirstWeekData(DAY_FORMAT.parse(anyDay)!!)
 
 fun currentTimeToHelloGood() : String{
     val time = DAY_FORMAT_HHMM.format(Date(System.currentTimeMillis())).toInt()
