@@ -1,7 +1,7 @@
 package com.au.jobstudy.consts
 
-import com.au.jobstudy.util.anyDayToWeekStartDay
-import com.au.jobstudy.util.timeToDayInt
+import com.au.jobstudy.consts.WeekDateUtil.anyDayToWeekStartDay
+import com.au.jobstudy.consts.WeekDateUtil.timeToDayInt
 
 /**
  * @author allan.jiang

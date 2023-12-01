@@ -5,15 +5,18 @@ import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.fillDataItemMode
 import com.au.jobstudy.bean.randomGetTwoSubjects
 import com.au.jobstudy.consts.Dayer
-import com.au.jobstudy.util.anyDayToWeekStartDay
+import com.au.jobstudy.consts.WeekDateUtil
+import com.au.module_android.utils.ALog
 import com.au.module_android.utils.awaitOnIoThread
 import java.lang.RuntimeException
+import java.util.Collections
 import kotlin.coroutines.resume
 
 class SaveImpl : ISave {
     private val allWeeksDao = HashMap<String, EntityListDao<DataItem>>()
 
     private suspend fun generateOrLoadFromDb(weekStartDay: String) : List<DataItem> {
+        ALog.d("generate OrLoad FromDb....")
         val weekDao =
             if (allWeeksDao.containsKey(weekStartDay))
                 allWeeksDao[weekStartDay]!!
@@ -23,17 +26,21 @@ class SaveImpl : ISave {
                 }
 
         return awaitOnIoThread { cancellableContinuation->
+            ALog.d("generate OrLoad FromDb awaitOnIoThread....")
+            cancellableContinuation.invokeOnCancellation {
+                cancellableContinuation.resume(Collections.emptyList())
+            }
+
             weekDao.loadAllFilter("weekStartDay", weekStartDay) { dbList->
                 val targetList:List<DataItem>
+                ALog.d("generate OrLoad FromDb awaitOnIoThread11....")
                 if (dbList.isNotEmpty()) {
                     targetList = dbList
                     cancellableContinuation.resume(targetList)
                 } else {
-                    val weekStartDayInt = weekStartDay.toInt()
                     targetList = ArrayList()
-                    for (i in 0 until  7) {
-                        val aday = (weekStartDayInt + i).toString()
-
+                    val weekDayList = WeekDateUtil.getWeekData(weekStartDay)
+                    for (aday in weekDayList) {
                         val twoSubjects = randomGetTwoSubjects()
                         val firstCheck = twoSubjects[0].randomOneAction()
                         val secondCheck = twoSubjects[1].randomOneAction()
@@ -68,6 +75,7 @@ class SaveImpl : ISave {
     override suspend fun getWeekData(day:String) : List<DataItem> {
         val dayer = Dayer(day)
         val dayWeekStart = dayer.weekStartDay
+        ALog.d("get week data....")
         //load from memory
         if(allWeeksDao.containsKey(dayWeekStart)) {
             allWeeksDao[dayWeekStart]!!.data?.let {
@@ -95,7 +103,7 @@ class SaveImpl : ISave {
     }
 
     override suspend fun deleteOneDay(day: String): Boolean {
-        val dayWeekStart = anyDayToWeekStartDay(day)
+        val dayWeekStart = WeekDateUtil.anyDayToWeekStartDay(day)
         if (allWeeksDao.containsKey(dayWeekStart)) {
             val weekEntity = allWeeksDao[dayWeekStart]
             if (weekEntity != null) {
@@ -113,7 +121,7 @@ class SaveImpl : ISave {
     }
 
     override suspend fun deleteOneWeek(day: String): Boolean {
-        val dayWeekStart = anyDayToWeekStartDay(day)
+        val dayWeekStart = WeekDateUtil.anyDayToWeekStartDay(day)
         if (allWeeksDao.containsKey(dayWeekStart)) {
             awaitOnIoThread<Boolean> {
                 allWeeksDao[dayWeekStart]?.clear { suc->

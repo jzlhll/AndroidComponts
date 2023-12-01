@@ -16,7 +16,7 @@ fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initi
  * 不创建新的协程
  *  withContext开销更低 类似于 async{..}.await()
  */
-suspend inline fun <T> withMainThread(crossinline block: suspend () -> T): T {
+suspend fun <T> withMainThread(block: suspend () -> T): T {
     return if (!isMainThread) {
         withContext(Dispatchers.Main.immediate) {
             block.invoke()

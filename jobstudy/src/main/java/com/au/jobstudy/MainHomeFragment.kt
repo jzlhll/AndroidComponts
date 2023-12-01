@@ -3,7 +3,6 @@ package com.au.jobstudy
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.layout.SimpleItemsLayout
 import com.au.jobstudy.bean.DataItem
@@ -16,11 +15,10 @@ import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
 import com.au.jobstudy.home.CheckPointUiData
 import com.au.jobstudy.home.ThisWeekUiData
-import com.au.jobstudy.util.currentTimeToHelloGood
+import com.au.jobstudy.consts.WeekDateUtil.currentTimeToHelloGood
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.visible
-import kotlinx.coroutines.launch
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var viewModel:GlobalDataViewModel
