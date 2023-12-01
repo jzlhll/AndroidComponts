@@ -13,16 +13,19 @@ import java.util.Collections
 import kotlin.coroutines.resume
 
 class SaveImpl : ISave {
-    private val allWeeksDao = HashMap<String, EntityListDao<DataItem>>()
+    /**
+     * 在这里面的就是已经与db保持了同步的数据结构。因此，后续不需要二次打开去生成。
+     */
+    private val loadedWeekDaos = HashMap<String, EntityListDao<DataItem>>()
 
-    private suspend fun generateOrLoadFromDb(weekStartDay: String) : List<DataItem> {
+    private suspend fun loadFromDb(weekStartDay: String, generate:Boolean) : List<DataItem> {
         ALog.d("generate OrLoad FromDb....")
         val weekDao =
-            if (allWeeksDao.containsKey(weekStartDay))
-                allWeeksDao[weekStartDay]!!
+            if (loadedWeekDaos.containsKey(weekStartDay))
+                loadedWeekDaos[weekStartDay]!!
             else
                 EntityListDao(DataItem::class.java).also {
-                    allWeeksDao[weekStartDay] = it
+                    loadedWeekDaos[weekStartDay] = it
                 }
 
         return awaitOnIoThread { cancellableContinuation->
@@ -32,13 +35,11 @@ class SaveImpl : ISave {
             }
 
             weekDao.loadAllFilter("weekStartDay", weekStartDay) { dbList->
-                val targetList:List<DataItem>
                 ALog.d("generate OrLoad FromDb awaitOnIoThread11....")
                 if (dbList.isNotEmpty()) {
-                    targetList = dbList
-                    cancellableContinuation.resume(targetList)
-                } else {
-                    targetList = ArrayList()
+                    cancellableContinuation.resume(dbList)
+                } else if (generate) {
+                    val targetList = ArrayList<DataItem>()
                     val weekDayList = WeekDateUtil.getWeekData(weekStartDay)
                     for (aday in weekDayList) {
                         val twoSubjects = randomGetTwoSubjects()
@@ -66,75 +67,88 @@ class SaveImpl : ISave {
                     weekDao.saveAll(targetList) {
                         cancellableContinuation.resume(targetList)
                     }
+                } else {
+                    cancellableContinuation.resume(Collections.emptyList())
                 }
             }
         }
-
     }
 
-    override suspend fun getWeekData(day:String) : List<DataItem> {
-        val dayer = Dayer(day)
-        val dayWeekStart = dayer.weekStartDay
-        ALog.d("get week data....")
-        //load from memory
-        if(allWeeksDao.containsKey(dayWeekStart)) {
-            allWeeksDao[dayWeekStart]!!.data?.let {
-                return it
-            }
-        }
+    override fun isLoadedWeek(anyDay: String) = loadedWeekDaos.containsKey(Dayer(anyDay).weekStartDay)
 
-        //新生成 or 从db中提取
-        return generateOrLoadFromDb(dayWeekStart)
+    private fun getWeekDao(weekStartDay: String) = loadedWeekDaos[weekStartDay]!!
+
+    override suspend fun loadWeekData(anyDay: String, notExistGenerate: Boolean): List<DataItem> {
+        val dayer = Dayer(anyDay)
+        val weekStartDay = dayer.weekStartDay
+        //新生成 or 从db中提取. 不论如何都提取一次
+        return loadFromDb(weekStartDay, notExistGenerate)
+    }
+
+    //later 自行确保调用之前已经load了WeekData
+    override fun getWeekData(anyDay: String): List<DataItem>? {
+        val dayer = Dayer(anyDay)
+        val weekStartDay = dayer.weekStartDay
+        return getWeekDao(weekStartDay).data
     }
 
     override suspend fun updateOneDay(item: DataItem): Boolean {
         val dayer = Dayer(item.day)
         val dayWeekStart = dayer.weekStartDay
-        if (allWeeksDao.containsKey(dayWeekStart)) {
-            val weekData = allWeeksDao[dayWeekStart]!!
-            return awaitOnIoThread {
-                weekData.update(item) {suc->
-                    it.resume(suc)
-                }
-            }
+
+        if (!isLoadedWeek(dayWeekStart)) {
+            throw RuntimeException("updateOneDay please call getWeekData before.")
         }
 
-        throw RuntimeException("update OnDay() No data in allWeeksDao.")
+        return awaitOnIoThread {
+            getWeekDao(dayWeekStart).update(item) {suc->
+                it.resume(suc)
+            }
+        }
     }
 
     override suspend fun deleteOneDay(day: String): Boolean {
         val dayWeekStart = WeekDateUtil.anyDayToWeekStartDay(day)
-        if (allWeeksDao.containsKey(dayWeekStart)) {
-            val weekEntity = allWeeksDao[dayWeekStart]
-            if (weekEntity != null) {
-                weekEntity.data?.let { weekData->
-                    val needDeleteList = weekData.filter { it.day == day }
-                    return awaitOnIoThread {
-                        weekEntity.deleteAll(needDeleteList) { sucCount->
-                            it.resume(sucCount > 0)
-                        }
-                    }
+        if (!isLoadedWeek(dayWeekStart)) {
+            loadFromDb(dayWeekStart, false)
+        }
+
+        val weekEntity = getWeekDao(dayWeekStart)
+        weekEntity.data?.let { weekData->
+            val needDeleteList = weekData.filter { it.day == day }
+            return awaitOnIoThread {
+                weekEntity.deleteAll(needDeleteList) { sucCount->
+                    it.resume(sucCount > 0)
                 }
             }
         }
         return true
     }
 
-    override suspend fun deleteOneWeek(day: String): Boolean {
-        val dayWeekStart = WeekDateUtil.anyDayToWeekStartDay(day)
-        if (allWeeksDao.containsKey(dayWeekStart)) {
-            awaitOnIoThread<Boolean> {
-                allWeeksDao[dayWeekStart]?.clear { suc->
-                    it.resume(suc)
+    override suspend fun deleteOneWeek(anyDay: String): Boolean {
+        val weekStartDay = WeekDateUtil.anyDayToWeekStartDay(anyDay)
+        if (!isLoadedWeek(weekStartDay)) {
+            loadFromDb(weekStartDay, false)
+        }
+
+        val weekEntity = getWeekDao(weekStartDay)
+        weekEntity.data?.let { weekData->
+            return awaitOnIoThread {
+                weekEntity.deleteAll(weekData) { sucCount->
+                    it.resume(sucCount > 0)
                 }
             }
         }
-
         return true
     }
 
-    override suspend fun getDay(day: String) : List<DataItem>{
-        val weekData = getWeekData(day)
-        return weekData.filter { it.day == day }
+    //later 自行确保调用之前已经load了WeekData
+    override fun getDay(day: String) : List<DataItem>?{
+        val dayer = Dayer(day)
+        val weekStartDay = dayer.weekStartDay
+
+        return getWeekDao(weekStartDay).data?.filter {
+            it.day == day
+        }
     }
 }

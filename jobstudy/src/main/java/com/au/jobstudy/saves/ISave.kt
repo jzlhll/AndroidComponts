@@ -1,6 +1,5 @@
 package com.au.jobstudy.saves
 
-import com.au.aulitesql.actions.ICallback
 import com.au.jobstudy.bean.DataItem
 
 /**
@@ -8,10 +7,13 @@ import com.au.jobstudy.bean.DataItem
  * @date :2023/11/9 18:11
  */
 interface ISave {
+    suspend fun loadWeekData(anyDay:String, notExistGenerate: Boolean) : List<DataItem>
+
+    fun isLoadedWeek(anyDay:String) : Boolean
     /**
      * 查询。可为空。一周以内的任意一天，都会查询到整个一周
      */
-    suspend fun getWeekData(day:String) : List<DataItem>
+    fun getWeekData(anyDay:String) : List<DataItem>?
 
     /**
      * 更新一天的某一个index的结果。
@@ -26,12 +28,12 @@ interface ISave {
     /**
      * 删除一周的数据。一周以内的任意一天，都会删除。
      */
-    suspend fun deleteOneWeek(day:String):Boolean
+    suspend fun deleteOneWeek(anyDay:String):Boolean
 
     /**
      *  从一周的数据里面抽取，生成当天的数据。
      * */
-    suspend fun getDay(day:String) : List<DataItem>
+    fun getDay(day:String) : List<DataItem>?
 }
 
 /**
@@ -42,7 +44,7 @@ interface ISaveViewModel {
     /**
      * 查询。可为空。一周以内的任意一天，都会查询到整个一周
      */
-    fun getWeekData(day:String, mask:String? = null)
+    fun getWeekData(day:String, notExistGenerate: Boolean, mask:String? = null)
 
     /**
      * 更新一天的某一个index的结果。

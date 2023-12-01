@@ -25,7 +25,7 @@ object WeekDateUtil {
         return timeStampCalendar
     }
 
-    fun getYesterday(time:Long? = null) = getYesterday(Date(time ?: System.currentTimeMillis()))
+    fun getYesterday(day:String) = getYesterday(DAY_FORMAT.parse(day)!!)
 
     fun getYesterday(dataTime: Date): String {
         val calendar = Calendar.getInstance()
@@ -34,7 +34,7 @@ object WeekDateUtil {
         return DAY_FORMAT.format(calendar.time)
     }
 
-    fun getNextDay(day:String) : String{
+    fun getTomorrow(day:String) : String{
         val date = DAY_FORMAT.parse(day)!!
         val calendar = Calendar.getInstance()
         calendar.time = date

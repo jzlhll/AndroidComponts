@@ -1,9 +1,9 @@
 package com.au.module_android.simplelivedata
 
 class BusLiveData : NoStickLiveData<Bus>(Bus()) {
-    fun publishSuccess(key:String, content:Any) {
+    fun publishSuccess(key:String, content:Any, extraInfo:Any? = null) {
         val value = super.getValue()
-        value!!.push(key, content)
+        value!!.push(key, content, extraInfo)
         super.setValueSafe(value)
     }
 

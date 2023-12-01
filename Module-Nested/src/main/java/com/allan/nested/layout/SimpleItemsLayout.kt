@@ -41,7 +41,9 @@ class SimpleItemsLayout : LinearLayout {
     fun addItem(data:Any) {
         val viewBinding = itemInflateCreator.invoke(inflater, this, false, data)
         viewBinding.root.tag = data.toString()
-        addView(viewBinding.root)
+        addView(viewBinding.root, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).also {
+            it.setMargins(0, itemMarginTop, 0, 0)
+        })
     }
 
     fun removeItem(data:Any) {

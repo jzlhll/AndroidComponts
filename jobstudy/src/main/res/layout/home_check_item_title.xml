@@ -14,10 +14,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subjectText"
         android:id="@+id/workTitle"
-        android:layout_marginStart="14dp"
+        android:background="@color/color_primary_light"
+        android:layout_marginStart="4dp"
         tools:text="今天的任务"
         android:textColor="#333333"
-        android:textSize="16sp"
+        android:textSize="17sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

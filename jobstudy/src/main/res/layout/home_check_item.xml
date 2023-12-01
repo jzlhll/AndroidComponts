@@ -11,14 +11,12 @@
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:maxHeight="100dp"
-    android:minHeight="66dp"
+    android:layout_height="80dp"
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <View
             android:id="@+id/subjectColor"
@@ -40,6 +38,7 @@
             android:maxLines="1"
             tools:text="5-3天天练"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="#333333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -51,8 +50,9 @@
             android:id="@+id/descText"
             android:layout_marginTop="8dp"
             android:layout_marginStart="14dp"
-            android:maxLines="3"
+            android:maxLines="2"
             tools:text="5-3天天练Desc"
+            android:textStyle="bold"
             android:textColor="#212121"
             android:textSize="16sp"
             android:layout_width="0dp"

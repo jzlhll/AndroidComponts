@@ -6,7 +6,7 @@ package com.au.module_android.simplelivedata
  * @description: 总线思想的设计
  */
 class Bus {
-    data class Content(val real:Any?, val error:String?) {
+    data class Content(val real:Any?, val error:String?, val extraInfo:Any? = null) {
         val isGood
             get() = real != null
         val isError
@@ -16,8 +16,8 @@ class Bus {
     private val data = HashMap<String, Content>()
 
     @Synchronized
-    fun push(key:String, value:Any) {
-        data[key] = Content(value, null)
+    fun push(key:String, value:Any, extraInfo:Any? = null) {
+        data[key] = Content(value, null, extraInfo)
     }
 
     @Synchronized

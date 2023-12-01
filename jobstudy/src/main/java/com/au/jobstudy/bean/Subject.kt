@@ -50,8 +50,8 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
 //    ))
     object Every53Maths : Subject("53天天练-数学", 20, 40,
         actions = arrayOf(
-        CheckupDescMode("做三页并自我检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
-        CheckupDescMode("做两页并自我检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("做2页并自己用红笔批改，最后交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("做2-3页并自己用红笔批改，最后交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
     ))
     object Every53English : Subject("53天天练-英语", 41, 45,
         actions = arrayOf(
@@ -96,7 +96,7 @@ fun randomGetTwoSubjects() : Array<Subject> {
     return arrayOf(first, second)
 }
 
-fun subjectToColor(subject:String):Int {
+fun subjectToColorId(subject:String):Int {
     return when (nameToSubject(subject)) {
         Subject.Chinese-> R.color.color_chinese
         Subject.Every53Chinese-> R.color.color_chinese
