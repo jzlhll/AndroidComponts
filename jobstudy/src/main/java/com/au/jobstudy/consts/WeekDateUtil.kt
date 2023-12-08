@@ -6,8 +6,17 @@ import java.util.Date
 import java.util.Locale
 
 object WeekDateUtil {
+    private val DAY_FORMAT_HHMMSS = SimpleDateFormat("HH_mm_ss_SSS", Locale.getDefault())
     private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.getDefault())
+
+    fun currentHHmmssSSS() : String {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date(System.currentTimeMillis())
+        return DAY_FORMAT_HHMMSS.format(calendar.time)
+    }
+
+    fun offsetDayTs(day:Int) = day * (3600L * 24 * 1000)
 
     fun longToDate(timestamp: Long) = Date(timestamp)
 

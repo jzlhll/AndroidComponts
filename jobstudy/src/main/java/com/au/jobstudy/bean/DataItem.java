@@ -50,6 +50,12 @@ public final class DataItem extends Entity implements Serializable {
 
     public String weekStartDay; //20231127就是一个星期一
 
+    @NonNull
+    @Override
+    public String toString() {
+        return subject + " " + day + " " + weekStartDay + " " + desc;
+    }
+
     @Keep
     public static final class MediaItem {
         public static final int TYPE_VIDEO = 0x1;

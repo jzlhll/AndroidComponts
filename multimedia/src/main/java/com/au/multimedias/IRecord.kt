@@ -40,7 +40,5 @@ private fun createExternalFileName(vararg pathAndNames:String) : String {
 }
 
 fun createRecord(vararg pathAndNames: String): IRecord {
-
-
     return MediaRecordAudio(createExternalFileName(*pathAndNames))
 }

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
-import com.au.module_android.permissions.IPermission
+import com.au.module_android.permissions.activity.IActivityResult
 import com.au.module_android.ui.views.ViewActivity
 
 /**
@@ -48,10 +48,9 @@ class FragmentRootActivity : ViewActivity() {
          * 把一个Fragment放到本Activity当做唯一的界面，并在返回的时候带上结果。
          * <R> 代表你要返回的结果
          */
-        fun <R> startForResult(context: Context,
+        fun startForResult(context: Context,
                                fragmentClass:Class<out Fragment>,
-                               ownerForResult: IPermission<Intent, R>,
-                               onResultCallback: (R) -> Unit,
+                               ownerForResult: IActivityResult,
                                arguments: Bundle? = null,
                                optionsCompat: ActivityOptionsCompat? = null) {
             val intent = Intent(context, FragmentRootActivity::class.java)

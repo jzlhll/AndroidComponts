@@ -6,7 +6,6 @@ import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.Subject
 import com.au.jobstudy.bean.nameToSubject
 import com.au.jobstudy.bean.subjectToColorId
-import com.au.jobstudy.consts.WeekDateUtil
 import com.au.jobstudy.home.HomeRcvBean
 import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.jobstudy.home.HomeRcvTitleBean
