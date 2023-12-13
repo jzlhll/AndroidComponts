@@ -14,9 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.permissions.activity.IActivityResult
-import com.au.module_android.permissions.permission.IPermissionBaseResult
 import com.au.module_android.permissions.permission.IPermissionResult
-import com.au.module_android.permissions.permission.IPermissionsResult
+import com.au.module_android.permissions.permission.IMultiPermissionsResult
 import com.au.module_android.permissions.permission.PermissionForResult
 import com.au.module_android.permissions.permission.PermissionsForResult
 
@@ -28,17 +27,15 @@ const val REQUEST_OVERLAY_CODE: Int = 1001
 fun createMultiPermissionForResult(
     permissions:Array<String>,
     onResultCallback:((Map<String, @JvmSuppressWildcards Boolean>) -> Unit)? = null)
-        : IPermissionsResult
-    = PermissionsForResult(ActivityResultContracts.RequestMultiplePermissions(),
-            onResultCallback, permissions)
+        : IMultiPermissionsResult
+    = PermissionsForResult(permissions, ActivityResultContracts.RequestMultiplePermissions(), onResultCallback)
 
 /**
  * 单权限的申请
  */
 fun createPermissionForResult(permission:String,
             onResultCallback:((Boolean)->Unit)? = null) : IPermissionResult
-        = PermissionForResult(ActivityResultContracts.RequestPermission(),
-            onResultCallback, permission)
+        = PermissionForResult(permission, ActivityResultContracts.RequestPermission(), onResultCallback)
 
 /**
  * activity 跳转，返回拿结果。
@@ -47,6 +44,8 @@ fun createActivityForResult(
     onResultCallback : ((ActivityResult)->Unit)? = null
 ) : IActivityResult
         = ActivityForResult(ActivityResultContracts.StartActivityForResult(), onResultCallback)
+
+fun createTakePicForResult(onResu)
 
 /**
  * 请求弹窗权限。
@@ -94,10 +93,10 @@ fun checkPermission(vararg permissions:String) : Array<String> {
  *
  * 因为block放在了这里设置。
  */
-fun IPermissionBaseResult.safeRun(block:()->Unit, notGivePermissionBlock:(()->Unit)? = null) {
+fun <T> IResult.safeRun(block:()->Unit, notGivePermissionBlock:(()->Unit)? = null) {
     when (this) {
         is PermissionForResult -> {
-            if(hasPermission(permission)) {
+            if(hasPermission(permission())) {
                 block.invoke()
             } else {
                 this.onResultCallback = {
@@ -108,7 +107,7 @@ fun IPermissionBaseResult.safeRun(block:()->Unit, notGivePermissionBlock:(()->Un
         }
 
         is PermissionsForResult -> {
-            if (hasPermission(*permissions)) {
+            if (hasPermission(*permissions())) {
                 block.invoke()
             } else {
                 this.onResultCallback = {

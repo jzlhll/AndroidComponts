@@ -1,29 +1,32 @@
-package com.au.module_android.permissions.activity
+package com.au.module_android.permissions.other
 
-import android.content.Intent
+import android.net.Uri
 import android.view.View
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.au.module_android.permissions.IResult
+import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.utils.asOrNull
 import java.lang.IllegalArgumentException
 
 /**
- * 当初始化完成这个对象后，请在onCreate里面调用 函数（onCreate）即可
+ * @author allan.jiang
+ * @date :2023/12/13 11:35
+ * @description:
  */
-internal class ActivityForResult (private val resultContract: ActivityResultContract<Intent, ActivityResult>,
-                                 override var onResultCallback: ((ActivityResult) -> Unit)?)
-    : ActivityResultCallback<ActivityResult>,
-            DefaultLifecycleObserver,
-            IActivityResult {
+class TakePictureForResult (private val getPictureFileUri: Uri,
+                private var onResultCallback:((Boolean)->Unit)? = null)
+        : ActivityResultCallback<Boolean>, DefaultLifecycleObserver, IResult {
 
-    private var launcher: ActivityResultLauncher<Intent>? = null
+    private var launcher: ActivityResultLauncher<Uri?>? = null
+
+    private val resultContract = ActivityResultContracts.TakePicture()
 
     override fun initAtOnCreate(context: Any) {
         if (context is Fragment) {
@@ -43,7 +46,11 @@ internal class ActivityForResult (private val resultContract: ActivityResultCont
         }
     }
 
-    override fun onActivityResult(result: ActivityResult) {
+    override fun start(option: ActivityOptionsCompat?) {
+        launcher?.launch(getPictureFileUri, option)
+    }
+
+    override fun onActivityResult(result: Boolean) {
         onResultCallback?.invoke(result)
     }
 
@@ -52,12 +59,5 @@ internal class ActivityForResult (private val resultContract: ActivityResultCont
         onResultCallback = null
         launcher?.unregister()
         launcher = null
-    }
-
-    /**
-     * 启动activity
-     */
-    override fun start(intent: Intent, option: ActivityOptionsCompat?) {
-        launcher?.launch(intent, option)
     }
 }

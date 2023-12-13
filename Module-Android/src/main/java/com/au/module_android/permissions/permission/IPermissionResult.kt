@@ -1,12 +1,10 @@
 package com.au.module_android.permissions.permission
 
-interface IPermissionResult : IPermissionBaseResult {
-    /**
-     * context指代的是Activity，Fragment，或者View
-     */
-    fun initAtOnCreate(context: Any)
+import android.net.Uri
+import com.au.module_android.permissions.IResult
 
-    var onResultCallback:((Boolean) -> Unit)?
+interface IPermissionResult : IResult {
+    var onResultCallback:((Uri) -> Unit)?
 
-    val permission:String?
+    fun permission():String
 }

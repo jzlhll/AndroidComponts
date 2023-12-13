@@ -12,14 +12,15 @@ import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.utils.asOrNull
 import java.lang.IllegalArgumentException
 
-internal class PermissionForResult(private val resultContract: ActivityResultContract<String, Boolean>,
-                                   override var onResultCallback: ((Boolean) -> Unit)?,
-                                   override val permission: String)
+internal class PermissionForResult(private val permission: String,
+                                   private val resultContract: ActivityResultContract<String, Boolean>,
+                                   override var onResultCallback: ((Boolean) -> Unit)?)
         : ActivityResultCallback<Boolean>,
     DefaultLifecycleObserver,
     IPermissionResult {
 
     private var launcher: ActivityResultLauncher<String>? = null
+    override fun permission() = permission
 
     override fun initAtOnCreate(context: Any) {
         if (context is Fragment) {
@@ -39,6 +40,10 @@ internal class PermissionForResult(private val resultContract: ActivityResultCon
         }
     }
 
+    override fun start(option: ActivityOptionsCompat?) {
+        launcher?.launch(permission, option)
+    }
+
     override fun onActivityResult(result: Boolean) {
         onResultCallback?.invoke(result)
     }
@@ -49,22 +54,16 @@ internal class PermissionForResult(private val resultContract: ActivityResultCon
         launcher?.unregister()
         launcher = null
     }
-
-    /**
-     * 启动activity
-     */
-    override fun start(option: ActivityOptionsCompat?) {
-        launcher?.launch(permission, option)
-    }
 }
 
-
-internal class PermissionsForResult(private val resultContract: ActivityResultContract<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
-                                   override var onResultCallback: ((Map<String, @JvmSuppressWildcards Boolean>) -> Unit)?,
-                                   override val permissions: Array<String>)
+internal class PermissionsForResult(private val permissions: Array<String>,
+                                    private val resultContract: ActivityResultContract<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
+                                    override var onResultCallback: ((Map<String, @JvmSuppressWildcards Boolean>) -> Unit)?)
     : ActivityResultCallback<Map<String, @JvmSuppressWildcards Boolean>>,
-    DefaultLifecycleObserver,
-    IPermissionsResult {
+            DefaultLifecycleObserver,
+            IMultiPermissionsResult {
+
+    override fun permissions() = permissions
 
     private var launcher: ActivityResultLauncher<Array<String>>? = null
 
