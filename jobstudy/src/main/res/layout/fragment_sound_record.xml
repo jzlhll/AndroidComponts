@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="@id/timeLine"
         android:layout_marginBottom="8dp"
         android:text="00:00"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:id="@+id/currentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="@id/timeLine"
         android:layout_marginTop="8dp"
         android:text="@string/can_submit_and_left_time"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:id="@+id/canSubmitText"
         android:textColor="#39CA3F"
         android:layout_width="wrap_content"
