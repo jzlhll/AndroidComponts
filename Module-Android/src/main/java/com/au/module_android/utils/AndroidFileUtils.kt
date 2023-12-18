@@ -33,21 +33,22 @@ fun filesDir(context: Context, type:String? = null) : File? {
  * 创建一个图片的临时的uri。存在的话，就会删除再新建给出。
  * dir就是目录；fileName就是文件名；extension后缀名（记得自行带点，比如.png）
  */
-fun getPictureFileUri(context: Context, dir:String, fileName:String, extension:String, applicationID:String) : Uri? {
-    return getPictureFileUri(context, File(dir), fileName, extension, applicationID)
+fun getPictureFileUri(context: Context, dir:String, fileName:String, extension:String) : Uri? {
+    return getPictureFileUri(context, File(dir), fileName, extension)
 }
 
 /**
  * 创建一个图片的临时的uri。存在的话，就会删除再新建给出。
  * dir就是目录；fileName就是文件名；extension后缀名（记得自行带点，比如.png）
  */
-fun getPictureFileUri(context: Context, dir:File, fileName:String, extension:String, applicationID:String) : Uri? {
+fun getPictureFileUri(context: Context, dir:File, fileName:String, extension:String) : Uri? {
     val photoFile = File.createTempFile(fileName, extension, dir).apply {
         createNewFile()
         deleteOnExit()
     }
+    val appPkgName = context.applicationInfo.packageName //因为我这里配置的androidmanifest。
     try {
-        return FileProvider.getUriForFile(context, "$applicationID.provider", photoFile)
+        return FileProvider.getUriForFile(context, "$appPkgName.provider", photoFile)
     } catch (e:Exception) {e.printStackTrace()}
     return null
 }
