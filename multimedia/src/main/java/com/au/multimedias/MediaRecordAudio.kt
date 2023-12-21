@@ -21,11 +21,14 @@ class MediaRecordAudio(private val fileName:String) : IRecord {
     private enum class St {
         NOT_INIT,
         RECORDING,
-        PAUSING
+        PAUSED
     }
 
     override val isRecording: Boolean
         get() = mCurrentSt == St.RECORDING
+
+    override val isPaused: Boolean
+        get() = mCurrentSt == St.PAUSED
 
     override fun start(context:Context) {
         if (mCurrentSt != St.NOT_INIT) {
@@ -68,7 +71,7 @@ class MediaRecordAudio(private val fileName:String) : IRecord {
     }
 
     override fun stop() {
-        if (mCurrentSt == St.RECORDING || mCurrentSt == St.PAUSING) {
+        if (mCurrentSt == St.RECORDING || mCurrentSt == St.PAUSED) {
             mMediaRecorder?.stop()
         }
         mMediaRecorder?.release()
@@ -77,7 +80,7 @@ class MediaRecordAudio(private val fileName:String) : IRecord {
     }
 
     override fun resume(file: String) {
-        if (mCurrentSt == St.PAUSING) {
+        if (mCurrentSt == St.PAUSED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Log.d("MediaRecord", "resumeeeee")
                 mMediaRecorder?.resume()
@@ -94,7 +97,7 @@ class MediaRecordAudio(private val fileName:String) : IRecord {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Log.d("MediaRecord", "pauseeeee")
                 mMediaRecorder?.pause()
-                mCurrentSt = St.PAUSING
+                mCurrentSt = St.PAUSED
             }
         }
     }

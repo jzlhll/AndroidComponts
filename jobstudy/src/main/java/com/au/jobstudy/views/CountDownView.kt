@@ -14,6 +14,8 @@ class CountDownView @JvmOverloads constructor(
 ) : CustomFontText(context, attrs) {
     private var mCurrentCountDown = 0
 
+    private var endWorkCallback:(()->Unit)? = null
+
     private val run = Runnable {
         runBlock()
     }
@@ -21,10 +23,13 @@ class CountDownView @JvmOverloads constructor(
     private fun runBlock() {
         text = "$mCurrentCountDown"
         mCurrentCountDown--
-        if(mCurrentCountDown > 0) handler.postDelayed(run, 1000)
+        if (isAttachedToWindow) {
+            if(mCurrentCountDown > 0) handler.postDelayed(run, 1000) else endWorkCallback?.invoke()
+        }
     }
 
-    fun startCountDown(start:Int) {
+    fun startCountDown(start:Int, endWorkCallback:()->Unit) {
+        this.endWorkCallback = endWorkCallback
         mCurrentCountDown = start
         runBlock()
         handler?.removeCallbacksAndMessages(null)

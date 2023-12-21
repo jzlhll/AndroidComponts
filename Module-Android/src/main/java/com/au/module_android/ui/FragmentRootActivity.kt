@@ -44,21 +44,6 @@ class FragmentRootActivity : ViewActivity() {
             )
         }
 
-        /**
-         * 把一个Fragment放到本Activity当做唯一的界面，并在返回的时候带上结果。
-         * <R> 代表你要返回的结果
-         */
-        fun startForResult(context: Context,
-                               fragmentClass:Class<out Fragment>,
-                               ownerForResult: IActivityResult,
-                               arguments: Bundle? = null,
-                               optionsCompat: ActivityOptionsCompat? = null) {
-            val intent = Intent(context, FragmentRootActivity::class.java)
-            intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
-            if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
-
-            ownerForResult.start(intent, optionsCompat)
-        }
     }
 
     override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

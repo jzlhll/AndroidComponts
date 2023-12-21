@@ -10,6 +10,7 @@ interface ISimpleRecord {
     fun start(context:Context)
     fun stop()
     val isRecording: Boolean
+    val isPaused:Boolean
 }
 
 interface IRecord : ISimpleRecord {
@@ -23,7 +24,7 @@ interface IRecord : ISimpleRecord {
  * 组合一个名字路径文件。并确保路径可用。
  */
 @Throws(IOException::class)
-private fun createExternalFileName(vararg pathAndNames:String) : String {
+fun createExternalFileName(vararg pathAndNames:String) : String {
     val sb = StringBuilder(Environment.getExternalStorageDirectory().toString())
     for (p in pathAndNames) {
         sb.append(File.separator).append(p)
@@ -39,6 +40,6 @@ private fun createExternalFileName(vararg pathAndNames:String) : String {
     return sb.toString()
 }
 
-fun createRecord(vararg pathAndNames: String): IRecord {
-    return MediaRecordAudio(createExternalFileName(*pathAndNames))
+fun createRecord(file: String): IRecord {
+    return MediaRecordAudio(file)
 }
