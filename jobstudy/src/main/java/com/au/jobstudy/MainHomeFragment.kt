@@ -2,44 +2,36 @@ package com.au.jobstudy
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.core.view.updatePadding
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.decoration.PaddingItemDecoration
 import com.allan.nested.layout.SimpleItemsLayout
 import com.au.jobstudy.bean.DataItem
-import com.au.jobstudy.bean.subjectToColorId
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
+import com.au.jobstudy.consts.WeekDateUtil.currentTimeToHelloGood
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
-import com.au.jobstudy.databinding.HomeCheckItemBinding
-import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
 import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
-import com.au.jobstudy.home.CheckPointUiData
-import com.au.jobstudy.home.ThisWeekUiData
-import com.au.jobstudy.consts.WeekDateUtil.currentTimeToHelloGood
 import com.au.jobstudy.home.HomeRcvAdapter
-import com.au.jobstudy.home.HomeRcvBean
-import com.au.jobstudy.home.HomeRcvItemBean
-import com.au.jobstudy.home.HomeRcvTitleBean
+import com.au.jobstudy.home.ThisWeekUiData
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.visible
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
-    private lateinit var viewModel:GlobalDataViewModel
-
     private lateinit var adapter: HomeRcvAdapter
     private val userName = "蒋添靖"
+    private val scroll = "华中师范宝安附属学校"
 
     override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentMainHomeBinding) {
-        binding.mineName.text = userName
+        binding.root.refresher.apply {
+            initEarlyAsFake(binding.root)
+        }
 
-        viewModel = ViewModelProvider(requireActivity())[GlobalDataViewModel::class.java]
+        binding.mineName.text = userName
+        binding.mineScholl.text = scroll
 
         binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
         binding.rcv.addItemDecoration(
@@ -99,12 +91,12 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             }
         }
 
-        viewModel.busLiveData.observe(this) {bus->
+        GlobalDataViewModel.busLiveData.observe(this) {bus->
             bus.foreach { key, content ->
                 if (key.startsWith("getWeekData-")) {
                     val list = content.real.asOrNull<List<DataItem>>()
                     if (list != null) {
-                        val arr = viewModel.dataListToCompletedCount(list)
+                        val arr = GlobalDataViewModel.dataListToCompletedCount(list)
                         for (a in arr) {
                             binding.thisWeekList.addItem(a)
                         }
@@ -112,17 +104,17 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
                     val currentDay = key.replace("getWeekData-", "")
 
-                    viewModel.getDay(WeekDateUtil.getYesterday(currentDay), "getDay-Yesterday")
-                    viewModel.getDay(currentDay, "getDay-Today")
+                    GlobalDataViewModel.getDay(WeekDateUtil.getYesterday(currentDay), "getDay-Yesterday")
+                    GlobalDataViewModel.getDay(currentDay, "getDay-Today")
                     true
                 } else {
                     false
                 }
             }
 
-            val shouldWork = viewModel.isBusGetTodayAndYesterday(bus)
+            val shouldWork = GlobalDataViewModel.isBusGetTodayAndYesterday(bus)
             if (shouldWork) {
-                adapter.submitList(viewModel.busToAdapterData(bus), false)
+                adapter.submitList(GlobalDataViewModel.busToAdapterData(bus), false)
             }
         }
     }
@@ -135,7 +127,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         if (binding.title.text != time) {
             binding.title.text = time
             val curDay = Dayer()
-            viewModel.getWeekData(curDay.currentDay, true, "getWeekData-" + curDay.currentDay)
+            GlobalDataViewModel.getWeekData(curDay.currentDay, true, "getWeekData-" + curDay.currentDay)
         }
     }
 }

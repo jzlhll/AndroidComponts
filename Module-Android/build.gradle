@@ -47,7 +47,7 @@ dependencies {
     // Saved state module for ViewModel
     api "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
 
-    api 'com.google.android.material:material:1.10.0'
+    api 'com.google.android.material:material:1.11.0'
     api 'androidx.startup:startup-runtime:1.1.1'
 
     api 'com.tencent:mmkv-static:1.2.16'

@@ -44,7 +44,6 @@ public class Entity implements BaseColumns {
     }
 
     /**
-     * 日后，会被自动化。
      * 打包：打包的意思，就是将数据写入到本地数据库。<br>
      * 任何子类增加了字段，都需要实现它。有子类一层一层继承，则一层一层super，往里面写入数据。
      * 比如子类有2个字段:
@@ -108,7 +107,6 @@ public class Entity implements BaseColumns {
     }
 
     /**
-     * 日后，会被自动化。
      * 解包：解包的意思，就是将数据从本地数据库导出来。<br>
      * 与pack相反，这里是从数据库中提取出内容。类似的，也需要一类一层一层实现，去解析。<br>
      * 比如某个子类有2个字段：
@@ -177,7 +175,7 @@ public class Entity implements BaseColumns {
                 }
             }
 
-            if (errorCollectionList.size() > 0) {
+            if (!errorCollectionList.isEmpty()) {
                 var sb = new StringBuilder();
                 for (var s : errorCollectionList) {
                     sb.append(s).append("\n");
@@ -188,8 +186,6 @@ public class Entity implements BaseColumns {
     }
 
     /**
-     * 日后，会被自动化。
-     * 重置：重置的意思，就是将所有数据恢复成默认。
      * 类似pack等函数，重置所有数据。
      */
     public final void reset() throws IllegalAccessException {

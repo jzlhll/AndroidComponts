@@ -28,22 +28,28 @@ class FragmentRootActivity : ViewActivity() {
 
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
+         *
+         * @param context Context
+         * @param fragmentClass 需要显示的fragment的类
+         * @param activityResult 如果传入了非空对象，则会通过它启动，会携带返回；否则就是默认启动。
+         * @param arguments 用来透传给Fragment
+         * @param optionsCompat 是startActivity的参数
          */
         fun start(context: Context,
                             fragmentClass:Class<out Fragment>,
+                            activityResult:IActivityResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null)  {
             val intent = Intent(context, FragmentRootActivity::class.java)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
-            ActivityCompat.startActivity(
-                context,
-                intent,
-                optionsCompat?.toBundle()
-            )
+            if (activityResult != null) {
+                activityResult.start(intent, optionsCompat)
+            } else {
+                ActivityCompat.startActivity(context, intent, optionsCompat?.toBundle())
+            }
         }
-
     }
 
     override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

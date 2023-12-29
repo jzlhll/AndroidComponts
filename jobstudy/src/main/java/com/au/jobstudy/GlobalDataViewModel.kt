@@ -1,7 +1,5 @@
 package com.au.jobstudy
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.Subject
 import com.au.jobstudy.bean.nameToSubject
@@ -17,6 +15,7 @@ import com.au.module_android.simplelivedata.Bus
 import com.au.module_android.simplelivedata.BusLiveData
 import com.au.module_android.utils.ALog
 import com.au.module_android.utils.asOrNull
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.Collections
 
@@ -25,10 +24,13 @@ import java.util.Collections
  * @date :2023/11/27 15:36
  * @description:
  */
-class GlobalDataViewModel : ViewModel(), ISaveViewModel {
+object GlobalDataViewModel : ISaveViewModel {
+    private val scope = MainScope()
+
     private val saved:ISave = SaveImpl()
 
-    val busLiveData = BusLiveData()
+    private val _busLiveData = BusLiveData()
+    override val busLiveData = _busLiveData
 
     fun isBusGetTodayAndYesterday(bus:Bus) : Boolean {
         val shouldWork = arrayOf(0)
@@ -49,7 +51,7 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
                     content.real.asOrNull<List<DataItem>>()?.let { list->
                         if (list.isNotEmpty()) {
                             data.add(HomeRcvTitleBean(1, "昨天还没有完成的任务:"))
-                            data.addAll(list.map { HomeRcvItemBean(2, subjectToColorId(it.subject), it.subject, it.desc) })
+                            data.addAll(list.map { HomeRcvItemBean(2, subjectToColorId(it.subject), it) })
                         }
                     }
                     true
@@ -58,7 +60,7 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
                     content.real.asOrNull<List<DataItem>>()?.let { list->
                         if (list.isNotEmpty()) {
                             data.add(HomeRcvTitleBean(1, "今天的任务:"))
-                            data.addAll(list.map { HomeRcvItemBean(2, subjectToColorId(it.subject), it.subject, it.desc) })
+                            data.addAll(list.map { HomeRcvItemBean(2, subjectToColorId(it.subject), it) })
                         }
                     }
                     true
@@ -121,7 +123,7 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
     }
 
     override fun getWeekData(day: String, notExistGenerate: Boolean, mask:String?) {
-        viewModelScope.launch {
+        scope.launch {
             if (!saved.isLoadedWeek(day)) {
                 saved.loadWeekData(day, notExistGenerate)
             }
@@ -132,28 +134,28 @@ class GlobalDataViewModel : ViewModel(), ISaveViewModel {
     }
 
     override fun updateOneDay(item: DataItem, mask:String?) {
-        viewModelScope.launch {
+        scope.launch {
             val r = saved.updateOneDay(item)
             busLiveData.publishSuccess(mask?:"updateOneDay", r)
         }
     }
 
     override fun deleteOneDay(day: String, mask:String?) {
-        viewModelScope.launch {
+        scope.launch {
             val r = saved.deleteOneDay(day)
             busLiveData.publishSuccess(mask?:"deleteOneDay", r)
         }
     }
 
     override fun deleteOneWeek(day: String, mask:String?) {
-        viewModelScope.launch {
+        scope.launch {
             val r = saved.deleteOneWeek(day)
             busLiveData.publishSuccess(mask?:"deleteOneWeek", r)
         }
     }
 
     override fun getDay(day: String, mask:String?) {
-        viewModelScope.launch {
+        scope.launch {
             if (saved.isLoadedWeek(day)) {
                 val list = saved.getDay(day)
                 ALog.d("getDay $day--< $list")

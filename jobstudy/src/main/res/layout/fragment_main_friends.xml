@@ -20,7 +20,10 @@
             android:paddingTop="20dp"
             android:layout_height="wrap_content"
             android:id="@+id/title"
-            android:text="朋友圈"
+            android:text="朋友圈, 维护中..."
+            android:textSize="30sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             app:layout_scrollFlags="scroll|snap"/>
 

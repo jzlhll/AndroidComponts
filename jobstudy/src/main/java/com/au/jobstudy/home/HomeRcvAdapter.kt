@@ -57,8 +57,8 @@ class HomeRcvItemViewHolder(viewBinding: HomeCheckItemBinding) : BindViewHolder<
     override fun bindData(bean: HomeRcvBean) {
         super.bindData(bean)
         bean as HomeRcvItemBean
-        binding.descText.text = bean.desc
-        binding.subjectText.text = bean.subject
+        binding.descText.text = bean.dataItem.desc
+        binding.subjectText.text = bean.dataItem.subject
         binding.subjectColor.setBackgroundColor(binding.root.resources.getColor(bean.colorId))
     }
 }

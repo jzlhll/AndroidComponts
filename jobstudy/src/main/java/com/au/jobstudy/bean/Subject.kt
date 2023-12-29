@@ -32,9 +32,9 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
 
     object Chinese : Subject("语文", 0, 5,
         actions = arrayOf(
-            CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 200, 400))),
+            CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
             CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课所有生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
-            CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 320))),
+            CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
         ))
     object EnglishWrite : Subject("英语拼写", 6, 10,
         actions = arrayOf(
@@ -42,8 +42,8 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
     ))
     object Science : Subject("科学", 11, 19,
         actions = arrayOf(
-        CheckupDescMode("找3个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 220, 480))),
-        CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 200, 480))),
+        CheckupDescMode("找3个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+        CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
     ))
 //    object Maths : Subject("数学", 26, 30, arrayOf(
 //        CheckupDescMode("读课本3个。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 220, 480))),
@@ -61,11 +61,18 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
         actions = arrayOf(
         CheckupDescMode("做一课。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
     ))
+
+    object SelfRead : Subject("课外阅读", 51, 55,
+        actions = arrayOf(
+            CheckupDescMode("美文赏析，读3篇课外作文，每篇读2遍。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+            CheckupDescMode("美文赏析，读2篇课外作文，每篇读3遍。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+        ))
+    //todo 最大值
 }
 
 private val allSubjects by unsafeLazy {
     listOf(Subject.Chinese, Subject.EnglishWrite, Subject.Science,
-        Subject.Every53Maths, Subject.Every53Chinese, Subject.Every53English)
+        Subject.Every53Maths, Subject.Every53Chinese, Subject.Every53English, Subject.SelfRead)
 }
 
 fun nameToSubject(name:String) : Subject {
@@ -78,7 +85,7 @@ fun nameToSubject(name:String) : Subject {
 }
 
 fun randomGetSubject() : Subject {
-    val random = (Math.random() * 51).toInt()
+    val random = (Math.random() * 56).toInt() //todo 最大值 + 1
     for (subj in allSubjects) {
         if (random>=subj.randomStart && random <= subj.randomEnd) {
             return subj
@@ -90,9 +97,10 @@ fun randomGetSubject() : Subject {
 fun randomGetTwoSubjects() : Array<Subject> {
     val first = randomGetSubject()
     var second = randomGetSubject()
-    if (second == first) {
+    while (second == first) {
         second = randomGetSubject()
     }
+
     return arrayOf(first, second)
 }
 
@@ -104,5 +112,6 @@ fun subjectToColorId(subject:String):Int {
         Subject.Every53Maths-> R.color.color_math
         Subject.EnglishWrite-> R.color.color_english
         Subject.Every53English-> R.color.color_english
+        Subject.SelfRead -> R.color.color_self_read
     }
 }

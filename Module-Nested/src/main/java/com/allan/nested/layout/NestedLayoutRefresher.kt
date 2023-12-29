@@ -4,9 +4,12 @@ import android.animation.ValueAnimator
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
+import android.widget.EdgeEffect
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.allan.nested.mgr.INestedPullManager
 import com.allan.nested.mgr.NestedPullFakeManager
@@ -39,6 +42,22 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
                 resetRefreshCompleted() //恢复状态
             }
         })
+
+        val childCount = layout.childCount
+        for (childIndex in 0 until childCount) {
+            val view = layout.getChildAt(childIndex)
+            if (view is RecyclerView) {
+                if (DEBUG) Log.d(TAG, "set no edge effect for $view")
+                //研究许久，如果想要下拉刷新的嵌套RecyclerView的Layout，则禁用内部的RecyclerView的edge效果即可。
+                //rcv1.3.2的库，额外处理了edge consume掉了nest的距离。因此，我们这里搞一个假的空Effect进去，也符合我们
+                //下拉刷新的本质。要求
+                view.edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
+                    override fun createEdgeEffect(view: RecyclerView, direction: Int): EdgeEffect {
+                        return NoEdgeEffect(view.context)
+                    }
+                }
+            }
+        }
     }
 
     //内部使用：用做于下拉状态的标志。表示我们是否接收本次为触发类型。
@@ -86,7 +105,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
      */
     fun initEarlyAsFake(
         bePullView: View,
-        params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
+        params: SmoothParams = SmoothParams(80.dp, 0.39f)
     ) {
         pullManager = NestedPullFakeManager(this, bePullView, params)
     }
@@ -104,7 +123,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         bePullView: View,
         progressIndicator: CircularProgressIndicator?,
         isIndicatorChildOfBePullView: Boolean,
-        params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
+        params: SmoothParams = SmoothParams(80.dp, 0.39f)
     ) {
         pullManager = NestedPullSmoothManager(this, bePullView, progressIndicator, isIndicatorChildOfBePullView, params)
     }

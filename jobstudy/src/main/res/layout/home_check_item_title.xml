@@ -8,16 +8,16 @@
     android:paddingVertical="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/corner_title_bar"
     tools:ignore="MissingDefaultResource">
 
     <com.au.module_android.text.CustomFontText
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subjectText"
         android:id="@+id/workTitle"
-        android:background="@color/color_primary_light"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="12dp"
         tools:text="今天的任务"
-        android:textColor="#333333"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"

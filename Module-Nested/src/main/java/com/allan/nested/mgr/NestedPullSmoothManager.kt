@@ -119,9 +119,13 @@ internal class NestedPullSmoothManager
                 if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#PullDown $translation1")
             }
 
-            indicator.isIndeterminate = false
-            showIndicator()
-            indicator.progress = (indicator.max * translation1 / params.pullDownTriggerValue).toInt()
+            if (translation1 < 0) { //代表上拉，不做显示
+                hideIndicator()
+            } else { //代表下拉
+                indicator.progress = (indicator.max * translation1 / params.pullDownTriggerValue).toInt()
+                indicator.isIndeterminate = false
+                showIndicator()
+            }
         }
     }
 

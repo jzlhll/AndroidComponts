@@ -1,13 +1,10 @@
 package com.au.jobstudy.bean;
 
-import android.database.Cursor;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.au.aulitesql.Entity;
-import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.List;

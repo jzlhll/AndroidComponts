@@ -84,14 +84,4 @@ open class NestedConstraintLayout : ConstraintLayout, NestedScrollingParent3{
     override fun getNestedScrollAxes(): Int {
         return mParentHelper.nestedScrollAxes
     }
-    
-    private val gesture by lazy {
-        GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-            //默认情况 onDown return false代表消费掉了。
-        })
-    }
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        return gesture.onTouchEvent(ev)
-    }
 }

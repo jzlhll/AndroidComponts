@@ -65,14 +65,4 @@ open class NestedCoordinatorLayout : CoordinatorLayout {
         super.onNestedPreScroll(target, dx, dy, consumed, type)
     }
     ////}
-
-    private val gesture by lazy {
-        GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-            //默认情况 onDown return false代表消费掉了。
-        })
-    }
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        return gesture.onTouchEvent(ev)
-    }
 }

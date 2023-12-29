@@ -19,4 +19,5 @@
     <color name="color_math">#2C57ED</color>
     <color name="color_english">#9471D3</color>
     <color name="color_science">#009688</color>
+    <color name="color_self_read">#94967a</color>
 </resources>

@@ -56,6 +56,11 @@ open class PageRecyclerOnlyManager<Bean:Any>(
      */
     var onError:(()->Unit)? = null
 
+    /**
+     * 你可以额外做一些信息的显示，adapter和recyclerView相关的更新不用管。
+     */
+    var onFirstInitError:(()->Unit)? = null
+
     init {
         rcv.adapter = adapter
     }
@@ -171,6 +176,11 @@ open class PageRecyclerOnlyManager<Bean:Any>(
                         onSuccess?.invoke(OnSuccessInfo.HasData)
                     }
                 }
+
+                Status.PAGE_INIT_ERROR -> {
+                    onFirstInitError?.invoke()
+                }
+
                 Status.OVER_ERROR -> {
                     onError?.invoke()
                 }
