@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.permissions.createActivityForResult
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/12/13 10:48
  * @description:
  */

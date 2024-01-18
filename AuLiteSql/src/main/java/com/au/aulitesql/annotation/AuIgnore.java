@@ -4,7 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/10 14:51
  * @description: 或者使用trasient标记
  */

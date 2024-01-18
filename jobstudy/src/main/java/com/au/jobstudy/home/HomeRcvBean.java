@@ -1,7 +1,7 @@
 package com.au.jobstudy.home;
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/12/1 16:46
  * @description:
  */

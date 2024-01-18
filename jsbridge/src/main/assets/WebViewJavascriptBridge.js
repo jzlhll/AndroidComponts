@@ -13,6 +13,7 @@
 
     var CUSTOM_PROTOCOL_SCHEME = 'yy';
     var QUEUE_HAS_MESSAGE = '__QUEUE_MESSAGE__/';
+    var MSG_IFRAME_ID = 'js_bridge_msg_iframe';
 
     var responseCallbacks = {};
     var uniqueId = 1;
@@ -20,10 +21,22 @@
     var responseMessagesPageMap = {};
     var sendMessagesPageMap = {};
 
-    function _createQueueReadyIframe(doc) {
-        messagingIframe = doc.createElement('iframe');
-        messagingIframe.style.display = 'none';
-        doc.documentElement.appendChild(messagingIframe);
+    function _createQueueReadyIframe() {
+        var doc = window.document;
+        var iframe = doc.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute("id", MSG_IFRAME_ID);
+        doc.documentElement.appendChild(iframe);
+
+        messagingIframe = iframe;
+    }
+
+    function isExistMessagingIFrame() {
+        var iframe = doc.getElementById(MSG_IFRAME_ID);
+        if (iframe) {
+            return true;
+        }
+        return false;
     }
 
     function isAndroid() {
@@ -65,6 +78,11 @@
 
     //set default messageHandler
     function init(messageHandler) {
+        console.log("js bridge init call");
+        if (!isExistMessagingIFrame()) {
+            console.log("js bridge require msg iframe");
+            _createQueueReadyIframe();
+        }
         if (WebViewJavascriptBridge._messageHandler) {
             //throw new Error('WebViewJavascriptBridge.init called twice');
             return;
@@ -164,7 +182,6 @@
                 var rid = message.responseId;
                 //追加处理分页
                 if (message.pageTotal) {
-                    logd("_dispatchMessageFromNative responseId pageTotal " + message.pageIndex + "/" + message.pageTotal);
                     if (message.pageIndex == 1) {
                         responseMessagesPageMap[rid] = message.responseData;
                     } else if (message.pageIndex < message.pageTotal) {
@@ -174,14 +191,12 @@
                         delete responseMessagesPageMap[rid];
                     }
                 } else {
-                    logw("_dispatchMessageFromNative responseId no page");
                     _dispatchMessageFromNativeResponse(rid, message.responseData);
                 }
             } else {
                 var cid = message.callbackId;
                 //追加处理分页
                 if (message.pageTotal) {
-                    logw("_dispatchMessageFromNative send pageTotal " + message.pageIndex + "/" + message.pageTotal);
                     if (message.pageIndex == 1) {
                         sendMessagesPageMap[cid] = message.data;
                     } else if (message.pageIndex < message.pageTotal) {
@@ -191,7 +206,6 @@
                         delete sendMessagesPageMap[cid];
                     }
                 } else {
-                    logw("_dispatchMessageFromNative send no page");
                     _dispatchMessageFromNativeSend(cid, message.handlerName, message.data);
                 }
             }
@@ -219,8 +233,9 @@
         _handleMessageFromNative: _handleMessageFromNative
     };
 
+    _createQueueReadyIframe();
+
     var doc = document;
-    _createQueueReadyIframe(doc);
     var readyEvent = doc.createEvent('Events');
     readyEvent.initEvent('WebViewJavascriptBridgeReady');
     readyEvent.bridge = WebViewJavascriptBridge;

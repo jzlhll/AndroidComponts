@@ -1,6 +1,7 @@
 package com.github.lzyzsd.jsbridge;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Looper;
@@ -8,17 +9,31 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @SuppressLint("SetJavaScriptEnabled")
 public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
+    /**
+     * 外部设置进来
+     */
+    @Nullable
+    public ViewGroup fullLayout;
+
+    /**
+     * 外部设置进来。自行置为空。
+     */
+    @Nullable
+    public Activity activity;
 
     public final String TAG = BridgeUtil.TAG;
 
@@ -67,7 +82,14 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
     private void init() {
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
-        this.getSettings().setJavaScriptEnabled(true);
+        setOverScrollMode(OVER_SCROLL_NEVER);
+
+        WebSettings settings = this.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowFileAccess(true);
+        settings.setDatabaseEnabled(true);
+        settings.setDomStorageEnabled(true);
+
         WebView.setWebContentsDebuggingEnabled(true);
         this.setWebViewClient(generateBridgeWebViewClient());
 

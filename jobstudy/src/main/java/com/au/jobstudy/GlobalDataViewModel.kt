@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import java.util.Collections
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/27 15:36
  * @description:
  */

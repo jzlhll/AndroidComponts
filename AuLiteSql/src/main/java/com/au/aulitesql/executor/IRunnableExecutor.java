@@ -6,7 +6,7 @@ import android.os.Looper;
 import java.util.concurrent.Executor;
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/22 12:27
  * @description:
  */

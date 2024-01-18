@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ class FragmentRootActivity : ViewActivity() {
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"
+        const val KEY_HAS_WEB_VIEW = "FragmentRootActivity_key_has_web_view"
 
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
@@ -39,9 +41,11 @@ class FragmentRootActivity : ViewActivity() {
                             fragmentClass:Class<out Fragment>,
                             activityResult:IActivityResult? = null,
                             arguments: Bundle? = null,
-                            optionsCompat: ActivityOptionsCompat? = null)  {
+                            optionsCompat: ActivityOptionsCompat? = null,
+                            hasWebView:Boolean = false)  {
             val intent = Intent(context, FragmentRootActivity::class.java)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
+            if(hasWebView) intent.putExtra(KEY_HAS_WEB_VIEW, hasWebView)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
             if (activityResult != null) {
@@ -67,5 +71,10 @@ class FragmentRootActivity : ViewActivity() {
         }
         supportFragmentManager.beginTransaction().replace(v.id, instance).commit() //todo 增加tag。
         return v
+    }
+
+    @CallSuper
+    override fun afterViewCreated(savedInstanceState: Bundle?, rootView: View) {
+        AndroidBug5497Workaround.assistActivity(this);
     }
 }

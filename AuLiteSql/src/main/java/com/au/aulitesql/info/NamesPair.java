@@ -3,7 +3,7 @@ package com.au.aulitesql.info;
 import com.au.aulitesql.Entity;
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/13 15:24
  * @description:
  */

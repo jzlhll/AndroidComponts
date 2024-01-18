@@ -7,7 +7,7 @@ import com.au.jobstudy.databinding.HomeCheckItemBinding
 import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/12/1 16:45
  * @description:
  */

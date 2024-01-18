@@ -3,7 +3,7 @@ package com.au.jobstudy.home
 import com.au.jobstudy.bean.DataItem
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/11/27 16:11
  * @description:
  */

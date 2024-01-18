@@ -68,9 +68,9 @@ public class Message {
             total++;
         }
 
-        Log.d(BridgeUtil.TAG, "createSend: " + len);
+        //Log.d(BridgeUtil.TAG, "createSend: " + len);
         if (total > 1) {
-            Log.d(BridgeUtil.TAG, "createSend page " + total + ", " + callbackId);
+            //Log.d(BridgeUtil.TAG, "createSend page " + total + ", " + callbackId);
             Message[] messages = new Message[total];
             int i = 1;
             int curSize = 0;
@@ -81,7 +81,7 @@ public class Message {
             messages[i - 1] = createSendPage(callbackId, data.substring(curSize), handlerName, i, total);
             return messages;
         } else {
-            Log.d(BridgeUtil.TAG, "createSend no page, " + callbackId);
+            //Log.d(BridgeUtil.TAG, "createSend no page, " + callbackId);
             return new Message[] {createSendDirectly(callbackId, data, handlerName)};
         }
     }
@@ -105,13 +105,13 @@ public class Message {
     public static Message[] createResponse(String data, String responseId) {
         int maxSize = MAX_RESPONSE_MESSAGE_SIZE;
         int len = data == null ? 0 : data.length();
-        Log.d(BridgeUtil.TAG, "createResponse: " + len);
+        //Log.d(BridgeUtil.TAG, "createResponse: " + len);
         int total = len / maxSize;
         if (len % maxSize > 0) {
             total++;
         }
         if (total > 1) {
-            Log.d(BridgeUtil.TAG, "createResponse page " + total + ", " + responseId);
+            //Log.d(BridgeUtil.TAG, "createResponse page " + total + ", " + responseId);
             Message[] messages = new Message[total];
             int i = 1;
             int curSize = 0;
@@ -122,7 +122,7 @@ public class Message {
             messages[i - 1] = createResponsePage(responseId, data.substring(curSize), i, total);
             return messages;
         } else {
-            Log.d(BridgeUtil.TAG, "createResponse no page, " + responseId);
+            //Log.d(BridgeUtil.TAG, "createResponse no page, " + responseId);
             return new Message[] {createResponseDirectly(responseId, data)};
         }
     }

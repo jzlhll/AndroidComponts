@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import com.au.module_android.text.CustomFontText
 
 /**
- * @author allan.jiang
+ * @author allan
  * @date :2023/12/1 17:59
  * @description:
  */
