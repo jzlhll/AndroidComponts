@@ -82,7 +82,7 @@ public class BridgeExWebView extends BridgeWebView {
         return super.generateBridgeWebViewClient();
     }
 
-    void setSelectPictureAction(BridgeWebChromeClient.IValueCallback callback) {
+    public void setSelectPictureAction(BridgeWebChromeClient.IValueCallback callback) {
         if (mChromeClient != null) {
             mChromeClient.setSelectPictureAction(callback);
         }
@@ -93,7 +93,7 @@ public class BridgeExWebView extends BridgeWebView {
     /**
      * 添加消息监听
      */
-    void addOnH5EventListener(@NonNull OnH5EventListener listener) {
+    public void addOnH5EventListener(@NonNull OnH5EventListener listener) {
         if (!events.contains(listener)) {
             events.add(listener);
         }
@@ -102,7 +102,7 @@ public class BridgeExWebView extends BridgeWebView {
     /**
      * 移除消息监听
      */
-    void removeOnH5EventListener(@Nullable OnH5EventListener listener) {
+    public void removeOnH5EventListener(@Nullable OnH5EventListener listener) {
         if(listener != null) events.remove(listener);
     }
 
@@ -110,7 +110,7 @@ public class BridgeExWebView extends BridgeWebView {
      * 注册监听h5事件
      *
      */
-    void registerH5Event(@NonNull String eventName) {
+    public void registerH5Event(@NonNull String eventName) {
         registerHandler(eventName, (data, function) -> {
             events.forEach(it -> {
                 it.onH5Event(this, eventName, data, function);
@@ -132,7 +132,7 @@ public class BridgeExWebView extends BridgeWebView {
     /**
      * 发送信息给h5
      */
-    void sendEventToH5(@NonNull String eventName, @Nullable String msg) {
+    public void sendEventToH5(@NonNull String eventName, @Nullable String msg) {
         //必须有一个handler，否则会在console不断打印错误。
         callHandler(eventName, msg, requireSendEventToH5bFunction());
     }
@@ -140,7 +140,7 @@ public class BridgeExWebView extends BridgeWebView {
     /**
      * 发送信息给h5。追加一个带callback的函数。
      */
-    void sendEventToH5WithCallback(@NonNull String eventName, @Nullable String msg, @NonNull CallBackFunction callback) {
+    public void sendEventToH5WithCallback(@NonNull String eventName, @Nullable String msg, @NonNull CallBackFunction callback) {
         callHandler(eventName, msg, callback);
     }
 }

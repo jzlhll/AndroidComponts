@@ -89,6 +89,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         settings.setAllowFileAccess(true);
         settings.setDatabaseEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setTextZoom(100); //禁止文字缩放
 
         WebView.setWebContentsDebuggingEnabled(true);
         this.setWebViewClient(generateBridgeWebViewClient());
