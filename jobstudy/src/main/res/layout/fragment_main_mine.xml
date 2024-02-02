@@ -179,6 +179,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
+        android:id="@+id/logoText"
         style="@style/AUFontMText"
         android:textColor="#999999"
         android:textSize="14sp"

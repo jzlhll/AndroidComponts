@@ -19,6 +19,7 @@ object FirstInitial {
         val app = context as Application
         ALog.d("first init....")
         ToutiaoScreenAdapter.init(app)
+        app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
         Globals.internalApp = app
 
         if (isInitSharedPrefHook) {
