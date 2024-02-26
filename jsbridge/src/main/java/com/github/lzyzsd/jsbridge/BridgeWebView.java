@@ -9,10 +9,9 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,15 +123,20 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 		}
 	}
 
+	private final int URL_MAX_CHARACTER_NUM = 2097152 - 2048;
     void dispatchMessage(Message m) {
         String messageJson = m.toJson();
-        //escape special characters for json string
-        messageJson = messageJson.replaceAll("(\\\\)([^utrn])", "\\\\\\\\$1$2");
-        messageJson = messageJson.replaceAll("(?<=[^\\\\])(\")", "\\\\\"");
-        String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            this.loadUrl(javascriptCommand);
-        }
+		//escape special characters for json string
+		messageJson = JSONObject.quote(messageJson);
+		String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
+		// 必须要找主线程才会将数据传递出去 --- 划重点
+		if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && javascriptCommand.length() >= URL_MAX_CHARACTER_NUM) {
+				this.evaluateJavascript(javascriptCommand,null);
+			} else {
+				this.loadUrl(javascriptCommand);
+			}
+		}
     }
 
 	private TimeSlowHandler timeSlowHandler;
