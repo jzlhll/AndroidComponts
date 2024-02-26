@@ -18,8 +18,8 @@
     var responseCallbacks = {};
     var uniqueId = 1;
 
-
-
+    var responseMessagesPageMap = {};
+    var sendMessagesPageMap = {};
 
     function _createQueueReadyIframe() {
         var doc = window.document;
@@ -118,42 +118,76 @@
         }
     }
 
+    function _dispatchMessageFromNativeResponse(responseId, responseData) {
+        var responseCallback = responseCallbacks[responseId];
+        if (!responseCallback) {
+            return;
+        }
+        responseCallback(responseData);
+        delete responseCallbacks[responseId];
+    }
+
+    function _dispatchMessageFromNativeSend(callbackId, handlerName, data) {
+        //直接发送
+        var responseCallback;
+        if (callbackId) {
+            var callbackResponseId = callbackId;
+            responseCallback = function(responseData) {
+                _doSend({
+                    responseId: callbackResponseId,
+                    responseData: responseData
+                });
+            };
+        }
+
+        var handler = WebViewJavascriptBridge._messageHandler;
+        if (handlerName) {
+            handler = messageHandlers[handlerName];
+        }
+        //查找指定handler
+        try {
+            handler(data, responseCallback);
+        } catch (exception) {
+            if (typeof console != 'undefined') {
+                console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", exception);
+            }
+        }
+    }
+
     //提供给native使用,
     function _dispatchMessageFromNative(messageJSON) {
         setTimeout(function() {
             var message = JSON.parse(messageJSON);
-            var responseCallback;
             //java call finished, now need to call js callback function
             if (message.responseId) {
-                responseCallback = responseCallbacks[message.responseId];
-                if (!responseCallback) {
-                    return;
-                }
-                responseCallback(message.responseData);
-                delete responseCallbacks[message.responseId];
-            } else {
-                //直接发送
-                if (message.callbackId) {
-                    var callbackResponseId = message.callbackId;
-                    responseCallback = function(responseData) {
-                        _doSend({
-                            responseId: callbackResponseId,
-                            responseData: responseData
-                        });
-                    };
-                }
-
-                var handler = WebViewJavascriptBridge._messageHandler;
-                if (message.handlerName) {
-                    handler = messageHandlers[message.handlerName];
-                }
-                //查找指定handler
-                try {
-                    handler(message.data, responseCallback);
-                } catch (exception) {
-                    if (typeof console != 'undefined') {
-                        console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
+                var rid = message.responseId;
+                //追加处理分页
+                if (message.pageTotal) {
+                    if (message.pageIndex == 1) {
+                        responseMessagesPageMap[rid] = message.responseData;
+                    } else if (message.pageIndex < message.pageTotal) {
+                        responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
+                    } else {
+                        _dispatchMessageFromNativeResponse(rid, responseMessagesPageMap[rid] + message.responseData);
+                        delete responseMessagesPageMap[rid];
                     }
+                } else {
+                    _dispatchMessageFromNativeResponse(rid, message.responseData);
+                }
+            } else {
+                var cid = message.callbackId;
+                //追加处理分页
+                if (message.pageTotal) {
+                    if (message.pageIndex == 1) {
+                        sendMessagesPageMap[cid] = message.data;
+                    } else if (message.pageIndex < message.pageTotal) {
+                        sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;
+                    } else {
+                        _dispatchMessageFromNativeSend(cid, message.handlerName, sendMessagesPageMap[cid] + message.data);
+                        delete sendMessagesPageMap[cid];
+                    }
+                } else {
+                    _dispatchMessageFromNativeSend(cid, message.handlerName, message.data);
                 }
             }
         });
