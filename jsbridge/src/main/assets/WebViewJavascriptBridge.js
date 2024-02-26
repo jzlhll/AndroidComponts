@@ -13,30 +13,17 @@
 
     var CUSTOM_PROTOCOL_SCHEME = 'yy';
     var QUEUE_HAS_MESSAGE = '__QUEUE_MESSAGE__/';
-    var MSG_IFRAME_ID = 'js_bridge_msg_iframe';
 
     var responseCallbacks = {};
     var uniqueId = 1;
 
-    var responseMessagesPageMap = {};
-    var sendMessagesPageMap = {};
 
-    function _createQueueReadyIframe() {
-        var doc = window.document;
-        var iframe = doc.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.setAttribute("id", MSG_IFRAME_ID);
-        doc.documentElement.appendChild(iframe);
 
-        messagingIframe = iframe;
-    }
 
-    function isExistMessagingIFrame() {
-        var iframe = doc.getElementById(MSG_IFRAME_ID);
-        if (iframe) {
-            return true;
-        }
-        return false;
+    function _createQueueReadyIframe(doc) {
+        messagingIframe = doc.createElement('iframe');
+        messagingIframe.style.display = 'none';
+        doc.documentElement.appendChild(messagingIframe);
     }
 
     function isAndroid() {
@@ -57,35 +44,10 @@
         return false;
     }
 
-    function logd(s) {
-        _doSend({
-                handlerName: 'logd',
-                data: s
-            });
-    }
-    function loge(s) {
-        _doSend({
-                handlerName: 'loge',
-                data: s
-            });
-    }
-    function logw(s) {
-        _doSend({
-                handlerName: 'logw',
-                data: s
-            });
-    }
-
     //set default messageHandler
     function init(messageHandler) {
-        console.log("js bridge init call");
-        if (!isExistMessagingIFrame()) {
-            console.log("js bridge require msg iframe");
-            _createQueueReadyIframe();
-        }
         if (WebViewJavascriptBridge._messageHandler) {
-            //throw new Error('WebViewJavascriptBridge.init called twice');
-            return;
+            throw new Error('WebViewJavascriptBridge.init called twice');
         }
         WebViewJavascriptBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
@@ -137,76 +99,42 @@
         }
     }
 
-    function _dispatchMessageFromNativeResponse(responseId, responseData) {
-        var responseCallback = responseCallbacks[responseId];
-        if (!responseCallback) {
-            return;
-        }
-        responseCallback(responseData);
-        delete responseCallbacks[responseId];
-    }
-
-    function _dispatchMessageFromNativeSend(callbackId, handlerName, data) {
-        //直接发送
-        var responseCallback;
-        if (callbackId) {
-            var callbackResponseId = callbackId;
-            responseCallback = function(responseData) {
-                _doSend({
-                    responseId: callbackResponseId,
-                    responseData: responseData
-                });
-            };
-        }
-
-        var handler = WebViewJavascriptBridge._messageHandler;
-        if (handlerName) {
-            handler = messageHandlers[handlerName];
-        }
-        //查找指定handler
-        try {
-            handler(data, responseCallback);
-        } catch (exception) {
-            if (typeof console != 'undefined') {
-                console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", exception);
-            }
-        }
-    }
-
     //提供给native使用,
     function _dispatchMessageFromNative(messageJSON) {
         setTimeout(function() {
             var message = JSON.parse(messageJSON);
+            var responseCallback;
             //java call finished, now need to call js callback function
             if (message.responseId) {
-                var rid = message.responseId;
-                //追加处理分页
-                if (message.pageTotal) {
-                    if (message.pageIndex == 1) {
-                        responseMessagesPageMap[rid] = message.responseData;
-                    } else if (message.pageIndex < message.pageTotal) {
-                        responseMessagesPageMap[rid] = responseMessagesPageMap[rid] + message.responseData;
-                    } else {
-                        _dispatchMessageFromNativeResponse(rid, responseMessagesPageMap[rid] + message.responseData);
-                        delete responseMessagesPageMap[rid];
-                    }
-                } else {
-                    _dispatchMessageFromNativeResponse(rid, message.responseData);
+                responseCallback = responseCallbacks[message.responseId];
+                if (!responseCallback) {
+                    return;
                 }
+                responseCallback(message.responseData);
+                delete responseCallbacks[message.responseId];
             } else {
-                var cid = message.callbackId;
-                //追加处理分页
-                if (message.pageTotal) {
-                    if (message.pageIndex == 1) {
-                        sendMessagesPageMap[cid] = message.data;
-                    } else if (message.pageIndex < message.pageTotal) {
-                        sendMessagesPageMap[cid] = sendMessagesPageMap[cid] + message.data;
-                    } else {
-                        _dispatchMessageFromNativeSend(cid, message.handlerName, sendMessagesPageMap[cid] + message.data);
-                        delete sendMessagesPageMap[cid];
+                //直接发送
+                if (message.callbackId) {
+                    var callbackResponseId = message.callbackId;
+                    responseCallback = function(responseData) {
+                        _doSend({
+                            responseId: callbackResponseId,
+                            responseData: responseData
+                        });
+                    };
+                }
+
+                var handler = WebViewJavascriptBridge._messageHandler;
+                if (message.handlerName) {
+                    handler = messageHandlers[message.handlerName];
+                }
+                //查找指定handler
+                try {
+                    handler(message.data, responseCallback);
+                } catch (exception) {
+                    if (typeof console != 'undefined') {
+                        console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
                     }
-                } else {
-                    _dispatchMessageFromNativeSend(cid, message.handlerName, message.data);
                 }
             }
         });
@@ -214,6 +142,7 @@
 
     //提供给native调用,receiveMessageQueue 在会在页面加载完后赋值为null,所以
     function _handleMessageFromNative(messageJSON) {
+        console.log(messageJSON);
         if (receiveMessageQueue) {
             receiveMessageQueue.push(messageJSON);
         } else {
@@ -224,18 +153,14 @@
     var WebViewJavascriptBridge = window.WebViewJavascriptBridge = {
         init: init,
         send: send,
-        logd: logd,
-        loge: loge,
-        logw: logw,
         registerHandler: registerHandler,
         callHandler: callHandler,
         _fetchQueue: _fetchQueue,
         _handleMessageFromNative: _handleMessageFromNative
     };
 
-    _createQueueReadyIframe();
-
     var doc = document;
+    _createQueueReadyIframe(doc);
     var readyEvent = doc.createEvent('Events');
     readyEvent.initEvent('WebViewJavascriptBridgeReady');
     readyEvent.bridge = WebViewJavascriptBridge;
