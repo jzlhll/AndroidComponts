@@ -18,9 +18,6 @@
     var responseCallbacks = {};
     var uniqueId = 1;
 
-
-
-
     function _createQueueReadyIframe() {
         var doc = window.document;
         var iframe = doc.createElement('iframe');
@@ -31,43 +28,14 @@
         messagingIframe = iframe;
     }
 
-    function isExistMessagingIFrame() {
-        var iframe = doc.getElementById(MSG_IFRAME_ID);
-        if (iframe) {
-            return true;
-        }
-        return false;
-    }
-
-    function isAndroid() {
-        var ua = navigator.userAgent.toLowerCase();
-        var isA = ua.indexOf("android") > -1;
-        if (isA) {
-            return true;
-        }
-        return false;
-    }
-
-    function isIphone() {
-        var ua = navigator.userAgent.toLowerCase();
-        var isIph = ua.indexOf("iphone") > -1;
-        if (isIph) {
-            return true;
-        }
-        return false;
-    }
-
     //set default messageHandler
     function init(messageHandler) {
         console.log("js bridge init call");
-        if (!isExistMessagingIFrame()) {
-            console.log("js bridge require msg iframe");
-            _createQueueReadyIframe();
-        }
         if (WebViewJavascriptBridge._messageHandler) {
             //throw new Error('WebViewJavascriptBridge.init called twice');
             return;
         }
+        _createQueueReadyIframe();
         WebViewJavascriptBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
         receiveMessageQueue = null;
@@ -109,13 +77,7 @@
     function _fetchQueue() {
         var messageQueueString = JSON.stringify(sendMessageQueue);
         sendMessageQueue = [];
-        //add by hq
-        if (isIphone()) {
-            return messageQueueString;
-            //android can't read directly the return data, so we can reload iframe src to communicate with java
-        } else if (isAndroid()) {
-            messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://return/_fetchQueue/' + encodeURIComponent(messageQueueString);
-        }
+        return messageQueueString;
     }
 
     //提供给native使用,
@@ -176,8 +138,6 @@
         _fetchQueue: _fetchQueue,
         _handleMessageFromNative: _handleMessageFromNative
     };
-
-    _createQueueReadyIframe();
 
     var doc = document;
     var readyEvent = doc.createEvent('Events');

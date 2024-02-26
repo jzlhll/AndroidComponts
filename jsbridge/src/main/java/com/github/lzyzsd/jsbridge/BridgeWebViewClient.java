@@ -50,10 +50,7 @@ public class BridgeWebViewClient extends WebViewClient {
             e.printStackTrace();
         }
 
-        if (url.startsWith(BridgeUtil.YY_RETURN_DATA)) { // 如果是返回数据
-            webView.handlerReturnData(url);
-            return true;
-        } else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) { //
+        if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) { //
             webView.flushMessageQueue();
             return true;
         } else {

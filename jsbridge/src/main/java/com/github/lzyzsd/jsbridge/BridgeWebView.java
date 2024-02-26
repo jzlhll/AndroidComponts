@@ -19,25 +19,10 @@ import java.util.Map;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
-
-	private final String TAG = "BridgeWebView";
-
 	public static final String toLoadJs = "WebViewJavascriptBridge.js";
-	Map<String, CallBackFunction> responseCallbacks = new HashMap<String, CallBackFunction>();
-	Map<String, BridgeHandler> messageHandlers = new HashMap<String, BridgeHandler>();
+
 	BridgeHandler defaultHandler = new DefaultHandler();
 
-    private List<Message> startupMessage = new ArrayList<Message>();
-
-    public List<Message> getStartupMessage() {
-        return startupMessage;
-    }
-
-    public void setStartupMessage(List<Message> startupMessage) {
-        this.startupMessage = startupMessage;
-    }
-
-    private long uniqueId = 0;
 
     public BridgeWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,7 +49,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         this.defaultHandler = handler;
     }
 
-    private void init() {
+	private void init() {
 		this.setVerticalScrollBarEnabled(false);
 		this.setHorizontalScrollBarEnabled(false);
 		this.getSettings().setJavaScriptEnabled(true);
@@ -72,21 +57,11 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
             WebView.setWebContentsDebuggingEnabled(true);
         }
 		this.setWebViewClient(generateBridgeWebViewClient());
+		addJavascriptInterface(new BridgeObject(new BridgeManager(this)), "Android");
 	}
 
     protected BridgeWebViewClient generateBridgeWebViewClient() {
         return new BridgeWebViewClient(this);
-    }
-
-    void handlerReturnData(String url) {
-        String functionName = BridgeUtil.getFunctionFromReturnUrl(url);
-        CallBackFunction f = responseCallbacks.get(functionName);
-        String data = BridgeUtil.getDataFromReturnUrl(url);
-        if (f != null) {
-            f.onCallBack(data);
-            responseCallbacks.remove(functionName);
-            return;
-        }
     }
 
     @Override
@@ -100,44 +75,8 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
     }
 
 	private void doSend(String handlerName, String data, CallBackFunction responseCallback) {
-		Message m = new Message();
-		if (!TextUtils.isEmpty(data)) {
-			m.setData(data);
-		}
-		if (responseCallback != null) {
-			String callbackStr = String.format(BridgeUtil.CALLBACK_ID_FORMAT, ++uniqueId + (BridgeUtil.UNDERLINE_STR + SystemClock.currentThreadTimeMillis()));
-			responseCallbacks.put(callbackStr, responseCallback);
-			m.setCallbackId(callbackStr);
-		}
-		if (!TextUtils.isEmpty(handlerName)) {
-			m.setHandlerName(handlerName);
-		}
 		queueMessage(m);
 	}
-
-	private void queueMessage(Message m) {
-		if (startupMessage != null) {
-			startupMessage.add(m);
-		} else {
-			dispatchMessage(m);
-		}
-	}
-
-	private final int URL_MAX_CHARACTER_NUM = 2097152 - 2048;
-    void dispatchMessage(Message m) {
-        String messageJson = m.toJson();
-		//escape special characters for json string
-		messageJson = JSONObject.quote(messageJson);
-		String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
-		// 必须要找主线程才会将数据传递出去 --- 划重点
-		if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && javascriptCommand.length() >= URL_MAX_CHARACTER_NUM) {
-				this.evaluateJavascript(javascriptCommand,null);
-			} else {
-				this.loadUrl(javascriptCommand);
-			}
-		}
-    }
 
 	private TimeSlowHandler timeSlowHandler;
 	private TimeSlowHandler getTimeSlowHandler() {
