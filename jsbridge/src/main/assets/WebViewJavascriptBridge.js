@@ -13,6 +13,7 @@
 
     var CUSTOM_PROTOCOL_SCHEME = 'yy';
     var QUEUE_HAS_MESSAGE = '__QUEUE_MESSAGE__/';
+    var MSG_IFRAME_ID = 'js_bridge_msg_iframe';
 
     var responseCallbacks = {};
     var uniqueId = 1;
@@ -20,10 +21,22 @@
 
 
 
-    function _createQueueReadyIframe(doc) {
-        messagingIframe = doc.createElement('iframe');
-        messagingIframe.style.display = 'none';
-        doc.documentElement.appendChild(messagingIframe);
+    function _createQueueReadyIframe() {
+        var doc = window.document;
+        var iframe = doc.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute("id", MSG_IFRAME_ID);
+        doc.documentElement.appendChild(iframe);
+
+        messagingIframe = iframe;
+    }
+
+    function isExistMessagingIFrame() {
+        var iframe = doc.getElementById(MSG_IFRAME_ID);
+        if (iframe) {
+            return true;
+        }
+        return false;
     }
 
     function isAndroid() {
@@ -46,8 +59,14 @@
 
     //set default messageHandler
     function init(messageHandler) {
+        console.log("js bridge init call");
+        if (!isExistMessagingIFrame()) {
+            console.log("js bridge require msg iframe");
+            _createQueueReadyIframe();
+        }
         if (WebViewJavascriptBridge._messageHandler) {
-            throw new Error('WebViewJavascriptBridge.init called twice');
+            //throw new Error('WebViewJavascriptBridge.init called twice');
+            return;
         }
         WebViewJavascriptBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
@@ -142,7 +161,6 @@
 
     //提供给native调用,receiveMessageQueue 在会在页面加载完后赋值为null,所以
     function _handleMessageFromNative(messageJSON) {
-        console.log(messageJSON);
         if (receiveMessageQueue) {
             receiveMessageQueue.push(messageJSON);
         } else {
@@ -159,8 +177,9 @@
         _handleMessageFromNative: _handleMessageFromNative
     };
 
+    _createQueueReadyIframe();
+
     var doc = document;
-    _createQueueReadyIframe(doc);
     var readyEvent = doc.createEvent('Events');
     readyEvent.initEvent('WebViewJavascriptBridgeReady');
     readyEvent.bridge = WebViewJavascriptBridge;
