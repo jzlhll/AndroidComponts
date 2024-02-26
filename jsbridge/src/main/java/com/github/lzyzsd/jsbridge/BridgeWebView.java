@@ -135,9 +135,21 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         }
     }
 
+	private TimeSlowHandler timeSlowHandler;
+	private TimeSlowHandler getTimeSlowHandler() {
+		if (timeSlowHandler == null) {
+			timeSlowHandler = new TimeSlowHandler(getHandler());
+		}
+		return timeSlowHandler;
+	}
+
 	void flushMessageQueue() {
-		if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-			loadUrl(BridgeUtil.JS_FETCH_QUEUE_FROM_JAVA, new CallBackFunction() {
+		getTimeSlowHandler().execute(flushMessageQueueRun);
+	}
+
+	private final Runnable flushMessageQueueRun = () -> {
+		if (Thread.currentThread() == Looper.getMainLooper().getThread() && isAttachedToWindow()) {
+			loadUrlWithResponse(BridgeUtil.JS_FETCH_QUEUE_FROM_JAVA, new CallBackFunction() {
 
 				@Override
 				public void onCallBack(String data) {
@@ -197,12 +209,12 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 				}
 			});
 		}
-	}
+	};
 
-	public void loadUrl(String jsUrl, CallBackFunction returnCallback) {
-		this.loadUrl(jsUrl);
-		responseCallbacks.put(BridgeUtil.parseFunctionName(jsUrl), returnCallback);
-	}
+    private void loadUrlWithResponse(String jsUrl, CallBackFunction returnCallback) {
+        this.loadUrl(jsUrl);
+        responseCallbacks.put(BridgeUtil.parseFunctionName(jsUrl), returnCallback);
+    }
 
     /**
      * register handler,so that javascript can call it
