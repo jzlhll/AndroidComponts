@@ -6,37 +6,24 @@
         return;
     }
 
-    var messagingIframe;
-    var sendMessageQueue = [];
     var receiveMessageQueue = [];
     var messageHandlers = {};
-
-    var CUSTOM_PROTOCOL_SCHEME = 'yy';
-    var QUEUE_HAS_MESSAGE = '__QUEUE_MESSAGE__/';
-    var MSG_IFRAME_ID = 'js_bridge_msg_iframe';
 
     var responseCallbacks = {};
     var uniqueId = 1;
 
-    function _createQueueReadyIframe() {
-        var doc = window.document;
-        var iframe = doc.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.setAttribute("id", MSG_IFRAME_ID);
-        doc.documentElement.appendChild(iframe);
-
-        messagingIframe = iframe;
-    }
+    var emptyResponseFunction = function(data) {};
 
     //set default messageHandler
     function init(messageHandler) {
         console.log("js bridge init call");
-        if (WebViewJavascriptBridge._messageHandler) {
+        if (WebViewJavascriptBridge._messageHandler || WebViewJavascriptBridge.isInit) {
             //throw new Error('WebViewJavascriptBridge.init called twice');
             return;
         }
-        _createQueueReadyIframe();
         WebViewJavascriptBridge._messageHandler = messageHandler;
+        WebViewJavascriptBridge.isInit = true;
+
         var receivedMessages = receiveMessageQueue;
         receiveMessageQueue = null;
         for (var i = 0; i < receivedMessages.length; i++) {
@@ -64,52 +51,54 @@
     //sendMessage add message, 触发native处理 sendMessage
     function _doSend(message, responseCallback) {
         if (responseCallback) {
-            var callbackId = 'cb_' + (uniqueId++) + '_' + new Date().getTime();
-            responseCallbacks[callbackId] = responseCallback;
-            message.callbackId = callbackId;
+            var id = 'jsId_' + (uniqueId++) + '_' + new Date().getTime();
+            responseCallbacks[id] = responseCallback;
+            message.id = id;
         }
-
-        sendMessageQueue.push(message);
-        messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
+        Android.jsCall(JSON.stringify(message));
     }
 
-    // 提供给native调用,该函数作用:获取sendMessageQueue返回给native,由于android不能直接获取返回的内容,所以使用url shouldOverrideUrlLoading 的方式返回内容
-    function _fetchQueue() {
-        var messageQueueString = JSON.stringify(sendMessageQueue);
-        sendMessageQueue = [];
-        return messageQueueString;
+    //不需要参数responseCode，因为我们直接调用了该方法。
+    function _doSendResponse(message) {
+        Android.jsResponse(JSON.stringify(message));
     }
 
     //提供给native使用,
     function _dispatchMessageFromNative(messageJSON) {
         setTimeout(function() {
             var message = JSON.parse(messageJSON);
+            var msgId = message.id;
             var responseCallback;
             //java call finished, now need to call js callback function
-            if (message.responseId) {
-                responseCallback = responseCallbacks[message.responseId];
+
+            //=2表示，是js已经向native发送过指令。现在call回来
+            if (message.responseCode == 2) {
+                responseCallback = responseCallbacks[msgId];
                 if (!responseCallback) {
                     return;
                 }
-                responseCallback(message.responseData);
-                delete responseCallbacks[message.responseId];
+                responseCallback(message.data);
+                delete responseCallbacks[msgId];
             } else {
-                //直接发送
-                if (message.callbackId) {
-                    var callbackResponseId = message.callbackId;
-                    responseCallback = function(responseData) {
-                        _doSend({
-                            responseId: callbackResponseId,
-                            responseData: responseData
-                        });
-                    };
-                }
-
+                //查找注册的handler
                 var handler = WebViewJavascriptBridge._messageHandler;
                 if (message.handlerName) {
                     handler = messageHandlers[message.handlerName];
                 }
-                //查找指定handler
+
+                if (msgId) {
+                    //native主动调用上来，存在id，则需要response给native
+                    responseCallback = function(data) {
+                        _doSendResponse({
+                            id: msgId,
+                            data: data,
+                        });
+                    };
+                } else {
+                    //native主动调上来，不存在id。则给一个空函数
+                    responseCallback = emptyResponseFunction;
+                }
+
                 try {
                     handler(message.data, responseCallback);
                 } catch (exception) {
@@ -135,7 +124,6 @@
         send: send,
         registerHandler: registerHandler,
         callHandler: callHandler,
-        _fetchQueue: _fetchQueue,
         _handleMessageFromNative: _handleMessageFromNative
     };
 
@@ -144,4 +132,5 @@
     readyEvent.initEvent('WebViewJavascriptBridgeReady');
     readyEvent.bridge = WebViewJavascriptBridge;
     doc.dispatchEvent(readyEvent);
+    console.log("js bridge run over.");
 })();

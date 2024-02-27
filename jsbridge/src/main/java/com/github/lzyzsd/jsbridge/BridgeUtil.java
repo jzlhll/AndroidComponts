@@ -1,85 +1,53 @@
 package com.github.lzyzsd.jsbridge;
 
 import android.content.Context;
-import android.util.Base64;
+import android.os.Handler;
+import android.os.Looper;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class BridgeUtil {
+public final class BridgeUtil {
+    private BridgeUtil() {}
+
     public final static String TAG = "JsBridge";
-    final static String YY_OVERRIDE_SCHEMA = "yy://";
-    final static String EMPTY_STR = "";
-    final static String UNDERLINE_STR = "_";
-    final static String SPLIT_MARK = "/";
-
-    final static String CALLBACK_ID_FORMAT = "JAVA_CB_%s";
-    final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:WebViewJavascriptBridge._handleMessageFromNative('%s');";
-    final static String DIRECT_FETCH_QUEUE_FROM_JAVA = "javascript:WebViewJavascriptBridge._fetchQueue();";
-    public final static String JAVASCRIPT_STR = "javascript:";
-
-    public static String parseFunctionName(String jsUrl){
-        return jsUrl.replace("javascript:WebViewJavascriptBridge.", "").replaceAll("\\(.*\\);", "");
-    }
-
-
-    public static String getFunctionFromReturnUrl(String url) {
-        String temp = url.replace(YY_RETURN_DATA, EMPTY_STR);
-        String[] functionAndData = temp.split(SPLIT_MARK);
-        if(functionAndData.length >= 1){
-            return functionAndData[0];
-        }
-        return null;
-    }
-
-    /**
-     * js 文件将注入为第一个script引用
-     * @param view
-     * @param url
-     */
-    public static void webViewLoadJs(WebView view, String url){
-        String js = "var newscript = document.createElement(\"script\");";
-        js += "newscript.src=\"" + url + "\";";
-        js += "document.scripts[0].parentNode.insertBefore(newscript,document.scripts[0]);";
-        view.loadUrl("javascript:" + js);
-    }
-
+    final static String JS_HANDLE_MESSAGE_FROM_JAVA = "WebViewJavascriptBridge._handleMessageFromNative('%s');";
     public static void webViewLoadLocalJs(WebView view, String path){
         String jsContent = assetFile2Str(view.getContext(), path);
-        view.loadUrl("javascript:" + jsContent);
+       // view.loadUrl("javascript:" + jsContent);
+        view.evaluateJavascript(jsContent, null);
     }
 
-    public static String assetFile2Str(Context c, String urlStr){
-        InputStream in = null;
-        try{
-            in = c.getAssets().open(urlStr);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            String line = null;
+    public static String assetFile2Str(Context c, String urlStr) {
+        try (InputStream in = c.getAssets().open(urlStr);
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));) {
+            String line;
             StringBuilder sb = new StringBuilder();
             do {
                 line = bufferedReader.readLine();
-                if (line != null && !line.matches("^\\s*\\/\\/.*")) {
+                if (line != null && !line.matches("^\\s*//.*")) {
                     sb.append(line);
                 }
             } while (line != null);
 
-            bufferedReader.close();
-            in.close();
-
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if(in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                }
-            }
         }
         return null;
+    }
+
+    private static Handler mainHandler;
+
+    @NonNull
+    static Handler getMainHandler() {
+        if (mainHandler == null) {
+            mainHandler = new Handler(Looper.getMainLooper());
+        }
+        return mainHandler;
     }
 }
