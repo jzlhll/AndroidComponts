@@ -6,6 +6,8 @@ import android.webkit.JavascriptInterface;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,12 +110,26 @@ public class BridgeObject {
         }
     }
 
+//    private static final String percent7B = URLEncoder.encode("%7B");
+//    private static final String percent7D = URLEncoder.encode("%7D");
+//    private static final String percent22 = URLEncoder.encode("%22");
+
     private void dispatchMessage(@NonNull Message m) {
         String messageJson = m.toJson();
         if (messageJson == null) {return;}
         //escape special characters for json string  为json字符串转义特殊字符
-        messageJson = messageJson.replaceAll("(\\\\)([^utrn])", "\\\\\\\\$1$2");
-        messageJson = messageJson.replaceAll("(?<=[^\\\\])(\")", "\\\\\"");
+        //1. 过时
+//        messageJson = messageJson
+//                .replaceAll("(?<=[^\\\\])(')", "\\\\'")
+//                .replaceAll("(\\\\)([^utrn])", "\\\\\\\\$1$2")
+//                .replaceAll("(?<=[^\\\\])(\")", "\\\\\"")
+//                .replaceAll("%7B", percent7B)
+//                .replaceAll("%7D", percent7D)
+//                .replaceAll("%22", percent22);
+
+        //2. 新的处理方式 效率更高。但是会存在多余的外部2个引号。因此修改了JS_HANDLE_MESSAGE_FROM_JAVA里面的传参，去掉了引号。
+        messageJson = JSONObject.quote(messageJson);
+
         String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
             webView.evaluateJavascript(javascriptCommand, null);
