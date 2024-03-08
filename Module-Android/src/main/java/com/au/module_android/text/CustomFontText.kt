@@ -3,8 +3,10 @@ package com.au.module_android.text
 import android.content.Context
 import android.graphics.Paint.FontMetricsInt
 import android.graphics.Rect
+import android.text.Layout
 import android.util.AttributeSet
 import com.google.android.material.textview.MaterialTextView
+import kotlin.math.ceil
 
 /**
  * @author allan
@@ -60,6 +62,12 @@ open class CustomFontText : MaterialTextView {
         if (FONT_NO_SPACE) {
             removeSpace(widthMeasureSpec, heightMeasureSpec)
         }
+
+        if (fixWrapEndToolLong) {
+            val width = ceil(getMaxLineWidth(layout))
+            val height = measuredHeight
+            setMeasuredDimension(width.toInt(), height)
+        }
     }
     override fun setText(text: CharSequence?, type: BufferType?) {
         super.setText(text, type)
@@ -113,5 +121,19 @@ open class CustomFontText : MaterialTextView {
             texts[i] = line
         }
         return texts
+    }
+
+    var fixWrapEndToolLong = false
+
+    private fun getMaxLineWidth(layout: Layout) : Float {
+        var maximumWidth = 0.0f
+        val lines = layout.lineCount
+        var i = 0
+        while (i < lines) {
+            maximumWidth = Math.max(layout.getLineWidth(i), maximumWidth)
+            i++
+        }
+
+        return maximumWidth
     }
 }

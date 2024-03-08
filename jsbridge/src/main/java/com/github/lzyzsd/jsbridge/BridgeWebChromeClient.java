@@ -6,8 +6,10 @@ import static com.github.lzyzsd.jsbridge.SystemUis.myShowSystemUI;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -16,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class BridgeWebChromeClient extends WebChromeClient {
-    public BridgeWebChromeClient(@NonNull BridgeWebView webView) {
+    public BridgeWebChromeClient(@NonNull BridgeExWebView webView) {
         super();
         this.webView = webView;
     }
@@ -61,7 +63,7 @@ public class BridgeWebChromeClient extends WebChromeClient {
     private View mCustomView;
 
     @NonNull
-    private final BridgeWebView webView;
+    private final BridgeExWebView webView;
 
     @Nullable
     private WebChromeClient.CustomViewCallback mCustomViewCallback;

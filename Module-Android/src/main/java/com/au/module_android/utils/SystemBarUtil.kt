@@ -6,6 +6,7 @@ import android.view.Window
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
 fun transparentStatusBar(fragment: Fragment,
@@ -70,4 +71,18 @@ fun transparentStatusBar(window: Window,
             }
         }
     }
+}
+
+fun Activity.myHideSystemUI() {
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    WindowCompat.getInsetsController(window, window.decorView).let { controller ->
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+}
+
+fun Activity.myShowSystemUI() {
+    WindowCompat.setDecorFitsSystemWindows(window, true)
+    WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
 }

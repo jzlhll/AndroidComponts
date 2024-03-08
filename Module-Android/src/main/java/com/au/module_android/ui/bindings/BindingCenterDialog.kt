@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.base.AbsCenterDialog
+import com.au.module_android.ui.base.DialogMode
+import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.createViewBinding
 
-abstract class BindingCenterDialog<VB:ViewBinding> : AbsCenterDialog(), IUiViewBinding<VB>{
+abstract class BindingCenterDialog<VB:ViewBinding, D:IBaseDialog>(mode: DialogMode = DialogMode.Center)
+        : AbsCenterDialog<D>(mode), IUiViewBinding<VB>{
     lateinit var binding:VB
 
     final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
