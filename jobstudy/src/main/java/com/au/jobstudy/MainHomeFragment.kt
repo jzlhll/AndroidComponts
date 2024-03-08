@@ -37,7 +37,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         binding.rcv.addItemDecoration(
             PaddingItemDecoration(
             0,
-            8.dp,
+            4.dp,
             true)
         )
 

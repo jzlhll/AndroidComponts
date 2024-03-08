@@ -7,6 +7,8 @@ import com.au.jobstudy.databinding.HomeCheckItemBinding
 import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.gone
+import com.au.module_android.utils.visible
 
 /**
  * @author allan
@@ -44,6 +46,11 @@ class HomeRcvTitleViewHolder(viewBinding: HomeCheckItemTitleBinding) : BindViewH
         super.bindData(bean)
         bean as HomeRcvTitleBean
         binding.workTitle.text = bean.title
+        if (bean.isFirstTitle) {
+            binding.secondGroupSpace.gone()
+        } else {
+            binding.secondGroupSpace.visible()
+        }
     }
 }
 

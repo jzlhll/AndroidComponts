@@ -71,6 +71,18 @@ object GlobalDataViewModel : ISaveViewModel {
             }
         }
 
+        var isNotFirstTitle = false
+        data.forEach {
+            if (it is HomeRcvTitleBean) {
+                if (!isNotFirstTitle) {
+                    isNotFirstTitle = true
+                    it.isFirstTitle = true
+                } else {
+                    it.isFirstTitle = false
+                }
+            }
+        }
+
         return data
     }
 

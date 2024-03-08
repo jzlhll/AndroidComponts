@@ -11,5 +11,6 @@ public class HomeRcvTitleBean extends HomeRcvBean {
         this.title = title;
     }
 
-    public String title;
+    public final String title;
+    public boolean isFirstTitle;
 }
