@@ -64,9 +64,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="4dp"
             android:padding="8dp"
-            android:layout_width="45dp"
-            android:src="@drawable/ic_b_next"
-            android:layout_height="45dp"/>
+            android:layout_width="60dp"
+            android:src="@drawable/next_white_bg"
+            android:layout_height="60dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

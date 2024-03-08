@@ -5,6 +5,8 @@ import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.databinding.HomeCheckItemBinding
 import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
+import com.au.module_android.utils.ViewBackgroundBuilder
+import com.au.module_android.utils.dp
 
 /**
  * @author allan
@@ -59,6 +61,10 @@ class HomeRcvItemViewHolder(viewBinding: HomeCheckItemBinding) : BindViewHolder<
         bean as HomeRcvItemBean
         binding.descText.text = bean.dataItem.desc
         binding.subjectText.text = bean.dataItem.subject
-        binding.subjectColor.setBackgroundColor(binding.root.resources.getColor(bean.colorId))
+//        binding.subjectColor.setBackgroundColor(binding.root.resources.getColor(bean.colorId))
+        binding.subjectColor.background = ViewBackgroundBuilder()
+            .setBackground(binding.root.resources.getColor(bean.colorId))
+            .setCornerRadius(3f.dp)
+            .build()
     }
 }
