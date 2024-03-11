@@ -101,7 +101,7 @@ abstract class AbsCenterDialog<D:IBaseDialog>(private val mode: DialogMode) : Ap
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //这里也忽略container，因为我们自行在这里rootTouchView.add了， 所以也忽略。
-        val contentViewGroup = onMvvmCreateView(inflater, container, savedInstanceState)
+        val contentViewGroup = onCreatingView(inflater, container, savedInstanceState)
         //用于响应触摸外部消失
         val rootTouchView = DialogTouchLayout(inflater.context, this, contentViewGroup)
 

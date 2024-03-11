@@ -11,14 +11,13 @@ import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.createViewBinding
 
-abstract class BindingCenterDialog<VB:ViewBinding, D:IBaseDialog>(mode: DialogMode = DialogMode.Center)
-        : AbsCenterDialog<D>(mode), IUiViewBinding<VB>{
+open class BindingCenterDialog<VB:ViewBinding, D:IBaseDialog>(mode: DialogMode = DialogMode.Center)
+        : AbsCenterDialog<D>(mode){
     lateinit var binding:VB
 
-    final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
-        afterViewCreated(savedInstanceState, vb)
         return vb.root
     }
 }

@@ -1,4 +1,4 @@
-package com.au.module_androidex
+package com.au.module_androidex.jsbridge
 
 import android.os.Bundle
 import android.os.Looper
@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
 import com.au.module_android.postToMainHandler
-import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.asOrNull
+import com.au.module_androidex.R
 import com.github.lzyzsd.jsbridge.BridgeExWebView
 import com.github.lzyzsd.jsbridge.CallBackFunction
 

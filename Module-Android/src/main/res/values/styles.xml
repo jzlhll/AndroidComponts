@@ -6,6 +6,30 @@
         <item name="android:lineSpacingMultiplier">1.05</item>
     </style>
 
+    <!--显示成为中粗-->
+    <style name="StyleMText" parent="StyleNormalText"/>
+    <!--显示成为粗-->
+    <style name="StyleBText" parent="StyleNormalText"/>
+
+    <style name="StylePrimaryLongButton">
+        <item name="android:background">@drawable/corner_btn_primary_long</item>
+        <item name="android:textSize">@dimen/btn_font_size</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:textColor">@color/primary_btn_color</item>
+
+        <item name="android:layout_marginStart">@dimen/single_btn_margin_edge</item>
+        <item name="android:layout_marginEnd">@dimen/single_btn_margin_edge</item>
+        <item name="android:layout_marginBottom">@dimen/btn_margin_bottom</item>
+
+        <item name="android:textStyle">normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_size_h3_20sp</item>
+        <item name="autoSizeMinTextSize">@dimen/text_size_minest</item>
+
+        <item name="fontMode">mid</item>
+    </style>
+
     <style name="CustomBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
         <item name="shapeAppearance">@null</item>
     </style>

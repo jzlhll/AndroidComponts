@@ -64,7 +64,7 @@ abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return onMvvmCreateView(inflater, container, savedInstanceState).also {
+        return onCreatingView(inflater, container, savedInstanceState).also {
             rootView = it
         }
     }

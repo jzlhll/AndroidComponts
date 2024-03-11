@@ -22,8 +22,8 @@ interface IBaseDialog {
     /**
      * 提供Dialog、Activity、Fragment、等组件的创建view
      */
-    fun onMvvmCreateView(inflater: LayoutInflater,
-                         container: ViewGroup? = null,
-                         savedInstanceState: Bundle? = null) : View
+    fun onCreatingView(inflater: LayoutInflater,
+                       container: ViewGroup? = null,
+                       savedInstanceState: Bundle? = null) : View
 
 }
