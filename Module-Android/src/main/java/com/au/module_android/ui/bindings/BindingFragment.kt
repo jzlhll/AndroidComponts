@@ -10,7 +10,7 @@ import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.createViewBinding
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */

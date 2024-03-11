@@ -3,7 +3,7 @@ package com.allan.nested.recyclerview.page
 import com.au.module_android.simplelivedata.Status
 import com.au.module_android.simplelivedata.StatusLiveData;
 /**
- * @author allan
+ * @author au
  * @date :2023/10/12 10:12
  * @description: 如果调用了success，则会标记为加载成功过。这样的话，错误来的话，就不是首次出错了。
  */

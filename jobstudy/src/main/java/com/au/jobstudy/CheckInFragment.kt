@@ -7,7 +7,7 @@ import com.au.jobstudy.databinding.FragmentCheckInBinding
 import com.au.module_android.ui.bindings.BindingParamsFragment
 
 /**
- * @author allan
+ * @author au
  * @date :2023/12/29 17:04
  * @description:
  */

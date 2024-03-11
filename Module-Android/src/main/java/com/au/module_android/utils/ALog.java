@@ -6,7 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/7 14:07
  * @description: Log日志
  */

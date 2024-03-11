@@ -3,18 +3,24 @@
 
     <application
         android:name=".MyInitApplication"
-        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher"
+        android:icon="@mipmap/new_icon"
+        android:roundIcon="@mipmap/new_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidLearning">
         <activity
             android:name=".MainActivity"
             android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|orientation|screenLayout|uiMode|navigation"
             android:windowSoftInputMode="adjustPan|stateHidden"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:screenOrientation="portrait">
+        </activity>
 
+        <activity
+            android:name="com.au.jobstudy.CompactSplashActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|orientation|screenLayout|uiMode|navigation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,17 +28,6 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".SplashActivity"-->
-<!--            android:theme="@style/SplashTheme"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
     </application>
 
 </manifest>

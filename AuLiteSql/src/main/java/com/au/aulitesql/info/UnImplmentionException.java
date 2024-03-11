@@ -1,7 +1,7 @@
 package com.au.aulitesql.info;
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/30 10:38
  * @description:
  */

@@ -15,15 +15,22 @@ import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
 import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.ThisWeekUiData
+import com.au.jobstudy.pass.Pass
+import com.au.module_android.click.onClick
+import com.au.module_android.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.FabImageViewUtil
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
     private val userName = "蒋添靖"
     private val scroll = "华中师范宝安附属学校"
+
+    private val floatFab by unsafeLazy { FabImageViewUtil(binding.passFab) }
 
     override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentMainHomeBinding) {
         binding.root.refresher.apply {
@@ -117,6 +124,17 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
                 adapter.submitList(GlobalDataViewModel.busToAdapterData(bus), false)
             }
         }
+
+        binding.passFab.onClick {_->
+            Pass().useOnePassCount {
+                if (it > 0) {
+                    toastOnTop("今天已经免做啦！还有${it}次机会!")
+                } else {
+                    toastOnTop("今天免做啦！本周免做机会已用完。")
+                    floatFab.hide()
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -129,5 +147,18 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             val curDay = Dayer()
             GlobalDataViewModel.getWeekData(curDay.currentDay, true, "getWeekData-" + curDay.currentDay)
         }
+
+        Pass().isThisWeekCanUse {
+            if (it) {
+                floatFab.show()
+            } else {
+                floatFab.hideDirectly()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        floatFab.hide()
     }
 }

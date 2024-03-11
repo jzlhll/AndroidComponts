@@ -56,6 +56,8 @@ object Globals {
         handlerThread.start()
         return Handler(handlerThread.looper)
     }
+
+    const val SIMPLE_CONFIG_SP_XML_NAME = "app_simple_sp"
 }
 
 //----------------------handler start

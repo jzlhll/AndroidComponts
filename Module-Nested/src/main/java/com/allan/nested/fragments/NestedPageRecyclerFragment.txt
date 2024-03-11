@@ -5,7 +5,7 @@ import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.allan.nested.recyclerview.page.AbstractPageViewModel
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/28
  */
 abstract class NestedPageRecyclerFragment : NestedRecyclerFragment() {

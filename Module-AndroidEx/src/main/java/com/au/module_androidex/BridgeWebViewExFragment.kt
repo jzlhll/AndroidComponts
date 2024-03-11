@@ -15,7 +15,7 @@ import com.github.lzyzsd.jsbridge.BridgeExWebView
 import com.github.lzyzsd.jsbridge.CallBackFunction
 
 /**
- * @author allan
+ * @author au
  * @date :2024/1/19 14:50
  * @description:
  */

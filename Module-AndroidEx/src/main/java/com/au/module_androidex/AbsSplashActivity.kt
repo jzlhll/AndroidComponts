@@ -10,7 +10,7 @@ import com.au.module_android.Globals
 
 private var lastLauncherApp = 0L
 /**
- * @author allan
+ * @author au
  * @date :2023/11/7 9:33
  * @description:
  */
@@ -36,12 +36,9 @@ abstract class AbsSplashActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         launcherApp(intent)
     }
-    
-    abstract fun goToMainActivity()
 
-    abstract fun goToGuideActivity()
+    abstract fun goActivity()
 
-    //调试GuideFragment
     fun launcherApp(intent: Intent?) {
         //直接从android Studio run起来会初始化多次。
         val cur = System.currentTimeMillis()
@@ -58,7 +55,8 @@ abstract class AbsSplashActivity : AppCompatActivity() {
             }
         }
 
-        goToMainActivity()
+        goActivity()
+
         this.finish()
     }
 }

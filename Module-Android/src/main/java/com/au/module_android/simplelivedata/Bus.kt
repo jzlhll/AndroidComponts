@@ -1,7 +1,7 @@
 package com.au.module_android.simplelivedata
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/30 14:03
  * @description: 总线思想的设计
  */

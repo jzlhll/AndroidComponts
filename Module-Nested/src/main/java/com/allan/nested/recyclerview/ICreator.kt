@@ -1,7 +1,7 @@
 package com.allan.nested.recyclerview
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/21
  * Description 转成一个结果
  */

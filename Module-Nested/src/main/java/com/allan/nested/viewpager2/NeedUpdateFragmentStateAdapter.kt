@@ -10,7 +10,7 @@ import java.lang.Integer.min
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/6/29
  * Description 用于需要更新Fragment的ViewPager2的Adapter。给你的Fragment实现IFragmentNeedUpdate，
  * 会在生命周期onStart自动回调或者有动态更新的时候通知。因此，不需要编写data和onCreateView的代码。

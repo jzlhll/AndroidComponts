@@ -3,7 +3,7 @@ package com.au.module_android.glide
 import com.bumptech.glide.load.model.GlideUrl
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/21
  * https://blog.csdn.net/qq_33635618/article/details/103479064
  * Description 通过使用自定义GlideUrl限定时间，来将glide做区分。

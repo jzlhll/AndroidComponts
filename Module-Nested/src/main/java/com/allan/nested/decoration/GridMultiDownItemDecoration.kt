@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * @author allan
+ * @author au
  * 4个一行的GridItemDecoration
  * @param top: 表示间距上的距离。
  * @param horzPadding: 表示每个间隔的左右间距。

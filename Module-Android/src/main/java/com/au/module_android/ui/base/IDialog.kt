@@ -17,7 +17,7 @@ interface IDialog<D:IBaseDialog> : IBottomDialog<D> {
 
 
 /**
- * @author allan
+ * @author au
  * @date :2024/2/19 17:45
  * @description:
  */

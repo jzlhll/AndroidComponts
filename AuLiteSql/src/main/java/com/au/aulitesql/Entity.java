@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/10 11:48
  * @description: 继承本类的，就会被创建一张表。
  *

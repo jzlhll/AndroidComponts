@@ -10,7 +10,7 @@ import com.github.lzyzsd.jsbridge.DefaultHandler
 import com.google.gson.Gson
 
 /**
- * @author allan
+ * @author au
  * @date :2023/10/8 10:26
  * @description:
  */

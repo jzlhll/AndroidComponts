@@ -3,7 +3,7 @@ package com.au.module_android.simplelivedata
 import androidx.annotation.IntDef
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/17
  * Description 将真实类型T data，包装在被包装的数据类型中。
  */
@@ -14,7 +14,7 @@ data class StatusData<T>(@Status var status:Int = Status.NONE, //状态
 )
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/15
  * Description 设计运行的模式
  */

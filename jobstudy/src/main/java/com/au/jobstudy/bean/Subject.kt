@@ -33,7 +33,7 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
     object Chinese : Subject("语文", 0, 5,
         actions = arrayOf(
             CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
-            CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课所有生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
             CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
         ))
     object EnglishWrite : Subject("英语拼写", 6, 10,
@@ -42,7 +42,7 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
     ))
     object Science : Subject("科学", 11, 19,
         actions = arrayOf(
-        CheckupDescMode("找3个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+        CheckupDescMode("找2个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
         CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
     ))
 //    object Maths : Subject("数学", 26, 30, arrayOf(

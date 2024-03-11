@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 object AppDataStore {
     /**
-     * @author allan
+     * @author au
      * @date :2023/11/7 10:24
      * @description:
      */

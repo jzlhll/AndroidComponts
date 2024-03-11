@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import com.au.module_android.ui.views.ViewCenterDialog
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/8 14:20
  * @description:
  */

@@ -10,7 +10,7 @@ public class MeMoryBitmap {
     public static MeMoryBitmap mInstance=null;
     private MeMoryBitmap() {}
 
-    public static MeMoryBitmap getmInstance() {
+    public static MeMoryBitmap getInstance() {
         if(mInstance==null){
             mInstance=new MeMoryBitmap();
         }

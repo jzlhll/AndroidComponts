@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.startup.Initializer
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/7/20
  * Description 初始化，所有的初始化类，都继承它。
  * 这样好必须比FirstInitial晚。

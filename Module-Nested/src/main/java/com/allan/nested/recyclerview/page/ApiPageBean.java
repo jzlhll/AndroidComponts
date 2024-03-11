@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/8/24
  * Description
  * todo 每个公司的api，分页加载的框架。需要自行修改。或者进行转换。

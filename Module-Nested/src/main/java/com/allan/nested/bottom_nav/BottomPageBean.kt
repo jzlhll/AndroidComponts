@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/6 14:48
  * @description:
  */

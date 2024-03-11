@@ -4,7 +4,7 @@ import com.au.jobstudy.bean.DataItem
 import com.au.module_android.simplelivedata.BusLiveData
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/9 18:11
  */
 interface ISave {
@@ -38,7 +38,7 @@ interface ISave {
 }
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/9 18:11
  */
 interface ISaveViewModel {

@@ -8,7 +8,7 @@ import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.module_android.utils.unsafeLazy
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/2/20
  * Description ("这是一个非常基础的类。请勿直接使用。请使用BindRcvAdapter或者AutoLoadMoreXXX")
  *

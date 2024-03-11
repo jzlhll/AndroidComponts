@@ -6,7 +6,7 @@ import com.au.module_android.permissions.permission.PermissionForResult
 import com.au.module_android.permissions.permission.PermissionsForResult
 
 /**
- * @author allan
+ * @author au
  * @date :2023/12/13 10:52
  * @description:
  */

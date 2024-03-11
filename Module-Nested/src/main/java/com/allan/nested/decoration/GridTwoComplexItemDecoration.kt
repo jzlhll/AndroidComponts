@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 /**
- * @author allan
+ * @author au
  *
  * 两竖item往下的Grid排列方式
  * top表示两竖模式下的，两行之间的高度间隔；itemLeft是2个之间的距离。

@@ -7,7 +7,7 @@ import com.google.android.material.textview.MaterialTextView
 import kotlin.math.ceil
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/8/24
  */
 open class CustomWrapEnFontText : MaterialTextView {

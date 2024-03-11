@@ -18,7 +18,7 @@ import com.au.module_android.permissions.activity.IActivityResult
 import com.au.module_android.ui.views.ViewActivity
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/8/29
  * Description 限制
  */

@@ -5,7 +5,7 @@ import com.au.module_android.utils.asOrNull
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * @author allan
+ * @author au
  * 简化和传入复杂的参数类型。
  * 主要使用场景为做为整个activity的唯一。
  */

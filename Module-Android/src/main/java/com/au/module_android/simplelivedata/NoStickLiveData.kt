@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import com.au.module_android.utils.ReflectionUtils
 
 /**
- * @author allan
+ * @author au
  * 不需要的粘性状态。
  */
 open class NoStickLiveData<T> : SafeLiveData<T> {

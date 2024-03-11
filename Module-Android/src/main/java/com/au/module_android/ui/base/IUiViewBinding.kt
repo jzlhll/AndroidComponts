@@ -5,7 +5,7 @@ import androidx.annotation.EmptySuper
 import androidx.viewbinding.ViewBinding
 
 /**
- * @author allan
+ * @author au
  * @date :2023/10/8 17:40
  * @description:
  */

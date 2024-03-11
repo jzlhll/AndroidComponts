@@ -12,7 +12,7 @@ import com.au.module_android.ui.views.ViewFragment
 import com.google.android.material.button.MaterialButton
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/8 14:16
  * @description:
  */

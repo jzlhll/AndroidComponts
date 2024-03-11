@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.au.module_android.postToMainHandler
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/6 11:31
  * @description: 如果是静态数据的RecyclerView，setAdapter需要额外处理。
  * 避免出现问题。

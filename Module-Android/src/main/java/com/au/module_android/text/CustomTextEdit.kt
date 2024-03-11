@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import com.google.android.material.textfield.TextInputEditText
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/7 15:42
  * @description:
  */

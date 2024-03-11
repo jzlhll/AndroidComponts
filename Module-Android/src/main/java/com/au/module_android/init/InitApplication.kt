@@ -6,7 +6,7 @@ import android.util.Log
 import com.au.module_android.utils.ALog
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/7 14:32
  * @description:
  */

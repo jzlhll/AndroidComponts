@@ -3,7 +3,7 @@ package com.au.jobstudy
 import android.os.Build
 
 /**
- * @author allan
+ * @author au
  * @date :2024/2/2 14:44
  * @description:
  */

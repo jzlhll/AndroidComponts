@@ -7,7 +7,7 @@ import com.au.module_android.ui.base.IUiView
 import com.au.module_android.ui.base.AbsActivity
 
 /**
- * @author allan
+ * @author au
  * Date: 2023/7/4
  * Description 指导基础类模板
  */

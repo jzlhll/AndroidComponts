@@ -4,7 +4,7 @@ import com.au.jobstudy.consts.WeekDateUtil.anyDayToWeekStartDay
 import com.au.jobstudy.consts.WeekDateUtil.timeToDayInt
 
 /**
- * @author allan
+ * @author au
  * @date :2023/11/27 10:48
  * @description:
  */
