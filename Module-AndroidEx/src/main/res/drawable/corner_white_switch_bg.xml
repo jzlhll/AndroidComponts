@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 中空有灰色边框的背景 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="7dp"/>
+            <solid android:color="@android:color/white"/>
+        </shape>
+    </item>
+</selector>

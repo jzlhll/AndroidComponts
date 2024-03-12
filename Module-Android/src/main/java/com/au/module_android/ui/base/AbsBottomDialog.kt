@@ -18,7 +18,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-@Deprecated("基础框架的一环，请使用BindingXXXDialog或者ViewXXXDialog")
 abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
         : BottomSheetDialogFragment(), IBottomDialog<D> {
     /**
@@ -42,7 +41,7 @@ abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
     override var createdDialog : Dialog? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val sheetDialog = BeforeDismissBottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme).also {
+        val sheetDialog = BeforeDismissBottomSheetDialog(requireContext(), R.style.StyleBottomSheetDialogTheme).also {
             ToutiaoScreenAdapter.attach(it)
         }
         createdDialog = sheetDialog

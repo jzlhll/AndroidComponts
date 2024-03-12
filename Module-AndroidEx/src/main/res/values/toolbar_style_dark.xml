@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--定义默认的toolbar样式，以及颜色-->>
+    <color name="toolBarBackgroundDark">@color/color_black_111</color>
+    <drawable name="toolbarLogoDark">@drawable/icon_back_dark</drawable>
+    <color name="toolbarLogoTintDark">@color/color_text_normal_dark</color>
+
+    <!--文字外观-->
+    <style name="toolbarTitleTextAppearanceDark">
+        <item name="android:textColor">@color/toolbarLogoTintDark</item>
+        <item name="android:textSize">@dimen/text_20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--设置toolbar菜单样式-->
+    <style name="toolbarPopupThemeDark" parent="@style/ThemeOverlay.AppCompat.DayNight">
+        <item name="android:colorBackground">@color/toolBarBackgroundDark</item>
+        <item name="android:textColor">@color/toolbarLogoTintDark</item>
+        <!--新增一个item，用于控制menu-->
+        <item name="actionOverflowMenuStyle">@style/toolbarOverflowMenuStyle</item>
+        <item name="actionMenuTextAppearance">@style/toolbarMenuTextAppearance</item>
+    </style>
+</resources>

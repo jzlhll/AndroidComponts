@@ -49,7 +49,7 @@
         android:src="@drawable/ic_b_paus"
         android:layout_height="64dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintBottom_toTopOf="@id/timeLine"
         app:layout_constraintStart_toStartOf="@id/timeLine"
         android:layout_marginBottom="8dp"
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintTop_toBottomOf="@id/timeLine"
         app:layout_constraintEnd_toEndOf="@id/timeLine"
         app:layout_constraintStart_toStartOf="@id/timeLine"

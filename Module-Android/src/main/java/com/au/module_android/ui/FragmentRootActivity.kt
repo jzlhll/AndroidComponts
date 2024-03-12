@@ -16,6 +16,7 @@ import com.au.module.android.BuildConfig
 import com.au.module_android.APP_TAG
 import com.au.module_android.permissions.activity.IActivityResult
 import com.au.module_android.ui.views.ViewActivity
+import com.au.module_android.utils.unsafeLazy
 
 /**
  * @author au
@@ -56,6 +57,8 @@ class FragmentRootActivity : ViewActivity() {
         }
     }
 
+    val fragmentClass by unsafeLazy { intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment> }
+
     override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v = FragmentContainerView(inflater.context)
         v.layoutParams = ViewGroup.LayoutParams(
@@ -63,7 +66,7 @@ class FragmentRootActivity : ViewActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         v.id = View.generateViewId()
-        val fragmentClass = intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment>
+
         val instance = fragmentClass.getDeclaredConstructor().newInstance()
         instance.arguments = intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS)
         if (BuildConfig.DEBUG) {

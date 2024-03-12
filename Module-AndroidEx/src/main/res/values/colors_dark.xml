@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主标题色-->
+    <color name="color_black_111">#111111</color>
+    <!-- button 主题色 -->
+    <color name="color_text_normal_dark">#ffffff</color>
+    <color name="color_text_normal_dark_press">#C3C3C3</color>
+    <color name="color_text_dark_secondary">#6D6D73</color>
+
+    <!-- dark模式的颜色 -->
+    <color name="color_primary_dark">#FF5252</color>
+    <color name="color_primary_press_dark">#CF4545</color> <!--换算为非透明-->
+
+    <color name="color_dark_bg1d1d1f">#1D1D1F</color>
+</resources>

@@ -58,13 +58,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         viewBinding.mainBottomNavRcv.adapter = BottomNavAdapter<BottomPageMenuBinding>(bottomNavList, BottomPageMenuBinding::class.java).also { adapter->
             adapter.bindWithBottomNav(viewBinding.mainViewPager,
                 itemViewChangeFun = { viewBinding, bean->
-                viewBinding.tvTitle.setText(bean.titleRes)
+                viewBinding.titleTv.setText(bean.titleRes)
                 if (bean.isSelected) {
                     viewBinding.ivLogo.setImageResource(bean.selectIconRes)
-                    viewBinding.tvTitle.setTextColor(bean.selectTitleColor)
+                    viewBinding.titleTv.setTextColor(bean.selectTitleColor)
                 } else {
                     viewBinding.ivLogo.setImageResource(bean.iconRes)
-                    viewBinding.tvTitle.setTextColor(bean.titleColor)
+                    viewBinding.titleTv.setTextColor(bean.titleColor)
                 }
             },
                 switchBtnAnimObjectApply = {

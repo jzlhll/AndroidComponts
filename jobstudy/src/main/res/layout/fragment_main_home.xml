@@ -18,7 +18,7 @@
             app:layout_scrollFlags="scroll|snap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.au.module_android.text.CustomFontText
+            <com.au.module_android.widget.CustomFontText
                 android:id="@+id/title"
                 android:layout_marginStart="20dp"
                 android:textSize="20sp"
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <com.au.module_android.text.CustomFontText
+            <com.au.module_android.widget.CustomFontText
                 android:id="@+id/weather"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -81,7 +81,7 @@
                         android:layout_height="36dp"/>
                 </androidx.cardview.widget.CardView>
 
-                <com.au.module_android.text.CustomFontText
+                <com.au.module_android.widget.CustomFontText
                     android:id="@+id/mineName"
                     app:layout_constraintStart_toEndOf="@id/mineHeadImageHost"
                     app:layout_constraintTop_toTopOf="@id/mineHeadImageHost"
@@ -93,7 +93,7 @@
                     android:textColor="#212121"
                     android:layout_height="wrap_content"/>
 
-                <com.au.module_android.text.CustomFontText
+                <com.au.module_android.widget.CustomFontText
                     android:id="@+id/mineScholl"
                     app:layout_constraintStart_toEndOf="@id/mineHeadImageHost"
                     app:layout_constraintTop_toBottomOf="@id/mineName"
@@ -124,7 +124,7 @@
                     android:src="@drawable/ic_checkpoint"
                     android:layout_height="32dp"/>
 
-                <com.au.module_android.text.CustomFontText
+                <com.au.module_android.widget.CustomFontText
                     android:id="@+id/mineWeeklyText"
                     app:layout_constraintStart_toEndOf="@id/mineCheckPointImage"
                     app:layout_constraintTop_toTopOf="@id/mineCheckPointImage"
@@ -153,7 +153,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.au.module_android.text.CustomFontText
+        <com.au.module_android.widget.CustomFontText
             android:id="@+id/lookWeeklyText"
             android:text="任务完成情况 >"
             android:layout_gravity="end"

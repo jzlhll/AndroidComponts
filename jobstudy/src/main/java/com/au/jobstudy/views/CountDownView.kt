@@ -2,7 +2,7 @@ package com.au.jobstudy.views
 
 import android.content.Context
 import android.util.AttributeSet
-import com.au.module_android.text.CustomFontText
+import com.au.module_android.widget.CustomFontText
 
 /**
  * @author au

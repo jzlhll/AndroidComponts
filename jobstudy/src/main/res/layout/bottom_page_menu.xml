@@ -15,8 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.au.module_android.text.CustomFontText
-        android:id="@+id/tvTitle"
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/titleTv"
         style="@style/AUMinText"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/ivLogo"
         tools:text="@string/app_name" />
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/tvRedNumber"
         style="@style/AUMinText"
         android:layout_marginTop="-3dp"

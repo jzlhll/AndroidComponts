@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:layout_width="wrap_content"
         android:textSize="20sp"
         android:textColor="#212121"
@@ -24,7 +24,7 @@
         android:src="@drawable/ic_star"
         android:layout_height="36dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/numbersTv"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"

@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/name1"
         android:layout_marginEnd="12dp"
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         android:src="@drawable/ic_star"
         android:layout_height="36dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/value1"
         android:layout_width="wrap_content"
         android:layout_marginStart="6dp"
@@ -41,7 +41,7 @@
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="1dp"/>
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/name2"
         android:layout_marginEnd="12dp"
         android:visibility="invisible"
@@ -57,7 +57,7 @@
         android:src="@drawable/ic_star"
         android:layout_height="36dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/value2"
         android:layout_width="wrap_content"
         android:visibility="invisible"
@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/name3"
         android:layout_marginEnd="12dp"
         android:visibility="invisible"
@@ -87,7 +87,7 @@
         android:visibility="invisible"
         android:layout_height="36dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/value3"
         android:layout_width="wrap_content"
         android:visibility="invisible"

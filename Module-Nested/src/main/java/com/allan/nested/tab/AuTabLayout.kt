@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
-import com.au.module_android.text.FontMode
-import com.au.module_android.text.setFontFromAsset
+import com.au.module_android.widget.FontMode
+import com.au.module_android.widget.setFontFromAsset
 import com.au.module_android.utils.forEachChild
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

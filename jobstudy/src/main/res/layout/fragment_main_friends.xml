@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.au.module_android.text.CustomFontText
+        <com.au.module_android.widget.CustomFontText
             style="@style/AUFontMText"
             android:paddingTop="20dp"
             android:layout_height="wrap_content"

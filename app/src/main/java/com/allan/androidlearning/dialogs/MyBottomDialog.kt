@@ -9,7 +9,5 @@ import com.au.module_android.ui.bindings.BindingBottomDialog
  * @date :2023/11/8 18:19
  * @description:
  */
-class MyBottomDialog : BindingBottomDialog<DialogDemoBinding>() {
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: DialogDemoBinding) {
-    }
+class MyBottomDialog : BindingBottomDialog<DialogDemoBinding, MyBottomDialog>() {
 }

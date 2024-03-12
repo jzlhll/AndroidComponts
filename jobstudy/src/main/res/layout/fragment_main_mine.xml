@@ -26,7 +26,7 @@
             android:layout_height="66dp"/>
     </androidx.cardview.widget.CardView>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/name"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/name"
@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/headImageHost"
         app:layout_constraintBottom_toBottomOf="@id/studyTargetText"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/normalFeatureTitle"
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="@id/normalFeatureHost"
@@ -96,7 +96,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/studyTargetText"
         app:layout_constraintStart_toStartOf="@id/normalFeatureImage1"
         app:layout_constraintEnd_toEndOf="@id/normalFeatureImage1"
@@ -119,7 +119,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintStart_toStartOf="@id/normalFeatureImage2"
         app:layout_constraintEnd_toEndOf="@id/normalFeatureImage2"
         app:layout_constraintTop_toBottomOf="@id/normalFeatureImage2"
@@ -139,7 +139,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/normalFeatureHost"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/helpFeatureTitle"
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="@id/helpFeatureHost"
@@ -163,7 +163,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintStart_toEndOf="@id/helpFeatureImage1"
         app:layout_constraintBottom_toBottomOf="@id/helpFeatureImage1"
         app:layout_constraintTop_toTopOf="@id/helpFeatureImage1"
@@ -175,7 +175,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintTop_toBottomOf="@id/helpFeatureHost"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

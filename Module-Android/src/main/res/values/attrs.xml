@@ -3,6 +3,10 @@
     <attr name="fontMode" format="string" />
     <attr name="isFontNum" format="boolean" />
 
+    <attr name="backgroundNormal" format="color" />
+    <attr name="backgroundPressed" format="color" />
+    <attr name="backgroundDisabled" format="color" />
+
     <declare-styleable name="FlowLayout">
         <attr name="flFlow" format="boolean"/>
         <attr name="flChildSpacing" format="enum|dimension">
@@ -39,5 +43,53 @@
         <attr name="replaceLayout" format="reference" />
         <attr name="replaceViewClass" format="string" />
         <attr name="inflatedCornerSize" format="dimension"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="SwitchLayoutButton">
+        <attr name="first_str" format="string" />
+        <attr name="second_str" format="string" />
+        <attr name="padding_inner" format="dimension" />
+        <attr name="bg_color" format="color"/>
+        <attr name="bg_corner" format="dimension"/>
+        <attr name="select_color" format="color"/>
+        <attr name="select_corner" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTextView">
+        <attr name="fontMode" />
+        <attr name="isFontNum" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomImageFontText">
+        <attr name="drawableTextPadding" format="dimension"/>
+
+        <attr name="drawableMarginStart" format="dimension"/>
+        <attr name="drawableMarginEnd" format="dimension"/>
+
+        <attr name="drawableStartWidth" format="dimension"/>
+        <attr name="drawableStartHeight" format="dimension"/>
+        <attr name="drawableTopWidth" format="dimension"/>
+        <attr name="drawableTopHeight" format="dimension"/>
+        <attr name="drawableEndWidth" format="dimension"/>
+        <attr name="drawableEndHeight" format="dimension"/>
+        <attr name="drawableBottomWidth" format="dimension"/>
+        <attr name="drawableBottomHeight" format="dimension"/>
+    </declare-styleable>
+
+    <!-- 没有alpha，水波纹等比较特殊的场景。-->
+    <declare-styleable name="AnySimpleView">
+        <attr name="backgroundNormal" />
+        <attr name="backgroundPressed" />
+        <attr name="backgroundDisabled" />
+
+        <attr name="cornerRadius" />
+        <attr name="cornerSizeTopLeft" />
+        <attr name="cornerSizeTopRight" />
+        <attr name="cornerSizeBottomLeft" />
+        <attr name="cornerSizeBottomRight" />
+
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
     </declare-styleable>
 </resources>

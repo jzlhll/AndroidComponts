@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="two_btn_single_min_with">136dp</dimen>
+    <dimen name="two_btn_single_max_with">156dp</dimen>
+    <dimen name="two_btn_single_padding">20dp</dimen>
+</resources>

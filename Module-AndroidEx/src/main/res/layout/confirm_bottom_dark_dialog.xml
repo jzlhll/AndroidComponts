@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    tools:layout_height="300dp"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.CustConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:backgroundNormal="@color/color_dark_bg1d1d1f"
+        app:cornerRadius="12dp">
+        <!-- 预留一份空间4dp。这样就可以让title是16dp或者20dp的marginTop -->
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/titleTv"
+            style="@style/StyleFontBTextDark"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:maxLines="3"
+            android:textSize="@dimen/text_24sp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            tools:text="fir asdfjk z9 " />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/contentTv"
+            style="@style/StyleFontSecondaryTextDark"
+            android:textSize="@dimen/text_16sp"
+            app:layout_constraintTop_toBottomOf="@id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:maxLines="3"
+            android:gravity="center"
+            tools:text="Yourkd 18941 jfifz 1`2894 zmnkzj 12849" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/cancelButton"
+            style="@style/StyleButtonSecondaryLongDark"
+            android:maxWidth="@dimen/two_btn_single_max_with"
+            android:minWidth="@dimen/two_btn_single_min_with"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            app:cornerRadius="8dp"
+            android:textSize="16sp"
+            app:strokeWidth="1.5dp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/sureButton"
+            style="@style/StyleButtonPrimaryLongDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:maxWidth="@dimen/two_btn_single_max_with"
+            android:minWidth="@dimen/two_btn_single_min_with"
+            android:paddingStart="@dimen/two_btn_single_padding"
+            android:paddingEnd="@dimen/two_btn_single_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            tools:text="delete"
+            app:cornerRadius="8dp"/>
+
+        <View
+            android:id="@+id/bottomView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cancelButton"
+            android:layout_width="1dp"
+            android:layout_height="24dp"/>
+    </com.au.module_android.widget.CustConstraintLayout>
+
+</LinearLayout>

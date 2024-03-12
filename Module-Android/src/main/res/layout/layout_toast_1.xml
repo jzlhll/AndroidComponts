@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    android:minHeight="64dp"
+    android:minHeight="68dp"
     android:background="@drawable/ic_shadow_bg"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
@@ -17,11 +17,11 @@
         android:id="@+id/icon"
         android:visibility="gone"
         tools:visibility="visible"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         tools:src="@drawable/ic_successful"/>
 
-    <com.au.module_android.text.CustomFontText
+    <com.au.module_android.widget.CustomFontText
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"
@@ -35,6 +35,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:textSize="14sp"
+        android:textSize="16sp"
         tools:text="The recipy dfjksdafhjkf jkfjk 18949i 489 22 cooool!!! djkfdasjkf zxcjvk 83204i jadskfja 18904 ajdkfa 182941j makxsf  81294 adjkf 189023 jdfka 12891 dskjf" />
 </androidx.constraintlayout.widget.ConstraintLayout>
