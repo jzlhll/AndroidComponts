@@ -7,10 +7,13 @@
 
     <color name="color_text_normal">#212121</color>
 
+
     <color name="color_primary">#DB4F4F</color>
     <color name="color_primary_press">#E78989</color>
 
     <!-- 按钮或者输入框背景色和边框 -->
+    <color name="color_gray_light">#F0F0F0</color>
+
     <color name="color_gray_tab">#5B5546</color>
     <color name="color_gray_border">#D1D5DB</color>
     <color name="color_dialog_gray_border">#747474</color>

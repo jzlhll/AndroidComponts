@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.databinding.FragmentLiveDataBinding
 import com.allan.androidlearning.utils.logm
-import com.allan.androidlearning.utils.testGsonData
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.ui.bindings.BindingFragment
 import kotlinx.coroutines.delay
@@ -31,7 +30,6 @@ class LiveDataFragment : BindingFragment<FragmentLiveDataBinding>() {
             viewModel.changeData()
         }
 
-        testGsonData()
     }
 
 }

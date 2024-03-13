@@ -42,7 +42,7 @@ open class ConfirmCenterImgDialog : BindingNorDialog<ConfirmCenterImgDialogBindi
                 }
             }
 
-            dialog.show(manager, "StronglyCenterImageDialogV2")
+            dialog.show(manager, "ConfirmCenterImgDialog")
             return dialog
         }
     }

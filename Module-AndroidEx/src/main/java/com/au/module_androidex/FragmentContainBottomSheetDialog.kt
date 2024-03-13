@@ -43,7 +43,7 @@ class FragmentContainBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomD
                 }
                 if(height != null) it.putInt(BUNDLE_KEY3, height)
             }
-            dialog.show(manager, "FragmentBottomSheetDialogV2")
+            dialog.show(manager, "FragmentContainBottomSheetDialog")
             return dialog
         }
     }

@@ -34,7 +34,7 @@ open class ConfirmDarkAtBottomDialog : BindingNorDialog<ConfirmBottomDarkDialogB
                 }
             }
 
-            dialog.show(manager, "StronglyBottomDarkDialogV2")
+            dialog.show(manager, "ConfirmDarkAtBottomDialog")
             return dialog
         }
     }

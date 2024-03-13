@@ -42,7 +42,7 @@ open class ConfirmDarkImgAtBottomDialog : BindingNorDialog<ConfirmBottomDarkImgD
                     d.dismissAllowingStateLoss()
                 }
             }
-            dialog.show(manager, "StronglyBottomDarkImageDialogV2")
+            dialog.show(manager, "ConfirmDarkImgAtBottomDialog")
             return dialog
         }
     }

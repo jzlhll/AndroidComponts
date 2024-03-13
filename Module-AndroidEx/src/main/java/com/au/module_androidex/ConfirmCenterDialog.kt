@@ -32,7 +32,7 @@ open class ConfirmCenterDialog : BindingNorDialog<ConfirmCenterDialogBinding, Co
                     d.dismissAllowingStateLoss()
                 }
             }
-            dialog.show(manager, "StronglyCenterDialogV2")
+            dialog.show(manager, "ConfirmCenterDialog")
             return dialog
         }
     }

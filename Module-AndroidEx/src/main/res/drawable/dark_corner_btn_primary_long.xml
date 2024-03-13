@@ -14,7 +14,7 @@
 
     <item>
         <shape>
-            <solid android:color="@color/color_text_normal_dark"/>
+            <solid android:color="@color/color_gray_light"/>
             <corners android:radius="@dimen/two_btn_corner_size"/>
         </shape>
     </item>
