@@ -12,10 +12,4 @@ import com.au.module_android.ui.viewBackgroundBuild
  */
 class CustomButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : CustomFontText(context, attrs) {
-    init {
-        val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
-        viewBackgroundBuild(attr)
-        attr.recycle()
-    }
-}
+) : CustomFontText(context, attrs)

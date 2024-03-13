@@ -13,8 +13,6 @@ import com.au.module_android.utils.ALog
  */
 object FirstInitial {
     var isInitSharedPrefHook = false
-    var isFontNoSpace = true
-
     fun init(context: Context): Application {
         val app = context as Application
         ALog.d("first init....")

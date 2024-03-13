@@ -34,7 +34,7 @@
     <style name="StyleMinText">
         <item name="android:lineSpacingMultiplier">1.05</item>
         <item name="android:textSize">@dimen/text_15sp</item>
-        <item name="android:textColor">@color/color_999999</item>
+        <item name="android:textColor">@color/color_normal_text</item>
     </style>
 
     <style name="StyleSmallText">
