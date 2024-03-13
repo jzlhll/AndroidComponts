@@ -17,7 +17,7 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/titleTv"
-        style="@style/AUMinText"
+        style="@style/StyleMinText"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/tvRedNumber"
-        style="@style/AUMinText"
+        style="@style/StyleMinText"
         android:layout_marginTop="-3dp"
         android:layout_width="18dp"
         android:layout_height="18dp"
@@ -39,7 +39,7 @@
         tools:visibility="visible"
         android:gravity="center"
         android:background="@drawable/dot_red_round"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toEndOf="@id/ivLogo"
         app:layout_constraintTop_toTopOf="@id/ivLogo"
         tools:text="1" />

@@ -11,9 +11,9 @@ import com.allan.nested.viewpager2.simplePagerAdapter
 import com.au.jobstudy.databinding.ActivityMainBinding
 import com.au.jobstudy.databinding.BottomPageMenuBinding
 import com.au.module_android.Globals.app
-import com.au.module_android.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.transparentStatusBar
+import com.au.module_android.utils.unsafeLazy
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,16 +30,19 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         return insets
     }
 
+    private val colorTextGray by unsafeLazy { app.getColor(com.au.module_androidex.R.color.color_999999) }
+    private val colorPrimary by unsafeLazy { app.getColor(R.color.color_primary) }
+
     private val bottomNavList = listOf(
         BottomPageBean(true, R.string.bottom_home, R.drawable.ic_bottom_home, R.drawable.ic_bottom_home_select,
-            app.getColor(R.color.color_text_gray),
-            app.getColor(R.color.color_primary)),
+            colorTextGray,
+            colorPrimary),
         BottomPageBean(false, R.string.bottom_boardcast, R.drawable.ic_bottom_boardcast, R.drawable.ic_bottom_boardcast_sel,
-            app.getColor(R.color.color_text_gray),
-            app.getColor(R.color.color_primary)),
+            colorTextGray,
+            colorPrimary),
         BottomPageBean(false, R.string.bottom_mine, R.drawable.ic_bottom_mine, R.drawable.ic_bottom_mine_select,
-            app.getColor(R.color.color_text_gray),
-            app.getColor(R.color.color_primary))
+            colorTextGray,
+            colorPrimary)
     )
 
     private val pages = listOf(

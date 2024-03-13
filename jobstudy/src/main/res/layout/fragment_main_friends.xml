@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <com.au.module_android.widget.CustomFontText
-            style="@style/AUFontMText"
+            style="@style/StyleMinText"
             android:paddingTop="20dp"
             android:layout_height="wrap_content"
             android:id="@+id/title"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:background="@android:color/transparent"
-            style="@style/TyphurTabLayoutNormally"
+            style="@style/StyleTabLayoutNormally"
             />
     </com.google.android.material.appbar.AppBarLayout>
 

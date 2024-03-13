@@ -207,4 +207,18 @@
         <item name="android:textSize">@dimen/text_16sp</item>
         <!--        <item name="android:textStyle">bold</item>-->
     </style>
+
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->
+    <style name="shape_round8dp_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+        <!-- app:strokeColor
+app:strokeWidth -->
+    </style>
+
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆形 -->
+    <style name="shape_circle_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
