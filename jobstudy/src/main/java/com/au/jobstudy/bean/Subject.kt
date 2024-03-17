@@ -32,47 +32,38 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
 
     object Chinese : Subject("语文", 0, 5,
         actions = arrayOf(
-            CheckupDescMode("阅读某个单元所有课文", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
-            CheckupDescMode("抄一遍或者叫爸爸妈妈听写任意2课生字", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
-            CheckupDescMode("读生字表3课，并每个生字口头组词。比如: \"飞，飞，飞机。\"", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+            CheckupDescMode("阅读某个单元课文。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+            CheckupDescMode("叫爸爸妈妈听写2课生字。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("抄写一课生字，字写2遍，组词写一遍。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("读生字表3课，并每个生字口头组词。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
         ))
-    object EnglishWrite : Subject("英语拼写", 6, 10,
+
+    object SelfRead : Subject("课外阅读", 6, 7,
         actions = arrayOf(
-        CheckupDescMode("从英语书本上找，8个单词，每个抄2遍。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("美文赏析，读2篇课外作文，每篇读2遍。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+        ))
+    object English : Subject("英语拼写", 8, 13,
+        actions = arrayOf(
+        CheckupDescMode("从英语书本上找8个单词，每个抄2遍。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
+            CheckupDescMode("叫爸爸妈妈听写单词5-8个。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 1, 3))),
     ))
-    object Science : Subject("科学", 11, 19,
+    object Maths : Subject("数学", 14, 21,
         actions = arrayOf(
-        CheckupDescMode("找2个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
-        CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
-    ))
-//    object Maths : Subject("数学", 26, 30, arrayOf(
-//        CheckupDescMode("读课本3个。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 220, 480))),
-//    ))
-    object Every53Maths : Subject("53天天练-数学", 20, 40,
-        actions = arrayOf(
-        CheckupDescMode("做2页并自己用红笔批改，最后交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
-        CheckupDescMode("做2-3页并自己用红笔批改，最后交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
-    ))
-    object Every53English : Subject("53天天练-英语", 41, 45,
-        actions = arrayOf(
-        CheckupDescMode("做一课。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
-    ))
-    object Every53Chinese : Subject("53天天练-语文", 46, 50,
-        actions = arrayOf(
-        CheckupDescMode("做一课。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("做1页黄冈卷，并自己用红笔批改，再让爸爸妈妈检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("做2页黄冈卷，交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("找做错的知训或者试卷，3题，在草稿本画图解答或找爸爸妈妈再解释一次。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
     ))
 
-    object SelfRead : Subject("课外阅读", 51, 55,
+    object Science : Subject("科学", 22, 23,
         actions = arrayOf(
-            CheckupDescMode("美文赏析，读3篇课外作文，每篇读2遍。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
-            CheckupDescMode("美文赏析，读2篇课外作文，每篇读3遍。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+            CheckupDescMode("找2-3个单元阅读。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
+            CheckupDescMode("阅读老师总结的打印内容。", arrayOf(CheckupMode(MediaItem.TYPE_VOICE, 120, 600))),
         ))
     //todo 最大值
 }
 
 private val allSubjects by unsafeLazy {
-    listOf(Subject.Chinese, Subject.EnglishWrite, Subject.Science,
-        Subject.Every53Maths, Subject.Every53Chinese, Subject.Every53English, Subject.SelfRead)
+    listOf(Subject.Chinese, Subject.English, Subject.Maths, Subject.Science, Subject.SelfRead)
 }
 
 fun nameToSubject(name:String) : Subject {
@@ -85,7 +76,7 @@ fun nameToSubject(name:String) : Subject {
 }
 
 fun randomGetSubject() : Subject {
-    val random = (Math.random() * 56).toInt() //todo 最大值 + 1
+    val random = (Math.random() * 24).toInt() //todo 最大值 + 1
     for (subj in allSubjects) {
         if (random>=subj.randomStart && random <= subj.randomEnd) {
             return subj
@@ -107,11 +98,9 @@ fun randomGetTwoSubjects() : Array<Subject> {
 fun subjectToColorId(subject:String):Int {
     return when (nameToSubject(subject)) {
         Subject.Chinese-> R.color.color_chinese
-        Subject.Every53Chinese-> R.color.color_chinese
         Subject.Science-> R.color.color_science
-        Subject.Every53Maths-> R.color.color_math
-        Subject.EnglishWrite-> R.color.color_english
-        Subject.Every53English-> R.color.color_english
         Subject.SelfRead -> R.color.color_self_read
+        Subject.Maths -> R.color.color_math
+        Subject.English -> R.color.color_english
     }
 }

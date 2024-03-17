@@ -35,13 +35,23 @@ public final class DataItem extends Entity implements Serializable {
     public int minVideoSec;
     public int maxVideoSec;
 
+    public boolean isSupportVideo() {
+        return minVideoSec > 0 && maxVideoSec >= minVideoSec;
+    }
+
     public int minPicNum;
     public int maxPicNum;
+
+    public boolean isSupportPicture() {
+        return minPicNum > 0 && maxPicNum >= minPicNum;
+    }
 
     public int minVoiceSec;
     public int maxVoiceSec;
 
-    public int checkUpMode;
+    public boolean isSupportVoice() {
+        return minVoiceSec > 0 && maxVoiceSec >= minVoiceSec;
+    }
 
     public String day; //20230910
 

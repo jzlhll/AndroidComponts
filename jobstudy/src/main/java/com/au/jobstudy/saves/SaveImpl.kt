@@ -3,6 +3,7 @@ package com.au.jobstudy.saves
 import com.au.aulitesql.dao.EntityListDao
 import com.au.jobstudy.bean.DataItem
 import com.au.jobstudy.bean.fillDataItemMode
+import com.au.jobstudy.bean.randomGetSubject
 import com.au.jobstudy.bean.randomGetTwoSubjects
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
@@ -41,27 +42,46 @@ class SaveImpl : ISave {
                 } else if (generate) {
                     val targetList = ArrayList<DataItem>()
                     val weekDayList = WeekDateUtil.getWeekData(weekStartDay)
+                    var index = 0
                     for (aday in weekDayList) {
-                        val twoSubjects = randomGetTwoSubjects()
-                        val firstCheck = twoSubjects[0].randomOneAction()
-                        val secondCheck = twoSubjects[1].randomOneAction()
+                        index++
+                        val subjects = if (index <= 5) {
+                            val rand = Math.random()
+                            if(rand < 0.1f) //周内小概率0个作业。
+                                arrayOf()
+                            else if (rand >= 0.9f) { //周内小概率2个作业。
+                                randomGetTwoSubjects()
+                            } else { //周内大概率1个作业。
+                                arrayOf(randomGetSubject())
+                            }
+                        } else {
+                            randomGetTwoSubjects()
+                        }
 
-                        val dataItem1 = DataItem().apply {
-                            day = aday
-                            this.weekStartDay = weekStartDay
-                            orderIndex = 0
-                            subject = twoSubjects[0].name
-                            fillDataItemMode(this, firstCheck)
+                        if (subjects.isNotEmpty()) {
+                            val firstCheck = subjects[0].randomOneAction()
+
+                            val dataItem1 = DataItem().apply {
+                                day = aday
+                                this.weekStartDay = weekStartDay
+                                orderIndex = 0
+                                subject = subjects[0].name
+                                fillDataItemMode(this, firstCheck)
+                            }
+                            targetList.add(dataItem1)
                         }
-                        val dataItem2 = DataItem().apply {
-                            day = aday
-                            this.weekStartDay = weekStartDay
-                            orderIndex = 1
-                            subject = twoSubjects[1].name
-                            fillDataItemMode(this, secondCheck)
+
+                        if (subjects.size == 2) {
+                            val secondCheck = subjects[1].randomOneAction()
+                            val dataItem2 = DataItem().apply {
+                                day = aday
+                                this.weekStartDay = weekStartDay
+                                orderIndex = 1
+                                subject = subjects[1].name
+                                fillDataItemMode(this, secondCheck)
+                            }
+                            targetList.add(dataItem2)
                         }
-                        targetList.add(dataItem1)
-                        targetList.add(dataItem2)
                     }
 
                     weekDao.saveAll(targetList) {

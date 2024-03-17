@@ -14,15 +14,14 @@ import com.au.jobstudy.databinding.FragmentMainHomeBinding
 import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
 import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
 import com.au.jobstudy.home.HomeRcvAdapter
+import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.jobstudy.home.ThisWeekUiData
 import com.au.jobstudy.pass.Pass
 import com.au.module_android.click.onClick
 import com.au.module_android.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.FabImageViewUtil
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
@@ -30,7 +29,8 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private val userName = "蒋添靖"
     private val scroll = "华中师范宝安附属学校"
 
-    private val floatFab by unsafeLazy { FabImageViewUtil(binding.passFab) }
+    private val itemClick : (HomeRcvItemBean)->Unit = { itemBean->
+    }
 
     override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentMainHomeBinding) {
         binding.root.refresher.apply {
@@ -48,10 +48,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             true)
         )
 
-        HomeRcvAdapter.click = {
-
-        }
-
+        HomeRcvAdapter.click = itemClick
         binding.rcv.adapter = HomeRcvAdapter().also { adapter = it }
 
         binding.thisWeekList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)->ViewBinding) {
@@ -131,7 +128,6 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
                     toastOnTop("今天已经免做啦！还有${it}次机会!")
                 } else {
                     toastOnTop("今天免做啦！本周免做机会已用完。")
-                    floatFab.hide()
                 }
             }
         }
@@ -149,16 +145,11 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         }
 
         Pass().isThisWeekCanUse {
-            if (it) {
-                floatFab.show()
-            } else {
-                floatFab.hideDirectly()
-            }
+
         }
     }
 
     override fun onPause() {
         super.onPause()
-        floatFab.hide()
     }
 }
