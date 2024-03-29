@@ -5,6 +5,7 @@ import android.app.Application
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
@@ -35,6 +36,8 @@ object Globals {
 
     val activityList: ArrayList<Activity>
         get() = internalActivityList
+
+    val topActivityChangeLiveData = NoStickLiveData<Unit>()
 
     val topActivity:Activity?
         get() = activityList.lastOrNull()

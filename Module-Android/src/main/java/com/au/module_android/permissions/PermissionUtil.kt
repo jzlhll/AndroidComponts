@@ -1,5 +1,6 @@
 package com.au.module_android.permissions
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -86,4 +87,8 @@ fun checkPermission(vararg permissions:String) : Array<String> {
         }
     }
     return noPermissionList.toTypedArray()
+}
+
+fun canShowPermissionDialog(activity:Activity, permission:String) : Boolean{
+    return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
 }

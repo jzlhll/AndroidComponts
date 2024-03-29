@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import androidx.viewpager.widget.ViewPager.DecorView
 import com.au.module.android.R
 import com.au.module.android.databinding.LayoutToast1Binding
 import com.au.module.android.databinding.LayoutToast2Binding
@@ -194,6 +195,10 @@ fun toastOnTop(string: String, desc:String? = null, @IconType icon:String? = nul
 
 class ToastBuilder {
     private var decorView:ViewGroup? = null
+    fun setDecorView(decorView: ViewGroup?) {
+        this.decorView = decorView
+    }
+
     private var mMsg:String? = null //如果有desc，则这是标题；如果没有desc就是它一行
     private var mDesc:String? = null //如果有msg，则这个是第二行；如果没有msg，则就是它一行
     private var mIcon:String? = null //图标: success, fail, warn, none, null
@@ -214,12 +219,6 @@ class ToastBuilder {
         decorView = fragment.activity?.window?.decorView.asOrNull()
         return this
     }
-
-//    fun setOnDialogFragment(fragment: Fragment) : DefaultToastBuilder{
-//        val dialog = BottomSheetDialog.findBottomSheetDialog(fragment)
-//        decorView = dialog?.findToastViewGroup()
-//        return this
-//    }
 
     fun setOnViewGroup(viewGroup: ViewGroup?) : ToastBuilder{
         decorView = viewGroup

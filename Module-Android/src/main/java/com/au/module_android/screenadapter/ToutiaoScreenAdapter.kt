@@ -86,4 +86,8 @@ object ToutiaoScreenAdapter {
         displayMetrics.scaledDensity = targetScaleDensity
         displayMetrics.densityDpi = targetDensityDpi
     }
+
+    override fun toString(): String {
+        return "ScreenAdapter(systemDensity=$systemDensity, systemScaleDensity=$systemScaleDensity, targetDensity=$targetDensity, targetScaleDensity=$targetScaleDensity, targetDensityDpi=$targetDensityDpi)"
+    }
 }

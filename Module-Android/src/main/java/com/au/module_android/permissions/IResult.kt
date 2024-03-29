@@ -28,7 +28,7 @@ interface IResult<O> {
      *
      * 因为block放在了这里设置。
      */
-    fun <T> safeRun(block:()->Unit, notGivePermissionBlock:(()->Unit)? = null) {
+    fun safeRun(block:()->Unit, notGivePermissionBlock:(()->Unit)? = null) {
         when (this) {
             is PermissionForResult -> {
                 if(hasPermission(permission())) {

@@ -1,11 +1,11 @@
-package com.au.module_androidex
+package com.au.module_androidex.dialog_normal
 
 import androidx.fragment.app.FragmentManager
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.bindings.BindingNorDialog
+import com.au.module_android.ui.bindings.BindingDialog
 import com.au.module_androidex.databinding.ConfirmCenterDialogBinding
 
-open class ConfirmCenterDialog : BindingNorDialog<ConfirmCenterDialogBinding, ConfirmCenterDialog>() {
+open class ConfirmCenterDialog : BindingDialog<ConfirmCenterDialogBinding>() {
     companion object {
         fun show(
             manager: FragmentManager,
@@ -17,19 +17,18 @@ open class ConfirmCenterDialog : BindingNorDialog<ConfirmCenterDialogBinding, Co
         ): ConfirmCenterDialog {
             val dialog = ConfirmCenterDialog()
             dialog.onShownBlock = {
-                val d = it
-                d.binding.sureButton.text = sureText
+                dialog.binding.sureButton.text = sureText
                 if (cancelText != null) {
-                    d.binding.cancelButton.text = cancelText
+                    dialog.binding.cancelButton.text = cancelText
                 }
-                d.binding.sureButton.onClick {
-                    sureClick?.invoke(d)
+                dialog.binding.sureButton.onClick {
+                    sureClick?.invoke(dialog)
                 }
 
-                d.binding.titleTv.text = title
-                d.binding.contentTv.text = content
-                d.binding.cancelButton.onClick {
-                    d.dismissAllowingStateLoss()
+                dialog.binding.titleTv.text = title
+                dialog.binding.contentTv.text = content
+                dialog.binding.cancelButton.onClick {
+                    dialog.dismissAllowingStateLoss()
                 }
             }
             dialog.show(manager, "ConfirmCenterDialog")

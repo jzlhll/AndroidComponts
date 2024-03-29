@@ -1,4 +1,4 @@
-package com.au.module_androidex
+package com.au.module_androidex.dialog_bottomsheet
 
 import android.graphics.Color
 import android.os.Bundle
@@ -18,8 +18,9 @@ import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
+import com.au.module_androidex.R
 
-class FragmentContainBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomDialog<FragmentContainBottomSheetDialog>(hasEditText) {
+class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomDialog(hasEditText) {
     companion object {
         /**
          * manager 基于哪个fragment的childFragmentManger而弹出。
@@ -33,8 +34,8 @@ class FragmentContainBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomD
             height: Int? = null,
             isDarkMode:Int = 0,
             hasEditText: Boolean = false
-        ): FragmentContainBottomSheetDialog {
-            val dialog = FragmentContainBottomSheetDialog(hasEditText)
+        ): FragmentBottomSheetDialog {
+            val dialog = FragmentBottomSheetDialog(hasEditText)
             dialog.arguments = Bundle().also {
                 it.putSerializable(BUNDLE_KEY0, T::class.java)
                 it.putInt(BUNDLE_KEY1, isDarkMode)

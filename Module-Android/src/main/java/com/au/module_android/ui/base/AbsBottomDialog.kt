@@ -18,17 +18,17 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
-        : BottomSheetDialogFragment(), IBottomDialog<D> {
+abstract class AbsBottomDialog(private val hasEditText:Boolean)
+    : BottomSheetDialogFragment(), IBaseDialog {
     /**
      * 尽量早一点调用。在show之前。如果是继承，则放在init{}
      */
-    override var onDismissBlock:((D)->Unit)? = null
+    override var onDismissBlock:(()->Unit)? = null
 
     /**
      * 尽量早一点调用。在show之前。如果是继承，则放在init{}
      */
-    override var onShownBlock:((D)->Unit)? = null
+    override var onShownBlock:(()->Unit)? = null
 
     override var rootView: View? = null
 
@@ -50,13 +50,13 @@ abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
 
         sheetDialog.beforeDismissCallback = object : BeforeDismissBottomSheetDialog.BeforeDismissCallback {
             override fun onBeforeDismiss(dialog: BeforeDismissBottomSheetDialog?) {
-                onDismissBlock?.invoke(this as D)
+                onDismissBlock?.invoke()
                 onDismissBlock = null
             }
         }
 
         sheetDialog.setOnShowListener {
-            onShownBlock?.invoke(this as D)
+            onShownBlock?.invoke()
             onShownBlock = null
         }
         return sheetDialog
@@ -97,7 +97,8 @@ abstract class AbsBottomDialog<D:IBaseDialog>(private val hasEditText:Boolean)
         rootView?.let { tdv->
             val design_bottom_sheet = tdv.parent.asOrNull<ViewGroup>()
             design_bottom_sheet?.let { dbs->
-                return dbs.parent.asOrNull<ViewGroup>() //coordinator
+                val coordinator = dbs.parent.asOrNull<ViewGroup>() //coordinator CoordinatorLayout
+                return coordinator?.parent.asOrNull() //container FrameLayout
             }
         }
         return null

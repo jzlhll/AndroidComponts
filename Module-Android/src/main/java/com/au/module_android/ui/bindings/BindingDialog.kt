@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.ui.base.AbsNorDialog
+import com.au.module_android.ui.base.AbsDialog
 import com.au.module_android.ui.base.DialogMode
-import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.createViewBinding
 
-open class BindingNorDialog<VB:ViewBinding, D:IBaseDialog>(mode: DialogMode = DialogMode.Center)
-        : AbsNorDialog<D>(mode){
+open class BindingDialog<VB:ViewBinding>(mode: DialogMode = DialogMode.Center)
+        : AbsDialog(mode){
     lateinit var binding:VB
 
     final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

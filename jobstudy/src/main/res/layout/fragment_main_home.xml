@@ -189,6 +189,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:scaleType="center"
             android:layout_width="42dp"
+            android:visibility="gone"
             android:layout_height="42dp"/>
     </RelativeLayout>
 

@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.allan.androidlearning.dialogs.MyBottomDialog
 import com.allan.androidlearning.dialogs.MyCenterDialog
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.widget.FlowLayout
-import com.au.module_androidex.ConfirmCenterDialog
+import com.au.module_androidex.dialog_normal.ConfirmCenterDialog
 import com.google.android.material.button.MaterialButton
 
 /**

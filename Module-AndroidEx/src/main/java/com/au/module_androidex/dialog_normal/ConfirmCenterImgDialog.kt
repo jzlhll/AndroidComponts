@@ -1,13 +1,13 @@
-package com.au.module_androidex
+package com.au.module_androidex.dialog_normal
 
 import android.content.res.ColorStateList
 import androidx.annotation.ColorInt
 import androidx.fragment.app.FragmentManager
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.bindings.BindingNorDialog
+import com.au.module_android.ui.bindings.BindingDialog
 import com.au.module_androidex.databinding.ConfirmCenterImgDialogBinding
 
-open class ConfirmCenterImgDialog : BindingNorDialog<ConfirmCenterImgDialogBinding, ConfirmCenterImgDialog>() {
+open class ConfirmCenterImgDialog : BindingDialog<ConfirmCenterImgDialogBinding>() {
     companion object {
         fun show(
             manager: FragmentManager,
@@ -21,24 +21,23 @@ open class ConfirmCenterImgDialog : BindingNorDialog<ConfirmCenterImgDialogBindi
         ): ConfirmCenterImgDialog {
             val dialog = ConfirmCenterImgDialog()
             dialog.onShownBlock = {
-                val d = it
-                d.binding.icon.setImageResource(imageRes)
+                dialog.binding.icon.setImageResource(imageRes)
                 if (imageTint != null) {
-                    d.binding.icon.imageTintList = ColorStateList.valueOf(imageTint)
+                    dialog.binding.icon.imageTintList = ColorStateList.valueOf(imageTint)
                 }
 
-                d.binding.sureButton.text = sureText
+                dialog.binding.sureButton.text = sureText
                 if (cancelText != null) {
-                    d.binding.cancelButton.text = cancelText
+                    dialog.binding.cancelButton.text = cancelText
                 }
-                d.binding.sureButton.onClick {
-                    sureClick?.invoke(d)
+                dialog.binding.sureButton.onClick {
+                    sureClick?.invoke(dialog)
                 }
 
-                d.binding.titleTv.text = title
-                d.binding.contentTv.text = content
-                d.binding.cancelButton.onClick {
-                    d.dismissAllowingStateLoss()
+                dialog.binding.titleTv.text = title
+                dialog.binding.contentTv.text = content
+                dialog.binding.cancelButton.onClick {
+                    dialog.dismissAllowingStateLoss()
                 }
             }
 

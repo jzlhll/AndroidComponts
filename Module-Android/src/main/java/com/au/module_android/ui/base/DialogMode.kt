@@ -1,20 +1,9 @@
 package com.au.module_android.ui.base
 
 import android.view.Gravity
-import android.view.View
-import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.au.module.android.R
-
-interface IDialog<D:IBaseDialog> : IBottomDialog<D> {
-
-    /**
-     * 尽量早一点调用。在show之前。如果是继承，则放在init{}
-     */
-    var onDialogViewLayoutParamBlock:((contentViewGroup: View, newLp: FrameLayout.LayoutParams)->Unit)?
-}
-
 
 /**
  * @author au
@@ -49,10 +38,10 @@ fun DialogMode.toGravity():Int {
  * @return 找到的dialog
  * @param contentFragment 显示的contentFragment
  */
-fun findDialog(contentFragment: Fragment?): DialogFragment? {
+fun findDialogByContentFragment(contentFragment: Fragment?): DialogFragment? {
     contentFragment ?: return null
     if (contentFragment is DialogFragment) {
         return contentFragment
     }
-    return findDialog(contentFragment.parentFragment)
+    return findDialogByContentFragment(contentFragment.parentFragment)
 }

@@ -24,7 +24,7 @@ import com.au.module_android.utils.transparentStatusBar
  * @date :2023/11/8 10:59
  * @description: 从中间弹出的样式Dialog
  */
-abstract class AbsNorDialog<D:IBaseDialog>(private val mode: DialogMode) : AppCompatDialogFragment(), IDialog<D> {
+abstract class AbsDialog(private val mode: DialogMode) : AppCompatDialogFragment(), IBaseDialog {
     private var dialogView: View? = null
 
     override var rootView: View? = null
@@ -49,17 +49,17 @@ abstract class AbsNorDialog<D:IBaseDialog>(private val mode: DialogMode) : AppCo
     /**
      * 尽量早一点调用。在show之前。如果是继承，则放在init{}
      */
-    override var onDismissBlock:((D)->Unit)? = null
+    override var onDismissBlock:(()->Unit)? = null
 
     /**
      * 尽量早一点调用。在show之前。如果是继承，则放在init{}
      */
-    override var onShownBlock:((D)->Unit)? = null
+    override var onShownBlock:(()->Unit)? = null
 
     /**
      * 尽量早一点调用。在show之前。如果是继承，则放在init{}
      */
-    override var onDialogViewLayoutParamBlock:((contentViewGroup:View, newLp: FrameLayout.LayoutParams)->Unit)? = null
+    var onDialogViewLayoutParamBlock: ((contentViewGroup: View, newLp: FrameLayout.LayoutParams) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState).also {
@@ -67,7 +67,7 @@ abstract class AbsNorDialog<D:IBaseDialog>(private val mode: DialogMode) : AppCo
         }
 
         dialog.setOnShowListener {
-            onShownBlock?.invoke(this as D)
+            onShownBlock?.invoke()
             onShownBlock = null
         }
         createdDialog = dialog
@@ -75,7 +75,7 @@ abstract class AbsNorDialog<D:IBaseDialog>(private val mode: DialogMode) : AppCo
     }
 
     override fun dismiss() {
-        onDismissBlock?.invoke(this as D)
+        onDismissBlock?.invoke()
         onDismissBlock = null
         super.dismiss()
     }
@@ -87,7 +87,7 @@ abstract class AbsNorDialog<D:IBaseDialog>(private val mode: DialogMode) : AppCo
 //    }
 
     override fun dismissAllowingStateLoss() {
-        onDismissBlock?.invoke(this as D)
+        onDismissBlock?.invoke()
         onDismissBlock = null
         super.dismissAllowingStateLoss()
     }

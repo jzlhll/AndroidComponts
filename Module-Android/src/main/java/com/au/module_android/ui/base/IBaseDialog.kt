@@ -26,4 +26,13 @@ interface IBaseDialog {
                        container: ViewGroup? = null,
                        savedInstanceState: Bundle? = null) : View
 
+    /**
+     * 尽量早一点调用。在show之前。如果是继承，则放在init{}
+     */
+    var onDismissBlock:(()->Unit)?
+
+    /**
+     * 尽量早一点调用。在show之前。如果是继承，则放在init{}
+     */
+    var onShownBlock:(()->Unit)?
 }
