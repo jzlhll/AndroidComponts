@@ -1,6 +1,9 @@
 package com.allan.androidlearning.activities
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentDatastoreBinding
 import com.au.module_android.click.onClick
@@ -16,7 +19,10 @@ import kotlinx.coroutines.launch
  * @description:
  */
 class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentDatastoreBinding) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val viewBinding = binding
         viewBinding.clearBtn.onClick {
             lifecycleScope.launch(Dispatchers.Default) {
                 ALog.t("clear....")

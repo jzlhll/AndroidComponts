@@ -7,15 +7,10 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.core.app.ActivityOptionsCompat
-import com.au.module_android.permissions.IResult
 
-interface IActivityResult : IResult<ActivityResult> {
-    @Deprecated("ActivityResult please use start(intent, options)",
-        ReplaceWith("throw IllegalAccessException(\"ActivityResult please use start(intent, options)\")")
-    )
-    override fun start(option: ActivityOptionsCompat?) {
-        throw IllegalAccessException("ActivityResult please use start(intent, options)")
-    }
+interface IActivityResult {
+    fun setOnResultCallback(callback:(ActivityResultCallback<ActivityResult>))
+    fun getOnResultCallback() : (ActivityResultCallback<ActivityResult>)
 
     fun start(intent: Intent, option: ActivityOptionsCompat?)
 

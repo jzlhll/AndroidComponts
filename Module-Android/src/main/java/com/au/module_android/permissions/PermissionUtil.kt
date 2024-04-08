@@ -7,71 +7,78 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
+import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.permissions.activity.IActivityResult
 import com.au.module_android.permissions.other.TakePictureForResult
 import com.au.module_android.permissions.other.TakePicturePreviewForResult
-import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.permissions.permission.IMultiPermissionsResult
+import com.au.module_android.permissions.permission.IOnePermissionResult
+import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.permissions.permission.PermissionForResult
 import com.au.module_android.permissions.permission.PermissionsForResult
+import com.au.module_android.utils.asOrNull
 
 const val REQUEST_OVERLAY_CODE: Int = 1001
 
 /**
  * 多权限的申请
  */
-fun createMultiPermissionForResult(permissions:Array<String>,
+fun LifecycleOwner.createMultiPermissionForResult(permissions:Array<String>,
     onResultCallback:((Map<String, @JvmSuppressWildcards Boolean>) -> Unit)? = null)
         : IMultiPermissionsResult
-    = PermissionsForResult(permissions) { onResultCallback?.invoke(it) }
+    = PermissionsForResult(this, permissions) { onResultCallback?.invoke(it) }
 
 /**
  * 单权限的申请
  */
-fun createPermissionForResult(permission:String, onResultCallback:((Boolean)->Unit)? = null) : IPermissionResult
-        = PermissionForResult(permission) { onResultCallback?.invoke(it) }
+fun LifecycleOwner.createPermissionForResult(permission:String, onResultCallback:((Boolean)->Unit)? = null) : IOnePermissionResult
+        = PermissionForResult(this, permission) { onResultCallback?.invoke(it) }
 
 /**
  * activity 跳转，返回拿结果。
  */
-fun createActivityForResult(
+fun LifecycleOwner.createActivityForResult(
     onResultCallback : ((ActivityResult)->Unit)? = null) : IActivityResult
-        = ActivityForResult(onResultCallback ?: {})
-
-fun createActivityJumpToAppDetail(
-    onResultCallback : ((ActivityResult)->Unit)? = null) : IActivityResult
-    = ActivityForResult(onResultCallback ?: {})
+        = ActivityForResult(this, onResultCallback ?: {})
 
 /**
  * activity 跳转，返回拿结果。
  * @param uri 请使用AndroidUtils的方法来实现.getPictureFileUri.
  */
-fun createTakePictureForResult(uri:Uri, onResultCallback:((Boolean)->Unit)? = null) : IResult<Boolean>
-        = TakePictureForResult(uri) {onResultCallback?.invoke(it)}
+fun LifecycleOwner.createTakePictureForResult(uri:Uri, onResultCallback:((Boolean)->Unit)? = null) : IPermissionResult<Boolean>
+        = TakePictureForResult(this, uri) {onResultCallback?.invoke(it)}
 
 /**
  * activity 跳转，返回拿结果。
  */
-fun createTakeBitmapForResult(onResultCallback:((Bitmap?)->Unit)? = null) : IResult<Bitmap?>
-        = TakePicturePreviewForResult {onResultCallback?.invoke(it)}
+fun LifecycleOwner.createTakeBitmapForResult(onResultCallback:((Bitmap?)->Unit)? = null) : IPermissionResult<Bitmap?>
+        = TakePicturePreviewForResult(this) {onResultCallback?.invoke(it)}
 
 /**
  * 请求弹窗权限。
  */
-fun LifecycleOwner.requestFloatWindowPermission(context: AppCompatActivity) {
+fun LifecycleOwner.requestFloatWindowPermission() {
     val version = true //Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-    if (version && !Settings.canDrawOverlays(context)) {
+    val activity = when (this) {
+        is Fragment -> requireActivity()
+        is AppCompatActivity -> this
+        else -> {
+            throw IllegalArgumentException("requestFloatWindowPermission error call.")
+        }
+    }
+    if (version && !Settings.canDrawOverlays(activity)) {
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:" + context.packageName))
-        ActivityCompat.startActivityForResult(context, intent, REQUEST_OVERLAY_CODE, null)
+            Uri.parse("package:" + activity.packageName))
+        ActivityCompat.startActivityForResult(activity, intent, REQUEST_OVERLAY_CODE, null)
     }
 }
 
@@ -92,3 +99,5 @@ fun checkPermission(vararg permissions:String) : Array<String> {
 fun canShowPermissionDialog(activity:Activity, permission:String) : Boolean{
     return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
 }
+
+fun viewToActivity(view: View) = view.context.asOrNull<AppCompatActivity>()

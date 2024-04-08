@@ -25,7 +25,8 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
             DialogsFragment::class.java,)
     }
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: ActivityEntroBinding) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setSupportActionBar(findViewById(R.id.toolbar))
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)
@@ -33,8 +34,8 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
             btn.onClick {
                 FragmentRootActivity.start(this, fragmentClass)
             }
-            viewBinding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
-        viewBinding.buttonsHost
+        binding.buttonsHost
     }
 }

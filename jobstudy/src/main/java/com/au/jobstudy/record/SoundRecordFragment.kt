@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.view.View
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
 import com.au.jobstudy.databinding.PartialSoundRecordBinding
@@ -58,9 +59,8 @@ class SoundRecordFragment : BindingFragment<PartialSoundRecordBinding>() {
         }
     }
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: PartialSoundRecordBinding) {
-
-        viewBinding.recordBtn.onClick {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.recordBtn.onClick {
             if (mediaRecord == null) {
                 mFile = createExternalFileName(Dayer().currentDay,
                     ("audio_" + WeekDateUtil.currentHHmmssSSS() + ".amr"))
@@ -81,7 +81,7 @@ class SoundRecordFragment : BindingFragment<PartialSoundRecordBinding>() {
             }
         }
 
-        viewBinding.stopBtn.onClick {
+        binding.stopBtn.onClick {
             if (mediaRecord?.isRecording == true) {
                 mediaRecord!!.stop()
             }

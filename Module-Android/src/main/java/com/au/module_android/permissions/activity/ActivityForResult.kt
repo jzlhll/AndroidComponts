@@ -18,8 +18,13 @@ import java.lang.IllegalArgumentException
 /**
  * 当初始化完成这个对象后，请在onCreate里面调用 函数（onCreate）即可
  */
-internal class ActivityForResult(private var resultCallback:(ActivityResultCallback<ActivityResult>)? = null)
+internal class ActivityForResult(ctx:Any,
+                                 private var resultCallback:(ActivityResultCallback<ActivityResult>)? = null)
         :  DefaultLifecycleObserver, IActivityResult {
+    init {
+        initAtOnCreate(ctx)
+    }
+
     private var launcher: ActivityResultLauncher<Intent>? = null
     private val resultContract: ActivityResultContract<Intent, ActivityResult> = ActivityResultContracts.StartActivityForResult()
     private val resultCallbackWrap = ActivityResultCallback<ActivityResult> {
@@ -34,7 +39,7 @@ internal class ActivityForResult(private var resultCallback:(ActivityResultCallb
         return resultCallbackWrap
     }
 
-    override fun initAtOnCreate(context: Any) {
+    private fun initAtOnCreate(context: Any) {
         if (context is Fragment) {
             context.lifecycle.addObserver(this)
             launcher = context.registerForActivityResult(resultContract, getOnResultCallback())

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.base.AbsActivity
+import com.au.module_android.ui.base.IUi
 import com.au.module_android.ui.createViewBinding
 
 /**
@@ -15,7 +15,7 @@ import com.au.module_android.ui.createViewBinding
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BindingActivity<VB: ViewBinding> : AbsActivity(), IUiViewBinding<VB> {
+abstract class BindingActivity<VB: ViewBinding> : AbsActivity(), IUi {
     lateinit var binding:VB
 
     @CallSuper
@@ -23,7 +23,6 @@ abstract class BindingActivity<VB: ViewBinding> : AbsActivity(), IUiViewBinding<
         super.onCreate(savedInstanceState)
         val v = onCreatingView(layoutInflater, null, savedInstanceState)
         setContentView(v)
-        afterViewCreated(savedInstanceState, binding)
     }
 
     final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

@@ -2,6 +2,7 @@ package com.au.jobstudy
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -33,11 +34,11 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
         return result
     }
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentMainMineBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val appName = getString(R.string.app_name)
         val system = AndroidSdkMapping().currentVersionStr
         val name = "$appName${BuildConfig.VERSION_NAME} - versionCode:${BuildConfig.VERSION_CODE}\n$system"
-        viewBinding.logoText.text = name
+        binding.logoText.text = name
 
         ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView) { _, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -57,7 +58,7 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
                     append("\nappDensityDpi ${appRes.densityDpi} activity ${activityRes.densityDpi}")
                     append("\n$adapter")
                 }
-                viewBinding.logoText.text = sb
+                binding.logoText.text = sb
             }
 
             insets

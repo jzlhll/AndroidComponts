@@ -2,6 +2,7 @@ package com.au.jobstudy
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.decoration.PaddingItemDecoration
@@ -32,7 +33,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private val itemClick : (HomeRcvItemBean)->Unit = { itemBean->
     }
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentMainHomeBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.root.refresher.apply {
             initEarlyAsFake(binding.root)
         }

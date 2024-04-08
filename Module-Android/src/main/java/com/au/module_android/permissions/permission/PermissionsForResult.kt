@@ -8,17 +8,34 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.utils.asOrNull
 import java.lang.IllegalArgumentException
 
-internal class PermissionForResult(private val permission: String,
+internal class PermissionForResult(cxt:LifecycleOwner,
+                                   private val permission: String,
                                    private var onResultCallback: ActivityResultCallback<Boolean>?= null) :
-    DefaultLifecycleObserver,
-    IPermissionResult {
+            IOnePermissionResult {
+
     private val resultContract: ActivityResultContract<String, Boolean> = ActivityResultContracts.RequestPermission()
     private var launcher: ActivityResultLauncher<String>? = null
+    init {
+        if (cxt is Fragment) {
+            cxt.lifecycle.addObserver(this)
+            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (cxt is AppCompatActivity) {
+            cxt.lifecycle.addObserver(this)
+            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (cxt is View) {
+            val activity = cxt.context.asOrNull<AppCompatActivity>()
+            if (activity != null) {
+                activity.lifecycle.addObserver(this)
+                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
+            } else {
+                throw IllegalArgumentException("init at onCreate $cxt is not illegal.")
+            }
+        }
+    }
     override fun permission() = permission
     override fun setOnResultCallback(callback: ActivityResultCallback<Boolean>) {
         onResultCallback = callback
@@ -26,24 +43,6 @@ internal class PermissionForResult(private val permission: String,
 
     override fun getOnResultCallback(): ActivityResultCallback<Boolean> {
         return onResultCallback ?: ActivityResultCallback {  }
-    }
-
-    override fun initAtOnCreate(context: Any) {
-        if (context is Fragment) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is AppCompatActivity) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is View) {
-            val activity = context.context.asOrNull<AppCompatActivity>()
-            if (activity != null) {
-                activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
-            } else {
-                throw IllegalArgumentException("init at onCreate $context is not illegal.")
-            }
-        }
     }
 
     override fun start(option: ActivityOptionsCompat?) {
@@ -57,10 +56,32 @@ internal class PermissionForResult(private val permission: String,
     }
 }
 
-internal class PermissionsForResult(private val permissions: Array<String>,
+internal class PermissionsForResult(cxt:Any,
+                                    private val permissions: Array<String>,
                                     private var onResultCallback: ActivityResultCallback<Map<String, Boolean>>?=null)
-    : DefaultLifecycleObserver,
-            IMultiPermissionsResult {
+        : IMultiPermissionsResult {
+
+    private var launcher: ActivityResultLauncher<Array<String>>? = null
+
+    private val resultContract = ActivityResultContracts.RequestMultiplePermissions()
+
+    init {
+        if (cxt is Fragment) {
+            cxt.lifecycle.addObserver(this)
+            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (cxt is AppCompatActivity) {
+            cxt.lifecycle.addObserver(this)
+            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (cxt is View) {
+            val activity = cxt.context.asOrNull<AppCompatActivity>()
+            if (activity != null) {
+                activity.lifecycle.addObserver(this)
+                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
+            } else {
+                throw IllegalArgumentException("init at onCreate $cxt is not illegal.")
+            }
+        }
+    }
 
     override fun permissions() = permissions
     override fun setOnResultCallback(callback: ActivityResultCallback<Map<String, Boolean>>) {
@@ -71,27 +92,6 @@ internal class PermissionsForResult(private val permissions: Array<String>,
         return onResultCallback ?: ActivityResultCallback {  }
     }
 
-    private var launcher: ActivityResultLauncher<Array<String>>? = null
-
-    private val resultContract = ActivityResultContracts.RequestMultiplePermissions()
-
-    override fun initAtOnCreate(context: Any) {
-        if (context is Fragment) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is AppCompatActivity) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is View) {
-            val activity = context.context.asOrNull<AppCompatActivity>()
-            if (activity != null) {
-                activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
-            } else {
-                throw IllegalArgumentException("init at onCreate $context is not illegal.")
-            }
-        }
-    }
 
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)

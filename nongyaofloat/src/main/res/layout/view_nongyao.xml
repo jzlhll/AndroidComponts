@@ -7,7 +7,7 @@
     android:maxHeight="900dp"
     android:background="#ee222222"
     android:layout_height="match_parent">
-        <com.au.module_android.text.CustomFontText
+        <com.au.module_android.widget.CustomFontText
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="8dp"
@@ -15,7 +15,7 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
             android:textSize="24sp"
-            android:text="<-"
+            android:text="--"
             android:textColor="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

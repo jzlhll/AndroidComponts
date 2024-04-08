@@ -1,6 +1,7 @@
 package com.allan.androidlearning.activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 class LiveDataFragment : BindingFragment<FragmentLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: FragmentLiveDataBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //liveData 是粘性的。只有有值，一个直接observe进来的监听者立刻得到回调
         viewModel.noStickData.observe(this) {
             logm("noStickLiveData receiver: $it")
@@ -26,10 +27,9 @@ class LiveDataFragment : BindingFragment<FragmentLiveDataBinding>() {
             logm("noStickLive receiver: $it")
         }
 
-        viewBinding.changeBtn.setOnClickListener {
+        binding.changeBtn.setOnClickListener {
             viewModel.changeData()
         }
-
     }
 
 }

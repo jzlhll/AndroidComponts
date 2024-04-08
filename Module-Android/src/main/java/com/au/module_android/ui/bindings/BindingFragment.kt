@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.ui.base.IUiViewBinding
 import com.au.module_android.ui.base.AbsFragment
+import com.au.module_android.ui.base.IUi
 import com.au.module_android.ui.createViewBinding
 
 /**
@@ -14,14 +15,11 @@ import com.au.module_android.ui.createViewBinding
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BindingFragment<VB:ViewBinding> : AbsFragment(), IUiViewBinding<VB> {
+abstract class BindingFragment<VB:ViewBinding> : AbsFragment(), IUi {
     lateinit var binding:VB
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    @CallSuper
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return onCreatingView(layoutInflater, null, savedInstanceState)
     }
 
@@ -29,10 +27,5 @@ abstract class BindingFragment<VB:ViewBinding> : AbsFragment(), IUiViewBinding<V
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root
-    }
-
-    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        afterViewCreated(savedInstanceState, binding)
     }
 }

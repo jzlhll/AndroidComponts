@@ -3,6 +3,7 @@ package com.au.module_android.ui.base
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 
 @Deprecated("基础框架的一环，请使用BindingFragment或者ViewFragment")
@@ -16,6 +17,7 @@ open class AbsFragment : Fragment() {
     /**
      * onViewCreated
      */
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

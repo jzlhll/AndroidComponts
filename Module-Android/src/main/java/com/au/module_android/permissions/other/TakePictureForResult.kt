@@ -8,9 +8,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.au.module_android.permissions.IResult
+import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.utils.asOrNull
 import java.lang.IllegalArgumentException
 
@@ -20,23 +19,16 @@ import java.lang.IllegalArgumentException
  * @description:
  * @param getPictureFileUri 请使用AndroidUtils的方法来实现.getPictureFileUri.
  */
-class TakePictureForResult (private val getPictureFileUri: Uri,
+class TakePictureForResult (context:Any,
+                            private val getPictureFileUri: Uri,
                             private var onResultCallback: ActivityResultCallback<Boolean>? = null)
-        : DefaultLifecycleObserver, IResult<Boolean> {
+        : IPermissionResult<Boolean> {
 
     private var launcher: ActivityResultLauncher<Uri?>? = null
 
     private val resultContract = ActivityResultContracts.TakePicture()
 
-    override fun getOnResultCallback(): ActivityResultCallback<Boolean> {
-        return onResultCallback ?: ActivityResultCallback { }
-    }
-
-    override fun setOnResultCallback(callback: ActivityResultCallback<Boolean>) {
-        onResultCallback = callback
-    }
-
-    override fun initAtOnCreate(context: Any) {
+    init {
         if (context is Fragment) {
             context.lifecycle.addObserver(this)
             launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
@@ -52,6 +44,15 @@ class TakePictureForResult (private val getPictureFileUri: Uri,
                 throw IllegalArgumentException("init at onCreate $context is not illegal.")
             }
         }
+
+    }
+
+    override fun getOnResultCallback(): ActivityResultCallback<Boolean> {
+        return onResultCallback ?: ActivityResultCallback { }
+    }
+
+    override fun setOnResultCallback(callback: ActivityResultCallback<Boolean>) {
+        onResultCallback = callback
     }
 
     override fun start(option: ActivityOptionsCompat?) {

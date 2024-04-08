@@ -55,7 +55,8 @@ abstract class NestedRecyclerFragment : ViewFragment() {
         rcv.clipToPadding = false
     }
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, rootView: View) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initRecyclerView(nestedLayout.recyclerView)
         nestedLayout.recyclerView.adapter = adapter
     }

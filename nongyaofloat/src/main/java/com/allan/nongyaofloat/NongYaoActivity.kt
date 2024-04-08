@@ -11,18 +11,18 @@ import com.au.module_android.permissions.requestFloatWindowPermission
 class NongYaoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requestFloatWindowPermission(this) {hasPermission, isDirect->
-            if (hasPermission) {
-                showFloat()
-            } else {
-                if (isDirect) {
-                    Toast.makeText(applicationContext, "请授权悬浮窗权限！", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(applicationContext, "您没有授权权限，不能展示！", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+//
+//        requestFloatWindowPermission(this) {hasPermission, isDirect->
+//            if (hasPermission) {
+//                showFloat()
+//            } else {
+//                if (isDirect) {
+//                    Toast.makeText(applicationContext, "请授权悬浮窗权限！", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    Toast.makeText(applicationContext, "您没有授权权限，不能展示！", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
 
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)

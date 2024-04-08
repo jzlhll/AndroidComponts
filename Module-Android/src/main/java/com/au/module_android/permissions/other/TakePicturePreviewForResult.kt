@@ -10,7 +10,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.au.module_android.permissions.IResult
+import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.utils.asOrNull
 import java.lang.IllegalArgumentException
 
@@ -19,21 +19,14 @@ import java.lang.IllegalArgumentException
  * @date :2023/12/13 11:35
  * @description:
  */
-class TakePicturePreviewForResult (private var onResultCallback: ActivityResultCallback<Bitmap?> ?= null)
-        : DefaultLifecycleObserver, IResult<Bitmap?> {
-
+class TakePicturePreviewForResult (context: Any,
+                                   private var onResultCallback: ActivityResultCallback<Bitmap?> ?= null)
+        : IPermissionResult<Bitmap?> {
     private var launcher: ActivityResultLauncher<Void?>? = null
 
     private val resultContract = ActivityResultContracts.TakePicturePreview()
-    override fun setOnResultCallback(callback: ActivityResultCallback<Bitmap?>) {
-        onResultCallback = callback
-    }
 
-    override fun getOnResultCallback(): ActivityResultCallback<Bitmap?> {
-        return onResultCallback ?: ActivityResultCallback {  }
-    }
-
-    override fun initAtOnCreate(context: Any) {
+    init {
         if (context is Fragment) {
             context.lifecycle.addObserver(this)
             launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
@@ -49,6 +42,14 @@ class TakePicturePreviewForResult (private var onResultCallback: ActivityResultC
                 throw IllegalArgumentException("init at onCreate $context is not illegal.")
             }
         }
+    }
+
+    override fun setOnResultCallback(callback: ActivityResultCallback<Bitmap?>) {
+        onResultCallback = callback
+    }
+
+    override fun getOnResultCallback(): ActivityResultCallback<Bitmap?> {
+        return onResultCallback ?: ActivityResultCallback {  }
     }
 
     override fun start(option: ActivityOptionsCompat?) {

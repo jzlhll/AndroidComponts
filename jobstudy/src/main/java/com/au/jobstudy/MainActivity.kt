@@ -19,6 +19,31 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         transparentStatusBar(this, isBlackStatusBarTextColor = true, isBlackNavigationBarTextColor = true, ::onStatusBar)
+
+        binding.mainViewPager.offscreenPageLimit = 1
+        binding.mainViewPager.simplePagerAdapter(this, pages) { _, fragment ->
+            fragment.getDeclaredConstructor().newInstance()
+        }
+
+        binding.mainViewPager.isUserInputEnabled = false
+
+        binding.mainBottomNavRcv.layoutManager = NoScrollLinearLayoutManager(this).also { it.orientation = RecyclerView.HORIZONTAL }
+        binding.mainBottomNavRcv.adapter = BottomNavAdapter<BottomPageMenuBinding>(bottomNavList, BottomPageMenuBinding::class.java).also { adapter->
+            adapter.bindWithBottomNav(binding.mainViewPager,
+                itemViewChangeFun = { binding, bean->
+                    binding.titleTv.setText(bean.titleRes)
+                    if (bean.isSelected) {
+                        binding.ivLogo.setImageResource(bean.selectIconRes)
+                        binding.titleTv.setTextColor(bean.selectTitleColor)
+                    } else {
+                        binding.ivLogo.setImageResource(bean.iconRes)
+                        binding.titleTv.setTextColor(bean.titleColor)
+                    }
+                },
+                switchBtnAnimObjectApply = {
+                    it.ivLogo
+                })
+        }
     }
 
     private fun onStatusBar(
@@ -48,31 +73,4 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private val pages = listOf(
         MainHomeFragment::class.java, MainFriendsFragment::class.java, MainMineFragment::class.java
     )
-
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: ActivityMainBinding) {
-        viewBinding.mainViewPager.offscreenPageLimit = 1
-        viewBinding.mainViewPager.simplePagerAdapter(this, pages) { _, fragment ->
-            fragment.getDeclaredConstructor().newInstance()
-        }
-
-        viewBinding.mainViewPager.isUserInputEnabled = false
-
-        viewBinding.mainBottomNavRcv.layoutManager = NoScrollLinearLayoutManager(this).also { it.orientation = RecyclerView.HORIZONTAL }
-        viewBinding.mainBottomNavRcv.adapter = BottomNavAdapter<BottomPageMenuBinding>(bottomNavList, BottomPageMenuBinding::class.java).also { adapter->
-            adapter.bindWithBottomNav(viewBinding.mainViewPager,
-                itemViewChangeFun = { viewBinding, bean->
-                viewBinding.titleTv.setText(bean.titleRes)
-                if (bean.isSelected) {
-                    viewBinding.ivLogo.setImageResource(bean.selectIconRes)
-                    viewBinding.titleTv.setTextColor(bean.selectTitleColor)
-                } else {
-                    viewBinding.ivLogo.setImageResource(bean.iconRes)
-                    viewBinding.titleTv.setTextColor(bean.titleColor)
-                }
-            },
-                switchBtnAnimObjectApply = {
-                it.ivLogo
-            })
-        }
-    }
 }

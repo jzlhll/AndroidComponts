@@ -2,6 +2,7 @@ package com.allan.androidlearning.activities
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.allan.androidlearning.databinding.ActivityJsHtmlBinding
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.click.onClick
@@ -18,7 +19,7 @@ class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1
 
-    override fun afterViewCreated(savedInstanceState: Bundle?, viewBinding: ActivityJsHtmlBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.button.onClick {
             binding.webView.callHandler("registerNative",
                 "jkadfjkfadjkfjk djkfj1290309 ajdfk mkadf12893918 " +

@@ -76,8 +76,8 @@ class FragmentRootActivity : ViewActivity() {
         return v
     }
 
-    @CallSuper
-    override fun afterViewCreated(savedInstanceState: Bundle?, rootView: View) {
-        AndroidBug5497Workaround.assistActivity(this);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidBug5497Workaround.assistActivity(this)
     }
 }
