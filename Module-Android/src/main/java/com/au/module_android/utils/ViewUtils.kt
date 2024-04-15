@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.core.view.forEach
 
 fun View.visible() {
-    visibility = View.VISIBLE
+    if(visibility != View.VISIBLE) visibility = View.VISIBLE
 }
 
 fun View.invisible() {
-    visibility = View.INVISIBLE
+    if(visibility != View.INVISIBLE) visibility = View.INVISIBLE
 }
 
 fun View.gone() {
-    visibility = View.GONE
+    if(visibility != View.GONE) visibility = View.GONE
 }
 
 /**

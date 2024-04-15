@@ -1,10 +1,16 @@
 package com.au.module_android.utils
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.Dialog
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build.VERSION
 import android.os.Looper
+import android.os.Process
+import android.os.SystemClock
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals
@@ -135,4 +141,35 @@ fun String?.keepTwoPoint(roundingMode: RoundingMode = RoundingMode.HALF_EVEN): S
     } catch (e: Throwable) {
         "0.00"
     }
+}
+
+private fun isAppForeground(context: Context) : Boolean {
+    val keyguardManager =
+        context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+    if (keyguardManager.inKeyguardRestrictedInputMode()) {
+        return false // Screen is off or lock screen is showing
+    }
+
+    // Screen is on and unlocked, now check if the process is in the foreground
+    if (!(VERSION.SDK_INT >= 21)) {
+        // Before L the process has IMPORTANCE_FOREGROUND while it executes BroadcastReceivers.
+        // As soon as the service is started the BroadcastReceiver should stop.
+        // UNFORTUNATELY the system might not have had the time to downgrade the process
+        // (this is happening consistently in JellyBean).
+        // With SystemClock.sleep(10) we tell the system to give a little bit more of CPU
+        // to the main thread (this code is executing on a secondary thread) allowing the
+        // BroadcastReceiver to exit the onReceive() method and downgrade the process priority.
+        SystemClock.sleep(10)
+    }
+    val pid = Process.myPid()
+    val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val appProcesses = am.runningAppProcesses
+    if (appProcesses != null) {
+        for (process in appProcesses) {
+            if (process.pid == pid) {
+                return process.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+            }
+        }
+    }
+    return false
 }

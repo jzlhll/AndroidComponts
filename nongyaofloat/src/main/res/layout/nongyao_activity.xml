@@ -10,13 +10,13 @@
     tools:context=".NongYaoActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_message"
+        android:id="@+id/permissionTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         android:layout_marginTop="6dp"
-        android:text="先打开无障碍权限 和 悬浮窗顶层权限\n\n打开悬浮手势，拖动到合适的位置\n开始自动点击"
+        android:text="先打开无障碍权限 和 悬浮窗顶层权限"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,18 @@
         android:text="权限申请 (无障碍和悬浮权限)"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_message" />
+        app:layout_constraintTop_toBottomOf="@id/permissionTv" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/workTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="打开悬浮手势\n拖动到合适的位置\n开始自动点击"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/requestPermissionsBtn" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="40dp"
@@ -52,7 +63,7 @@
         android:layout_marginStart="-40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/requestPermissionsBtn" />
+        app:layout_constraintTop_toBottomOf="@id/workTv" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/showFloatViewBtn"
@@ -121,9 +132,8 @@
             android:text="Auto click test"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textSize="24sp"
-            android:layout_marginBottom="100dp"/>
+            android:layout_height="wrap_content"
+            android:textSize="24sp"/>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

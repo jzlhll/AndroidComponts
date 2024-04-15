@@ -28,7 +28,7 @@ private val dismissToastRunnable = Runnable {
     dismissToast()
 }
 
-private const val DROP_DOWN_TIME = 400L
+private const val DROP_DOWN_TIME = 200L
 
 private var toastIndex = AtomicLong(1)
 

@@ -1,17 +1,9 @@
 package com.allan.nongyaofloat.screen
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.PixelFormat
-import android.hardware.display.DisplayManager
-import android.media.Image
-import android.media.ImageReader
 import android.media.projection.MediaProjection
-import android.util.Log
 import com.au.module_android.service.AutoStopService
-import java.nio.ByteBuffer
 
 class ScreenDetectService : AutoStopService() {
     companion object {

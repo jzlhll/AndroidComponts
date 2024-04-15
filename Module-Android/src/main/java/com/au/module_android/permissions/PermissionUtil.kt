@@ -63,9 +63,24 @@ fun LifecycleOwner.createTakeBitmapForResult(onResultCallback:((Bitmap?)->Unit)?
         = TakePicturePreviewForResult(this) {onResultCallback?.invoke(it)}
 
 /**
+ * 跳转到辅助服务
+ */
+fun LifecycleOwner.gotoAccessibilityPermission() {
+    val activity = when (this) {
+        is Fragment -> requireActivity()
+        is AppCompatActivity -> this
+        else -> {
+            throw IllegalArgumentException("gotoAccessibilityPermission error call.")
+        }
+    }
+    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+    activity.startActivity(intent)
+}
+
+/**
  * 请求弹窗权限。
  */
-fun LifecycleOwner.requestFloatWindowPermission() {
+fun LifecycleOwner.gotoFloatWindowPermission() {
     val version = true //Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     val activity = when (this) {
         is Fragment -> requireActivity()
@@ -80,6 +95,20 @@ fun LifecycleOwner.requestFloatWindowPermission() {
             Uri.parse("package:" + activity.packageName))
         ActivityCompat.startActivityForResult(activity, intent, REQUEST_OVERLAY_CODE, null)
     }
+}
+
+/**
+ * 请求弹窗权限。
+ */
+fun LifecycleOwner.hasFloatWindowPermission() : Boolean{
+    val activity = when (this) {
+        is Fragment -> requireActivity()
+        is AppCompatActivity -> this
+        else -> {
+            throw IllegalArgumentException("requestFloatWindowPermission error call.")
+        }
+    }
+    return Settings.canDrawOverlays(activity)
 }
 
 fun hasPermission(vararg permissions:String) : Boolean {
