@@ -86,6 +86,13 @@ public abstract class AutoStopService extends Service {
         }
     }
 
+    protected final void stopWrapSelf() {
+        synchronized (mStartIds) {
+            mStartIds.clear();
+            stopSelf();
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

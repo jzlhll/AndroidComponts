@@ -22,20 +22,27 @@ internal class PermissionForResult(cxt:LifecycleOwner,
     init {
         if (cxt is Fragment) {
             cxt.lifecycle.addObserver(this)
-            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (cxt is AppCompatActivity) {
             cxt.lifecycle.addObserver(this)
-            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (cxt is View) {
             val activity = cxt.context.asOrNull<AppCompatActivity>()
             if (activity != null) {
                 activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
             } else {
                 throw IllegalArgumentException("init at onCreate $cxt is not illegal.")
             }
         }
     }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        if (owner is Fragment) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (owner is AppCompatActivity) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+        }
+    }
+
     override fun permission() = permission
     override fun setOnResultCallback(callback: ActivityResultCallback<Boolean>) {
         onResultCallback = callback
@@ -68,18 +75,24 @@ internal class PermissionsForResult(cxt:Any,
     init {
         if (cxt is Fragment) {
             cxt.lifecycle.addObserver(this)
-            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (cxt is AppCompatActivity) {
             cxt.lifecycle.addObserver(this)
-            launcher = cxt.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (cxt is View) {
             val activity = cxt.context.asOrNull<AppCompatActivity>()
             if (activity != null) {
                 activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
             } else {
                 throw IllegalArgumentException("init at onCreate $cxt is not illegal.")
             }
+        }
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        if (owner is Fragment) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (owner is AppCompatActivity) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
         }
     }
 

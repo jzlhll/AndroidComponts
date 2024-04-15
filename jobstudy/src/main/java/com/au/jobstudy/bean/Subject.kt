@@ -3,6 +3,7 @@ package com.au.jobstudy.bean
 import com.au.jobstudy.R
 import com.au.jobstudy.bean.DataItem.MediaItem
 import com.au.module_android.utils.unsafeLazy
+import java.lang.Integer.max
 
 fun fillDataItemMode(dataItem: DataItem, mode:CheckupDescMode) {
     dataItem.desc = mode.desc
@@ -51,7 +52,7 @@ sealed class Subject(val name:String, val randomStart:Int, val randomEnd:Int, va
         actions = arrayOf(
         CheckupDescMode("做1页黄冈卷，并自己用红笔批改，再让爸爸妈妈检查。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
         CheckupDescMode("做2页黄冈卷，交给爸爸妈妈再批改。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
-        CheckupDescMode("找做错的知训或者试卷，3题，在草稿本画图解答或找爸爸妈妈再解释一次。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
+        CheckupDescMode("找做错的知训或试卷，2题，在草稿本画图解答。不懂的，找爸爸妈妈举一反三。", arrayOf(CheckupMode(MediaItem.TYPE_PIC, 2, 4))),
     ))
 
     object Science : Subject("科学", 22, 23,
@@ -66,6 +67,14 @@ private val allSubjects by unsafeLazy {
     listOf(Subject.Chinese, Subject.English, Subject.Maths, Subject.Science, Subject.SelfRead)
 }
 
+private val maxRandoms by unsafeLazy {
+    var max = -1
+    allSubjects.forEach {
+        max = max(it.randomEnd, max)
+    }
+    max + 1
+}
+
 fun nameToSubject(name:String) : Subject {
     for (subj in allSubjects) {
         if (subj.name == name) {
@@ -76,7 +85,7 @@ fun nameToSubject(name:String) : Subject {
 }
 
 fun randomGetSubject() : Subject {
-    val random = (Math.random() * 24).toInt() //todo 最大值 + 1
+    val random = (Math.random() * maxRandoms).toInt()
     for (subj in allSubjects) {
         if (random>=subj.randomStart && random <= subj.randomEnd) {
             return subj

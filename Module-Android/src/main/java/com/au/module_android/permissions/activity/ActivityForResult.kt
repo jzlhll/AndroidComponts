@@ -18,11 +18,22 @@ import java.lang.IllegalArgumentException
 /**
  * 当初始化完成这个对象后，请在onCreate里面调用 函数（onCreate）即可
  */
-internal class ActivityForResult(ctx:Any,
+internal class ActivityForResult(context:Any,
                                  private var resultCallback:(ActivityResultCallback<ActivityResult>)? = null)
         :  DefaultLifecycleObserver, IActivityResult {
     init {
-        initAtOnCreate(ctx)
+        if (context is Fragment) {
+            context.lifecycle.addObserver(this)
+        } else if (context is AppCompatActivity) {
+            context.lifecycle.addObserver(this)
+        } else if (context is View) {
+            val activity = context.context.asOrNull<AppCompatActivity>()
+            if (activity != null) {
+                activity.lifecycle.addObserver(this)
+            } else {
+                throw IllegalArgumentException("init at onCreate $context is not illegal.")
+            }
+        }
     }
 
     private var launcher: ActivityResultLauncher<Intent>? = null
@@ -39,21 +50,13 @@ internal class ActivityForResult(ctx:Any,
         return resultCallbackWrap
     }
 
-    private fun initAtOnCreate(context: Any) {
-        if (context is Fragment) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is AppCompatActivity) {
-            context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
-        } else if (context is View) {
-            val activity = context.context.asOrNull<AppCompatActivity>()
-            if (activity != null) {
-                activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
-            } else {
-                throw IllegalArgumentException("init at onCreate $context is not illegal.")
-            }
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        if (owner is Fragment) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (owner is AppCompatActivity) {
+            owner.lifecycle.addObserver(this)
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
         }
     }
 

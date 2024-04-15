@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.utils.asOrNull
@@ -29,18 +28,24 @@ class TakePicturePreviewForResult (context: Any,
     init {
         if (context is Fragment) {
             context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (context is AppCompatActivity) {
             context.lifecycle.addObserver(this)
-            launcher = context.registerForActivityResult(resultContract, getOnResultCallback())
         } else if (context is View) {
             val activity = context.context.asOrNull<AppCompatActivity>()
             if (activity != null) {
                 activity.lifecycle.addObserver(this)
-                launcher = activity.registerForActivityResult(resultContract, getOnResultCallback())
             } else {
                 throw IllegalArgumentException("init at onCreate $context is not illegal.")
             }
+        }
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        if (owner is Fragment) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+        } else if (owner is AppCompatActivity) {
+            launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
         }
     }
 

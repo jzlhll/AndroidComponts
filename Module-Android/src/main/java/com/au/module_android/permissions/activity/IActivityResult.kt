@@ -12,7 +12,7 @@ interface IActivityResult {
     fun setOnResultCallback(callback:(ActivityResultCallback<ActivityResult>))
     fun getOnResultCallback() : (ActivityResultCallback<ActivityResult>)
 
-    fun start(intent: Intent, option: ActivityOptionsCompat?)
+    fun start(intent: Intent, option: ActivityOptionsCompat? = null)
 
     fun jumpToAppDetail(appContext: Context, callback:(ActivityResult)->Unit) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
