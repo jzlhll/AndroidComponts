@@ -17,7 +17,7 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/left_tv"
-        style="@style/StyleNormalText"
+        style="@style/StyleFontText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -31,7 +31,7 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/right_tv"
-        style="@style/StyleNormalText"
+        style="@style/StyleFontText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#121212"

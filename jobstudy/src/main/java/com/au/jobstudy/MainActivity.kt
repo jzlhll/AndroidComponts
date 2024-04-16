@@ -1,5 +1,6 @@
 package com.au.jobstudy
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -55,7 +56,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         return insets
     }
 
-    private val colorTextGray by unsafeLazy { app.getColor(com.au.module_androidex.R.color.color_999999) }
+    private val colorTextGray by unsafeLazy { Color.parseColor("#999999") }
     private val colorPrimary by unsafeLazy { app.getColor(R.color.color_primary) }
 
     private val bottomNavList = listOf(

@@ -1,58 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--想要字体有粗，请命名为XXXBTextXXX。或者额外设置textStyle=bold
-        如果想要中粗，则必须命名为XXXMTextXXX 或者额外设置fontSizeMode=mid
-    因为StyleFontUtil中有改。
-    -->
-    <!-- 间隔比较大的文字体。 -->
-    <style name="StyleFontSpaceText">
-        <item name="android:textColor">@color/color_text_normal</item>
-        <item name="android:lineSpacingExtra">4sp</item>
-    </style>
-
-    <!-- 大标题的样式。字体大小不做限定；自行设置；主要约束了行间距和颜色。 -->
-    <style name="StyleTitleBText">
-        <item name="android:textColor">@color/color_text_normal</item>
-        <item name="android:lineSpacingExtra">4sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/text_20sp</item>
-    </style>
-
-    <!-- 一般的字体 -->
-    <style name="StyleFontText">
-        <item name="android:textColor">@color/color_text_normal</item>
-        <item name="android:lineSpacingMultiplier">1.05</item>
-    </style>
-
-    <!--显示成为中粗-->
-    <style name="StyleFontMText" parent="StyleFontText"/>
-
-    <!--显示成为粗-->
-    <style name="StyleFontBText" parent="StyleFontText"/>
-
-    <!-- minText 15sp 和 smallText 12sp默认灰色 -->
-    <style name="StyleMinText">
-        <item name="android:lineSpacingMultiplier">1.05</item>
-        <item name="android:textSize">@dimen/text_15sp</item>
-        <item name="android:textColor">@color/color_normal_text</item>
-    </style>
-
-    <style name="StyleSmallText">
-        <item name="android:textSize">@dimen/text_13sp</item>
-        <item name="android:lineSpacingMultiplier">1.02</item>
-        <item name="android:textColor">@color/color_999999</item>
-    </style>
-
-    <!-- 假装为输入框的Text样式 -->
-    <style name="StyleFakeEditText" parent="StyleFontText">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">#F7F7F7</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <!-- 》》》》》》》》分割线《《《《《《《《《《《《《《《《《《《 -->
-
     <!--输入框的外部InputLayout的样式：配套的外部壳样式 必须先处理一次基础继承；
         ColorStateList cursorColor =
         MaterialColors.getColorStateListOrNull(getContext(), R.attr.colorControlActivated);
@@ -84,7 +31,7 @@
     <!--输入框的外部InputLayout的样式: 配套的内部EditText样式-->
     <style name="StyleEditInInputLayout">
 <!--        <item name="boxBackgroundColor">@color/input_background_color</item>-->
-        <item name="android:textSize">@dimen/text_15sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingMultiplier">1.05</item>
         <item name="android:textColorHint">#cccccc</item>
         <item name="android:textColor">@color/color_text_normal</item>
@@ -94,7 +41,7 @@
     <!-- 单纯一个输入框，空白边框样式-->
     <style name="StyleBlankEditText">
         <item name="android:lineSpacingExtra">4sp</item>
-        <item name="android:textSize">@dimen/text_15sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColorHint">#cccccc</item>
         <item name="android:background">@drawable/corner_blank_board_e6_bg</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor</item>
@@ -116,8 +63,8 @@
         <item name="android:textStyle">normal</item>
         <item name="android:lines">1</item>
         <item name="android:gravity">center</item>
-        <item name="autoSizeMaxTextSize">@dimen/text_20sp</item>
-        <item name="autoSizeMinTextSize">@dimen/text_9sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">11sp</item>
 
         <item name="fontMode">mid</item>
     </style>
@@ -144,8 +91,8 @@
         <item name="android:textStyle">normal</item>
         <item name="android:lines">1</item>
         <item name="android:gravity">center</item>
-        <item name="autoSizeMaxTextSize">@dimen/text_20sp</item>
-        <item name="autoSizeMinTextSize">@dimen/text_9sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">11sp</item>
 
         <item name="fontMode">mid</item>
     </style>
@@ -162,7 +109,7 @@
         <item name="tabPaddingEnd">8dp</item>
         <item name="tabMinWidth">8dp</item>
         <item name="tabMode">fixed</item>
-        <item name="tabTextAppearance">@style/StyleTabText</item>
+        <item name="tabTextAppearance">@style/StyleFontText</item>
         <item name="tabTextColor">@color/color_gray_tab</item>
         <item name="tabSelectedTextColor">@color/color_primary</item>
         <item name="android:backgroundTint">@android:color/transparent</item>
@@ -174,8 +121,8 @@
 
     <style name="StyleTabLayoutNormally">
         <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabTextAppearance">@style/StyleTabText</item>
-        <item name="tabTextColor">@color/color_999999</item>
+        <item name="tabTextAppearance">@style/StyleFontText</item>
+        <item name="tabTextColor">#999999</item>
         <item name="tabSelectedTextColor">@color/color_text_normal</item>
 <!--        <item name="android:backgroundTint">@android:color/white</item>-->
         <item name="android:overScrollMode">never</item>
@@ -199,11 +146,6 @@
         <item name="tabMode">auto</item>
         <item name="tabPaddingStart">4dp</item>
         <item name="tabPaddingEnd">4dp</item>
-    </style>
-
-    <style name="StyleTabText" parent="StyleFontText">
-        <item name="android:textSize">@dimen/text_16sp</item>
-        <!--        <item name="android:textStyle">bold</item>-->
     </style>
 
     <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->

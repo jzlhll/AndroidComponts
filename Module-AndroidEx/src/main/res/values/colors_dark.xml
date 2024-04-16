@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--主标题色-->
-    <color name="color_black_111">#111111</color>
+    <color name="color_background_app_dark">#111111</color>
     <!-- button 主题色 -->
     <color name="color_text_normal_dark">#ffffff</color>
     <color name="color_text_normal_dark_press">#C3C3C3</color>

@@ -5,4 +5,4 @@ package com.au.module_android.widget
  * mid 中粗
  * bold 粗
  */
-data class TextViewCheckMode(var fontSizeMode: FontMode, var isNumber: Boolean)
+data class TextViewCheckMode(var fontMode: FontMode, var isNumber: Boolean)

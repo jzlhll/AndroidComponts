@@ -15,11 +15,11 @@ open class CustomWrapEnFontText : MaterialTextView {
 
     var fontMode: FontMode
         get() {
-            return mode.fontSizeMode
+            return mode.fontMode
         }
         set(value) {
-            mode.fontSizeMode = value
-            setFontFromAsset(context, mode.fontSizeMode, mode.isNumber)
+            mode.fontMode = value
+            setFontFromAsset(context, mode.fontMode, mode.isNumber)
             invalidate()
         }
 
@@ -29,7 +29,7 @@ open class CustomWrapEnFontText : MaterialTextView {
         }
         set(value) {
             mode.isNumber = value
-            setFontFromAsset(context, mode.fontSizeMode, mode.isNumber)
+            setFontFromAsset(context, mode.fontMode, mode.isNumber)
             invalidate()
         }
 

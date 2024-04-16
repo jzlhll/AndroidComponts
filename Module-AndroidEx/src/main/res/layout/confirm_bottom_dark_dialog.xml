@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginStart="24dp"
+        android:padding="16dp"
         android:layout_marginEnd="24dp"
         app:backgroundNormal="@color/color_dark_bg1d1d1f"
         app:cornerRadius="12dp">
@@ -23,24 +24,19 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:maxLines="3"
-            android:textSize="@dimen/text_24sp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             tools:text="fir asdfjk z9 " />
 
         <com.au.module_android.widget.CustomFontText
             android:id="@+id/contentTv"
             style="@style/StyleFontSecondaryTextDark"
-            android:textSize="@dimen/text_16sp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/titleTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:maxLines="3"
             android:gravity="center"
             tools:text="Yourkd 18941 jfifz 1`2894 zmnkzj 12849" />
@@ -48,44 +44,38 @@
         <com.au.module_android.widget.CustomButton
             android:id="@+id/cancelButton"
             style="@style/StyleButtonSecondaryLongDark"
-            android:maxWidth="@dimen/two_btn_single_max_with"
-            android:minWidth="@dimen/two_btn_single_min_with"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:layout_width="wrap_content"
+            app:fontMode="mid"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/cancel"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sureButton"
             app:layout_constraintTop_toBottomOf="@id/contentTv"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="20dp"
-            app:cornerRadius="8dp"
-            android:textSize="16sp"
-            app:strokeWidth="1.5dp"/>
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            app:cornerRadius="6dp"
+            android:textSize="16sp"/>
 
         <com.au.module_android.widget.CustomButton
             android:id="@+id/sureButton"
+            app:fontMode="mid"
             style="@style/StyleButtonPrimaryLongDark"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
             app:layout_constraintTop_toBottomOf="@id/contentTv"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="20dp"
-            android:maxWidth="@dimen/two_btn_single_max_with"
-            android:minWidth="@dimen/two_btn_single_min_with"
-            android:paddingStart="@dimen/two_btn_single_padding"
-            android:paddingEnd="@dimen/two_btn_single_padding"
-            android:layout_width="wrap_content"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             tools:text="delete"
-            app:cornerRadius="8dp"/>
-
-        <View
-            android:id="@+id/bottomView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cancelButton"
-            android:layout_width="1dp"
-            android:layout_height="24dp"/>
+            app:cornerRadius="6dp"/>
     </com.au.module_android.widget.CustConstraintLayout>
 
+    <android.widget.Space
+        android:layout_width="1dp"
+        android:layout_height="8dp"/>
 </LinearLayout>

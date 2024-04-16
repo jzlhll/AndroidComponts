@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="two_btn_single_min_with">136dp</dimen>
-    <dimen name="two_btn_single_max_with">156dp</dimen>
-    <dimen name="two_btn_single_padding">20dp</dimen>
+    <dimen name="two_btn_single_padding">12dp</dimen>
 
-    <dimen name="dark_ui_padding_edge">24dp</dimen>
-    <dimen name="light_ui_padding_edge">20dp</dimen>
-
-    <dimen name="text_24sp">24sp</dimen>
-
-    <dimen name="text_21sp">21sp</dimen>
-    <dimen name="text_20sp">20sp</dimen>
-
-    <dimen name="text_17sp">17sp</dimen>
-    <dimen name="text_16sp">16sp</dimen>
-
-    <dimen name="text_15sp">15sp</dimen>
-    <dimen name="text_14sp">14sp</dimen>
-    <dimen name="text_13p5sp">13.5sp</dimen>
-    <dimen name="text_13sp">13sp</dimen>
-    <dimen name="text_12sp">12sp</dimen>
-
-    <dimen name="text_10sp">10sp</dimen>
-    <dimen name="text_9sp">9.2sp</dimen>
+    <dimen name="dark_ui_padding_edge">21dp</dimen>
+    <dimen name="light_ui_padding_edge">21dp</dimen>
 
     <!-- button的文字大小，高度, 底部边距-->
     <dimen name="btn_font_size">16dp</dimen>

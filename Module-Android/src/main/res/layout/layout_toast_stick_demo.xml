@@ -39,7 +39,7 @@
         android:paddingBottom="8dp"
         android:layout_marginStart="12dp"
         android:id="@+id/text"
-        style="@style/StyleNormalText"
+        style="@style/StyleFontText"
         android:maxLines="3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

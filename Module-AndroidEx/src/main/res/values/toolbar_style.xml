@@ -3,12 +3,12 @@
     <!--定义默认的toolbar样式，以及颜色-->>
     <color name="toolBarBackground">@android:color/white</color>
     <drawable name="toolbarLogo">@drawable/icon_back</drawable>
-    <color name="toolbarLogoTint">@color/color_333333</color>
+    <color name="toolbarLogoTint">#333333</color>
 
     <!--文字外观-->
     <style name="toolbarTitleTextAppearance">
         <item name="android:textColor">@color/toolbarLogoTint</item>
-        <item name="android:textSize">@dimen/text_20sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

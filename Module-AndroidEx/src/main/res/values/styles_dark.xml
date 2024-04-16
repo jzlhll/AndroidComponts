@@ -1,57 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 间隔比较大的文字体。 -->
-    <style name="StyleFontSpaceTextDark">
-        <item name="android:textColor">@color/color_text_normal_dark</item>
-        <item name="android:lineSpacingExtra">4sp</item>
-    </style>
-
-    <!-- 大标题的样式。字体大小不做限定；自行设置；主要约束了行间距和颜色。 -->
-    <style name="StyleTitleBTextDark">
-        <item name="android:textColor">@color/color_text_normal_dark</item>
-        <item name="android:lineSpacingExtra">4sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/text_20sp</item>
-    </style>
-
-    <!-- 一般的字体 -->
-    <style name="StyleFontTextDark">
-        <item name="android:textColor">@color/color_text_normal_dark</item>
-        <item name="android:lineSpacingMultiplier">1.05</item>
-    </style>
-
-    <style name="StyleFontSecondaryTextDark">
-        <item name="android:textColor">@color/color_text_dark_secondary</item>
-        <item name="android:lineSpacingMultiplier">1.05</item>
-    </style>
-
-    <!--显示成为中粗-->
-    <style name="StyleFontMTextDark" parent="StyleFontTextDark"/>
-
-    <!--显示成为粗-->
-    <style name="StyleFontBTextDark" parent="StyleFontTextDark"/>
-
-    <!-- minText 15sp 和 smallText 12sp默认灰色 -->
-    <style name="StyleMinTextDark">
-        <item name="android:lineSpacingMultiplier">1.05</item>
-        <item name="android:textSize">@dimen/text_15sp</item>
-        <item name="android:textColor">@color/color_999999</item>
-    </style>
-
-    <style name="StyleSmallTextDark">
-        <item name="android:textSize">@dimen/text_13sp</item>
-        <item name="android:lineSpacingMultiplier">1.02</item>
-        <item name="android:textColor">@color/color_999999</item>
-    </style>
-
-    <!-- 假装为输入框的Text样式 -->
-    <style name="StyleFakeEditTextDark" parent="StyleFontTextDark">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">#111111</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <!-- 统一样式: 主题色背景，单个且长，左右下边距固定，文字大小颜色固定 -->
     <style name="StyleButtonPrimaryLongDark">
         <item name="android:background">@drawable/dark_corner_btn_primary_long</item>
@@ -66,8 +14,8 @@
         <item name="android:textStyle">normal</item>
         <item name="android:lines">1</item>
         <item name="android:gravity">center</item>
-        <item name="autoSizeMaxTextSize">@dimen/text_20sp</item>
-        <item name="autoSizeMinTextSize">@dimen/text_9sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">11sp</item>
 
         <item name="fontMode">mid</item>
     </style>
@@ -100,7 +48,7 @@
         <item name="android:paddingEnd">0dp</item>
         <item name="cursorColor">@color/color_text_normal_dark</item>
 <!--        <item name="boxBackgroundMode">none</item>-->
-        <item name="boxBackgroundColor">@color/color_black_111</item>
+        <item name="boxBackgroundColor">@color/color_background_app_dark</item>
         <item name="boxStrokeColor">@color/dark_input_board_color</item>
         <item name="endIconTint">@color/dark_input_text_color</item>
         <item name="boxCollapsedPaddingTop">8dp</item>
@@ -116,7 +64,7 @@
     <style name="StyleEditInInputLayoutDark">
         <item name="android:paddingEnd">0dp</item>
         <item name="android:paddingStart">0dp</item>
-        <item name="android:textSize">@dimen/text_20sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingMultiplier">1.05</item>
         <item name="android:textColorHint">#3B3B40</item>
         <item name="android:textColor">@color/color_text_normal_dark</item>
@@ -127,7 +75,7 @@
     <style name="StyleBlankEditTextDark">
         <item name="android:textColor">@color/color_text_normal_dark</item>
         <item name="android:lineSpacingExtra">4sp</item>
-        <item name="android:textSize">@dimen/text_15sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColorHint">#3B3B40</item>
         <item name="android:background">@drawable/corner_blank_board_e6_bg_dark</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor_dark</item>

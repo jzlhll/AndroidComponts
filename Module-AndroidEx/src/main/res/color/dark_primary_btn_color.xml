@@ -3,5 +3,5 @@
     <!-- disabled state -->
     <item android:state_enabled="false" android:color="#353535" />
     <item android:state_pressed="true" android:color="#353535" />
-    <item android:color="@color/color_black_111"/>
+    <item android:color="@color/color_background_app_dark"/>
 </selector>

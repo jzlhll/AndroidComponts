@@ -12,9 +12,9 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
-        <item name="android:colorControlNormal">@color/color_black</item>
-        <item name="android:textColorPrimary">@color/color_black</item>
-        <item name="colorPrimaryVariant">@color/color_333333</item>
+        <item name="android:colorControlNormal">#212121</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="colorPrimaryVariant">#333333</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>

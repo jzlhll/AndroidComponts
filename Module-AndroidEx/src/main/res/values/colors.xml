@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_black">#000000</color>
-    <color name="color_333333">#333333</color>
-    <color name="color_999999">#999999</color>
-    <color name="color_eeeeee">#EEEEEE</color>
-
+    <!--主标题色-->
+    <!-- button 主题色 -->   
     <color name="color_text_normal">#212121</color>
-
-
     <color name="color_primary">#DB4F4F</color>
     <color name="color_primary_press">#E78989</color>
 
