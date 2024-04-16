@@ -21,8 +21,11 @@ object FloatingManager {
     /** 更新自动点击的liveData
      */
     val autoClickLiveData = NoStickLiveData<AutoClickInfo>()
+    private var isInited = false
 
-    init {
+    fun init() {
+        if (isInited) return
+        isInited = true
         autoClickLiveData.observeForeverUnStick {
             it!!
             when (it.action) {
@@ -48,11 +51,11 @@ object FloatingManager {
                 }
             }
         }
+    }
 
-        var currentStep = 1
+    var currentStep = 1
 
-        fun saveCurrentStep() {
+    fun saveCurrentStep() {
 
-        }
     }
 }

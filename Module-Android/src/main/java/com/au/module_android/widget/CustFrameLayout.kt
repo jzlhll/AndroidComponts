@@ -2,17 +2,19 @@ package com.au.module_android.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import com.au.module.android.R
 import com.au.module_android.ui.viewBackgroundBuild
 
 /**
- * @author au
- * @date :2023/11/7 15:37
+ * @author allan
+ * @date :2024/3/12 14:46
  * @description:
  */
-class CustomButton @JvmOverloads constructor(
+class CustFrameLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : CustomFontText(context, attrs) {
+) : FrameLayout(context, attrs) {
     init {
         val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
         viewBackgroundBuild(attr)

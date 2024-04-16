@@ -29,34 +29,38 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
         initListener()
     }
 
-    private var mTouchStartX = 0f
-    private var mTouchStartY = 0f
+    private var dX:Int = 0
+    private var dY:Int = 0
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         mRoot.setOnTouchListener { v, event ->
             //获取相对屏幕的坐标，即以屏幕左上角为原点
-            val x = event.rawX
-            val y = event.rawY
-            Log.i("Floating", "touch x=$x, touch y=$y")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //获取相对View的坐标，即以此View左上角为原点
-                    mTouchStartX = event.x
-                    mTouchStartY = event.y
-                    Log.i("Floating", "startX $mTouchStartX ====startY $mTouchStartY")
+                    dX = event.rawX.toInt()
+                    dY = event.rawY.toInt()
+                    Log.i("Floating", "startX $dX ====startY $dY")
                     mRoot.alpha = 1f
                 }
 
                 MotionEvent.ACTION_MOVE -> {
+                    val nX = event.rawX.toInt()
+                    val nY = event.rawY.toInt()
+                    val cW = nX - dX
+                    val cH = nY - dY
+                    mParams?.let { mP->
+                        mP.x += cW
+                        mP.y += cH
+                    }
+                    Log.i("Floating", "moveX $cW ====moveY $cH")
                     updateViewPosition()
                 }
                 MotionEvent.ACTION_CANCEL,
                 MotionEvent.ACTION_UP -> {
                     updateViewPosition()
-                    touchUpCallback?.invoke((x - mTouchStartX).toInt(), (y - mTouchStartY).toInt())
-                    mTouchStartX = 0f
-                    mTouchStartY = 0f
+                    touchUpCallback?.invoke(mParams?.x ?: 0, mParams?.y ?: 0)
 
                     mRoot.alpha = 0.3f
                 }
@@ -72,8 +76,7 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
     private fun updateViewPosition() {
         //更新浮动窗口位置参数
         mParams?.apply {
-            this.x = (x - mTouchStartX).toInt()
-            this.y = (y - mTouchStartY).toInt()
+            Log.d("allan", "WindowMgr updateView $x $y")
             WindowMgr.updateView(mRoot, this) //刷新显示
         }
     }

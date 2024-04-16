@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.accessibility.AccessibilityManager
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.allan.autoclickfloat.databinding.NongyaoActivityBinding
-import com.allan.autoclickfloat.floats.views.FloatingSettingView
 import com.allan.autoclickfloat.floats.AutoClickService
-import com.allan.autoclickfloat.floats.views.FloatingStepView
-import com.allan.autoclickfloat.floats.views.WindowMgr
+import com.allan.autoclickfloat.floats.FloatingManager
+import com.allan.autoclickfloat.floats.bean.ACTION_SHOW
+import com.allan.autoclickfloat.floats.bean.ACTION_STOP
+import com.allan.autoclickfloat.floats.bean.AutoClickInfo
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.gotoAccessibilityPermission
 import com.au.module_android.permissions.gotoFloatWindowPermission
@@ -53,6 +53,13 @@ class AutoClickActivity : AppCompatActivity() {
         startForegroundService(intent)
     }
 
+    private fun stopAutoClickService() {
+        val intent = Intent(this, AutoClickService::class.java).also {
+            intent.putExtra("action", "stopService")
+        }
+        startForegroundService(intent)
+    }
+
     override fun onResume() {
         super.onResume()
         val acc = isAccessibilityEnabled()
@@ -63,7 +70,6 @@ class AutoClickActivity : AppCompatActivity() {
         } else {
             mBinding.permissionTv.visible()
             mBinding.requestPermissionsBtn.visible()
-
             if (acc) {
                 mBinding.permissionTv.text = floatWindowPermissionLost
             } else if (fw) {
@@ -78,16 +84,18 @@ class AutoClickActivity : AppCompatActivity() {
         mBinding.requestPermissionsBtn.onClick {
             if (!isAccessibilityEnabled()) {
                 gotoAccessibilityPermission()
-            } else if (isFloatWindowEnabled()) {
+            } else if (!isFloatWindowEnabled()) {
                 gotoFloatWindowPermission()
             }
         }
 
         mBinding.showFloatViewBtn.onClick {
-
+            FloatingManager.autoClickLiveData.setValueSafe(AutoClickInfo(ACTION_SHOW))
         }
 
         mBinding.closeFloatViewBtn.onClick {
+            FloatingManager.autoClickLiveData.setValueSafe(AutoClickInfo(ACTION_STOP))
+            stopAutoClickService()
         }
 
         mBinding.startAutoClickBtn.onClick {

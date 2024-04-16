@@ -1,14 +1,17 @@
 package com.allan.autoclickfloat.floats
 
 import android.accessibilityservice.AccessibilityService
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.Observer
+import com.allan.autoclickfloat.AutoClickActivity
 import com.allan.autoclickfloat.floats.bean.ACTION_CLOSE
 import com.allan.autoclickfloat.floats.bean.AutoClickInfo
+import com.au.module_android.Globals
 import com.au.module_android.utils.ForeNotificationUtil
 
 /**
@@ -27,18 +30,27 @@ class AutoClickService : AccessibilityService() {
         super.onCreate()
         ForeNotificationUtil.startForeground(
             this,
-            "Nongyao Auto click channelName",
-            "Nongyao channel desc",
-            "nongyao content title",
-            "nongyao content text"
+            "NongyaoAutoClickChannel",
+            "NonNongyaoAutoClickChannelDesc",
+            "悬浮点击",
+            "正在工作中，点击关闭",
+            pendingIntent = PendingIntent.getActivity(this, 0, Intent(Globals.app, AutoClickActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
         )
 
         broadcastHandler = BroadcastHandler(this).also { it.register() }
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.getStringExtra("action") == "stopService") {
+            stopSelf()
+        }
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         broadcastHandler?.unregister()
+        ForeNotificationUtil.stopForeground(this)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

@@ -12,16 +12,17 @@
         android:layout_height="48dp" />
 
     <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
         android:id="@+id/toolBarRight"
         android:layout_width="wrap_content"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_height="48dp">
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/addMenuBtn"
             android:padding="8dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_add"
             android:layout_width="48dp"
             android:layout_height="48dp"/>
@@ -29,6 +30,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/removeMenuBtn"
             android:padding="8dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_delete"
             android:layout_width="48dp"
             android:layout_height="48dp"/>

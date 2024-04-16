@@ -1,5 +1,6 @@
 package com.allan.autoclickfloat.screen
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjection
@@ -27,6 +28,10 @@ class ScreenDetectService : AutoStopService() {
 
     override fun getNotifyName(): String {
         return "Screen detect"
+    }
+
+    override fun getPendingIntent(): PendingIntent? {
+        return null
     }
 
     override fun onHandleWork(intent: Intent, startIdStr: String) {

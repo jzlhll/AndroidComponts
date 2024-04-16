@@ -1,5 +1,6 @@
 package com.au.module_android.service;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.au.module_android.utils.ForeNotificationUtil;
 
@@ -59,14 +61,17 @@ public abstract class AutoStopService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (isForeground()) ForeNotificationUtil.startForeground(this, getNotifyName(), getNotifyName(), getNotifyName(), "");
+        if (isForeground()) ForeNotificationUtil.startForeground(this, getNotifyName(), getNotifyName(), getNotifyName(), "", getPendingIntent());
     }
+
+    @Nullable
+    abstract protected PendingIntent getPendingIntent();
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "in onDestroy ");
-        if (isForeground()) ForeNotificationUtil.stopForegound(this);
+        if (isForeground()) ForeNotificationUtil.stopForeground(this);
     }
 
     protected final void stopWrap(String startId) {

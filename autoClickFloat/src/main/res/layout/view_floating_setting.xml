@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.au.module_android.widget.CustFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:background="#8fcccccc"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cornerRadius="8dp"
+    app:backgroundNormal="#8fcccccc"
     android:layout_height="wrap_content">
 
     <com.au.module_android.widget.CustomButton
         android:id="@+id/saveBtn"
         style="@style/StyleButtonGrayShort"
+        android:textColor="#ffaa00"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
         android:layout_marginBottom="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
-        android:text="保存"/>
+        android:text="保存方案"/>
 
-</FrameLayout>
+</com.au.module_android.widget.CustFrameLayout>
