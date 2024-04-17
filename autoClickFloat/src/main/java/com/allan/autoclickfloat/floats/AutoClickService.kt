@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.Observer
 import com.allan.autoclickfloat.AutoClickActivity
@@ -41,7 +42,8 @@ class AutoClickService : AccessibilityService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.getStringExtra("action") == "stopService") {
+        if (intent?.getStringExtra("myAction") == "stopService") {
+            Log.d("allan", "on start command stop service")
             stopSelf()
         }
         return super.onStartCommand(intent, flags, startId)

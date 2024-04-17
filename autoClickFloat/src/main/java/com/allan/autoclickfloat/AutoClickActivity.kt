@@ -1,10 +1,9 @@
 package com.allan.autoclickfloat
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.allan.autoclickfloat.databinding.NongyaoActivityBinding
 import com.allan.autoclickfloat.floats.AutoClickService
 import com.allan.autoclickfloat.floats.FloatingManager
@@ -14,10 +13,10 @@ import com.allan.autoclickfloat.floats.bean.AutoClickInfo
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.gotoAccessibilityPermission
 import com.au.module_android.permissions.gotoFloatWindowPermission
-import com.au.module_android.permissions.hasFloatWindowPermission
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.transparentStatusBar
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
 class AutoClickActivity : AppCompatActivity() {
@@ -27,12 +26,49 @@ class AutoClickActivity : AppCompatActivity() {
     private val accessibilityPermissionLost = "先打开无障碍权限"
     private val floatWindowPermissionLost = "先打开悬浮窗顶层权限"
 
-    private fun isAccessibilityEnabled() : Boolean {
-        val accessibilityMgr = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        return accessibilityMgr.isEnabled
-    }
+    private val viewModel by unsafeLazy { ViewModelProvider(this)[AutoClickViewModel::class.java] }
 
-    private fun isFloatWindowEnabled() = hasFloatWindowPermission()
+    private fun initData() {
+        viewModel.allPermissionEnabled.observeUnStick(this) {
+            when (it) {
+                AutoClickViewModel.STATE_ALL_NO_PERMISSION -> {
+                    mBinding.requestPermissionsBtn.visible()
+                    mBinding.permissionTv.visible()
+                    mBinding.permissionTv.text = twoPermissionLost
+
+                    mBinding.startAutoClickBtn.gone()
+                    mBinding.closeFloatViewBtn.gone()
+                    mBinding.showFloatViewBtn.gone()
+                }
+                AutoClickViewModel.STATE_NO_FLOAT_WINDOW -> {
+                    mBinding.requestPermissionsBtn.visible()
+                    mBinding.permissionTv.visible()
+                    mBinding.permissionTv.text = floatWindowPermissionLost
+
+                    mBinding.startAutoClickBtn.gone()
+                    mBinding.closeFloatViewBtn.gone()
+                    mBinding.showFloatViewBtn.gone()
+                }
+                AutoClickViewModel.STATE_NO_ACCESSIBILITY -> {
+                    mBinding.requestPermissionsBtn.visible()
+                    mBinding.permissionTv.visible()
+                    mBinding.permissionTv.text = accessibilityPermissionLost
+
+                    mBinding.startAutoClickBtn.gone()
+                    mBinding.closeFloatViewBtn.gone()
+                    mBinding.showFloatViewBtn.gone()
+                }
+                AutoClickViewModel.STATE_ALL_PERMISSION_ENABLE -> {
+                    mBinding.requestPermissionsBtn.gone()
+                    mBinding.permissionTv.gone()
+
+                    mBinding.startAutoClickBtn.visible()
+                    mBinding.closeFloatViewBtn.visible()
+                    mBinding.showFloatViewBtn.visible()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +80,7 @@ class AutoClickActivity : AppCompatActivity() {
         mBinding = vb
         setContentView(vb.root)
 
+        initData()
         initListener()
         startAutoClickService()
     }
@@ -55,36 +92,23 @@ class AutoClickActivity : AppCompatActivity() {
 
     private fun stopAutoClickService() {
         val intent = Intent(this, AutoClickService::class.java).also {
-            intent.putExtra("action", "stopService")
+            intent.putExtra("myAction", "stopService")
         }
         startForegroundService(intent)
     }
 
     override fun onResume() {
         super.onResume()
-        val acc = isAccessibilityEnabled()
-        val fw = isFloatWindowEnabled()
-        if (acc && fw) {
-            mBinding.permissionTv.gone()
-            mBinding.requestPermissionsBtn.gone()
-        } else {
-            mBinding.permissionTv.visible()
-            mBinding.requestPermissionsBtn.visible()
-            if (acc) {
-                mBinding.permissionTv.text = floatWindowPermissionLost
-            } else if (fw) {
-                mBinding.permissionTv.text = accessibilityPermissionLost
-            } else {
-                mBinding.permissionTv.text = twoPermissionLost
-            }
-        }
+        viewModel.getPermission(this)
     }
 
     private fun initListener() {
         mBinding.requestPermissionsBtn.onClick {
-            if (!isAccessibilityEnabled()) {
+            if (viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_ALL_NO_PERMISSION
+                    || viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_NO_ACCESSIBILITY) {
                 gotoAccessibilityPermission()
-            } else if (!isFloatWindowEnabled()) {
+            } else if (viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_ALL_NO_PERMISSION
+                || viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_NO_FLOAT_WINDOW) {
                 gotoFloatWindowPermission()
             }
         }
