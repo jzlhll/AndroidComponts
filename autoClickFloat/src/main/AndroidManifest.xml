@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidLearning">
         <activity
-            android:name=".AutoClickActivity"
+            android:name=".AllPermissionActivity"
+            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

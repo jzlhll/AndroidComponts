@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.au.module_android.widget.CustFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="120dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cornerRadius="8dp"
+    android:alpha="0.6"
     app:backgroundNormal="#8fcccccc"
-    android:layout_height="wrap_content">
+    android:layout_height="45dp">
 
-    <com.au.module_android.widget.CustomButton
+    <!--
+        style="@style/StyleButtonGrayShort" -->
+    <TextView
         android:id="@+id/saveBtn"
-        style="@style/StyleButtonGrayShort"
         android:textColor="#ffaa00"
         android:shadowColor="#000000"
         android:shadowDx="2"

@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -58,10 +59,13 @@ public abstract class AutoStopService extends Service {
         return true;
     }
 
+    @DrawableRes
+    protected Integer noBgIcon() {return null;}
+
     @Override
     public void onCreate() {
         super.onCreate();
-        if (isForeground()) ForeNotificationUtil.startForeground(this, getNotifyName(), getNotifyName(), getNotifyName(), "", getPendingIntent());
+        if (isForeground()) ForeNotificationUtil.startForeground(this, getNotifyName(), getNotifyName(), getNotifyName(), "", noBgIcon(), getPendingIntent());
     }
 
     @Nullable

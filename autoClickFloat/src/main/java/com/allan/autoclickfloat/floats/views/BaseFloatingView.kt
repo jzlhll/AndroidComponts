@@ -12,25 +12,38 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import kotlin.math.abs
 
 /**
  * @author allan
  * @date :2024/4/15 16:43
- * @description:
+ * @description: 不要给任何的子View设置点击事件。通过直接监听这里面的clickCallback来处理
  */
 open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
     private var mParams: WindowManager.LayoutParams? = null
     val mRoot: View = LayoutInflater.from(Globals.app).inflate(layoutId, null).also { it.tag = this }
 
     var touchUpCallback:((pointX:Int, pointY:Int)->Unit)? = null
+
     var clickCallback:(()->Unit)? = null
+
+    private var isShown = false
+
+    var mNotAlpha = 0.4f
 
     init {
         initListener()
     }
 
-    private var dX:Int = 0
-    private var dY:Int = 0
+    private val MOVE_REACH_PIXEL = 4
+
+    private var lastTouchAction = 0
+
+    private var downX = 0f
+    private var downY = 0f
+
+    private var newX = 0f
+    private var newY = 0f
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
@@ -39,36 +52,45 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //获取相对View的坐标，即以此View左上角为原点
-                    dX = event.rawX.toInt()
-                    dY = event.rawY.toInt()
-                    Log.i("Floating", "startX $dX ====startY $dY")
+                    lastTouchAction = MotionEvent.ACTION_DOWN //设置状态为按下
+                    //判断是不第一次按下,不然的话每重新滑动都会回到起点
+                    //0这个值应该跟随你的初始位置变化
+                    if (downX == 0f && downY == 0f) {
+                        downX = event.rawX
+                        downY = event.rawY
+                    }
+                    newX = event.rawX
+                    newY = event.rawY
                     mRoot.alpha = 1f
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    val nX = event.rawX.toInt()
-                    val nY = event.rawY.toInt()
-                    val cW = nX - dX
-                    val cH = nY - dY
-                    mParams?.let { mP->
-                        mP.x += cW
-                        mP.y += cH
+                    //当X轴或Y轴的滑动大于10时再,判定为滑动,正好点击事件也需要这个
+                    if (abs(event.rawX - newX) > MOVE_REACH_PIXEL
+                        || abs(event.rawY - newY) > MOVE_REACH_PIXEL) {
+                        lastTouchAction = MotionEvent.ACTION_MOVE //设置状态为滑动
+
+                        //这里给定滑动的位置
+                        mParams?.x = (newX - downX).toInt()
+                        mParams?.y = (newY - downY).toInt()
+
+                        //记录下最新一个点的位置
+                        newX = event.rawX
+                        newY = event.rawY
                     }
-                    Log.i("Floating", "moveX $cW ====moveY $cH")
                     updateViewPosition()
                 }
                 MotionEvent.ACTION_CANCEL,
                 MotionEvent.ACTION_UP -> {
-                    updateViewPosition()
                     touchUpCallback?.invoke(mParams?.x ?: 0, mParams?.y ?: 0)
-
-                    mRoot.alpha = 0.3f
+                    mRoot.alpha = mNotAlpha
                 }
             }
             false
         }
 
         mRoot.onClick {
+            Log.d("allan", "on click")
             clickCallback?.invoke()
         }
     }
@@ -82,6 +104,10 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
     }
 
     fun show() {
+        if (isShown) {
+            return
+        }
+
         mParams = WindowManager.LayoutParams()
         mParams?.apply {
             gravity = Gravity.CENTER
@@ -102,10 +128,14 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
                 WindowMgr.removeView(mRoot)
             }
             WindowMgr.addView(mRoot, this)
+            isShown = true
         }
     }
 
     fun remove() {
-        WindowMgr.removeView(mRoot)
+        if (isShown) {
+            WindowMgr.removeView(mRoot)
+            isShown = false
+        }
     }
 }

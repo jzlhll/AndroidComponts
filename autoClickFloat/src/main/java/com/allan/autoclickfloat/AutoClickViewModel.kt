@@ -17,18 +17,18 @@ class AutoClickViewModel : ViewModel() {
         const val STATE_ALL_NO_PERMISSION = -10
         const val STATE_NO_ACCESSIBILITY = -1
         const val STATE_NO_FLOAT_WINDOW = -2
+
+        fun isAccessibilityEnabled(context: Context) : Boolean {
+            val accessibilityMgr = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+            return accessibilityMgr.isEnabled
+        }
+
+        fun isFloatWindowEnabled(activity: AllPermissionActivity) = activity.hasFloatWindowPermission()
     }
 
     val allPermissionEnabled = NoStickLiveData<Int>()
 
-    private fun isAccessibilityEnabled(context: Context) : Boolean {
-        val accessibilityMgr = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        return accessibilityMgr.isEnabled
-    }
-
-    private fun isFloatWindowEnabled(activity: AutoClickActivity) = activity.hasFloatWindowPermission()
-
-    fun getPermission(activity: AutoClickActivity) {
+    fun getPermission(activity: AllPermissionActivity) {
         val floatWindowEnabled = isFloatWindowEnabled(activity)
         val accessEnabled = isAccessibilityEnabled(activity)
 

@@ -1,6 +1,7 @@
 package com.allan.autoclickfloat.floats
 
-import com.allan.autoclickfloat.floats.bean.ACTION_CLOSE
+import android.util.Log
+import com.allan.autoclickfloat.floats.bean.ACTION_REMOVE
 import com.allan.autoclickfloat.floats.bean.ACTION_SHOW
 import com.allan.autoclickfloat.floats.bean.ACTION_START
 import com.allan.autoclickfloat.floats.bean.ACTION_STOP
@@ -16,7 +17,8 @@ import com.au.module_android.simplelivedata.NoStickLiveData
  * @description:
  */
 object FloatingManager {
-    private var enableAutoClick = false
+    var enableAutoClick = false
+        private set
 
     /** 更新自动点击的liveData
      */
@@ -26,17 +28,19 @@ object FloatingManager {
     fun init() {
         if (isInited) return
         isInited = true
-        autoClickLiveData.observeForeverUnStick {
-            it!!
-            when (it.action) {
+        autoClickLiveData.observeForeverUnStick { info->
+            info!!
+            Log.d("allan", "autoClick LvieData $info")
+            when (info.action) {
                 ACTION_SHOW -> {
+                    WindowMgr.floatingStep = WindowMgr.floatingStep ?: FloatingStepView().also { it.mNotAlpha = 0.6f }
+                    WindowMgr.floatingStep?.show()
+
                     WindowMgr.floatingSetting = WindowMgr.floatingSetting ?: FloatingSettingView()
                     WindowMgr.floatingSetting?.show()
-                    WindowMgr.floatingStep = WindowMgr.floatingStep ?: FloatingStepView()
-                    WindowMgr.floatingStep?.show()
                 }
 
-                ACTION_CLOSE -> {
+                ACTION_REMOVE -> {
                     WindowMgr.floatingSetting?.remove()
                     WindowMgr.floatingStep?.remove()
                     enableAutoClick = false

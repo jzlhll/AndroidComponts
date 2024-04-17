@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20dp"
+    tools:context=".AutoClickActivity">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:text="保存点击方案%d"
+        style="@style/StyleTitleBText"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/workTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="打开悬浮手势, 拖动到合适的位置, 开始自动点击"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/nameInput"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:hint="输入方案名字"
+        android:inputType="number"
+        android:textColor="#FF0000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/workTv" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/intervalUnit"
+        android:text="ms(毫秒)"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/intervalEdit"
+        app:layout_constraintTop_toTopOf="@id/intervalEdit" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/intervalEdit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="18dp"
+        android:hint="点击的间隔(建议大于100)"
+        android:inputType="number"
+        android:textColor="#FF0000"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toStartOf="@id/intervalUnit"
+        app:layout_constraintTop_toBottomOf="@id/nameInput" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/showFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="打开悬浮按钮"
+        app:layout_constraintEnd_toStartOf="@id/closeFloatViewBtn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intervalEdit" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/closeFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="关闭悬浮按钮"
+        app:layout_constraintStart_toEndOf="@id/showFloatViewBtn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/showFloatViewBtn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startAutoClickBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="测试"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/closeFloatViewBtn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

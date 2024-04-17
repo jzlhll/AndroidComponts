@@ -1,12 +1,12 @@
 package com.au.module_android.utils
 
-import android.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
+import androidx.annotation.DrawableRes
 
 object ForeNotificationUtil {
     private const val CHANNEL_ONE_ID = "foreNotifyId"
@@ -18,9 +18,9 @@ object ForeNotificationUtil {
     /**
      * 公开使用
      */
-    fun sendNotification(context: Context, channelName: String, channelDesc: String, contentTitle: String, contentText: String) {
+    fun sendNotification(context: Context, channelName: String, channelDesc: String, contentTitle: String, contentText: String, @DrawableRes noBgIcon:Int) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(NOTIFY_ID, getNotificationO(context, manager, channelName, channelDesc, contentTitle, contentText))
+        manager.notify(NOTIFY_ID, getNotificationO(context, manager, channelName, channelDesc, contentTitle, contentText, noBgIcon, null))
     }
 
     /**
@@ -28,9 +28,10 @@ object ForeNotificationUtil {
      */
     @JvmStatic
     fun startForeground(service: Service, channelName: String, channelDesc: String, contentTitle: String, contentText: String,
+                        @DrawableRes noBgIcon:Int? = null,
                         pendingIntent: PendingIntent? = null) {
         val manager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = getNotificationO(service, manager, channelName, channelDesc, contentTitle, contentText, pendingIntent)
+        val notification = getNotificationO(service, manager, channelName, channelDesc, contentTitle, contentText, noBgIcon, pendingIntent)
         notification.flags = Notification.FLAG_ONGOING_EVENT
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         notification.flags = notification.flags or Notification.FLAG_FOREGROUND_SERVICE
@@ -52,7 +53,8 @@ object ForeNotificationUtil {
         desc: String,
         contentTitle: String,
         contentText: String,
-        pendingIntent: PendingIntent? = null
+        @DrawableRes noBgIcon:Int?,
+        pendingIntent: PendingIntent?
     ): Notification {
         var channel: NotificationChannel? = null
         channel = NotificationChannel(CHANNEL_ONE_ID, name, if (NO_SOUND) NotificationManager.IMPORTANCE_MIN else NotificationManager.IMPORTANCE_DEFAULT)
@@ -66,8 +68,9 @@ object ForeNotificationUtil {
         builder.setCategory(Notification.CATEGORY_RECOMMENDATION)
             .setContentTitle(contentTitle)
             .setContentText(contentText) //.setContentIntent(getPendingIntent(context))
-            .setSmallIcon(R.drawable.ic_notification_overlay)
-
+        if (noBgIcon != null) {
+            builder.setSmallIcon(noBgIcon)
+        }
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent)
         }

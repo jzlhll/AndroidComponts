@@ -19,4 +19,4 @@ const val ACTION_SHOW = "action_show"
 const val ACTION_START = "action_start"
 const val ACTION_STOP = "action_stop"
 //关闭悬浮窗
-const val ACTION_CLOSE = "action_close"
+const val ACTION_REMOVE = "action_close"
