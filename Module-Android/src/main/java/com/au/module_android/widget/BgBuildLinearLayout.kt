@@ -2,18 +2,18 @@ package com.au.module_android.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.LinearLayout
 import com.au.module.android.R
 import com.au.module_android.ui.viewBackgroundBuild
 
 /**
  * @author allan
- * @date :2024/3/13 15:21
+ * @date :2024/3/12 14:46
  * @description:
  */
-class CustConstraintLayout @JvmOverloads constructor(
+class BgBuildLinearLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : ConstraintLayout(context, attrs) {
+) : LinearLayout(context, attrs) {
     init {
         val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
         viewBackgroundBuild(attr)

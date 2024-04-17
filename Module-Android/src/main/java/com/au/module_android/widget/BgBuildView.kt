@@ -2,8 +2,7 @@ package com.au.module_android.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
-import android.widget.LinearLayout
+import android.view.View
 import com.au.module.android.R
 import com.au.module_android.ui.viewBackgroundBuild
 
@@ -12,9 +11,9 @@ import com.au.module_android.ui.viewBackgroundBuild
  * @date :2024/3/12 14:46
  * @description:
  */
-class CustFrameLayout @JvmOverloads constructor(
+class BgBuildView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : FrameLayout(context, attrs) {
+) : View(context, attrs) {
     init {
         val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
         viewBackgroundBuild(attr)

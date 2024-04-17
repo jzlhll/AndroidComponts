@@ -8,7 +8,7 @@
     tools:layout_height="300dp"
     android:layout_height="wrap_content">
 
-    <com.au.module_android.widget.CustConstraintLayout
+    <com.au.module_android.widget.BgBuildConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -73,7 +73,7 @@
             android:layout_height="50dp"
             tools:text="delete"
             app:cornerRadius="6dp"/>
-    </com.au.module_android.widget.CustConstraintLayout>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
 
     <android.widget.Space
         android:layout_width="1dp"

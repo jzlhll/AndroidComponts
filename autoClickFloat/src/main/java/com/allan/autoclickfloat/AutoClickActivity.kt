@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.allan.autoclickfloat.databinding.NongyaoActivityBinding
+import com.allan.autoclickfloat.databinding.SetupOneProjectFragmentBinding
 import com.allan.autoclickfloat.floats.AutoClickService.Companion.startAutoClickService
 import com.allan.autoclickfloat.floats.AutoClickService.Companion.stopAutoClickService
 import com.allan.autoclickfloat.floats.FloatingManager
@@ -24,14 +25,7 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
-class AutoClickActivity : BindingFragment<NongyaoActivityBinding>() {
-    private lateinit var mBinding:NongyaoActivityBinding
-
-    private val twoPermissionLost = "先打开无障碍权限 和 悬浮窗顶层权限"
-    private val accessibilityPermissionLost = "先打开无障碍权限"
-    private val floatWindowPermissionLost = "先打开悬浮窗顶层权限"
-
-    private val viewModel by unsafeLazy { ViewModelProvider(this)[AutoClickViewModel::class.java] }
+class AutoClickActivity : BindingFragment<SetupOneProjectFragmentBinding>() {
 
     private fun initData() {
         viewModel.allPermissionEnabled.observeUnStick(this) {
@@ -92,7 +86,13 @@ class AutoClickActivity : BindingFragment<NongyaoActivityBinding>() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getPermission(this)
+        if (AutoClickViewModel.isAccessibilityEnabled(this) && AutoClickViewModel.isFloatWindowEnabled(this)) {
+        } else {
+            StrongCenterDialog.show() {
+                finish()
+                startActivity(Intent(this, AutoClickActivity::class.java))
+            }
+        }
     }
 
     private fun initListener() {

@@ -1,5 +1,6 @@
 package com.allan.autoclickfloat
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -46,7 +47,8 @@ class AllPermissionActivity : AppCompatActivity() {
                     mBinding.permissionTv.text = accessibilityPermissionLost
                 }
                 AutoClickViewModel.STATE_ALL_PERMISSION_ENABLE -> {
-                    FragmentC
+                    finishAfterTransition()
+                    startActivity(Intent(this, AutoClickActivity::class.java))
                 }
             }
         }
@@ -57,7 +59,7 @@ class AllPermissionActivity : AppCompatActivity() {
 
         if (AutoClickViewModel.isAccessibilityEnabled(this) && AutoClickViewModel.isFloatWindowEnabled(this)) {
             finish()
-            startActivity()
+            startActivity(Intent(this, AutoClickActivity::class.java))
         } else {
             transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
                 mBinding.root.setPadding(0, statusBarsHeight, 0, navigationBarHeight)

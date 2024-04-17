@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:layout_height="500dp">
 
-    <com.au.module_android.widget.CustLinearLayout
+    <com.au.module_android.widget.BgBuildLinearLayout
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:orientation="vertical"
@@ -20,6 +20,6 @@
             android:id="@+id/fcv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.au.module_android.widget.CustLinearLayout>
+    </com.au.module_android.widget.BgBuildLinearLayout>
 
 </LinearLayout>

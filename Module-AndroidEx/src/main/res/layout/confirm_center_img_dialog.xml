@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.au.module_android.widget.CustConstraintLayout
+    <com.au.module_android.widget.BgBuildConstraintLayout
         android:layout_width="match_parent"
         android:minHeight="224dp"
         android:layout_height="wrap_content"
@@ -98,5 +98,5 @@
             app:layout_constraintTop_toBottomOf="@id/cancelButton"
             android:layout_width="1dp"
             android:layout_height="20dp"/>
-    </com.au.module_android.widget.CustConstraintLayout>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
 </LinearLayout>
