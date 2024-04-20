@@ -26,7 +26,7 @@ class NormalViewActivity : ViewActivity() {
         }
     }
 
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val mask = intent.getStringExtra(KEY_INTENT_MASK)
         val mask2 = intent.getStringExtra(KEY_INTENT_MASK2)
         val supply = actionMap.remove(mask + "_" + mask2) ?: throw RuntimeException("NormalViewActivity has no mask.")

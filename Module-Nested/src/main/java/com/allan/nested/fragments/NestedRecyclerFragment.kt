@@ -61,7 +61,7 @@ abstract class NestedRecyclerFragment : ViewFragment() {
         nestedLayout.recyclerView.adapter = adapter
     }
 
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return nestedLayout
     }
 

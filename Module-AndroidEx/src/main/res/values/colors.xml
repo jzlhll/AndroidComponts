@@ -3,8 +3,8 @@
     <!--主标题色-->
     <!-- button 主题色 -->   
     <color name="color_text_normal">#212121</color>
-    <color name="color_primary">#DB4F4F</color>
-    <color name="color_primary_press">#E78989</color>
+    <color name="color_primary">#12A182</color>
+    <color name="color_primary_press">#9F12A182</color>
 
     <!-- 按钮或者输入框背景色和边框 -->
     <color name="color_gray_light">#F0F0F0</color>

@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidLearning">
+        android:theme="@style/CustomModuleTheme">
         <activity
             android:name=".AllPermissionActivity"
             android:launchMode="singleTask"
@@ -26,11 +26,11 @@
         </activity>
 
         <service
-            android:name=".floats.AutoClickService"
+            android:name=".GlobalsAccessService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaProjection"
-            android:label="农药自动抢红包插件"
+            android:label="AShoot辅助点击方案"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

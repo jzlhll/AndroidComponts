@@ -1,4 +1,4 @@
-package com.allan.autoclickfloat.floats
+package com.allan.autoclickfloat
 
 import android.accessibilityservice.AccessibilityService
 import android.app.PendingIntent
@@ -8,8 +8,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import com.allan.autoclickfloat.AutoClickActivity
-import com.allan.autoclickfloat.R
+import androidx.lifecycle.MutableLiveData
+import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
+import com.allan.autoclickfloat.floats.FloatingManager
 import com.allan.autoclickfloat.floats.bean.ACTION_STOP
 import com.allan.autoclickfloat.floats.bean.AutoClickInfo
 import com.au.module_android.Globals
@@ -20,30 +21,16 @@ import com.au.module_android.utils.ForeNotificationUtil
  * @date :2024/3/19 10:04
  * @description:
  */
-class AutoClickService : AccessibilityService() {
+class GlobalsAccessService : AccessibilityService() {
     companion object {
         const val TAG = "NongYaoAutoClickService"
 
-        fun Context.startAutoClickService() {
-            if (!isAlive) {
-                val intent = Intent(this, AutoClickService::class.java)
-                startForegroundService(intent)
-            }
-        }
-
-        fun Context.stopAutoClickService() {
-            if (isAlive) {
-                val intent = Intent(this, AutoClickService::class.java).also {
-                    it.putExtra("myAction", "stopService")
-                }
-                startService(intent)
-            }
-        }
-
         private var isAlive = false
+
+        val isEnabledLiveData = MutableLiveData<Any>()
     }
 
-    private var broadcastHandler:BroadcastHandler? = null
+    private var broadcastHandler: BroadcastHandler? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -53,13 +40,14 @@ class AutoClickService : AccessibilityService() {
             this,
             "NongyaoAutoClickChannel",
             "NonNongyaoAutoClickChannelDesc",
-            "悬浮点击",
-            "正在工作中，点击关闭",
+            "AShoot悬浮点击",
+            "AShoot正在工作中，点击关闭。",
             R.drawable.ic_nongyao_click,
-            pendingIntent = PendingIntent.getActivity(this, 0, Intent(Globals.app, AutoClickActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+            pendingIntent = PendingIntent.getActivity(this, 0, Intent(Globals.app, AllPermissionActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
         )
 
         broadcastHandler = BroadcastHandler(this).also { it.register() }
+        isEnabledLiveData.value = Unit
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -77,6 +65,7 @@ class AutoClickService : AccessibilityService() {
         broadcastHandler?.unregister()
         Log.d("allan", "service onDestroy")
         ForeNotificationUtil.stopForeground(this)
+        isEnabledLiveData.value = Unit
         isAlive = false
     }
 
@@ -84,6 +73,17 @@ class AutoClickService : AccessibilityService() {
         //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
 //        performGlobalAction(GLOBAL_ACTION_DPAD_DOWN)
 //        performGlobalAction(GLOBAL_ACTION_DPAD_UP)
+        Log.d("allan", "onAccessibilityEvent $event")
+        // 当快捷方式开关变化时，此方法会被调用
+        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            // 检查事件内容，判断是否是快捷方式开关
+            // 快捷方式开关通常是一个特定的窗口，你需要根据实际情况来判断
+            if (event.className == GlobalsAccessService::class.java.name) {
+                // 快捷方式开关状态发生了变化
+                // 在这里处理你的逻辑
+                Log.d("allan", "enabled! access")
+            }
+        }
     }
 
     override fun onInterrupt() { //辅助服务被中断了

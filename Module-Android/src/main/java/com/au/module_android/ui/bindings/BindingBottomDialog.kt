@@ -16,6 +16,5 @@ open class BindingBottomDialog<VB:ViewBinding>(hasEditText:Boolean = false)
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root
-
     }
 }

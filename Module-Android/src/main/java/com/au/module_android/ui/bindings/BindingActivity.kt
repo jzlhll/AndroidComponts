@@ -16,16 +16,16 @@ import com.au.module_android.ui.createViewBinding
  * Description 指导基础类模板
  */
 abstract class BindingActivity<VB: ViewBinding> : AbsActivity(), IUi {
-    lateinit var binding:VB
+    lateinit var binding:VB private set
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val v = onCreatingView(layoutInflater, null, savedInstanceState)
+        val v = onUiCreateView(layoutInflater, null, savedInstanceState)
         setContentView(v)
     }
 
-    final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    final override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
         return vb.root

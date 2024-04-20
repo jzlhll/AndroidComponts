@@ -103,13 +103,16 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
         }
     }
 
-    fun show() {
+    fun show(x:Int?=null, y:Int? = null) {
         if (isShown) {
             return
         }
 
         mParams = WindowManager.LayoutParams()
         mParams?.apply {
+            if (x != null) this.x = x
+            if (y != null) this.y = y
+
             gravity = Gravity.CENTER
             //总是出现在应用程序窗口之上
             type =

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/title"
+        style="@style/StyleTitleBText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="28dp"
+        android:text="AShoot辅助工具"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/desc"
+        style="@style/StyleFontSecondTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="保存一个点，开启后，连续自动点击"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        android:layout_marginTop="75dp"
+        style="@style/StyleFontBText"
+        android:id="@+id/saveText"
+        android:text="已经保存的点："
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonGrayLong"
+        android:id="@+id/showFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:text="开始设置"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveText" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonGrayLong"
+        android:id="@+id/closeFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="关闭设置"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/showFloatViewBtn" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonPrimaryLong"
+        android:id="@+id/startAutoClickBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="开始自动点击"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

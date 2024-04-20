@@ -11,12 +11,14 @@ import androidx.annotation.ColorInt
 import com.au.module.android.R
 
 class ViewBackgroundBuilder {
-    private var mShape:Int = -1
-    private var mAlpha:Float = -1f
+    //private var mShape:Int = -1
+    //private var mAlpha:Float = -1f
     private var mCorner: CornerRadius? = null
     private var mStrokeWidth:Float = 0f
     private var mStrokeColor:Int = 0
     private var mBg:ColorStateList? = null
+
+    var isAtLeastOne = false
 
     /**
      * 圆角
@@ -36,31 +38,38 @@ class ViewBackgroundBuilder {
     /**
      * 0~3 RECT, OVAL, LINE, RING
      */
-    fun setShape(shape:Int) : ViewBackgroundBuilder {
-        mShape = shape
-        return this
-    }
-
-    fun setAlpha(alpha:Float) : ViewBackgroundBuilder {
-        mAlpha = alpha
-        return this
-    }
+//    fun setShape(shape:Int) : ViewBackgroundBuilder {
+//        mShape = shape
+//        return this
+//    }
+//
+//    fun setAlpha(alpha:Float) : ViewBackgroundBuilder {
+//        mAlpha = alpha
+//        return this
+//    }
 
     fun setStroke(width:Float, color:Int) : ViewBackgroundBuilder {
         if (width > 0) {
             mStrokeWidth = width
             mStrokeColor = color
+            isAtLeastOne = true
         }
         return this
     }
 
     fun setCornerRadius(cornerRadius: Float) : ViewBackgroundBuilder {
-        mCorner = CornerRadius.AllCornerRadius(cornerRadius)
+        if (cornerRadius > 0) {
+            mCorner = CornerRadius.AllCornerRadius(cornerRadius)
+            isAtLeastOne = true
+        }
         return this
     }
 
     fun setCornerRadius(topLeft:Float, topRight:Float, bottomLeft:Float, bottomRight:Float) : ViewBackgroundBuilder {
-        mCorner = CornerRadius.EachCornerRadius(topLeft, topRight, bottomLeft, bottomRight)
+        if (topLeft > 0f || topRight > 0f || bottomLeft > 0f || bottomRight > 0f) {
+            mCorner = CornerRadius.EachCornerRadius(topLeft, topRight, bottomLeft, bottomRight)
+            isAtLeastOne = true
+        }
         return this
     }
 
@@ -68,26 +77,42 @@ class ViewBackgroundBuilder {
             : ViewBackgroundBuilder {
         val colorMap = mutableListOf<Pair<IntArray, Int>>()
         val noColor = 0
+
+        var hasColor = false
         if (pressedColor != noColor) {
             colorMap.add(Pair(intArrayOf(android.R.attr.state_pressed), pressedColor))
+            hasColor = true
         }
         if (disabledColor != noColor) {//-代表false
             colorMap.add(Pair(intArrayOf(-android.R.attr.state_enabled), disabledColor))
+            hasColor = true
         }
-        if(color != noColor) colorMap.add(Pair(intArrayOf(0), color))
+        if(color != noColor) {
+            colorMap.add(Pair(intArrayOf(0), color))
+            hasColor = true
+        }
 
-        val size = colorMap.size
-        val stateArray = arrayOfNulls<IntArray>(size)
-        val colorArray = IntArray(size)
-        colorMap.forEachIndexed { index, data ->
-            stateArray[index] = data.first
-            colorArray[index] = data.second
+        if (hasColor) {
+            val size = colorMap.size
+            val stateArray = arrayOfNulls<IntArray>(size)
+            val colorArray = IntArray(size)
+            colorMap.forEachIndexed { index, data ->
+                stateArray[index] = data.first
+                colorArray[index] = data.second
+            }
+            mBg = ColorStateList(stateArray, colorArray)
+
+            isAtLeastOne = true
         }
-        mBg = ColorStateList(stateArray, colorArray)
+
         return this
     }
 
-    fun build() : Drawable {
+    fun build() : Drawable? {
+        if (!isAtLeastOne) {
+            return null
+        }
+
         val it = GradientDrawable()
         //背景
         if(mBg != null) it.color = mBg
@@ -109,17 +134,17 @@ class ViewBackgroundBuilder {
         }
 
         //形状 RECTANGLE, OVAL, LINE, RING
-        when (mShape) {
-            0->it.shape = GradientDrawable.RECTANGLE
-            1->it.shape = GradientDrawable.OVAL
-            2->it.shape = GradientDrawable.LINE
-            3->it.shape = GradientDrawable.RING
-        }
+//        when (mShape) {
+//            0->it.shape = GradientDrawable.RECTANGLE
+//            1->it.shape = GradientDrawable.OVAL
+//            2->it.shape = GradientDrawable.LINE
+//            3->it.shape = GradientDrawable.RING
+//        }
 
         //alpha
-        if (mAlpha in 0f..1f) {
-            it.alpha = (225f * mAlpha).toInt()
-        }
+//        if (mAlpha in 0f..1f) {
+//            it.alpha = (225f * mAlpha).toInt()
+//        }
         return it
     }
 }
@@ -153,8 +178,9 @@ fun View.viewBackgroundBuild(array:TypedArray) {
     val strokeWidth = array.getDimension(R.styleable.AnySimpleView_strokeWidth, 0f)
 
     builder.setStroke(strokeWidth, strokeColor)
-
-    background = builder.build()
+    if (builder.isAtLeastOne) {
+        background = builder.build()
+    }
 }
 
 /**

@@ -18,7 +18,7 @@ interface IUi {
         return metrics.widthPixels < metrics.heightPixels
     }
 
-    fun onCreatingView(inflater: LayoutInflater,
-                   container: ViewGroup? = null,
-                   savedInstanceState: Bundle? = null) : View
+    fun onUiCreateView(inflater: LayoutInflater,
+                       container: ViewGroup? = null,
+                       savedInstanceState: Bundle? = null) : View
 }

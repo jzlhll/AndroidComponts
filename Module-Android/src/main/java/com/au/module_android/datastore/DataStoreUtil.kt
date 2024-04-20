@@ -68,6 +68,14 @@ object AppDataStore {
         }
     }
 
+    fun save(vararg pair:Pair<String, Any>) {
+        Globals.mainScope.launch {
+            pair.forEach {
+                saveSuspend(it.first, it.second)
+            }
+        }
+    }
+
     inline fun <reified T> remove(key:String) {
         Globals.mainScope.launch {
             removeSuspend<T>(key)

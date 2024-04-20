@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--输入框的外部InputLayout的样式：配套的外部壳样式 必须先处理一次基础继承；
-        ColorStateList cursorColor =
-        MaterialColors.getColorStateListOrNull(getContext(), R.attr.colorControlActivated);
-
-        The reason why using android:theme works is because colorControlActivated is a theme attribute,
-        as opposed to a specific component attribute (e.g., hintTextColor).
-        One way you could customize a global theme attribute but only have that customization apply to a specific component
-        is to use our materialThemeOverlay functionality.
-    -->
-
     <style name="StyleInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundMode">outline</item>
         <item name="boxBackgroundColor">#ffffff</item>
@@ -51,10 +41,10 @@
 
     <!-- 按钮v2.1 统一样式: 主题色背景，单个且长，左右下边距固定，文字大小颜色固定 -->
     <style name="StyleButtonPrimaryLong">
-        <item name="android:background">@drawable/corner_btn_primary_long</item>
+        <item name="android:background">@drawable/corner_btn_primary</item>
         <item name="android:textSize">@dimen/btn_font_size</item>
         <item name="android:layout_height">@dimen/btn_height</item>
-        <item name="android:textColor">@color/primary_btn_color</item>
+        <item name="android:textColor">#ffffff</item>
 
         <item name="android:layout_marginBottom">@dimen/btn_margin_bottom</item>
 
@@ -66,7 +56,7 @@
 
     <!-- 按钮v2.1 统一样式: 有的地方需要一个类似disable的btn，却又支持点击 -->
     <style name="StyleButtonPrimaryDisabled" parent="StyleButtonPrimaryLong">
-        <item name="android:background">@drawable/corner_btn_primary_long_disabled</item>
+        <item name="android:background">@drawable/corner_btn_primary_disabled</item>
         <item name="android:textColor">#CCCCCC</item>
     </style>
 
@@ -78,7 +68,7 @@
 
     <!-- 按钮v2.1 统一样式: 主题色短按钮-->
     <style name="StyleButtonPrimaryShort">
-        <item name="android:background">@drawable/corner_btn_primary_short</item>
+        <item name="android:background">@drawable/corner_btn_primary</item>
         <item name="android:textSize">@dimen/btn_font_size</item>
         <item name="android:layout_height">@dimen/btn_height</item>
         <item name="android:textColor">@color/primary_btn_color</item>

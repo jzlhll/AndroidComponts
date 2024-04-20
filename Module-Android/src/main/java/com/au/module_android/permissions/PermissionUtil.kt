@@ -100,15 +100,8 @@ fun LifecycleOwner.gotoFloatWindowPermission() {
 /**
  * 请求弹窗权限。
  */
-fun LifecycleOwner.hasFloatWindowPermission() : Boolean{
-    val activity = when (this) {
-        is Fragment -> requireActivity()
-        is AppCompatActivity -> this
-        else -> {
-            throw IllegalArgumentException("requestFloatWindowPermission error call.")
-        }
-    }
-    return Settings.canDrawOverlays(activity)
+fun Context.hasFloatWindowPermission() : Boolean{
+    return Settings.canDrawOverlays(this)
 }
 
 fun hasPermission(vararg permissions:String) : Boolean {

@@ -18,7 +18,7 @@ import com.google.android.material.button.MaterialButton
  * @description:
  */
 class DialogsFragment : ViewFragment() {
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val context = inflater.context
         val ll = FlowLayout(context)
         ll.addView(MaterialButton(context).apply {

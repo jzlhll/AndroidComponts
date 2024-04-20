@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.EmptySuper
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IUi
@@ -20,12 +21,16 @@ abstract class BindingFragment<VB:ViewBinding> : AbsFragment(), IUi {
 
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return onCreatingView(layoutInflater, null, savedInstanceState)
+        return onUiCreateView(layoutInflater, null, savedInstanceState)
     }
 
-    final override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    final override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB
         binding = vb
+        onBindingCreated(savedInstanceState)
         return vb.root
     }
+
+    @EmptySuper
+    open fun onBindingCreated(savedInstanceState: Bundle?) {}
 }

@@ -2,75 +2,76 @@ package com.allan.autoclickfloat
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.allan.autoclickfloat.databinding.PermissionsActivityBinding
-import com.au.module_android.click.onClick
-import com.au.module_android.permissions.gotoAccessibilityPermission
-import com.au.module_android.permissions.gotoFloatWindowPermission
+import androidx.lifecycle.lifecycleScope
+import com.allan.autoclickfloat.activities.startup.AllFeaturesFragment
+import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
+import com.allan.autoclickfloat.databinding.RootActivityBinding
+import com.allan.autoclickfloat.activities.startup.PermissionsViewModel
+import com.au.module_android.ui.bindings.BindingActivity
+import com.au.module_android.utils.launchOnUi
+import com.au.module_android.utils.replaceFragment
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.utils.visible
+import com.au.module_androidex.dialog_normal.ConfirmCenterDialog
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 /**
  * @author allan
  * @date :2024/4/17 11:43
  * @description:
  */
-class AllPermissionActivity : AppCompatActivity() {
-    private lateinit var mBinding: PermissionsActivityBinding
+class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
+    private val viewModel by unsafeLazy { ViewModelProvider(this)[PermissionsViewModel::class.java] }
 
-    private val twoPermissionLost = "先打开无障碍权限 和 悬浮窗顶层权限"
-    private val accessibilityPermissionLost = "先打开无障碍权限"
-    private val floatWindowPermissionLost = "先打开悬浮窗顶层权限"
-
-    private val viewModel by unsafeLazy { ViewModelProvider(this)[AutoClickViewModel::class.java] }
-
-    private fun initData() {
-        viewModel.allPermissionEnabled.observeUnStick(this) {
-            when (it) {
-                AutoClickViewModel.STATE_ALL_NO_PERMISSION -> {
-                    mBinding.requestPermissionsBtn.visible()
-                    mBinding.permissionTv.visible()
-                    mBinding.permissionTv.text = twoPermissionLost
-
-                }
-                AutoClickViewModel.STATE_NO_FLOAT_WINDOW -> {
-                    mBinding.requestPermissionsBtn.visible()
-                    mBinding.permissionTv.visible()
-                    mBinding.permissionTv.text = floatWindowPermissionLost
-
-                }
-                AutoClickViewModel.STATE_NO_ACCESSIBILITY -> {
-                    mBinding.requestPermissionsBtn.visible()
-                    mBinding.permissionTv.visible()
-                    mBinding.permissionTv.text = accessibilityPermissionLost
-                }
-                AutoClickViewModel.STATE_ALL_PERMISSION_ENABLE -> {
-                    finishAfterTransition()
-                    startActivity(Intent(this, AutoClickActivity::class.java))
-                }
+    private var _permissionsRequestFragment: PermissionsRequestFragment? = null
+    private val permissionsRequestFragment: PermissionsRequestFragment
+        get() {
+            if (_permissionsRequestFragment == null) {
+                _permissionsRequestFragment = PermissionsRequestFragment()
             }
+            return _permissionsRequestFragment!!
         }
-    }
+
+    private var _allFeaturesFragment: AllFeaturesFragment? = null
+    private val allFeaturesFragment: AllFeaturesFragment
+        get() {
+            if (_allFeaturesFragment == null) {
+                _allFeaturesFragment = AllFeaturesFragment()
+            }
+            return _allFeaturesFragment!!
+        }
+
+    private var isPermissionFragment:Boolean? = null
+    private var enabledFromServiceJob:Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (AutoClickViewModel.isAccessibilityEnabled(this) && AutoClickViewModel.isFloatWindowEnabled(this)) {
-            finish()
-            startActivity(Intent(this, AutoClickActivity::class.java))
-        } else {
-            transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
-                mBinding.root.setPadding(0, statusBarsHeight, 0, navigationBarHeight)
-                insets
-            }
-            val vb = PermissionsActivityBinding.inflate(layoutInflater)
-            mBinding = vb
-            setContentView(vb.root)
+        transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
+            binding.root.setPadding(binding.root.paddingStart, statusBarsHeight, binding.root.paddingEnd, navigationBarHeight)
+            insets
+        }
 
-            initData()
-            initListener()
+        viewModel.allPermissionEnabled.observeUnStick(this) { it ->
+            when (it) {
+                PermissionsViewModel.STATE_ALL_NO_PERMISSION, PermissionsViewModel.STATE_NO_FLOAT_WINDOW, PermissionsViewModel.STATE_NO_ACCESSIBILITY -> {
+                    showPermissionsRequest()
+                }
+                PermissionsViewModel.STATE_ALL_PERMISSION_ENABLE -> {
+                    showAllFeatures()
+                }
+            }
+        }
+
+        GlobalsAccessService.isEnabledLiveData.observe(this) {
+            enabledFromServiceJob?.cancel()
+            enabledFromServiceJob = lifecycleScope.launchOnUi {
+                delay(1000)
+                viewModel.getPermission(this@AllPermissionActivity)
+            }
         }
     }
 
@@ -79,14 +80,32 @@ class AllPermissionActivity : AppCompatActivity() {
         viewModel.getPermission(this)
     }
 
-    private fun initListener() {
-        mBinding.requestPermissionsBtn.onClick {
-            if (viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_ALL_NO_PERMISSION
-                || viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_NO_ACCESSIBILITY) {
-                gotoAccessibilityPermission()
-            } else if (viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_ALL_NO_PERMISSION
-                || viewModel.allPermissionEnabled.value == AutoClickViewModel.STATE_NO_FLOAT_WINDOW) {
-                gotoFloatWindowPermission()
+    fun showPermissionsRequest() {
+        if (isPermissionFragment == null || isPermissionFragment == false) {
+            isPermissionFragment = true
+            replaceFragment(R.id.fragmentRoot, permissionsRequestFragment)
+        }
+    }
+
+    fun showAllFeatures() {
+        if (isPermissionFragment == null || isPermissionFragment == true) {
+            isPermissionFragment = false
+            replaceFragment(R.id.fragmentRoot, allFeaturesFragment)
+        }
+    }
+
+    companion object {
+        fun checkGotoAllPermissionActivity(fragment:Fragment) {
+            val ac = fragment.requireActivity()
+            if (!PermissionsViewModel.isAccessibilityEnabled(ac) || !PermissionsViewModel.isFloatWindowEnabled(ac)) {
+                ConfirmCenterDialog.show(fragment.childFragmentManager,
+                    "请重新授权。",
+                    "点击回到首页，重新申请权限。",
+                    "好的") {
+                    val activity = fragment.requireActivity()
+                    activity.finishAfterTransition()
+                    fragment.startActivity(Intent(activity, AllPermissionActivity::class.java))
+                }
             }
         }
     }

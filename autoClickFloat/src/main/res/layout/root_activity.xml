@@ -2,12 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp"
-    tools:context=".AutoClickActivity">
+    android:background="#ffffff"
+    tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/title"
@@ -16,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="28dp"
-        android:text="allan-辅助工具"
+        android:text="AShoot辅助工具"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,25 +30,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/permissionTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
-        android:layout_marginTop="100dp"
-        android:textSize="16sp"
-        android:text="先打开无障碍权限 和 悬浮窗顶层权限"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/desc" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestPermissionsBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentRoot"
         android:layout_marginTop="12dp"
-        android:text="权限申请"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/permissionTv" />
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

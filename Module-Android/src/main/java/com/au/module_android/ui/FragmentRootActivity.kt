@@ -59,7 +59,7 @@ class FragmentRootActivity : ViewActivity() {
 
     val fragmentClass by unsafeLazy { intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment> }
 
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v = FragmentContainerView(inflater.context)
         v.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,

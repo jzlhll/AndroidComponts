@@ -40,7 +40,10 @@ object ToutiaoScreenAdapter {
 
     private lateinit var application:Application
 
+    private val enable = false
+
     fun init(app:Application, expectWidthPx:Int=DEFAULT_UE_SIZE) {
+        if(!enable)return
         this.application = app
         this.ueExceptWidthPx = expectWidthPx
 
@@ -74,6 +77,7 @@ object ToutiaoScreenAdapter {
     }
 
     fun attach(activity: Activity) {
+        if(!enable)return
         val displayMetrics = activity.resources.displayMetrics
         displayMetrics.density = targetDensity
         displayMetrics.scaledDensity = targetScaleDensity
@@ -81,6 +85,7 @@ object ToutiaoScreenAdapter {
     }
 
     fun attach(dialog: Dialog) {
+        if(!enable)return
         val displayMetrics = dialog.context.resources.displayMetrics
         displayMetrics.density = targetDensity
         displayMetrics.scaledDensity = targetScaleDensity

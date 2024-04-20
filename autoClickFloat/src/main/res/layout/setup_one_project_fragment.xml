@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp"
-    tools:context=".AutoClickActivity">
+    tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/title"

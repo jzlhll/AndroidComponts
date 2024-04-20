@@ -22,7 +22,7 @@ class BridgeWebViewExFragment : ViewFragment(), BridgeExWebView.OnH5EventListene
     private lateinit var webView:BridgeExWebView
     private lateinit var fullVideoLayout:FrameLayout
 
-    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.bridge_web_view, container, false)
         webView = view.findViewById(R.id.webView)
         fullVideoLayout = view.findViewById(R.id.fullVideoLayout)

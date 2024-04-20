@@ -1,8 +1,10 @@
-package com.allan.autoclickfloat
+package com.allan.autoclickfloat.activities.startup
 
+import android.app.Activity
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.ViewModel
+import com.allan.autoclickfloat.AllPermissionActivity
 import com.au.module_android.permissions.hasFloatWindowPermission
 import com.au.module_android.simplelivedata.NoStickLiveData
 
@@ -11,7 +13,7 @@ import com.au.module_android.simplelivedata.NoStickLiveData
  * @date :2024/4/17 9:53
  * @description:
  */
-class AutoClickViewModel : ViewModel() {
+class PermissionsViewModel : ViewModel() {
     companion object {
         const val STATE_ALL_PERMISSION_ENABLE = 0
         const val STATE_ALL_NO_PERMISSION = -10
@@ -23,7 +25,7 @@ class AutoClickViewModel : ViewModel() {
             return accessibilityMgr.isEnabled
         }
 
-        fun isFloatWindowEnabled(activity: AllPermissionActivity) = activity.hasFloatWindowPermission()
+        fun isFloatWindowEnabled(activity: Activity) = activity.hasFloatWindowPermission()
     }
 
     val allPermissionEnabled = NoStickLiveData<Int>()

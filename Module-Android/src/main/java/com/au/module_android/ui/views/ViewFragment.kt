@@ -22,7 +22,7 @@ abstract class ViewFragment : AbsFragment(), IUi {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = onCreatingView(layoutInflater, null, savedInstanceState)
+        root = onUiCreateView(layoutInflater, null, savedInstanceState)
         return root
     }
 }
