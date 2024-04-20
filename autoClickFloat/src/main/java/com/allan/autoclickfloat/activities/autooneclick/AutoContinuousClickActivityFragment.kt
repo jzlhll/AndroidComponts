@@ -1,6 +1,7 @@
 package com.allan.autoclickfloat.activities.autooneclick
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.AllPermissionActivity
@@ -24,6 +25,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
             if (setupClickView == null) {
                 setupClickView = SetupClickFloatView().also {
                     it.callback = {x, y->
+                        Log.d("allan", "autoClick x=$x, y=$y")
                         lifecycleScope.launch {
                             binding.saveText.text = "已经保存的点：\n($x, $y)"
                         }

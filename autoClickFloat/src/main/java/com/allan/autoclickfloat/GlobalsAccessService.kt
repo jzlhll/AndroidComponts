@@ -73,7 +73,7 @@ class GlobalsAccessService : AccessibilityService() {
         //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
 //        performGlobalAction(GLOBAL_ACTION_DPAD_DOWN)
 //        performGlobalAction(GLOBAL_ACTION_DPAD_UP)
-        Log.d("allan", "onAccessibilityEvent $event")
+//        Log.d("allan", "onAccessibilityEvent $event")
         // 当快捷方式开关变化时，此方法会被调用
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             // 检查事件内容，判断是否是快捷方式开关
@@ -81,7 +81,6 @@ class GlobalsAccessService : AccessibilityService() {
             if (event.className == GlobalsAccessService::class.java.name) {
                 // 快捷方式开关状态发生了变化
                 // 在这里处理你的逻辑
-                Log.d("allan", "enabled! access")
             }
         }
     }

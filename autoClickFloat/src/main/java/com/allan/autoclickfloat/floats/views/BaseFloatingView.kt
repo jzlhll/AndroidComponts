@@ -39,46 +39,43 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
 
     private var lastTouchAction = 0
 
-    private var downX = 0f
-    private var downY = 0f
-
-    private var newX = 0f
-    private var newY = 0f
+    private var mRawX:Float = 0f
+    private var mRawY:Float = 0f
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         mRoot.setOnTouchListener { v, event ->
             //获取相对屏幕的坐标，即以屏幕左上角为原点
+            Log.d("allan", "onTouch: ${event.action} x(${event.x}) y(${event.y}), rawX(${event.rawX} rawY(${event.rawY}))")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //获取相对View的坐标，即以此View左上角为原点
                     lastTouchAction = MotionEvent.ACTION_DOWN //设置状态为按下
                     //判断是不第一次按下,不然的话每重新滑动都会回到起点
                     //0这个值应该跟随你的初始位置变化
-                    if (downX == 0f && downY == 0f) {
-                        downX = event.rawX
-                        downY = event.rawY
-                    }
-                    newX = event.rawX
-                    newY = event.rawY
+                    mRawX = event.rawX
+                    mRawY = event.rawY
                     mRoot.alpha = 1f
                 }
 
                 MotionEvent.ACTION_MOVE -> {
                     //当X轴或Y轴的滑动大于10时再,判定为滑动,正好点击事件也需要这个
-                    if (abs(event.rawX - newX) > MOVE_REACH_PIXEL
-                        || abs(event.rawY - newY) > MOVE_REACH_PIXEL) {
+                    if (abs(event.rawX - mRawX) > MOVE_REACH_PIXEL
+                        || abs(event.rawY - mRawY) > MOVE_REACH_PIXEL) {
                         lastTouchAction = MotionEvent.ACTION_MOVE //设置状态为滑动
-
-                        //这里给定滑动的位置
-                        mParams?.x = (newX - downX).toInt()
-                        mParams?.y = (newY - downY).toInt()
-
+// getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
+                        val distanceX = (event.rawX - mRawX).toInt()
+                        val distanceY = (event.rawY - mRawY).toInt()
+                        mParams?.let {
+                            it.x += distanceX
+                            it.y += distanceY
+                            // 刷新
+                            updateViewPosition()
+                        }
                         //记录下最新一个点的位置
-                        newX = event.rawX
-                        newY = event.rawY
+                        mRawX = event.rawX
+                        mRawY = event.rawY
                     }
-                    updateViewPosition()
                 }
                 MotionEvent.ACTION_CANCEL,
                 MotionEvent.ACTION_UP -> {

@@ -39,7 +39,7 @@
         android:text="已经保存的点："
         android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="wrap_content"/>
 
     <com.au.module_android.widget.CustomButton
         style="@style/StyleButtonGrayLong"

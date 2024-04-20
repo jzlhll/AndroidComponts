@@ -106,9 +106,7 @@ object AppDataStore {
      */
     @Deprecated("不建议直接使用，因为可能协程被取消，除非你明白你的scope一定保存成功")
     suspend fun saveSuspend(key:String, value:Any) {
-        ALog.t("1save suspend $key <to> $value")
         Globals.app.dataStore.edit { setting ->
-            ALog.t("2save suspend $key <to> $value")
             when (value) {
                 is Int -> setting[intPreferencesKey(key)] = value
                 is Long -> setting[longPreferencesKey(key)] = value

@@ -71,6 +71,8 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
             enabledFromServiceJob = lifecycleScope.launchOnUi {
                 delay(1000)
                 viewModel.getPermission(this@AllPermissionActivity)
+                delay(2000)
+                viewModel.getPermission(this@AllPermissionActivity)
             }
         }
     }
