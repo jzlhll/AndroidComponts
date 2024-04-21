@@ -13,7 +13,8 @@ open class ConfirmCenterDialog : BindingDialog<ConfirmCenterDialogBinding>() {
             content: String?,
             sureText: String?,
             cancelText:String? = null,
-            sureClick: Function1<ConfirmCenterDialog, Unit>?,
+            cancelBlock:Function1<ConfirmCenterDialog, Unit>? = null,
+            sureClick: Function1<ConfirmCenterDialog, Unit>?
         ): ConfirmCenterDialog {
             val dialog = ConfirmCenterDialog()
             dialog.onShownBlock = {
@@ -29,6 +30,7 @@ open class ConfirmCenterDialog : BindingDialog<ConfirmCenterDialogBinding>() {
                 dialog.binding.contentTv.text = content
                 dialog.binding.cancelButton.onClick {
                     dialog.dismissAllowingStateLoss()
+                    cancelBlock?.invoke(dialog)
                 }
             }
             dialog.show(manager, "ConfirmCenterDialog")

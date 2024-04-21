@@ -1,7 +1,8 @@
 package com.allan.autoclickfloat
 
 import android.util.Log
-import com.allan.autoclickfloat.floats.FloatingManager
+import com.allan.autoclickfloat.activities.projects.FloatingManager
+import com.allan.autoclickfloat.consts.Const
 import com.au.module_android.init.InitApplication
 
 /**
@@ -12,7 +13,7 @@ import com.au.module_android.init.InitApplication
 class AutoClickApplication : InitApplication() {
     override fun onCreate() {
         super.onCreate()
-        Log.d("allan", "application onCreate")
+        Log.d(Const.TAG, "application onCreate")
         FloatingManager.init()
     }
 }

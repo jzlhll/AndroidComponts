@@ -1,6 +1,7 @@
-package com.allan.autoclickfloat.floats
+package com.allan.autoclickfloat.activities.projects
 
 import android.util.Log
+import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.bean.ACTION_REMOVE
 import com.allan.autoclickfloat.floats.bean.ACTION_SHOW
 import com.allan.autoclickfloat.floats.bean.ACTION_START
@@ -8,7 +9,6 @@ import com.allan.autoclickfloat.floats.bean.ACTION_STOP
 import com.allan.autoclickfloat.floats.bean.AutoClickInfo
 import com.allan.autoclickfloat.floats.views.FloatingSettingView
 import com.allan.autoclickfloat.floats.views.FloatingStepView
-import com.allan.autoclickfloat.floats.views.WindowMgr
 import com.au.module_android.simplelivedata.NoStickLiveData
 
 /**
@@ -17,6 +17,9 @@ import com.au.module_android.simplelivedata.NoStickLiveData
  * @description:
  */
 object FloatingManager {
+    var floatingSetting: FloatingSettingView? = null
+    var floatingStep: FloatingStepView? = null
+
     var enableAutoClick = false
         private set
 
@@ -30,19 +33,19 @@ object FloatingManager {
         isInited = true
         autoClickLiveData.observeForeverUnStick { info->
             info!!
-            Log.d("allan", "autoClick LvieData $info")
+            Log.d(Const.TAG, "autoClick LvieData $info")
             when (info.action) {
                 ACTION_SHOW -> {
-                    WindowMgr.floatingStep = WindowMgr.floatingStep ?: FloatingStepView().also { it.mNotAlpha = 0.6f }
-                    WindowMgr.floatingStep?.show()
+                    floatingStep = floatingStep ?: FloatingStepView().also { it.mNotAlpha = 0.6f }
+                    floatingStep?.show()
 
-                    WindowMgr.floatingSetting = WindowMgr.floatingSetting ?: FloatingSettingView()
-                    WindowMgr.floatingSetting?.show()
+                    floatingSetting = floatingSetting ?: FloatingSettingView()
+                    floatingSetting?.show()
                 }
 
                 ACTION_REMOVE -> {
-                    WindowMgr.floatingSetting?.remove()
-                    WindowMgr.floatingStep?.remove()
+                    floatingSetting?.remove()
+                    floatingStep?.remove()
                     enableAutoClick = false
                 }
 

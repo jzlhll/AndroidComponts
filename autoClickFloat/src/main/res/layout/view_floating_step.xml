@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="60dp"
-    android:alpha="0.4"
+    android:alpha="0.75"
     android:layout_height="60dp">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="6dp"
+        android:tint="@color/floating_setting_color"
         android:src="@drawable/ic_nongyao_click"/>
 
     <TextView

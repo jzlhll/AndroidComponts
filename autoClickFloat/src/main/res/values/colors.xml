@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="floating_setting_color">#fff000</color>
+    <color name="floating_working_color">@color/color_primary</color>
 </resources>

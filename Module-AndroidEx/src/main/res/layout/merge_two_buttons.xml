@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
     <com.au.module_android.widget.CustomButton
         android:id="@+id/cancelButton"
-        style="@style/StyleButtonGrayShort"
+        style="@style/StyleButtonGrayLong"
         app:fontMode="mid"
         android:layout_width="0dp"
         android:layout_height="50dp"

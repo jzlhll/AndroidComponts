@@ -66,28 +66,6 @@
         <item name="android:textColor">@color/gray_btn_color</item>
     </style>
 
-    <!-- 按钮v2.1 统一样式: 主题色短按钮-->
-    <style name="StyleButtonPrimaryShort">
-        <item name="android:background">@drawable/corner_btn_primary</item>
-        <item name="android:textSize">@dimen/btn_font_size</item>
-        <item name="android:layout_height">@dimen/btn_height</item>
-        <item name="android:textColor">@color/primary_btn_color</item>
-
-        <item name="android:textStyle">normal</item>
-        <item name="android:lines">1</item>
-        <item name="android:gravity">center</item>
-        <item name="autoSizeMaxTextSize">20sp</item>
-        <item name="autoSizeMinTextSize">11sp</item>
-
-        <item name="fontMode">mid</item>
-    </style>
-
-    <!-- 按钮v2.1 统一样式: 灰色短按钮-->
-    <style name="StyleButtonGrayShort" parent="StyleButtonPrimaryShort">
-        <item name="android:background">@drawable/corner_bg_gray_light</item>
-        <item name="android:textColor">@color/color_text_normal</item>
-    </style>
-
     <style name="CustomTabLayout">
         <item name="tabIndicatorFullWidth">true</item>
         <item name="tabPaddingStart">8dp</item>
