@@ -45,10 +45,10 @@ class OnePointAuto {
 
     fun loadAutoOnePoint() {
         Globals.mainScope.launch {
-            val x:Int = AppDataStore.read("auto_continuous_click_point_x", 0)
-            val y:Int = AppDataStore.read("auto_continuous_click_point_y", 0)
-            val locx:Int = AppDataStore.read("auto_continuous_click_point_loc_x", 0)
-            val locy:Int = AppDataStore.read("auto_continuous_click_point_loc_y", 0)
+            val x:Int = AppDataStore.read("auto_continuous_click_point_x", 100)
+            val y:Int = AppDataStore.read("auto_continuous_click_point_y", 400)
+            val locx:Int = AppDataStore.read("auto_continuous_click_point_loc_x", 100)
+            val locy:Int = AppDataStore.read("auto_continuous_click_point_loc_y", 400)
             _autoOnePointLiveData.postValue(x to y)
             _autoOnePointLocLiveData.postValue(locx to locy)
         }

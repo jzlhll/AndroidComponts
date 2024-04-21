@@ -128,7 +128,7 @@ open class BaseFloatingView(private val tagKey:String, @LayoutRes private val la
                     }
                     MotionEvent.ACTION_CANCEL,
                     MotionEvent.ACTION_UP -> {
-                        touchUpCallback?.invoke(mParams?.x ?: 0, mParams?.y ?: 0)
+                        touchUpCallback?.invoke(mParams.x, mParams.y)
                         mRoot.alpha = mNotAlpha
                     }
                 }

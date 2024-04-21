@@ -25,6 +25,7 @@ import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.permissions.permission.PermissionForResult
 import com.au.module_android.permissions.permission.PermissionsForResult
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.startActivityFix
 
 const val REQUEST_OVERLAY_CODE: Int = 1001
 
@@ -74,7 +75,7 @@ fun LifecycleOwner.gotoAccessibilityPermission() {
         }
     }
     val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-    activity.startActivity(intent)
+    activity.startActivityFix(intent)
 }
 
 /**

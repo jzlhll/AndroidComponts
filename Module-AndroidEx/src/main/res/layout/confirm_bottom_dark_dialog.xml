@@ -55,7 +55,6 @@
             app:layout_constraintTop_toBottomOf="@id/contentTv"
             app:layout_constraintHorizontal_chainStyle="packed"
             android:layout_marginTop="32dp"
-            app:cornerRadius="6dp"
             android:textSize="16sp"/>
 
         <com.au.module_android.widget.CustomButton
@@ -71,8 +70,7 @@
             android:layout_marginTop="32dp"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            tools:text="delete"
-            app:cornerRadius="6dp"/>
+            tools:text="delete"/>
     </com.au.module_android.widget.BgBuildConstraintLayout>
 
     <android.widget.Space

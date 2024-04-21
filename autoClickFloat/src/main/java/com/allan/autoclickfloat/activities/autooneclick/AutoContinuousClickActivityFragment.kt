@@ -33,7 +33,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
             if (pair != null) {
                 v.show(pair.first, pair.second)
             } else {
-                v.show()
+                v.show(100, 400)
             }
         }
     }
@@ -117,7 +117,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
         AllPermissionActivity.checkGotoAllPermissionActivity(this)
 
         if (Const.autoOnePoint.autoOnePointOpenLiveData.value == true) {
-            ConfirmCenterDialog.show(childFragmentManager,
+            val dialog = ConfirmCenterDialog.show(childFragmentManager,
                 "如果需要设置的话，是否关闭？",
                 "",
                 "关闭",
@@ -129,6 +129,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
                 cancelBlock = {
                     requireActivity().finishAfterTransition()
                 })
+            dialog.isCancelable = false
         }
     }
 

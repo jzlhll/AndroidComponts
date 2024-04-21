@@ -12,10 +12,10 @@
         android:minHeight="234dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="@dimen/light_ui_padding_edge"
+        android:layout_marginEnd="@dimen/light_ui_padding_edge"
         android:padding="16dp"
-        app:backgroundNormal="@color/color_dark_bg1d1d1f"
+        app:backgroundNormal="#ffffff"
         app:cornerSizeTopLeft="12dp"
         app:cornerSizeTopRight="12dp"
         app:cornerSizeBottomLeft="12dp"
@@ -33,7 +33,7 @@
 
         <com.au.module_android.widget.CustomFontText
             android:id="@+id/titleTv"
-            style="@style/StyleFontBTextDark"
+            style="@style/StyleFontBText"
             app:layout_constraintTop_toBottomOf="@id/icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
 
         <com.au.module_android.widget.CustomFontText
             android:id="@+id/contentTv"
-            style="@style/StyleFontSecondaryTextDark"
+            style="@style/StyleFontSecondaryText"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/titleTv"
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
 
         <com.au.module_android.widget.CustomButton
             android:id="@+id/cancelButton"
-            style="@style/StyleButtonSecondaryLongDark"
+            style="@style/StyleButtonGrayLong"
             app:fontMode="mid"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -77,7 +77,7 @@
         <com.au.module_android.widget.CustomButton
             android:id="@+id/sureButton"
             app:fontMode="mid"
-            style="@style/StyleButtonPrimaryLongDark"
+            style="@style/StyleButtonPrimaryLong"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="8dp"
