@@ -19,7 +19,6 @@
         <!--新增一个item，用于控制menu-->
         <item name="actionOverflowMenuStyle">@style/toolbarOverflowMenuStyle</item>
         <item name="actionMenuTextAppearance">@style/toolbarMenuTextAppearance</item>
-
     </style>
 
     <!--设置菜单的popup的样式-->

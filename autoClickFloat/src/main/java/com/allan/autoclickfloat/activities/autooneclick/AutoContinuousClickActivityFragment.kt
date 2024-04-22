@@ -12,7 +12,7 @@ import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
-import com.au.module_androidex.dialog_normal.ConfirmCenterDialog
+import com.au.module_androiduilight.dialogs.ConfirmCenterDialog
 
 class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickAPointBinding>() {
 

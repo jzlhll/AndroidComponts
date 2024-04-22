@@ -8,8 +8,8 @@ import android.view.View
 import com.allan.autoclickfloat.databinding.FragmentHongbaoScreenBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.createActivityForResult
-import com.au.module_androidex.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_androiduilight.toast.toastOnTop
 
 class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding>() {
     private var mediaProjectionManager:MediaProjectionManager? = null

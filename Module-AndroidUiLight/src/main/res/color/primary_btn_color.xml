@@ -2,5 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- disabled state -->
     <item android:state_enabled="false" android:color="#CCCCCC" />
+    <item android:state_pressed="true" android:color="#CCCCCC" />
     <item android:color="#ffffff"/>
 </selector>

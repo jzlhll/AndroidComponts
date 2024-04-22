@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.android.nested.BuildConfig
 import com.au.module_android.simplelivedata.SafeLiveData
-import com.au.module_androidex.toast.toastOnTop
+import com.au.module_androiduilight.toast.toastOnTop
 import kotlinx.coroutines.launch
 
 /**

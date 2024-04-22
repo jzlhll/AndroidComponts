@@ -1,4 +1,4 @@
-package com.au.module_androidex.widget
+package com.au.module_androiduilight.widget
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.au.module_android.ui.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
-import com.au.module_androidex.R
-import com.au.module_androidex.databinding.SwitchButtonsLayoutBinding
+import com.au.module_androiduilight.R
+import com.au.module_androiduilight.databinding.SwitchButtonsLayoutBinding
 import kotlin.math.max
 
 /**

@@ -64,8 +64,8 @@
     </style>
 
     <style name="StyleButtonWarn" parent="StyleButtonPrimary">
-        <item name="android:background">@drawable/corner_btn_warn_dark</item>
-        <item name="android:textColor">@color/secondary_btn_color</item>
+        <item name="android:background">@drawable/corner_btn_warn</item>
+        <item name="android:textColor">#f6f6f6</item>
     </style>
 
 </resources>

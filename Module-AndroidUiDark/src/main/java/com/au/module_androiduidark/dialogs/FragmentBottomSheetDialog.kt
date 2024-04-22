@@ -1,12 +1,12 @@
 package com.au.module_androiduidark.dialogs
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
+import com.au.module_android.Globals
 import com.au.module_android.ui.ViewBackgroundBuilder
 import com.au.module_android.utils.BUNDLE_KEY0
 import com.au.module_android.utils.BUNDLE_KEY1
@@ -14,7 +14,7 @@ import com.au.module_android.utils.BUNDLE_KEY2
 import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_androidex.AbsFragmentBottomSheetDialog
+import com.au.module_androidex.dialog.AbsFragmentBottomSheetDialog
 import com.au.module_androiduidark.R
 
 class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottomSheetDialog(hasEditText) {
@@ -54,9 +54,9 @@ class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottom
             val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)
             ViewBindingWrap(root as ViewGroup, fcv)
         } else {
-            val root = inflater.inflate(R.layout.dialog_bottomsheet, container, false)
+            val root = inflater.inflate(com.au.module.android.R.layout.dialog_bottomsheet, container, false)
             root.background = ViewBackgroundBuilder()
-                .setBackground(Color.parseColor("#1f1f1f"))
+                .setBackground(Globals.app.getColor(com.au.module.android.R.color.color1f1f1f))
                 .setCornerRadius(20f.dp, 20f.dp, 0f, 0f)
                 .build()
             val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)

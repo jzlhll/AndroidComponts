@@ -4,10 +4,11 @@
     <color name="color_background_app_dark">#111111</color>
     <!-- button 主题色 -->
     <color name="color_text_normal_dark">#ffffff</color>
+    <color name="color_text_normal_press_dark">#C3C3C3</color>
+    <color name="color_text_secondary_dark">#6D6D73</color>
     
     <color name="color_primary_dark">#ED5A65</color>
     <color name="color_primary_press_dark">#C04851</color>
-    
-    <color name="color_text_normal_press_dark">#C3C3C3</color>
-    <color name="color_text_secondary_dark">#6D6D73</color>
+
+    <color name="color_warn_bg_dark">#FF6600</color>
 </resources>

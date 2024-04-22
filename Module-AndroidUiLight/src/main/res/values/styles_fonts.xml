@@ -51,7 +51,7 @@
     <style name="StyleMinText">
         <item name="android:textColor">@color/color_text_normal</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="StyleSmallText">

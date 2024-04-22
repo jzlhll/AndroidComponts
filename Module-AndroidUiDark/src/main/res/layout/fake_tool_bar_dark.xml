@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:paddingStart="12dp"
-    android:paddingEnd="@dimen/dark_ui_padding_edge"
+    android:paddingEnd="@dimen/ui_padding_edge"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@color/color1f1f1f"
     android:layout_height="48dp">

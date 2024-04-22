@@ -12,7 +12,7 @@ import com.au.module_android.utils.BUNDLE_KEY0
 import com.au.module_android.utils.BUNDLE_KEY2
 import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.dp
-import com.au.module_androidex.AbsFragmentBottomSheetDialog
+import com.au.module_androidex.dialog.AbsFragmentBottomSheetDialog
 import com.au.module_androiduilight.R
 
 class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottomSheetDialog(hasEditText) {
@@ -43,12 +43,12 @@ class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottom
     }
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): ViewBindingWrap {
-        val root = inflater.inflate(R.layout.dialog_bottomsheet, container, false)
+        val root = inflater.inflate(com.au.module.android.R.layout.dialog_bottomsheet, container, false)
         root.background = ViewBackgroundBuilder()
             .setBackground(Color.WHITE)
             .setCornerRadius(20f.dp, 20f.dp, 0f, 0f)
             .build()
-        val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)
+        val fcv = root.findViewById<FragmentContainerView>(com.au.module.android.R.id.fcv)
         return ViewBindingWrap(root as ViewGroup, fcv)
     }
 }

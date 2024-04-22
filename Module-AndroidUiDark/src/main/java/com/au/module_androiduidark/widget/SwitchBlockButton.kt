@@ -1,11 +1,11 @@
-package com.au.module_androidex.widget
+package com.au.module_androiduidark.widget
 
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.au.module_androidex.R
-import com.au.module_androidex.databinding.BlocksSwitchLayoutBinding
+import com.au.module_androiduidark.R
+import com.au.module_androiduidark.databinding.BlocksSwitchLayoutBinding
 
 /**
  * 黑白块的开关

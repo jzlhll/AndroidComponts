@@ -6,7 +6,6 @@ pluginManagement {
     }
 }
 
-///// start of extra params
 Properties properties = new Properties()
 InputStream inputStream = file('./local.properties').newDataInputStream()
 properties.load(inputStream)
@@ -27,9 +26,8 @@ dependencyResolutionManagement {
 rootProject.name = "AndroidLearning"
 include ':app'
 include ':Module-Android'
-include ':Module-AndroidEx'
 include ':Module-AndroidUiLight'
-include ':Module-AndroidUiDark'
+//include ':Module-AndroidUiDark'
 
 include ':Module-Nested'
 include ':Module-Cached'
@@ -37,11 +35,13 @@ include ':Module-Cached'
 //include ':Module-FlyableJsonAPT'
 //include ':Module-FlyableJsonBase'
 include ':jsbridge'
-include ':appcontentprovider'
-include ':appcontentresolver'
+
 include ':studyjob'
 include ':jobstudy'
 include ':AuLiteSql'
 include ':AuLiteSqlKt'
 include ':MultiMedia'
 include ':autoClickFloat'
+
+//include ':appcontentprovider'
+//include ':appcontentresolver'

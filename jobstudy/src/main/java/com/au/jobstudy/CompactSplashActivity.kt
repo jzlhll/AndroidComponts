@@ -1,8 +1,8 @@
 package com.au.jobstudy
 
 import android.content.Intent
+import com.au.module_android.init.AbsSplashActivity
 import com.au.module_android.utils.startActivityFix
-import com.au.module_androidex.AbsSplashActivity
 
 /**
  * @author allan

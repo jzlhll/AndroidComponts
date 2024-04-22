@@ -12,8 +12,8 @@ import com.au.jobstudy.databinding.PartialSoundRecordBinding
 import com.au.jobstudy.utils.secondToTimeMS
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_androidex.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_androiduilight.toast.toastOnTop
 import com.au.multimedias.IRecord
 import com.au.multimedias.createExternalFileName
 import com.au.multimedias.createRecord

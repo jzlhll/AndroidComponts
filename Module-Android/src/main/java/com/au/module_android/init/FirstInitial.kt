@@ -2,6 +2,7 @@ package com.au.module_android.init
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.startup.Initializer
 import com.au.module_android.Globals
 import com.au.module_android.hooks.optimizeSpTask
@@ -13,6 +14,12 @@ import com.au.module_android.utils.ALog
  */
 object FirstInitial {
     var isInitSharedPrefHook = false
+
+    /**
+     * application初始化完成的通知。时机就是我们把基础的app全局给设置好。避免有的地方无法调用到。
+     */
+    val firstInitialOnCreateData = MutableLiveData<Any>()
+
     fun init(context: Context): Application {
         val app = context as Application
         ALog.d("first init....")
@@ -24,6 +31,7 @@ object FirstInitial {
             optimizeSpTask()
         }
 
+        firstInitialOnCreateData.postValue(Unit)
         return app
     }
 }

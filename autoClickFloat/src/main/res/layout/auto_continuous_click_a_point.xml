@@ -109,7 +109,7 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonWarnDark"
+        style="@style/StyleButtonWarn"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:id="@+id/stopAutoClickBtn"

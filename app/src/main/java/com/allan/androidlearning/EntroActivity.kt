@@ -14,8 +14,8 @@ import com.au.module_android.Globals
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.click.onClick
-import com.au.module_androidex.toast.toastOnTop
 import com.au.module_android.utils.unsafeLazy
+import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {

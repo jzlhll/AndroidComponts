@@ -14,7 +14,7 @@ import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_androidex.dialog_normal.ConfirmCenterDialog
+import com.au.module_androiduilight.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 

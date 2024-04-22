@@ -25,10 +25,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/closeBtn"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:id="@+id/text"
         style="@style/StyleFontText"
         android:maxLines="3"
@@ -36,5 +36,20 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:textSize="16sp"
-        tools:text="The recipy dfjksdafhjkf jkfjk 18949i 489 22 cooool!!! djkfdasjkf zxcjvk 83204i jadskfja 18904 ajdkfa 182941j makxsf  81294 adjkf 189023 jdfka 12891 dskjf" />
+        tools:text="dfjksdafhjkf jkfjk 18949i 489 22 cooool!!! djkfdasjkf zxcjvk 83204i jadskfja 18904 ajdkfa 182941j makxsf  81294 adjkf 189023 jdfka 12891 dskjf" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/closeBtn"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingEnd="2dp"
+        android:paddingStart="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:tint="@color/color_text_secondary"
+        android:src="@drawable/ic_close"
+        android:layout_width="30dp"
+        android:layout_height="24dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="BaseSplashTheme" parent="Theme.SplashScreen">
-        <!--   todo 继承修改     <item name="postSplashScreenTheme">@style/Theme.AppCompat</item>-->
-        <!--   todo 继承修改     <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>-->
-        <item name="windowSplashScreenBackground">#ffffff</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <!--        <item name="android:windowBackground">@drawable/bg_splash_window</item>-->
-    </style>
-
     <style name="CustomModuleTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>

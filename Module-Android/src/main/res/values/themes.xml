@@ -10,4 +10,27 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:navigationBarColor">#ffffff</item>
     </style>
+
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->
+    <style name="shape_round8dp_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+        <!-- app:strokeColor
+app:strokeWidth -->
+    </style>
+
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆形 -->
+    <style name="shape_circle_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="BaseSplashTheme" parent="Theme.SplashScreen">
+        <!--   todo 继承修改     <item name="postSplashScreenTheme">@style/Theme.AppCompat</item>-->
+        <!--   todo 继承修改     <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>-->
+        <item name="windowSplashScreenBackground">#ffffff</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <!--        <item name="android:windowBackground">@drawable/bg_splash_window</item>-->
+    </style>
+
 </resources>

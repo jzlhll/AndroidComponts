@@ -37,7 +37,7 @@ android {
 
 dependencies {
     api project(":Module-Android")
-    implementation project(":Module-AndroidEx")
+    implementation project(":Module-AndroidUiLight")
     implementation project(":Module-Nested")
     implementation project(':AuLiteSql')
     implementation project(':MultiMedia')

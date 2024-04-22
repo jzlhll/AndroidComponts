@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:minHeight="89dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/ic_shadow_bg"
+    android:background="@drawable/ic_shadow_bg_dark"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp">
 
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toStartOf="@id/closeBtn"
         android:layout_marginStart="12dp"
         android:id="@+id/text"
-        style="@style/StyleFontText"
+        style="@style/StyleFontTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="12dp"
         android:id="@+id/desc"
-        style="@style/StyleFontText"
+        style="@style/StyleFontTextDark"
         android:layout_marginTop="2dp"
         android:layout_width="0dp"
         android:textAlignment="gravity"
@@ -63,7 +63,7 @@
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:tint="@color/color_text_secondary"
+        android:tint="@color/color_text_secondary_dark"
         android:src="@drawable/ic_close"
         android:layout_width="30dp"
         android:layout_height="24dp"/>

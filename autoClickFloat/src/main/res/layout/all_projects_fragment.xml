@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <com.au.module_android.widget.CustomFontText
-        android:paddingHorizontal="@dimen/light_ui_padding_edge"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
         app:layout_constraintTop_toBottomOf="@id/toolBar"
         android:id="@+id/title"
         android:layout_marginTop="12dp"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingHorizontal="@dimen/light_ui_padding_edge"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
         android:layout_marginTop="8dp"
         android:id="@+id/rcv"
         app:layout_constraintTop_toBottomOf="@id/title"
