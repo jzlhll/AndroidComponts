@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- disabled state -->
-    <item android:state_focused="false" android:color="#ffffff" />
-    <item android:state_focused="true" android:color="#f0f0f0"/>
-</selector>

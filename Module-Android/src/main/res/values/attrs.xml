@@ -45,17 +45,6 @@
         <attr name="inflatedCornerSize" format="dimension"/>
     </declare-styleable>
 
-
-    <declare-styleable name="SwitchLayoutButton">
-        <attr name="first_str" format="string" />
-        <attr name="second_str" format="string" />
-        <attr name="padding_inner" format="dimension" />
-        <attr name="bg_color" format="color"/>
-        <attr name="bg_corner" format="dimension"/>
-        <attr name="select_color" format="color"/>
-        <attr name="select_corner" format="dimension"/>
-    </declare-styleable>
-
     <declare-styleable name="CustomTextView">
         <attr name="fontMode" />
         <attr name="isFontNum" />

@@ -45,7 +45,7 @@ public final class BridgeUtil {
     private static Handler mainHandler;
 
     @NonNull
-    static Handler getMainHandler() {
+    public static Handler getMainHandler() {
         if (mainHandler == null) {
             mainHandler = new Handler(Looper.getMainLooper());
         }

@@ -8,7 +8,7 @@ import android.view.View
 import com.allan.autoclickfloat.databinding.FragmentHongbaoScreenBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.createActivityForResult
-import com.au.module_android.toast.toastOnTop
+import com.au.module_androidex.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
 
 class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding>() {

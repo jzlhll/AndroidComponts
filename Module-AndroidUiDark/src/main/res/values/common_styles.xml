@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->
+    <style name="shape_round8dp_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+        <!-- app:strokeColor
+app:strokeWidth -->
+    </style>
+
+    <!-- ShapeableImageView shapeAppearanceOverlay 圆形 -->
+    <style name="shape_circle_Style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

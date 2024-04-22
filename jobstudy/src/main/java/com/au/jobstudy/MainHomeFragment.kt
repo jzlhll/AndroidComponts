@@ -19,7 +19,7 @@ import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.jobstudy.home.ThisWeekUiData
 import com.au.jobstudy.pass.Pass
 import com.au.module_android.click.onClick
-import com.au.module_android.toast.toastOnTop
+import com.au.module_androidex.toast.toastOnTop
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp

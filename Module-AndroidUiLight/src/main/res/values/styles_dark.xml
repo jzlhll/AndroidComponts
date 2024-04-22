@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 输入框 -->
+    <style name="StyleInputLayoutStyleDark" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="cursorColor">@color/color_text_normal_dark</item>
+<!--        <item name="boxBackgroundMode">none</item>-->
+        <item name="boxBackgroundColor">@color/color_background_app_dark</item>
+        <item name="boxStrokeColor">@color/input_board_color_dark</item>
+        <item name="endIconTint">@color/input_text_color_dark</item>
+        <item name="boxCollapsedPaddingTop">8dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <!--不给Layout有hint动画把hint放到editText上，并设置paddingVertical-->
+        <item name="hintEnabled">false</item>
+        <!--必须来一个theme才能让它改变-->
+<!--        <item name="android:theme">@style/Mine.TextInputLayout.FilledBox</item>-->
+    </style>
+
+    <!--输入框的外部InputLayout的样式: 配套的内部EditText样式-->
+    <style name="StyleEditInInputLayoutDark">
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textColorHint">#3B3B40</item>
+        <item name="android:textColor">@color/color_text_normal_dark</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_dark</item>
+    </style>
+
+    <!-- 单纯一个输入框，空白边框样式-->
+    <style name="StyleBlankEditTextDark">
+        <item name="android:textColor">@color/color_text_normal_dark</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColorHint">#3B3B40</item>
+        <item name="android:background">@drawable/corner_blank_board_bg_dark</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor_dark</item>
+    </style>
+
+    <!-- 主题色背景，单个且长，左右下边距固定，文字大小颜色固定 -->
+    <style name="StyleButtonPrimaryDark">
+        <item name="android:background">@drawable/corner_btn_primary_dark</item>
+        <item name="android:textSize">@dimen/btn_font_size</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:textColor">@color/primary_btn_color_dark</item>
+        <item name="android:layout_marginBottom">@dimen/btn_margin_bottom_low</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="fontMode">mid</item>
+    </style>
+    
+    <!-- 灰色长按钮-->
+    <style name="StyleButtonGrayDark" parent="StyleButtonPrimaryDark">
+        <item name="android:background">@drawable/corner_btn_secondary_dark</item>
+        <item name="android:textColor">@color/secondary_btn_color_dark</item>
+    </style>
+
+
+    <!-- 有的地方需要一个类似disable的btn，却又支持点击 -->
+    <style name="StyleButtonFakeDisabledDark" parent="StyleButtonPrimaryDark">
+        <item name="android:background">@drawable/corner_btn_primary_long_disabled_dark</item>
+        <item name="android:textColor">#3d3d3f</item>
+    </style>
+
+    <style name="StyleButtonWarnDark" parent="StyleButtonPrimaryDark">
+        <item name="android:background">@drawable/corner_btn_warn_dark</item>
+        <item name="android:textColor">@color/secondary_btn_color_dark</item>
+    </style>
+
+</resources>

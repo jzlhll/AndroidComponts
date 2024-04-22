@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonPrimaryLong"
+        style="@style/StyleButtonPrimary"
         android:id="@+id/requestPermissionsBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"

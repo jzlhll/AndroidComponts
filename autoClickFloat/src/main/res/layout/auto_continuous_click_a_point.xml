@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"/>
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonGrayLong"
+        style="@style/StyleButtonGray"
         android:id="@+id/showFloatViewBtn"
         android:layout_width="0dp"
         android:layout_height="52dp"
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@id/saveText" />
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonGrayLong"
+        style="@style/StyleButtonGray"
         android:id="@+id/closeFloatViewBtn"
         android:layout_width="0dp"
         android:layout_height="52dp"
@@ -98,7 +98,7 @@
         android:layout_height="wrap_content"/>
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonPrimaryLong"
+        style="@style/StyleButtonPrimary"
         android:id="@+id/startAutoClickBtn"
         android:layout_width="0dp"
         android:layout_height="52dp"
@@ -109,7 +109,7 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonWarnLongDark"
+        style="@style/StyleButtonWarnDark"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:id="@+id/stopAutoClickBtn"

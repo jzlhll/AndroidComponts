@@ -43,7 +43,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
-        style="@style/StyleButtonSecondaryLongDark"
+        style="@style/StyleButtonGrayDark"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/stopAllBtn"
         android:layout_marginBottom="24dp"

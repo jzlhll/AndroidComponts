@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/cancelButton"
+        style="@style/StyleButtonGray"
+        app:fontMode="mid"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="8dp"
+        tools:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sureButton"
+        app:layout_constraintTop_toBottomOf="@id/contentTv"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginTop="32dp"
+        app:cornerRadius="6dp"
+        android:textSize="16sp"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/sureButton"
+        app:fontMode="mid"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/cancelButton"
+        app:layout_constraintTop_toBottomOf="@id/contentTv"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginTop="32dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        tools:text="delete"
+        app:cornerRadius="6dp"/>
+</merge>

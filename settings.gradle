@@ -27,6 +27,10 @@ dependencyResolutionManagement {
 rootProject.name = "AndroidLearning"
 include ':app'
 include ':Module-Android'
+include ':Module-AndroidEx'
+include ':Module-AndroidUiLight'
+include ':Module-AndroidUiDark'
+
 include ':Module-Nested'
 include ':Module-Cached'
 //include ':Module-FlyableJson'
@@ -37,7 +41,6 @@ include ':appcontentprovider'
 include ':appcontentresolver'
 include ':studyjob'
 include ':jobstudy'
-include ':Module-AndroidEx'
 include ':AuLiteSql'
 include ':AuLiteSqlKt'
 include ':MultiMedia'

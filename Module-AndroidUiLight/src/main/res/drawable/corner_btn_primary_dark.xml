@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 长&主题色的背景 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/color1f1f1f"/>
+            <corners android:radius="@dimen/single_btn_corner_size"/>
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/color_text_normal_press_dark"/>
+            <corners android:radius="@dimen/single_btn_corner_size"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="@color/colorf0f0f0"/>
+            <corners android:radius="@dimen/single_btn_corner_size"/>
+        </shape>
+    </item>
+</selector>
