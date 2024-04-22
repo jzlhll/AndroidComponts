@@ -1,10 +1,12 @@
 package com.allan.autoclickfloat.activities.startup
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Activity
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.ViewModel
 import com.allan.autoclickfloat.AllPermissionActivity
+import com.allan.autoclickfloat.BuildConfig
 import com.au.module_android.permissions.hasFloatWindowPermission
 import com.au.module_android.simplelivedata.NoStickLiveData
 
@@ -22,7 +24,15 @@ class PermissionsViewModel : ViewModel() {
 
         fun isAccessibilityEnabled(context: Context) : Boolean {
             val accessibilityMgr = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-            return accessibilityMgr.isEnabled
+            if (accessibilityMgr.isEnabled) {
+                val enableServices = accessibilityMgr.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+                for (sv in enableServices) {
+                    if (sv.resolveInfo.serviceInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+                        return true
+                    }
+                }
+            }
+            return false
         }
 
         fun isFloatWindowEnabled(activity: Activity) = activity.hasFloatWindowPermission()

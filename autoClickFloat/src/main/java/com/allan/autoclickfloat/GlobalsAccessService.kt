@@ -21,8 +21,6 @@ import kotlinx.coroutines.MainScope
  */
 class GlobalsAccessService : AccessibilityService() {
     companion object {
-        const val TAG = "GlobalsAccessService"
-
         var isAlive = false
         val isEnabledLiveData = MutableLiveData<Any>()
     }
