@@ -8,6 +8,7 @@ import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AllFeaturesFragmentBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentRootOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
@@ -15,7 +16,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.autoClickButton.onClick {
-            FragmentRootActivity.start(requireActivity(), AutoContinuousClickActivityFragment::class.java)
+            FragmentRootOrientationActivity.start(requireActivity(), AutoContinuousClickActivityFragment::class.java)
         }
 
         binding.recordModeBtn.onClick {

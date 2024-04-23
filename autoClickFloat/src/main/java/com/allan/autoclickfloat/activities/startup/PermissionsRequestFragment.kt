@@ -15,9 +15,9 @@ import com.au.module_android.utils.visible
 class PermissionsRequestFragment : BindingFragment<PermissionsFragmentBinding>() {
     private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[PermissionsViewModel::class.java] }
 
-    private val twoPermissionLost = "先打开无障碍权限 和 悬浮窗顶层权限"
-    private val accessibilityPermissionLost = "先打开无障碍权限"
-    private val floatWindowPermissionLost = "先打开悬浮窗顶层权限"
+    private val twoPermissionLost = "开启无障碍功能 和 悬浮窗权限"
+    private val accessibilityPermissionLost = "开启无障碍功能"
+    private val floatWindowPermissionLost = "开启悬浮窗权限"
 
     private fun initData() {
         viewModel.allPermissionEnabled.observe(viewLifecycleOwner) {

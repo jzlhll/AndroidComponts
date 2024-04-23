@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.views.ViewActivity
 
-class NormalViewActivity : ViewActivity() {
+open class NormalViewActivity : ViewActivity() {
     companion object {
         private const val KEY_INTENT_MASK = "intent_mask_str"
         private const val KEY_INTENT_MASK2 = "intent_mask_2"

@@ -28,6 +28,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="com.au.module_android.ui.FragmentRootOrientationActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|screenLayout|uiMode|navigation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <activity
             android:name="com.au.module_android.ui.NormalViewActivity"
             android:configChanges="screenSize|keyboard|orientation|keyboardHidden|fontScale|locale|screenLayout|uiMode|navigation"
             android:exported="false"

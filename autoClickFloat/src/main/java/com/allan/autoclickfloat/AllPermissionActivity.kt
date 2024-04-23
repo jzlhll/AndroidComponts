@@ -2,6 +2,7 @@ package com.allan.autoclickfloat
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -9,6 +10,7 @@ import com.allan.autoclickfloat.activities.startup.AllFeaturesFragment
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.databinding.RootActivityBinding
 import com.allan.autoclickfloat.activities.startup.PermissionsViewModel
+import com.allan.autoclickfloat.consts.Const
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
@@ -47,8 +49,14 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     private var isPermissionFragment:Boolean? = null
     private var enabledFromServiceJob:Job? = null
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(Const.TAG, "onDestroy: ")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(Const.TAG, "onCreate: ")
 
         transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
             binding.root.setPadding(binding.root.paddingStart, statusBarsHeight, binding.root.paddingEnd, navigationBarHeight)

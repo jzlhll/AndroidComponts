@@ -37,10 +37,10 @@ object FloatingManager {
             when (info.action) {
                 ACTION_SHOW -> {
                     floatingStep = floatingStep ?: FloatingStepView().also { it.mNotAlpha = 0.6f }
-                    floatingStep?.show()
+                    //todo floatingStep?.show()
 
                     floatingSetting = floatingSetting ?: FloatingSettingView()
-                    floatingSetting?.show()
+                    //todo  floatingSetting?.show()
                 }
 
                 ACTION_REMOVE -> {

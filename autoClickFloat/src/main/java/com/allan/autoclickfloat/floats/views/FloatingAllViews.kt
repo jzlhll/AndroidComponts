@@ -8,7 +8,7 @@ import com.allan.autoclickfloat.R
 import com.au.module_android.Globals
 import com.au.module_android.utils.startActivityFix
 
-class FloatingStepView : BaseFloatingView("FloatingStepView", R.layout.view_floating_step) {
+class FloatingStepView : BaseFloatingView( R.layout.view_floating_step) {
     private var stepIndexTv :TextView? = null
 
     init {
@@ -20,7 +20,7 @@ class FloatingStepView : BaseFloatingView("FloatingStepView", R.layout.view_floa
     }
 }
 
-class FloatingSettingView : BaseFloatingView("FloatingSettingView", R.layout.view_floating_setting) {
+class FloatingSettingView : BaseFloatingView(R.layout.view_floating_setting) {
     init {
         clickCallback = {
             Globals.app.startActivityFix(Intent(Globals.app, AllPermissionActivity::class.java))

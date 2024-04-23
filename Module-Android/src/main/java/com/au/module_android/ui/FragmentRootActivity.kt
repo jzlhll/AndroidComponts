@@ -1,5 +1,6 @@
 package com.au.module_android.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,7 +24,7 @@ import com.au.module_android.utils.unsafeLazy
  * Date: 2023/8/29
  * Description 限制
  */
-class FragmentRootActivity : ViewActivity() {
+open class FragmentRootActivity : ViewActivity() {
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"
@@ -43,8 +44,18 @@ class FragmentRootActivity : ViewActivity() {
                             activityResult:IActivityResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
-                            hasWebView:Boolean = false)  {
-            val intent = Intent(context, FragmentRootActivity::class.java)
+                            hasWebView:Boolean = false) {
+            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView)
+        }
+
+        internal fun start(context: Context,
+                           showActivityClass:Class<out Activity>,
+                           fragmentClass:Class<out Fragment>,
+                           activityResult:IActivityResult?,
+                           arguments: Bundle?,
+                           optionsCompat: ActivityOptionsCompat?,
+                           hasWebView:Boolean) {
+            val intent = Intent(context, showActivityClass)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
             if(hasWebView) intent.putExtra(KEY_HAS_WEB_VIEW, hasWebView)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)

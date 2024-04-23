@@ -5,13 +5,9 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.util.Log
 import androidx.lifecycle.Observer
-import com.allan.autoclickfloat.activities.autooneclick.SetupClickFloatView
-import com.allan.autoclickfloat.activities.autooneclick.key_auto_continuous_click
 import com.allan.autoclickfloat.consts.Const
-import com.allan.autoclickfloat.floats.WindowMgr
 import com.au.module_android.postToMainHandler
 import com.au.module_android.removeFromMainHandler
-import com.au.module_android.utils.asOrNull
 
 class GlobalsAccessServiceAutoOneKey(service: GlobalsAccessService) : GlobalsAccessServiceObserver(service) {
     private val gestureResultCallback = object : AccessibilityService.GestureResultCallback() {

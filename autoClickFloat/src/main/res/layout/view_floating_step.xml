@@ -4,12 +4,11 @@
     android:alpha="0.75"
     android:layout_height="60dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/ivIcon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="6dp"
-        android:tint="@color/floating_setting_color"
         android:src="@drawable/ic_nongyao_click"/>
 
     <TextView

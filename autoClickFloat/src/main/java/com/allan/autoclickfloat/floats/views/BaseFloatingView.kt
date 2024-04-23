@@ -1,17 +1,17 @@
 package com.allan.autoclickfloat.floats.views
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.graphics.PixelFormat
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.Surface
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
-import com.allan.autoclickfloat.R
+import androidx.lifecycle.Observer
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.WindowMgr
 import com.au.module_android.Globals
@@ -23,7 +23,10 @@ import kotlin.math.abs
  * @date :2024/4/15 16:43
  * @description: 不要给任何的子View设置点击事件。通过直接监听这里面的clickCallback来处理
  */
-open class BaseFloatingView(private val tagKey:String, @LayoutRes private val layoutId:Int) {
+open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
+    val halfSize : Int
+        get() = (mRoot.width shr 1)
+
     private var _mParams: WindowManager.LayoutParams? = null
     private val mParams : WindowManager.LayoutParams
         get() {
@@ -88,6 +91,8 @@ open class BaseFloatingView(private val tagKey:String, @LayoutRes private val la
     private var mRawX:Float = 0f
     private var mRawY:Float = 0f
 
+    private var rotationObserver:Observer<Int?> ? = null
+
     @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         mRoot.setOnTouchListener { v, event ->
@@ -115,12 +120,9 @@ open class BaseFloatingView(private val tagKey:String, @LayoutRes private val la
 // getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
                             val distanceX = (event.rawX - mRawX).toInt()
                             val distanceY = (event.rawY - mRawY).toInt()
-                            mParams.let {
-                                it.x += distanceX
-                                it.y += distanceY
-                                // 刷新
-                                updateViewPosition()
-                            }
+                            mParams.x += distanceX
+                            mParams.y += distanceY
+                            updateViewPosition()
                             //记录下最新一个点的位置
                             mRawX = event.rawX
                             mRawY = event.rawY
@@ -145,30 +147,113 @@ open class BaseFloatingView(private val tagKey:String, @LayoutRes private val la
     }
 
     fun updateViewPosition() {
-        //更新浮动窗口位置参数
-        WindowMgr.updateView(mRoot, mParams) //刷新显示
+        if (isShown) {
+            //更新浮动窗口位置参数
+            WindowMgr.updateView(mRoot, mParams) //刷新显示
+        }
     }
 
-    fun show(x:Int?=null, y:Int? = null) {
+    var mLastOration = -1
+
+    //传入的是保存后的结果。因此可能需要核对转换角度
+    fun show(x:Int?, y:Int?, rotation:Int) {
         if (isShown) {
             return
         }
+        val currentRotation = WindowMgr.mWindowManager.defaultDisplay.rotation
+        var needFix = false
+        if (currentRotation != rotation) {
+            //转换不同角度的x,y
+            when (rotation) {
+                Surface.ROTATION_0 -> {
+                    when (currentRotation) {
+                        Surface.ROTATION_90 -> {
+                            needFix = true
+                        }
+                        Surface.ROTATION_180 -> {
 
-        mParams.apply {
-            if (x != null) this.x = x
-            if (y != null) this.y = y
+                        }
+                        Surface.ROTATION_270 -> {
+                            needFix = true
+                        }
+                    }
+                }
+                Surface.ROTATION_90 -> {
+                    when (currentRotation) {
+                        Surface.ROTATION_0 -> {
+                            needFix = true
+                        }
+                        Surface.ROTATION_180 -> {
+                            needFix = true
+                        }
+                        Surface.ROTATION_270 -> {
+                        }
+                    }
+                }
+                Surface.ROTATION_180 -> {
+                    when (currentRotation) {
+                        Surface.ROTATION_0 -> {
+
+                        }
+                        Surface.ROTATION_90 -> {
+                            needFix = true
+                        }
+                        Surface.ROTATION_270 -> {
+                            needFix = true
+                        }
+                    }
+                }
+
+                Surface.ROTATION_270 -> {
+                    when (currentRotation) {
+                        Surface.ROTATION_0 -> {
+                            needFix = true
+                        }
+                        Surface.ROTATION_90 -> {
+                        }
+                        Surface.ROTATION_180 -> {
+                            needFix = true
+                        }
+                    }
+                }
+            }
         }
+        if (needFix) {
+            Log.d(Const.TAG, "fixX;Y $x $y")
+            if (y != null) mParams.x = y
+            if (x != null) mParams.y = x
+        } else {
+            Log.d(Const.TAG, "no fix")
+            if (x != null) mParams.x = x
+            if (y != null) mParams.y = y
+        }
+        mLastOration = currentRotation
+
         if (mRoot.isAttachedToWindow) {
-            WindowMgr.removeView(tagKey, this@BaseFloatingView)
+            WindowMgr.removeView(mRoot)
         }
+
+        WindowMgr.addView(mRoot, mParams)
         isShown = true
-        WindowMgr.addView(tagKey, this@BaseFloatingView, mParams)
+
+        //监听
+        if (rotationObserver == null) {
+            rotationObserver = Observer {
+                val lastx = mParams.x
+                val lasty = mParams.y
+                val lastRot = mLastOration
+                Log.d(Const.TAG, this.toString() + " rotationObserver! $it。lastRot $lastRot x,y $lastx $lasty")
+                remove()
+                show(lastx, lasty, lastRot)
+            }
+            Const.rotationLiveData.observeForeverUnStick(rotationObserver!!)
+        }
     }
 
     fun remove() {
-        if (isShown) {
-            WindowMgr.removeView(tagKey, this)
-            isShown = false
+        if (mRoot.isAttachedToWindow) {
+            WindowMgr.removeView(mRoot)
         }
+        isShown = false
     }
 }

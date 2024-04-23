@@ -5,10 +5,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.allan.autoclickfloat.AllPermissionActivity
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AutoContinuousClickAPointBinding
-import com.allan.autoclickfloat.floats.WindowMgr
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
@@ -16,24 +14,16 @@ import com.au.module_androiduilight.dialogs.ConfirmCenterDialog
 
 class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickAPointBinding>() {
 
-    private fun setupClickView() : SetupClickFloatView{
-        var setupClickView = WindowMgr.findFloatView(key_auto_continuous_click).asOrNull<SetupClickFloatView>()
-        if (setupClickView == null) {
-            setupClickView = SetupClickFloatView()
-        }
-        return setupClickView
-    }
+    private fun setupClickView() = SetupClickFloatView.getInstance()
 
     private fun showOrUpdateFloat() {
-        val pair = Const.autoOnePoint.autoOnePointLiveData.value //不做一直监听
+        val info = Const.autoOnePoint.autoOnePointLiveData.value //不做一直监听
         val v = setupClickView()
-        if (v.isShown) {
-            v.updateViewPosition()
-        } else {
-            if (pair != null) {
-                v.show(pair.first, pair.second)
+        if (!v.isShown) {
+            if (info != null) {
+                v.show(info.first, info.second, info.third ?: Const.rotationLiveData.value!!)
             } else {
-                v.show(100, 400)
+                v.show(100, 400, Const.rotationLiveData.value!!)
             }
         }
     }
@@ -48,7 +38,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
             showOrUpdateFloat()
         }
         binding.closeFloatViewBtn.onClick {
-            WindowMgr.findFloatView(key_auto_continuous_click)?.remove()
+            SetupClickFloatView.getInstanceOrNull()?.remove()
         }
 
         binding.startAutoClickBtn.onClick {
@@ -81,7 +71,11 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
         Const.autoOnePoint.autoOnePointLocLiveData.observe(viewLifecycleOwner) {
             val x = it.first
             val y = it.second
-            binding.saveText.text = "已经保存的点：\n($x, $y)"
+            if (checkScreenRotationIsPort(resources)) {
+                binding.saveText.text = "已经保存的点：\n($x, $y)"
+            } else {
+                binding.saveText.text = "已经保存的点：($x, $y)"
+            }
         }
 
         Const.autoOnePoint.autoOnePointOpenLiveData.observe(viewLifecycleOwner) {
