@@ -27,7 +27,7 @@ rootProject.name = "AndroidLearning"
 include ':app'
 include ':Module-Android'
 include ':Module-AndroidUiLight'
-//include ':Module-AndroidUiDark'
+include ':Module-AndroidUiDark'
 
 include ':Module-Nested'
 include ':Module-Cached'

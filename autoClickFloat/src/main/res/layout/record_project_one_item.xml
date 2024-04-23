@@ -11,6 +11,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
         android:layout_width="52dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         android:layout_height="52dp"/>
 
     <com.au.module_android.widget.CustomFontText
@@ -22,18 +24,12 @@
         android:gravity="center_vertical"
         tools:text="this is fd adjfakdsjf jasdfja kdfjk ajdsfkajdsk fjaksdfjk ajsdfkj kadjfkaj kfjaskdfj kadsjfkajsdfk"
         android:layout_marginStart="4dp"
+        android:minHeight="52dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text, checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <View
-        app:layout_constraintTop_toBottomOf="@id/barrier"
+        app:layout_constraintTop_toBottomOf="@id/text"
         android:layout_marginTop="18dp"
         android:background="#cccccc"
         android:layout_width="match_parent"

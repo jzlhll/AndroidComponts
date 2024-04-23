@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolBar"
+        layout="@layout/fake_tool_bar"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="48dp" />
+
+    <com.au.module_android.widget.CustomImageFontText
+        android:id="@+id/deleteStepBtn"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:drawableStartCompat="@drawable/ic_delete"
+        app:drawableTextPadding="4dp"
+        app:drawableStartWidth="20dp"
+        app:drawableStartHeight="20dp"
+        android:drawableTint="@color/color_warn_bg"
+        android:textColor="@color/color_text_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        style="@style/StyleFontText"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:text="删除"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomImageFontText
+        android:id="@+id/addStepBtn"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:drawableStartCompat="@drawable/ic_add"
+        app:drawableTextPadding="4dp"
+        app:drawableStartWidth="20dp"
+        app:drawableStartHeight="20dp"
+        android:drawableTint="@color/color_text_normal"
+        app:layout_constraintEnd_toStartOf="@id/deleteStepBtn"
+        android:gravity="center"
+        style="@style/StyleFontText"
+        android:layout_marginEnd="12dp"
+        android:text="添加"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/desc"
+        style="@style/StyleFontText"
+        app:layout_constraintTop_toTopOf="@id/addStepBtn"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addStepBtn"
+        android:layout_marginEnd="8dp"
+        android:layout_width="0dp"
+        android:text="点击【添加】额外步骤；点击【删除】选择并删除某个步骤；长按拖动来移动步骤的位置。"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="6dp"
+        android:id="@+id/rcv"
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="12dp"
+        android:layout_height="0dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,6 +37,7 @@ dependencies {
     implementation project(":Module-Android")
     implementation project(':Module-AndroidUiLight')
     implementation project(':Module-Cached')
+    implementation project(':Module-Nested')
 
     implementation 'androidx.core:core-ktx:1.13.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

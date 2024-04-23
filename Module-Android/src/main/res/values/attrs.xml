@@ -53,9 +53,6 @@
     <declare-styleable name="CustomImageFontText">
         <attr name="drawableTextPadding" format="dimension"/>
 
-        <attr name="drawableMarginStart" format="dimension"/>
-        <attr name="drawableMarginEnd" format="dimension"/>
-
         <attr name="drawableStartWidth" format="dimension"/>
         <attr name="drawableStartHeight" format="dimension"/>
         <attr name="drawableTopWidth" format="dimension"/>

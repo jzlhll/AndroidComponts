@@ -35,6 +35,7 @@ open class CustomImageFontText : CustomFontText {
         mStartHeight = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableStartHeight, 0)
         mTopWidth = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableTopWidth, 0)
         mTopHeight = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableTopHeight, 0)
+
         mEndWidth = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableEndWidth, 0)
         mEndHeight = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableEndHeight, 0)
         mBottomWidth = typedArray.getDimensionPixelOffset(R.styleable.CustomImageFontText_drawableBottomWidth, 0)
