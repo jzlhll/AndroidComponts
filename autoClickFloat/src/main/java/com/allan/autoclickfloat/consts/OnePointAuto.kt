@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.au.module_android.Globals
 import com.au.module_android.datastore.AppDataStore
+import com.au.module_android.simplelivedata.NoStickLiveData
 import kotlinx.coroutines.launch
 
 class OnePointAuto {
     /**
      * 是否打开功能的开关
      */
-    val autoOnePointOpenLiveData = MutableLiveData<Boolean>(false)
+    val autoOnePointOpenLiveData = NoStickLiveData<Boolean>(false)
 
     private val _autoOnePointClickMsLiveData = MutableLiveData<Int>()
     /**

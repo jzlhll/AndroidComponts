@@ -140,7 +140,6 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
 
         mRoot.onClick {
             if (!disableTouch) {
-                Log.d(Const.TAG, "on click")
                 clickCallback?.invoke()
             }
         }
@@ -219,11 +218,11 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
             }
         }
         if (needFix) {
-            Log.d(Const.TAG, "fixX;Y $x $y")
+            Log.d(Const.TAG, ">>fixX-Y $x $y")
             if (y != null) mParams.x = y
             if (x != null) mParams.y = x
         } else {
-            Log.d(Const.TAG, "no fix")
+            Log.d(Const.TAG, ">>no fix $x $y")
             if (x != null) mParams.x = x
             if (y != null) mParams.y = y
         }
@@ -242,7 +241,7 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
                 val lastx = mParams.x
                 val lasty = mParams.y
                 val lastRot = mLastOration
-                Log.d(Const.TAG, this.toString() + " rotationObserver! $it。lastRot $lastRot x,y $lastx $lasty")
+                Log.d(Const.TAG, " rotationObserver! $it。>>lastRot $lastRot x,y $lastx $lasty")
                 remove()
                 show(lastx, lasty, lastRot)
             }

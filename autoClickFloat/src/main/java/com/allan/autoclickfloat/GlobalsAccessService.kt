@@ -83,7 +83,6 @@ class GlobalsAccessService : AccessibilityService() {
 //        Log.d(Const.TAG, "onAccessibilityEvent $event")
         // 当快捷方式开关变化时，此方法会被调用
         if (event?.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
-            Log.d(Const.TAG, "view click")
         }
     }
 

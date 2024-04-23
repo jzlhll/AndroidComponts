@@ -43,11 +43,11 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
 
         binding.startAutoClickBtn.onClick {
             if (Const.autoOnePoint.autoOnePointLiveData.value != null) {
-                Const.autoOnePoint.autoOnePointOpenLiveData.value = true
+                Const.autoOnePoint.autoOnePointOpenLiveData.setValueSafe(true)
             }
         }
         binding.stopAutoClickBtn.onClick {
-            Const.autoOnePoint.autoOnePointOpenLiveData.value = false
+            Const.autoOnePoint.autoOnePointOpenLiveData.setValueSafe(false)
         }
 
         binding.inputMs.doAfterTextChanged {
@@ -78,7 +78,8 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
             }
         }
 
-        Const.autoOnePoint.autoOnePointOpenLiveData.observe(viewLifecycleOwner) {
+        Const.autoOnePoint.autoOnePointOpenLiveData.observeUnStick(viewLifecycleOwner) {
+            it!!
             if (it) {
                 binding.stopAutoClickBtn.visible()
                 binding.startAutoClickBtn.gone()
@@ -117,7 +118,7 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
                 "关闭",
                 "退出",
                 sureClick = {
-                    Const.autoOnePoint.autoOnePointOpenLiveData.value = false
+                    Const.autoOnePoint.autoOnePointOpenLiveData.setValueSafe(false)
                     it.dismissAllowingStateLoss()
                 },
                 cancelBlock = {
