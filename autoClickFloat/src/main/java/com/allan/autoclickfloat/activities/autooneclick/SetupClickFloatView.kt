@@ -15,6 +15,7 @@ import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.views.BaseFloatingView
 import com.au.module_android.Globals
 import com.au.module_android.utils.gone
+import com.au.module_android.utils.unsafeLazy
 
 class SetupClickFloatView private constructor(): BaseFloatingView(R.layout.view_floating_step) {
     companion object {
@@ -37,9 +38,9 @@ class SetupClickFloatView private constructor(): BaseFloatingView(R.layout.view_
 
     val icon: ImageView
 
-    private val clickAnim by lazy(LazyThreadSafetyMode.NONE) {
+    private val clickAnim by unsafeLazy {
         ValueAnimator
-            .ofFloat(0f, 1f)
+            .ofFloat(0f, 0.1f, 0.15f, 1f)
             .apply {
                 duration = 120
                 doOnStart {

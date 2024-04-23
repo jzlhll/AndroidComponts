@@ -59,7 +59,7 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
     var isShown = false
         private set
 
-    var mNotAlpha = 0.75f
+    var mNotAlpha = 0.6f
 
     private val normalFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
