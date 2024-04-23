@@ -78,32 +78,39 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
             }
         }
 
+        changeWhenOpenChange(Const.autoOnePoint.autoOnePointOpenLiveData.value!!)
         Const.autoOnePoint.autoOnePointOpenLiveData.observeUnStick(viewLifecycleOwner) {
             it!!
+            changeWhenOpenChange(it)
             if (it) {
-                binding.stopAutoClickBtn.visible()
-                binding.startAutoClickBtn.gone()
-                binding.inputMs.gone()
-                binding.msText.gone()
-                binding.showFloatViewBtn.gone()
-                binding.closeFloatViewBtn.gone()
                 showOrUpdateFloat()
                 val v = setupClickView()
                 v.icon.imageTintList = v.workingColor
                 v.disableTouch = true
             } else {
-                binding.stopAutoClickBtn.gone()
-                binding.startAutoClickBtn.visible()
-                binding.inputMs.visible()
-                binding.msText.visible()
-                binding.showFloatViewBtn.visible()
-                binding.closeFloatViewBtn.visible()
-
                 val v = setupClickView()
                 v.icon.imageTintList = v.settingColor
                 v.disableTouch = false
                 v.remove()
             }
+        }
+    }
+
+    private fun changeWhenOpenChange(it:Boolean) {
+        if (it) {
+            binding.stopAutoClickBtn.visible()
+            binding.startAutoClickBtn.gone()
+            binding.inputMs.gone()
+            binding.msText.gone()
+            binding.showFloatViewBtn.gone()
+            binding.closeFloatViewBtn.gone()
+        } else {
+            binding.stopAutoClickBtn.gone()
+            binding.startAutoClickBtn.visible()
+            binding.inputMs.visible()
+            binding.msText.visible()
+            binding.showFloatViewBtn.visible()
+            binding.closeFloatViewBtn.visible()
         }
     }
 

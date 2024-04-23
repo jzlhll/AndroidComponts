@@ -36,6 +36,8 @@ class GlobalsAccessServiceAutoOneKey(service: GlobalsAccessService) : GlobalsAcc
             null
         )
 
+        Const.autoOnePoint.autoOnePointBeClickedData.setValueSafe(Unit)
+
         Log.d(Const.TAG, "dispatch gesture $r")
         startAutoClickRun()
     }

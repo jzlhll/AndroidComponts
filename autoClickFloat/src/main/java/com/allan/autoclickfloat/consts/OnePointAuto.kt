@@ -12,7 +12,7 @@ class OnePointAuto {
     /**
      * 是否打开功能的开关
      */
-    val autoOnePointOpenLiveData = NoStickLiveData<Boolean>(false)
+    val autoOnePointOpenLiveData = NoStickLiveData(false)
 
     private val _autoOnePointClickMsLiveData = MutableLiveData<Int>()
     /**
@@ -31,6 +31,11 @@ class OnePointAuto {
      * 自动点击的真实坐标点
      */
     val autoOnePointLocLiveData:LiveData<Triple<Int, Int, Int?>> = _autoOnePointLocLiveData
+
+    /**
+     * 自动点击被辅助服务自动点击了以后的回调
+     */
+    val autoOnePointBeClickedData = NoStickLiveData<Any>()
 
     fun loadAutoOnePointMs() {
         Globals.mainScope.launch {

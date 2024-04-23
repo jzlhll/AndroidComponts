@@ -44,13 +44,4 @@
             android:text="自动点击"/>
     </com.google.android.material.card.MaterialCardView>
 
-    <com.au.module_android.widget.CustomButton
-        style="@style/StyleButtonWarn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/stopAllBtn"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_height="50dp"
-        android:text="全部停止"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

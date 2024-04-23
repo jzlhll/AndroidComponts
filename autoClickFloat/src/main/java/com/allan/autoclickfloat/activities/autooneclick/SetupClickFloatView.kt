@@ -1,10 +1,15 @@
 package com.allan.autoclickfloat.activities.autooneclick
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.os.SystemClock
 import android.util.Log
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import com.allan.autoclickfloat.R
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.views.BaseFloatingView
@@ -32,6 +37,35 @@ class SetupClickFloatView private constructor(): BaseFloatingView(R.layout.view_
 
     val icon: ImageView
 
+    private val clickAnim by lazy(LazyThreadSafetyMode.NONE) {
+        ValueAnimator
+            .ofFloat(0f, 1f)
+            .apply {
+                duration = 120
+                doOnStart {
+                    mRoot.alpha = 0f
+                }
+                addUpdateListener {
+                    val alpha = it.animatedFraction * mNotAlpha
+                    Log.d(Const.TAG, "alpha $alpha")
+                    mRoot.alpha = alpha
+                }
+                doOnEnd {
+                    mRoot.alpha = mNotAlpha
+                }
+
+                interpolator = LinearInterpolator()
+            }
+    }
+
+    private fun startClickAnim() {
+        clickAnim.start()
+    }
+
+    private fun stopClickAnim() {
+        clickAnim.cancel()
+    }
+
     init {
         mRoot.findViewById<TextView>(R.id.stepIndexTv)?.gone()
         icon = mRoot.findViewById(R.id.ivIcon)
@@ -42,6 +76,10 @@ class SetupClickFloatView private constructor(): BaseFloatingView(R.layout.view_
             Log.d(Const.TAG, "screen location ${location[0]} * ${location[1]}")
             Const.autoOnePoint.saveAutoOnePoint(x, y, location[0], location[1], Const.rotationLiveData.value!!)
             callback(x, y)
+        }
+        Const.autoOnePoint.autoOnePointBeClickedData.observeForeverUnStick {
+            stopClickAnim()
+            startClickAnim()
         }
     }
 }
