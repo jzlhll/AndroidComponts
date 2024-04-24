@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -12,7 +13,10 @@ import com.au.module_android.utils.BUNDLE_KEY0
 import com.au.module_android.utils.BUNDLE_KEY2
 import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.getScreenSizeWithStatusAndNavHeight
 import com.au.module_android.utils.unsafeLazy
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlin.math.min
 
 abstract class AbsFragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomDialog(hasEditText) {
     private val fgClass by unsafeLazy {
@@ -38,10 +42,17 @@ abstract class AbsFragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBo
 
         val fragment = this.fragment
         if (fragment != null) {
-            //增加fragment高度预设
-            val height = this.height
-            if (height != null && height > 0) {
-                binding.fcv.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
+            //最大高度限定实现
+            val screenTriple = activity?.window?.getScreenSizeWithStatusAndNavHeight(1)
+            val maxHeight:Int = screenTriple?.first?.y ?: Int.MAX_VALUE
+            val height = this.height ?: 0
+            val fixHeight = min(height, maxHeight)
+            if (fixHeight > 0) {
+                binding.root.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, fixHeight)
+            } else {
+                dialog.asOrNull<BottomSheetDialog>()?.behavior?.let { behavior->
+                    behavior.maxHeight = screenTriple?.first?.y ?: WindowManager.LayoutParams.MATCH_PARENT //不太可能走到?:后面去。
+                }
             }
 
             fgBundle?.let {

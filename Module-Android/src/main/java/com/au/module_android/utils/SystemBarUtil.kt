@@ -2,7 +2,10 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.Point
+import android.os.Build
 import android.view.Window
+import android.view.WindowInsets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -85,4 +88,77 @@ fun Activity.myHideSystemUI() {
 fun Activity.myShowSystemUI() {
     WindowCompat.setDecorFitsSystemWindows(window, true)
     WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
+}
+
+/**
+ * 获取屏幕尺寸
+ * isOnlyDisplay:true 不计算状态栏 也不计算navigationBar
+ */
+fun Activity.getScreenSize(displayMode:Int, portrait:Boolean = true): Point {
+    return window.getScreenSize(displayMode, portrait)
+}
+
+/**
+ * 获取屏幕尺寸
+ * @param displayMode : 0 获取屏幕的高度； 1 抛掉statusBar高度；2抛掉statusBar和navBar高度。
+ */
+fun Window.getScreenSize(displayMode:Int, portrait:Boolean = true): Point {
+    val point = Point()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = windowManager.currentWindowMetrics
+        val bounds = metrics.bounds
+        point.x = bounds.width()
+        point.y = bounds.height()
+        if (displayMode > 0) {
+            val windowInsets = metrics.windowInsets
+            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+            //需要减去状态栏和导航栏高度
+            if (portrait) {
+                point.y -= insets.top
+                if(displayMode == 2) point.y -= insets.bottom
+            } else {
+                point.x = bounds.width() - insets.left
+                if(displayMode == 2) point.y -= insets.right
+            }
+        }
+    } else {
+        if (displayMode == 0) {
+            windowManager.defaultDisplay.getSize(point)
+        } else {
+            windowManager.defaultDisplay?.getRealSize(point) //todo 低版本没有实现 mode=1的情况。
+        }
+    }
+    return point
+}
+
+fun Window.getScreenSizeWithStatusAndNavHeight(displayMode:Int, portrait:Boolean = true): Triple<Point, Int, Int> {
+    val point = Point()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = windowManager.currentWindowMetrics
+        val bounds = metrics.bounds
+        point.x = bounds.width()
+        point.y = bounds.height()
+        if (displayMode > 0) {
+            val windowInsets = metrics.windowInsets
+            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+            //需要减去状态栏和导航栏高度
+            if (portrait) {
+                point.y -= insets.top
+                if(displayMode == 2) point.y -= insets.bottom
+                return Triple(point, insets.top, insets.bottom)
+            } else {
+                point.x = bounds.width() - insets.left
+                if(displayMode == 2) point.y -= insets.right
+                return Triple(point, insets.left, insets.right)
+            }
+        }
+        return Triple(point, 0, 0)
+    } else {
+        if (displayMode == 0) {
+            windowManager.defaultDisplay.getSize(point)
+        } else {
+            windowManager.defaultDisplay?.getRealSize(point) //todo 低版本没有实现 mode=1的情况。
+        }
+        return Triple(point, 0, 0) //todo 低版本没有实现 mode=1的情况。
+    }
 }
