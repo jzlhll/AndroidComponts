@@ -11,7 +11,7 @@ import com.allan.nested.recyclerview.NoScrollLinearLayoutManager
 import com.allan.nested.viewpager2.simplePagerAdapter
 import com.au.jobstudy.databinding.ActivityMainBinding
 import com.au.jobstudy.databinding.BottomPageMenuBinding
-import com.au.module_android.Globals.app
+import com.au.module_android.Apps.app
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy

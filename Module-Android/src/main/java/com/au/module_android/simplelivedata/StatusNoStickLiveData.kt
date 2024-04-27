@@ -1,5 +1,7 @@
 package com.au.module_android.simplelivedata
 
+import androidx.lifecycle.LiveData
+
 /**
  * @author au
  * 带状态的不需要粘性的LiveData。
@@ -20,3 +22,5 @@ class StatusNoStickLiveData<T> : NoStickLiveData<StatusData<T>?>, IOperator<T> {
         setValueSafe(StatusLiveData.createRealDataWrap(data, Status.RUNNING, code, msg))
     }
 }
+
+fun <T> LiveData<T>.asStatusNoStickLiveData() = this as StatusNoStickLiveData<T>

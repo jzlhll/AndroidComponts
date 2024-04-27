@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
@@ -210,7 +210,7 @@ abstract class AbsToastBuilder {
      * 其一：从最顶中调用
      */
     fun setOnTop() : AbsToastBuilder {
-        setOnActivity(Globals.activityList.lastOrNull())
+        setOnActivity(Apps.activityList.lastOrNull())
         return this
     }
 
@@ -218,19 +218,19 @@ abstract class AbsToastBuilder {
      * 其一：从次顶调用
      */
     fun setOnSecondTop() : AbsToastBuilder {
-        val list = Globals.activityList
+        val list = Apps.activityList
         setOnActivity(list[max(0, list.size - 2)])
         return this
     }
 
     fun setOnThirdTop() : AbsToastBuilder {
-        val list = Globals.activityList
+        val list = Apps.activityList
         setOnActivity(list[max(0, list.size - 3)])
         return this
     }
 
     fun setOnActivityByFragClass(clz : Class<*>): AbsToastBuilder {
-        Globals.activityList.forEach {
+        Apps.activityList.forEach {
             val activity = it.asOrNull<FragmentRootActivity>()
             if (activity?.fragmentClass == clz) {
                 return setOnActivity(activity)

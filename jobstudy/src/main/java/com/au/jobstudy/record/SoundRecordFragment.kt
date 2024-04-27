@@ -10,7 +10,7 @@ import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
 import com.au.jobstudy.databinding.PartialSoundRecordBinding
 import com.au.jobstudy.utils.secondToTimeMS
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_androiduilight.toast.toastOnTop
@@ -73,7 +73,7 @@ class SoundRecordFragment : BindingFragment<PartialSoundRecordBinding>() {
             }
 
             binding.countDownView.startCountDown(3) {
-                mediaRecord!!.start(Globals.app)
+                mediaRecord!!.start(Apps.app)
                 mStartTs = System.currentTimeMillis()
                 binding.timeLine.initColors(Color.GREEN, Color.CYAN)
                 binding.timeLine.initProgress(maxTs, minTs)

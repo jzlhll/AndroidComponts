@@ -9,7 +9,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module.android.R
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
@@ -122,12 +122,12 @@ fun Window.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
  * 全局弹出toast，在最上面的activity上。
  */
 fun toastOnTop(@StringRes strId: Int, duration: Long = 2200) =
-    Globals.activityList.lastOrNull()?.toast(strId, duration)
+    Apps.activityList.lastOrNull()?.toast(strId, duration)
 /**
  * 全局弹出toast，在最上面的activity上。
  */
 fun toastOnTop(msg: String?, duration: Long = 2200, desc:String? = null) =
-    Globals.activityList.lastOrNull()?.toast(msg, duration, desc)
+    Apps.activityList.lastOrNull()?.toast(msg, duration, desc)
 
 class ToastBuilder : AbsToastBuilder() {
     override fun toastPopup(): View? {

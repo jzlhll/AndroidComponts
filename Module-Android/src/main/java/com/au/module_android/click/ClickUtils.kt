@@ -1,7 +1,7 @@
 package com.au.module_android.click
 
 import android.view.View
-import com.au.module_android.globalPaddingClickTime
+import com.au.module_android.Apps.globalPaddingClickTime
 
 /**
  * 上一次按钮点击时间

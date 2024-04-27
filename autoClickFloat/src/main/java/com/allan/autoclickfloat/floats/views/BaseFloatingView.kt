@@ -14,7 +14,7 @@ import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.WindowMgr
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.click.onClick
 import kotlin.math.abs
 
@@ -48,7 +48,7 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
             return _mParams!!
         }
 
-    val mRoot: View = LayoutInflater.from(Globals.app).inflate(layoutId, null).also {
+    val mRoot: View = LayoutInflater.from(Apps.app).inflate(layoutId, null).also {
         it.tag = this
     }
 

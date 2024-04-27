@@ -7,7 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.au.jobstudy.databinding.FragmentMainMineBinding
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.bindings.BindingFragment
 import kotlinx.coroutines.launch
@@ -48,7 +48,7 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
             val bottom1 = getNavigationBarHeight(requireContext())
 
             lifecycleScope.launch {
-                val appRes = Globals.app.resources.displayMetrics
+                val appRes = Apps.app.resources.displayMetrics
                 val activityRes = requireActivity().resources.displayMetrics
                 val adapter = ToutiaoScreenAdapter.toString()
                 val sb = buildString {

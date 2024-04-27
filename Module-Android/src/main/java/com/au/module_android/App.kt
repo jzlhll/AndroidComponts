@@ -11,7 +11,7 @@ import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
 
-object Globals {
+object Apps {
     /**
      * 点击事件间隔时间
      */
@@ -70,26 +70,26 @@ object Globals {
 
 //----------------------handler start
 fun postToMainHandler(run:Runnable) {
-    Globals.mainHandler.post(run)
+    Apps.mainHandler.post(run)
 }
 
 fun postToMainHandler(run:Runnable, delay:Long) {
-    Globals.mainHandler.postDelayed(run, delay)
+    Apps.mainHandler.postDelayed(run, delay)
 }
 
 fun removeFromMainHandler(run:Runnable) {
-    Globals.mainHandler.removeCallbacks(run)
+    Apps.mainHandler.removeCallbacks(run)
 }
 
 fun postToBgHandler(run:Runnable) {
-    Globals.backgroundHandler.post(run)
+    Apps.backgroundHandler.post(run)
 }
 
 fun postToBgHandler(run:Runnable, delay:Long) {
-    Globals.backgroundHandler.postDelayed(run, delay)
+    Apps.backgroundHandler.postDelayed(run, delay)
 }
 
 fun removeFromBgHandler(run:Runnable) {
-    Globals.backgroundHandler.removeCallbacks(run)
+    Apps.backgroundHandler.removeCallbacks(run)
 }
 //----------------------handler end

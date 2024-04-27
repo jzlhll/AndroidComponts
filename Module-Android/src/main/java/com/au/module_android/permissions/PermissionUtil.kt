@@ -14,7 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.permissions.activity.IActivityResult
 import com.au.module_android.permissions.other.TakePictureForResult
@@ -112,7 +112,7 @@ fun hasPermission(vararg permissions:String) : Boolean {
 fun checkPermission(vararg permissions:String) : Array<String> {
     val noPermissionList = mutableListOf<String>()
     for (permission in permissions) {
-        if (ContextCompat.checkSelfPermission(Globals.app, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Apps.app, permission) != PackageManager.PERMISSION_GRANTED) {
             noPermissionList.add(permission)
         }
     }

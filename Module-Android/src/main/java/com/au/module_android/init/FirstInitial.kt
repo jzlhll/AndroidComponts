@@ -3,8 +3,7 @@ package com.au.module_android.init
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.startup.Initializer
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.hooks.optimizeSpTask
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.ALog
@@ -25,7 +24,7 @@ object FirstInitial {
         ALog.d("first init....")
         ToutiaoScreenAdapter.init(app)
         app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
-        Globals.internalApp = app
+        Apps.internalApp = app
 
         if (isInitSharedPrefHook) {
             optimizeSpTask()

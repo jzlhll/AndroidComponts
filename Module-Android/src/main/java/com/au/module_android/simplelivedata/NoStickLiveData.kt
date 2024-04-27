@@ -1,6 +1,7 @@
 package com.au.module_android.simplelivedata
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.au.module_android.utils.ReflectionUtils
 
@@ -75,5 +76,6 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
             }
         }
     }
-
 }
+
+fun <T> LiveData<T>.asNoStickLiveData() = this as NoStickLiveData<T>

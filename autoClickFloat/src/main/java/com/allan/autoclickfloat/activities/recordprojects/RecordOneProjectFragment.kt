@@ -2,12 +2,15 @@ package com.allan.autoclickfloat.activities.recordprojects
 
 import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.consts.Const
+import com.allan.autoclickfloat.database.Step
 import com.allan.autoclickfloat.databinding.RecordProjectOneFragmentBinding
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingParamsFragment
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.unsafeLazy
 
 class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentBinding>() {
     companion object {
@@ -26,6 +29,8 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
         }
     }
 
+    private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[RecordOneProjectViewModel::class.java] }
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         val projectName = getTempParams<String>("projectName")
         val projectId = getTempParams<Int>("projectId")
@@ -37,10 +42,17 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
             binding.toolBar.title.text = projectName ?: ""
         }
 
-        if (projectId != null && projectId >= 0) {
-            lifecycleScope.launchOnThread {
-                val steps = Const.db.stepDao().getAll(projectId).sortedBy { it.stepIndex }
-            }
+        viewModel.stepsData.observe(this) {
+
         }
+
+        if (projectId != null && projectId >= 0) {
+            viewModel.loadProjectIdSteps(projectId)
+        }
+
+    }
+
+    private fun refreshRcv(steps:List<Step>) {
+        binding.rcv.adapter =
     }
 }

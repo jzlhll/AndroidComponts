@@ -22,3 +22,5 @@ open class SafeLiveData<T> : LiveData<T> {
         }
     }
 }
+
+fun <T> LiveData<T>.asSafeLiveData() = this as SafeLiveData<T>

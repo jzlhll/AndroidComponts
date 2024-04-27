@@ -5,10 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import androidx.room.Room
-import com.allan.autoclickfloat.database.ProjectsDatabase
 import com.allan.autoclickfloat.floats.WindowMgr
-import com.au.module_android.Globals
+import com.au.module_android.Apps
 import com.au.module_android.simplelivedata.NoStickLiveData
 
 object Const {
@@ -32,6 +30,6 @@ object Const {
 
         val configChangeFilter = IntentFilter()
         configChangeFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
-        Globals.app.registerReceiver(mConfigChangeReceiver, configChangeFilter)
+        Apps.app.registerReceiver(mConfigChangeReceiver, configChangeFilter)
     }
 }
