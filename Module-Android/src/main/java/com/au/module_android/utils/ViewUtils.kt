@@ -16,6 +16,22 @@ fun View.gone() {
     if(visibility != View.GONE) visibility = View.GONE
 }
 
+fun View.visibleOrGone(visible:Boolean) {
+    if (visible) {
+        visible()
+    } else {
+        gone()
+    }
+}
+
+fun View.visibleOrInvisible(visible:Boolean) {
+    if (visible) {
+        visible()
+    } else {
+        invisible()
+    }
+}
+
 /**
  * 遍历所有子view
  */

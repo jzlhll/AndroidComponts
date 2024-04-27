@@ -58,4 +58,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="12dp"
         android:layout_height="0dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        style="@style/StyleFontText"
+        android:text="尚未有任何录制的方案，点击添加按钮开始吧。"
+        android:paddingHorizontal="50dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/emptyText"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

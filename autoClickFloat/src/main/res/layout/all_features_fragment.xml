@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
-            android:text="录制方案（todo）"/>
+            android:text="录制方案"/>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView

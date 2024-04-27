@@ -13,6 +13,11 @@ import kotlinx.coroutines.MainScope
 
 object Globals {
     /**
+     * 点击事件间隔时间
+     */
+    var globalPaddingClickTime = 180L
+
+    /**
      * 全局协程作用域
      */
     val mainScope by lazy { MainScope() }

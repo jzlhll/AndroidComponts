@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.allan.autoclickfloat.GlobalsAccessService
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
+import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AllFeaturesFragmentBinding
 import com.au.module_android.click.onClick
@@ -20,7 +21,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.recordModeBtn.onClick {
-          //  FragmentRootActivity.start(requireActivity(), RecordModeActivityFragment::class.java)
+            FragmentRootOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
         }
 
         Const.autoOnePoint.autoOnePointOpenLiveData.observe(viewLifecycleOwner) {
