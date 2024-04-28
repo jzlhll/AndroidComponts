@@ -5,9 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
-    <include
+    <com.au.module_androiduilight.widget.LightFakeToolbar
         android:id="@+id/toolBar"
-        layout="@layout/fake_tool_bar"
         android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="48dp" />
@@ -45,7 +44,6 @@
         android:layout_marginTop="12dp"
         style="@style/StyleTitleBText"
         android:text="所有录制方案"
-        tools:text="xxx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -61,14 +59,13 @@
 
     <com.au.module_android.widget.CustomFontText
         style="@style/StyleFontText"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
         android:text="尚未有任何录制的方案，点击添加按钮开始吧。"
-        android:paddingHorizontal="50dp"
-        android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:id="@+id/emptyText"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

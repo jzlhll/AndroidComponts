@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.activities.startup.AllFeaturesFragment
+import com.allan.autoclickfloat.activities.startup.OnlyFloatPermissionViewModel
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
-import com.allan.autoclickfloat.databinding.RootActivityBinding
-import com.allan.autoclickfloat.activities.startup.PermissionsViewModel
 import com.allan.autoclickfloat.consts.Const
+import com.allan.autoclickfloat.databinding.RootActivityBinding
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
  * @description:
  */
 class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
-    private val viewModel by unsafeLazy { ViewModelProvider(this)[PermissionsViewModel::class.java] }
+    private val viewModel by unsafeLazy { ViewModelProvider(this)[OnlyFloatPermissionViewModel::class.java] }
 
     private var _permissionsRequestFragment: PermissionsRequestFragment? = null
     private val permissionsRequestFragment: PermissionsRequestFragment
@@ -65,10 +65,10 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
 
         viewModel.allPermissionEnabled.observeUnStick(this) { it ->
             when (it) {
-                PermissionsViewModel.STATE_ALL_NO_PERMISSION, PermissionsViewModel.STATE_NO_FLOAT_WINDOW, PermissionsViewModel.STATE_NO_ACCESSIBILITY -> {
+                OnlyFloatPermissionViewModel.STATE_NO_FLOAT_WINDOW -> {
                     showPermissionsRequest()
                 }
-                PermissionsViewModel.STATE_ALL_PERMISSION_ENABLE -> {
+                OnlyFloatPermissionViewModel.STATE_ALL_PERMISSION_ENABLE -> {
                     showAllFeatures()
                 }
             }
@@ -105,11 +105,11 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     }
 
     companion object {
-        fun checkGotoAllPermissionActivity(fragment:Fragment) {
+        fun checkGotoAllPermissionActivity(fragment: Fragment) {
             val ac = fragment.requireActivity()
-            if (!PermissionsViewModel.isAccessibilityEnabled(ac) || !PermissionsViewModel.isFloatWindowEnabled(ac)) {
+            if (!OnlyFloatPermissionViewModel.isFloatWindowEnabled(ac)) {
                 ConfirmCenterDialog.show(fragment.childFragmentManager,
-                    "请重新授权。",
+                    "请授权悬浮窗权限。",
                     "点击回到首页，重新申请权限。",
                     "好的") {
                     val activity = fragment.requireActivity()

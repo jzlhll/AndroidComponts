@@ -77,5 +77,3 @@ open class NoStickLiveData<T> : SafeLiveData<T> {
         }
     }
 }
-
-fun <T> LiveData<T>.asNoStickLiveData() = this as NoStickLiveData<T>

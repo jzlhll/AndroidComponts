@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.database.Step
 import com.allan.autoclickfloat.databinding.RecordProjectOneFragmentBinding
@@ -31,6 +33,8 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
 
     private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[RecordOneProjectViewModel::class.java] }
 
+    private var adapter : RecordOneProjectAdapter? = null
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         val projectName = getTempParams<String>("projectName")
         val projectId = getTempParams<Int>("projectId")
@@ -50,9 +54,15 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
             viewModel.loadProjectIdSteps(projectId)
         }
 
+
     }
 
     private fun refreshRcv(steps:List<Step>) {
-        binding.rcv.adapter =
+        if (adapter == null) {
+            binding.rcv.adapter = RecordOneProjectAdapter().also { adapter = it }
+            binding.rcv.layoutManager = LinearLayoutManager(requireContext()).also { it.orientation = LinearLayoutManager.VERTICAL }
+            binding.rcv.setHasFixedSize(true)
+        }
+
     }
 }

@@ -6,6 +6,8 @@ import com.allan.autoclickfloat.databinding.RecordProjectOneItemBinding
 import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.allan.nested.recyclerview.DiffCallback
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_android.utils.HtmlPart
+import com.au.module_android.utils.useSimpleHtmlText
 
 data class StepWrap(val isSelected:Boolean, val step:Step)
 
@@ -18,7 +20,7 @@ class RecordOneProjectAdapter : AutoLoadMoreBindRcvAdapter<StepWrap, RecordOnePr
 
     private class Differ(a: List<StepWrap>?, b: List<StepWrap>?) : DiffCallback<StepWrap>(a, b) {
         override fun compareContent(a: StepWrap, b: StepWrap): Boolean {
-            return a == b
+            return a == b //那么就要求数据，每次来都拷贝更新StepWrap对象
         }
     }
 
@@ -33,6 +35,6 @@ class RecordOneProjectViewHolder(binding: RecordProjectOneItemBinding) : BindVie
     override fun bindData(bean: StepWrap) {
         super.bindData(bean)
         binding.checkbox.isSelected = bean.isSelected
-        binding.text.text = String.format("%2d步: 坐标（%s, %s）", bean.step.stepIndex, bean.step.locX, bean.step.locY)
+        binding.text.text = String.format("%02d步: 坐标（%s, %s）", bean.step.stepIndex, bean.step.locX, bean.step.locY)
     }
 }

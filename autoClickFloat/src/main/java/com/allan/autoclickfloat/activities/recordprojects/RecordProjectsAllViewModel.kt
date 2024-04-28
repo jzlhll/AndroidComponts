@@ -3,6 +3,7 @@ package com.allan.autoclickfloat.activities.recordprojects
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.autoclickfloat.consts.Const
+import com.allan.autoclickfloat.database.AppDatabase
 import com.allan.autoclickfloat.database.Project
 import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.utils.launchOnThread
@@ -14,7 +15,7 @@ class RecordProjectsAllViewModel : ViewModel() {
     fun getAll() {
         viewModelScope.launchOnThread {
             logt { Const.TAG + " RecordProjectsAllFragment load data..." }
-            val all = Const.db.projectDao().getAll()
+            val all = AppDatabase.db.projectDao().getAll()
             allProjectsData.setValueSafe(all)
         }
     }

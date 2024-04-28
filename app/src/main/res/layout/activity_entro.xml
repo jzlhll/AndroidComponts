@@ -33,9 +33,11 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/testText"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:text="AndroidX kotlin componts"
+            android:textColor="#333333"
             android:textSize="16sp"
             android:gravity="center"
             android:layout_gravity="bottom|center_horizontal"

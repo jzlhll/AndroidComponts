@@ -1,11 +1,16 @@
 package com.allan.androidlearning
 
+import android.widget.TextView
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.allan.androidlearning.utils.logd
+import com.au.module_android.Apps
 import com.au.module_android.json.fromJson
 import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utils.HtmlPart
+import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.useSimpleHtmlText
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,5 +50,12 @@ class ExampleInstrumentedTest {
         val revertList2 = listStr.fromJsonList(Bean::class.java)
 
         logd("beans1 $bean1Str bean2str $bean2Str $listStr $revertList")
+    }
+
+    @Test
+    fun testColorful() {
+        Apps.topActivity.asOrNull<EntroActivity>()?.apply {
+
+        }
     }
 }

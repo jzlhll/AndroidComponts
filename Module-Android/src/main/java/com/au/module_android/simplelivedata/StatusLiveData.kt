@@ -1,7 +1,5 @@
 package com.au.module_android.simplelivedata
 
-import androidx.lifecycle.LiveData
-
 /**
  * @author au
  * 基础的带状态的LiveData。使用它。
@@ -41,5 +39,3 @@ open class StatusLiveData<T> : SafeLiveData<StatusData<T>>, IOperator<T> {
 
     val data:T? = value?.data
 }
-
-fun <T> LiveData<T>.asStatusLiveData() = this as StatusLiveData<T>

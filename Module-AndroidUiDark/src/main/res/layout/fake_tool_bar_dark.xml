@@ -11,7 +11,7 @@
 
     <com.au.module_android.widget.CustomFontText
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/title"
+        android:id="@+id/fakeToolbarTitle"
         android:layout_marginStart="56dp"
         android:layout_marginEnd="56dp"
         style="@style/StyleFontBTextDark"
@@ -21,14 +21,13 @@
         android:gravity="center"
         android:maxLines="1"
         android:ellipsize="end"
-        tools:text="Long long long long long long Title"
         android:layout_height="match_parent"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/back"
-        android:src="@drawable/icon_back_dark"
-        android:padding="6dp"
+        android:id="@+id/fakeToolbarBack"
+        tools:src="@drawable/icon_back_dark"
+        android:padding="4dp"
         android:layout_width="48dp"
         android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

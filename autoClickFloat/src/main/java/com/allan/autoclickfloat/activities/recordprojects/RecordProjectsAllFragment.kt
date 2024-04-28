@@ -63,6 +63,7 @@ class RecordProjectsAllFragment : BindingFragment<RecordProjectsAllFragmentBindi
 
         binding.rcv.adapter = adapter
         binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
+        binding.rcv.setHasFixedSize(true)
 
         viewModel.allProjectsData.observe(viewLifecycleOwner) { list->
             val mapList = list.map { RecordProjectsItemInfo(false, it) }

@@ -3,6 +3,7 @@ package com.allan.autoclickfloat.activities.autooneclick
 import android.os.Bundle
 import androidx.core.widget.doAfterTextChanged
 import com.allan.autoclickfloat.AllPermissionActivity
+import com.allan.autoclickfloat.activities.startup.PermissionsHelper
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AutoContinuousClickAPointBinding
 import com.au.module_android.click.onClick
@@ -42,8 +43,10 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
         }
 
         binding.startAutoClickBtn.onClick {
-            if (Const.autoOnePoint.autoOnePointLiveData.value != null) {
-                Const.autoOnePoint.autoOnePointOpenLiveData.setValueSafe(true)
+            if (PermissionsHelper.showGotoSystemAccessibilityPermission(this)) {
+                if (Const.autoOnePoint.autoOnePointLiveData.value != null) {
+                    Const.autoOnePoint.autoOnePointOpenLiveData.setValueSafe(true)
+                }
             }
         }
         binding.stopAutoClickBtn.onClick {

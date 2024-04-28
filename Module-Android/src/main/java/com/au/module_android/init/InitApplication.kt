@@ -8,7 +8,7 @@ import com.au.module_android.utils.ALog
  * @date :2023/11/7 14:32
  * @description: 使用InitApplication做为基础的application父类或者直接使用
  */
-abstract class InitApplication : Application() {
+open class InitApplication : Application() {
     override fun onCreate() {
         ALog.d("init application")
         FirstInitial.init(this)
