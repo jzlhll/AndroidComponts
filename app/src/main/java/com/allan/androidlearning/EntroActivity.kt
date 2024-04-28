@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.allan.androidlearning.activities.CanvasFragment
 import com.allan.androidlearning.activities.DataStoreFragment
 import com.allan.androidlearning.activities.DialogsFragment
 import com.allan.androidlearning.activities.FontTestFragment
@@ -25,7 +26,8 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
             WebBridgeFragment::class.java,
             DataStoreFragment::class.java,
             LiveDataFragment::class.java,
-            DialogsFragment::class.java,)
+            DialogsFragment::class.java,
+            CanvasFragment::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
