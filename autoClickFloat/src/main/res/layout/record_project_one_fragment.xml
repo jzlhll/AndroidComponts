@@ -27,22 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomImageFontText
-        android:id="@+id/addStepBtn"
-        app:layout_constraintTop_toBottomOf="@id/toolBar"
-        app:drawableStartCompat="@drawable/ic_add"
-        app:drawableTextPadding="4dp"
-        app:drawableStartWidth="20dp"
-        app:drawableStartHeight="20dp"
-        android:drawableTint="@color/color_text_normal"
-        app:layout_constraintEnd_toStartOf="@id/deleteStepBtn"
-        android:gravity="center"
-        style="@style/StyleFontText"
-        android:layout_marginEnd="12dp"
-        android:text="添加"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/descBottom"
         android:paddingHorizontal="@dimen/ui_padding_edge"
@@ -61,12 +45,33 @@
         android:layout_marginBottom="12dp"
         android:textSize="18dp"
         style="@style/StyleFontText"
-        android:visibility="gone"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:text="点击【添加】按钮开始添加步骤吧！"
+        android:text="点击【添加应用】按钮开始选择一个应用，然后开始点击吧！"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomImageFontText
+        android:background="@drawable/corner_btn_bgf0f0f0"
+        android:id="@+id/addStepCenterBtn"
+        app:layout_constraintTop_toBottomOf="@id/descCenter"
+        app:drawableStartCompat="@drawable/ic_add"
+        app:drawableTextPadding="4dp"
+        app:drawableStartWidth="20dp"
+        app:drawableStartHeight="20dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableTint="@color/color_text_normal"
+        android:gravity="center"
+        style="@style/StyleFontText"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:text="添加应用"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -74,7 +79,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
         android:id="@+id/rcv"
-        app:layout_constraintTop_toBottomOf="@id/addStepBtn"
+        app:layout_constraintTop_toBottomOf="@id/deleteStepBtn"
         android:layout_width="match_parent"
         app:layout_constraintBottom_toTopOf="@id/descBottom"
         android:layout_height="0dp"/>
