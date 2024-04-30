@@ -64,6 +64,5 @@ dependencies {
     ksp 'com.github.bumptech.glide:ksp:4.16.0'
     api "com.github.bumptech.glide:okhttp3-integration:4.16.0"
 
-    api "androidx.datastore:datastore-preferences:1.1.0"
     implementation 'androidx.core:core-splashscreen:1.0.1'
 }

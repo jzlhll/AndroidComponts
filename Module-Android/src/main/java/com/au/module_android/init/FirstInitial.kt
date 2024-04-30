@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.au.module_android.Apps
-import com.au.module_android.hooks.optimizeSpTask
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.ALog
 

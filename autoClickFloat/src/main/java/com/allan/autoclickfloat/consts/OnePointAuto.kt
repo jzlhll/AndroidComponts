@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.au.module_android.Apps
-import com.au.module_android.datastore.AppDataStore
+import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.NoStickLiveData
 import kotlinx.coroutines.launch
 

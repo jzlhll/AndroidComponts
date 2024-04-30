@@ -105,3 +105,7 @@ fun <T> mmkvGet(key:String, tClass:Class<*>) : T? {
     val type : Type = TypeToken.getParameterized(tClass).type
     return gson.fromJson<T>(str, type)
 }
+
+fun mmkvForceSync() {
+    mmkv.async()
+}

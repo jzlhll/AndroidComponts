@@ -1,4 +1,4 @@
-package com.au.module_android.datastore
+package com.au.module.cached
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -15,7 +15,7 @@ import com.au.module_android.utils.ALog
 import com.au.module_android.utils.asOrNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 object AppDataStore {
     /**
@@ -55,21 +55,21 @@ object AppDataStore {
     }
 
     fun clear() {
-        Apps.mainScope.launch { Apps.app.dataStore.edit {
+        runBlocking {Apps.app.dataStore.edit {
             ALog.t("clear!")
             it.clear()
         } }
     }
 
     fun save(key:String, value: Any) {
-        Apps.mainScope.launch {
+        runBlocking {
             ALog.t("save $key <to> $value")
             saveSuspend(key, value)
         }
     }
 
     fun save(vararg pair:Pair<String, Any>) {
-        Apps.mainScope.launch {
+        runBlocking {
             pair.forEach {
                 saveSuspend(it.first, it.second)
             }
@@ -77,7 +77,7 @@ object AppDataStore {
     }
 
     inline fun <reified T> remove(key:String) {
-        Apps.mainScope.launch {
+        runBlocking {
             removeSuspend<T>(key)
         }
     }

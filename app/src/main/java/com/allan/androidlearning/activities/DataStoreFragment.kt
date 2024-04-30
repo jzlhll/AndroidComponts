@@ -1,13 +1,11 @@
 package com.allan.androidlearning.activities
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentDatastoreBinding
 import com.au.module_android.click.onClick
-import com.au.module_android.datastore.AppDataStore
+import com.au.module.cached.AppDataStore
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ALog
 import kotlinx.coroutines.Dispatchers
@@ -26,14 +24,14 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
         viewBinding.clearBtn.onClick {
             lifecycleScope.launch(Dispatchers.Default) {
                 ALog.t("clear....")
-                AppDataStore.clear()
+                com.au.module.cached.AppDataStore.clear()
             }
         }
 
         viewBinding.saveBtn.onClick {
             lifecycleScope.launch {
                 ALog.t("save key....")
-                AppDataStore.saveSuspend("info", "abbcbdke")
+                com.au.module.cached.AppDataStore.saveSuspend("info", "abbcbdke")
                 ALog.t("save key....end")
             }
         }
@@ -41,7 +39,7 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
         viewBinding.readBtn.onClick {
             lifecycleScope.launch {
                 ALog.t("read key....")
-                val data = AppDataStore.read<String>("info", "default_info")
+                val data = com.au.module.cached.AppDataStore.read<String>("info", "default_info")
                 ALog.t("read key....end $data")
             }
         }
@@ -49,7 +47,7 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
         viewBinding.containsBtn.onClick {
             lifecycleScope.launch {
                 ALog.t("contains key....")
-                val isContains = AppDataStore.containsKey<String>("info")
+                val isContains = com.au.module.cached.AppDataStore.containsKey<String>("info")
                 ALog.t("contains key....end $isContains")
             }
         }
@@ -58,7 +56,7 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
             ALog.t("removeKey key....")
             lifecycleScope.launch {
                 ALog.t("removeKey key1....")
-                val r = AppDataStore.removeSuspend<String>("info")
+                val r = com.au.module.cached.AppDataStore.removeSuspend<String>("info")
                 ALog.t("removeKey key2....end $r")
             }
         }

@@ -42,8 +42,6 @@ object Apps {
     val activityList: ArrayList<Activity>
         get() = internalActivityList
 
-    val topActivityChangeLiveData = NoStickLiveData<Unit>()
-
     val topActivity:Activity?
         get() = activityList.lastOrNull()
 
@@ -64,8 +62,6 @@ object Apps {
         handlerThread.start()
         return Handler(handlerThread.looper)
     }
-
-    const val SIMPLE_CONFIG_SP_XML_NAME = "app_simple_sp"
 }
 
 //----------------------handler start

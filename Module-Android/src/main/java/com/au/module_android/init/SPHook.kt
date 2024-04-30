@@ -1,4 +1,4 @@
-package com.au.module_android.hooks
+package com.au.module_android.init
 
 import android.os.Build
 import java.util.LinkedList
