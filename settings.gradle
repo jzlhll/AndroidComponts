@@ -12,6 +12,14 @@ properties.load(inputStream)
 //全局的地方都可以使用这个来当做。
 gradle.ext.selfUserName = properties.getProperty('username')
 gradle.ext.selfPassword = properties.getProperty('password')
+gradle.ext.jvmTarget           = "17"
+gradle.ext.sourceCompatibility = JavaVersion.VERSION_17
+gradle.ext.targetCompatibility = JavaVersion.VERSION_17
+gradle.ext.compileSdk          = 34
+gradle.ext.targetSdk           = 34
+gradle.ext.minSdk              = 26
+
+
 ///////end of extra params
 
 dependencyResolutionManagement {

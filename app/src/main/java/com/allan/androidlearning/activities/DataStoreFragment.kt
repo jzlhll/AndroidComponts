@@ -5,7 +5,6 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentDatastoreBinding
 import com.au.module_android.click.onClick
-import com.au.module.cached.AppDataStore
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ALog
 import kotlinx.coroutines.Dispatchers

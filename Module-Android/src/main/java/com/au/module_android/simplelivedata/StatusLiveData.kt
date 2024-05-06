@@ -4,9 +4,9 @@ package com.au.module_android.simplelivedata
  * @author au
  * 基础的带状态的LiveData。使用它。
  */
-open class StatusLiveData<T> : SafeLiveData<StatusData<T>>, IOperator<T> {
+open class StatusLiveData<T : Any> : SafeLiveData<StatusData<T>>, IOperator<T> {
     companion object {
-        fun <T> createRealDataWrap(data: T?, @Status status:Int, code: Int?, msg: String?) =
+        fun <T:Any> createRealDataWrap(data: T?, @Status status:Int, code: Int?, msg: String?) =
             StatusData<T>().also {
                 it.data = data
                 it.status = status

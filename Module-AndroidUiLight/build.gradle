@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace 'com.au.module_androiduilight'
-    compileSdk 34
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk 26
+        minSdk gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -20,11 +20,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
         viewBinding true

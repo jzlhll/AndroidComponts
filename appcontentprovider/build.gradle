@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.au.appcontentprovider'
-    compileSdk 34
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
         applicationId "com.au.appcontentprovider"
-        minSdk 26
-        targetSdk 34
+        minSdk gradle.ext.minSdk
+        targetSdk gradle.ext.targetSdk
         versionCode 1
         versionName "1.0"
     }
@@ -22,11 +22,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
         viewBinding true
@@ -35,10 +35,10 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.13.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
 }

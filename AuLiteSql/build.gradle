@@ -4,10 +4,10 @@ plugins {
 
 android {
     namespace 'com.example.aulitesql'
-    compileSdk 34
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk 26
+        minSdk gradle.ext.minSdk
     }
 
     buildTypes {
@@ -17,17 +17,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
     }
 }
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    def lifecycle_version = "2.6.2"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.gson
+    implementation libs.androidx.lifecycle.livedata.ktx
 }

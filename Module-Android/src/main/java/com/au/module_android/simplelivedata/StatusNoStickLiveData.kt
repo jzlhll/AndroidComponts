@@ -4,7 +4,7 @@ package com.au.module_android.simplelivedata
  * @author au
  * 带状态的不需要粘性的LiveData。
  */
-class StatusNoStickLiveData<T> : NoStickLiveData<StatusData<T>?>, IOperator<T> {
+class StatusNoStickLiveData<T:Any> : NoStickLiveData<StatusData<T>>, IOperator<T> {
     constructor()
     constructor(data:StatusData<T>) : super(data)
 
