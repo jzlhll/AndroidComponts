@@ -61,7 +61,7 @@ dependencies {
     api libs.okhttp
 
     api libs.glide
-    ksp libs.ksp
+    ksp libs.glideKsp
     api libs.okhttp3.integration
 
     implementation libs.androidx.core.splashscreen

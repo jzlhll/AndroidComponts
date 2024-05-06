@@ -105,7 +105,7 @@ object AppDataStore {
      * 因为我们用于保存，不应该使用lifeCycleScope来发起。有可能无法保存成功。应该使用全局scope。
      */
     @Deprecated("不建议直接使用，因为可能协程被取消，除非你明白你的scope一定保存成功")
-    suspend fun saveSuspend(key:String, value:Any) {
+    private suspend fun saveSuspend(key:String, value:Any) {
         Apps.app.dataStore.edit { setting ->
             when (value) {
                 is Int -> setting[intPreferencesKey(key)] = value

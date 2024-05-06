@@ -28,11 +28,7 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
         }
 
         viewBinding.saveBtn.onClick {
-            lifecycleScope.launch {
-                ALog.t("save key....")
-                com.au.module.cached.AppDataStore.saveSuspend("info", "abbcbdke")
-                ALog.t("save key....end")
-            }
+            com.au.module.cached.AppDataStore.save("info", "abbcbdke")
         }
 
         viewBinding.readBtn.onClick {

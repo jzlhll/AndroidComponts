@@ -45,7 +45,8 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { module = "junit:junit", version.ref = "junit" }
-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
+glideKsp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
+
 material = { module = "com.google.android.material:material", version.ref = "material" }
 mmkv-static = { module = "com.tencent:mmkv-static", version.ref = "mmkvStatic" }
 okhttp = { module = "com.squareup.okhttp3:okhttp" }

@@ -53,4 +53,5 @@ dependencies {
     implementation project(":jsbridge")
 
     implementation project(":Module-Android")
+    implementation project(":Module-Cached")
 }

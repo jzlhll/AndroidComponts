@@ -15,5 +15,5 @@ dependencies {
     implementation 'com.google.auto.service:auto-service:1.0-rc3'
     implementation 'org.jetbrains:annotations:15.0'
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc3'
-    implementation 'com.squareup:javapoet:1.10.0'
+    implementation 'com.squareup:javapoet:1.13.0'
 }
