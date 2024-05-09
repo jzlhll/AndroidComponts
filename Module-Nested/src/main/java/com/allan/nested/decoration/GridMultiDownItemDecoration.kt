@@ -13,25 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * 内部实现会根据最左边还是最右边，还是中间，来决定left，right的宽度。
  */
-class GridMultiDownItemDecoration(private val top: Int, horzPadding: Int, private val horzCount:Int) : RecyclerView.ItemDecoration() {
-    private val halfHorzPadding:Int
-    private val horzCount_1:Int //横向个数减1
-    init {
-        this.halfHorzPadding = horzPadding / 2
-        horzCount_1 = horzCount
-    }
+class GridMultiDownItemDecoration(val top: Int, val horzPadding: Int, val horzCount:Int) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        val itemPosition = parent.getChildAdapterPosition(view)
-        //第一个只设置右padding；最后一个设置左padding。其他2个设置。
-        if (itemPosition % horzCount == 0) {
-            outRect.right = halfHorzPadding
-        } else if (itemPosition % horzCount == horzCount_1) {
-            outRect.left = halfHorzPadding
-        } else {
-            outRect.left = halfHorzPadding
-            outRect.right = halfHorzPadding
-        }
+        val position = parent.getChildAdapterPosition(view)
+        val column = position % horzCount // view 所在的列
+
+        outRect.left = column * horzPadding / horzCount // column * (列间距 * (1f / 列数))
+        outRect.right = horzPadding - (column + 1) * horzPadding / horzCount // 列间距 - (column + 1) * (列间距 * (1f /列数))
         outRect.top = top
     }
 }
