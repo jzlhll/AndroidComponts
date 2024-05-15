@@ -17,22 +17,12 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 class GridTwoComplexItemDecoration(vertPadding: Int,
                                    horzPadding: Int,
                                    private val leftPadding:Int,
-                                   private val rightPadding:Int,
-                                   private val firstTop:Int,
-                                   private val lastBottom:Int) : ItemDecoration() {
-    private val halfHorzPadding:Int
-    private val halfVertPadding:Int
-    init {
-        this.halfHorzPadding = horzPadding shr 1
-        this.halfVertPadding = vertPadding shr 1
-    }
+                                   private val rightPadding:Int) : ItemDecoration() {
+    private val halfHorzPadding:Int = horzPadding shr 1
+    private val halfVertPadding:Int = vertPadding shr 1
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val itemPosition = parent.getChildAdapterPosition(view)
-        val count = parent.adapter?.itemCount ?: 0
-
-        val isTopOne = itemPosition <= 1
-        val isBottomOne = if(count % 2 == 0) itemPosition >= count - 2 else itemPosition >= count - 1
 
         //进行左右分半，实现这个边距。否则，就会造成一边宽一边窄
         if (itemPosition % 2 == 1) {
@@ -45,7 +35,7 @@ class GridTwoComplexItemDecoration(vertPadding: Int,
             outRect.left = leftPadding
         }
 
-        outRect.top = if(isTopOne) firstTop else halfVertPadding
-        outRect.bottom = if(isBottomOne) lastBottom else halfVertPadding
+        outRect.top = halfVertPadding
+        outRect.bottom = halfVertPadding
     }
 }

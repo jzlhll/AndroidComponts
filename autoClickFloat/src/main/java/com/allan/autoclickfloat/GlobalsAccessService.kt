@@ -2,14 +2,19 @@ package com.allan.autoclickfloat
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityService.GestureResultCallback
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.graphics.Path
+import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.MutableLiveData
@@ -54,6 +59,16 @@ class GlobalsAccessService : AccessibilityService() {
         }
     }
 
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        val config = AccessibilityServiceInfo()
+        //配置监听的事件类型为界面变化|点击事件
+        config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or AccessibilityEvent.TYPE_VIEW_CLICKED
+        config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
+        config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+        setServiceInfo(config)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(Const.TAG, "service on start command====")
         if (intent?.getStringExtra("myAction") == "stopService") {
@@ -79,14 +94,55 @@ class GlobalsAccessService : AccessibilityService() {
         }
     }
 
+    private fun tryGetActivity(componentName:ComponentName) :ActivityInfo? {
+        return try {
+            packageManager.getActivityInfo(componentName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
 //        performGlobalAction(GLOBAL_ACTION_DPAD_DOWN)
 //        performGlobalAction(GLOBAL_ACTION_DPAD_UP)
 //        Log.d(Const.TAG, "onAccessibilityEvent $event")
-        // 当快捷方式开关变化时，此方法会被调用
-        if (event?.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
-        }
+        val nodeInfo = event?.source //当前界面的可访问节点信息
+        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {//界面变化事件
+            val componentName = ComponentName(event.packageName.toString(), event.className.toString());
+            val activityInfo = tryGetActivity(componentName)
+            val isActivity = activityInfo != null
+
+            if (isActivity) {
+                Log.d("WindowChange", "allan 当前运行包名" + nodeInfo?.packageName)
+                switch (nodeInfo.getPackageName().toString()) {
+                    case “com.netease.cloudmusic”:
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            skip(nodeInfo.findAccessibilityNodeInfosByViewId(“com.netease.cloudmusic:id/c3l”));
+                        }
+                    }, 500);
+                    break;
+                    case “cn.xiaochuankeji.zuiyouLite”:
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            skip(nodeInfo.findAccessibilityNodeInfosByViewId(“cn.xiaochuankeji.zuiyouLite:id/btn_skip”));
+                        }
+                    }, 2000);
+                    break;
+
+                    default: {
+                    List nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(“跳过”);
+                    for (AccessibilityNodeInfo info : nodeInfoList) {
+                    CharSequence charSequence = info.getText();
+                    if (charSequence != null) {
+                        String msg = charSequence.toString();
+                        if (msg.contains(“跳过”)) {
+                            info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            Toast.makeText(this, “跳过广告”, Toast.LENGTH_SHORT).show();
+                        }
     }
 
     override fun onInterrupt() { //辅助服务被中断了

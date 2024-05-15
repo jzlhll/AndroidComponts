@@ -36,8 +36,8 @@ android {
 dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
+    implementation libs.androidx.window
 
-    def lifecycle_version = "2.7.0"
     // ViewModel
     api libs.androidx.lifecycle.viewmodel.ktx
     // LiveData

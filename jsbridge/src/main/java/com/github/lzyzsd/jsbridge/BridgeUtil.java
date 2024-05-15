@@ -15,8 +15,8 @@ public final class BridgeUtil {
     private BridgeUtil() {}
 
     public final static String TAG = "JsBridge";
-    final static String JS_HANDLE_MESSAGE_FROM_JAVA = "WebViewJavascriptBridge._handleMessageFromNative(%s);";
-//  final static String JS_HANDLE_MESSAGE_FROM_JAVA = "WebViewJavascriptBridge._handleMessageFromNative('%s');";
+//    final static String JS_HANDLE_MESSAGE_FROM_JAVA = "WebViewJavascriptBridge._handleMessageFromNative(%s);";
+  final static String JS_HANDLE_MESSAGE_FROM_JAVA = "WebViewJavascriptBridge._handleMessageFromNative('%s');";
     public static void webViewLoadLocalJs(WebView view, String path){
         String jsContent = assetFile2Str(view.getContext(), path);
        // view.loadUrl("javascript:" + jsContent);

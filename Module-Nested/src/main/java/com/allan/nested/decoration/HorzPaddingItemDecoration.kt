@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
  *
  * 使用这个，则已经处理了最左右的2个边距；则无需处理padding。
  */
+@Deprecated("需要小心使用；前2个参数设置以后，不得adpater.appendData 或者 删除，可能就会导致padding问题, 只用每次都sumbitList的场景。")
 class HorzPaddingItemDecoration(
     private val firstLeftPadding: Int,
     private val endRightPadding: Int,

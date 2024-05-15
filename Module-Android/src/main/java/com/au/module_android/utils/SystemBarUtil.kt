@@ -11,6 +11,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.window.layout.WindowMetricsCalculator
 
 fun transparentStatusBar(fragment: Fragment,
     isBlackStatusBarTextColor: Boolean? = null,
@@ -91,74 +92,30 @@ fun Activity.myShowSystemUI() {
 }
 
 /**
- * 获取屏幕尺寸
- * isOnlyDisplay:true 不计算状态栏 也不计算navigationBar
+ * 无需等待界面渲染成功，即在onCreate就可以调用，而且里面已经做了低版本兼容，感谢jetpack window库
+ * 获取的就是整个屏幕的高度。包含了statusBar，navigationBar的高度一起。与wm size一致。
+ * 这个方法100%可靠。虽然我们看api上描述说低版本是近似值，但是也是最接近最合理的值，不会是0的。
  */
-fun Activity.getScreenSize(displayMode:Int, portrait:Boolean = true): Point {
-    return window.getScreenSize(displayMode, portrait)
+fun Activity.getScreenFullSize() : Pair<Int, Int> {
+    val m = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(this)
+    //computeMaximumWindowMetrics(this) 区别就是多屏，类似华为推上去的效果。不分屏就是一样的。
+    return m.bounds.width() to m.bounds.height()
 }
 
 /**
- * 获取屏幕尺寸
- * @param displayMode : 0 获取屏幕的高度； 1 抛掉statusBar高度；2抛掉statusBar和navBar高度。
+ * 必须在activity已经完全渲染之后，一般地，我们是通过
+ * ViewCompat.setOnApplyWindowInsetsListener(decorView) { _, insets ->
+ *         val navHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+ *         val statusHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+ *
+ *  来得到结果的。但是它并不一定会回调，必须调用WindowCompat.setDecorFitsSystemWindows(this, false)。
+ *
+ *  想要获取，要么，如上，使用transparentStatusBar的方法。
+ *  要么，同View.post，再调用本函数获取。
  */
-fun Window.getScreenSize(displayMode:Int, portrait:Boolean = true): Point {
-    val point = Point()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val metrics = windowManager.currentWindowMetrics
-        val bounds = metrics.bounds
-        point.x = bounds.width()
-        point.y = bounds.height()
-        if (displayMode > 0) {
-            val windowInsets = metrics.windowInsets
-            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
-            //需要减去状态栏和导航栏高度
-            if (portrait) {
-                point.y -= insets.top
-                if(displayMode == 2) point.y -= insets.bottom
-            } else {
-                point.x = bounds.width() - insets.left
-                if(displayMode == 2) point.y -= insets.right
-            }
-        }
-    } else {
-        if (displayMode == 0) {
-            windowManager.defaultDisplay.getSize(point)
-        } else {
-            windowManager.defaultDisplay?.getRealSize(point) //todo 低版本没有实现 mode=1的情况。
-        }
-    }
-    return point
-}
-
-fun Window.getScreenSizeWithStatusAndNavHeight(displayMode:Int, portrait:Boolean = true): Triple<Point, Int, Int> {
-    val point = Point()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val metrics = windowManager.currentWindowMetrics
-        val bounds = metrics.bounds
-        point.x = bounds.width()
-        point.y = bounds.height()
-        if (displayMode > 0) {
-            val windowInsets = metrics.windowInsets
-            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
-            //需要减去状态栏和导航栏高度
-            if (portrait) {
-                point.y -= insets.top
-                if(displayMode == 2) point.y -= insets.bottom
-                return Triple(point, insets.top, insets.bottom)
-            } else {
-                point.x = bounds.width() - insets.left
-                if(displayMode == 2) point.y -= insets.right
-                return Triple(point, insets.left, insets.right)
-            }
-        }
-        return Triple(point, 0, 0)
-    } else {
-        if (displayMode == 0) {
-            windowManager.defaultDisplay.getSize(point)
-        } else {
-            windowManager.defaultDisplay?.getRealSize(point) //todo 低版本没有实现 mode=1的情况。
-        }
-        return Triple(point, 0, 0) //todo 低版本没有实现 mode=1的情况。
-    }
+fun Activity.currentStatusBarAndNavBarHeight() : Pair<Int, Int>? {
+    val insets = ViewCompat.getRootWindowInsets(window.decorView) ?: return null
+    val nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+    val sta = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+    return sta to nav
 }

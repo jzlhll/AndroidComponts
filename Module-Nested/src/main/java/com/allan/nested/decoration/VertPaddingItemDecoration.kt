@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
  * @description: 竖条的单个Item的上下间距即可。
  *
  */
+@Deprecated("需要小心使用；前2个参数设置以后，不得adpater.appendData 或者 删除，可能就会导致padding问题，只用每次都sumbitList的场景。")
 class VertPaddingItemDecoration(
     private val firstTopPadding: Int,
     private val endBottomPadding: Int,

@@ -24,6 +24,10 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
             FragmentRootOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
         }
 
+        binding.nongyaoBtn.onClick {
+
+        }
+
         Const.autoOnePoint.autoOnePointOpenLiveData.observe(viewLifecycleOwner) {
             if (it) {
                 binding.autoClickButton.text = "自动点击（开启中）"

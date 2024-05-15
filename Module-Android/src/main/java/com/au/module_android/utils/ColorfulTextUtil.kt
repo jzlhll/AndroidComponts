@@ -81,7 +81,12 @@ fun TextView.useSimpleHtmlText(vararg items : HtmlPart) {
             }
 
         val part = if (it.color != null) {
-            String.format(fmt, it.color, it.text)
+            val c = if (it.color.startsWith("#")) {
+                it.color.substring(1)
+            } else {
+                it.color
+            }
+            String.format(fmt, c, it.text)
         } else {
             String.format(fmt, it.text)
         }

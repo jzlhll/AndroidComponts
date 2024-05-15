@@ -16,10 +16,7 @@ class GridTwoDownItemDecoration(private val top: Int,
                                 horzPadding: Int,
                                 private val leftPadding:Int? = null,
                                 private val rightPadding:Int? = null) : ItemDecoration() {
-    private val halfHorzPadding:Int
-    init {
-        this.halfHorzPadding = horzPadding / 2
-    }
+    private val halfHorzPadding:Int = horzPadding / 2
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val itemPosition = parent.getChildAdapterPosition(view)

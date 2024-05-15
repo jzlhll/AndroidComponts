@@ -127,10 +127,9 @@ public class BridgeObject {
 //                .replaceAll("%7D", percent7D)
 //                .replaceAll("%22", percent22);
 
-        //2. 新的处理方式 效率更高。但是会存在多余的外部2个引号。因此修改了JS_HANDLE_MESSAGE_FROM_JAVA里面的传参，去掉了引号。
+        //2. 新的处理方式 效率更高。但是会存在多余的外部2个引号。
         messageJson = JSONObject.quote(messageJson);
-
-        String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);
+        String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson.substring(1, messageJson.length() - 1));
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
             webView.evaluateJavascript(javascriptCommand, null);
         } else {
