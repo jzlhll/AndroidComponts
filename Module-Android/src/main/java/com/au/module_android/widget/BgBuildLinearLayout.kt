@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.au.module.android.R
-import com.au.module_android.ui.viewBackgroundBuild
+import com.au.module_android.utils.viewBackgroundBuild
 
 /**
  * @author allan

@@ -1,7 +1,6 @@
 package com.allan.autoclickfloat
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityService.GestureResultCallback
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
@@ -14,13 +13,14 @@ import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Path
-import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.lifecycle.MutableLiveData
 import com.allan.autoclickfloat.consts.Const
 import com.au.module_android.Apps
 import com.au.module_android.utils.ForeNotificationUtil
+import com.au.module_android.utils.logd
 
 /**
  * @author allan
@@ -104,45 +104,29 @@ class GlobalsAccessService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
-//        performGlobalAction(GLOBAL_ACTION_DPAD_DOWN)
-//        performGlobalAction(GLOBAL_ACTION_DPAD_UP)
-//        Log.d(Const.TAG, "onAccessibilityEvent $event")
+        logd { "-------" }
         val nodeInfo = event?.source //当前界面的可访问节点信息
+        logd { "onAccessibilityEvent $event and nodeInfo: $nodeInfo" }
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {//界面变化事件
             val componentName = ComponentName(event.packageName.toString(), event.className.toString());
             val activityInfo = tryGetActivity(componentName)
             val isActivity = activityInfo != null
+            logd { "$isActivity componentName $componentName $activityInfo" }
+            getCurrentRootNode()?.findAccessibilityNodeInfosByText("我")?.forEach {
+                //it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                logd { "viewIdResourceName ${it.viewIdResourceName}"  }
+            }
+        }
+    }
 
-            if (isActivity) {
-                Log.d("WindowChange", "allan 当前运行包名" + nodeInfo?.packageName)
-                switch (nodeInfo.getPackageName().toString()) {
-                    case “com.netease.cloudmusic”:
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            skip(nodeInfo.findAccessibilityNodeInfosByViewId(“com.netease.cloudmusic:id/c3l”));
-                        }
-                    }, 500);
-                    break;
-                    case “cn.xiaochuankeji.zuiyouLite”:
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            skip(nodeInfo.findAccessibilityNodeInfosByViewId(“cn.xiaochuankeji.zuiyouLite:id/btn_skip”));
-                        }
-                    }, 2000);
-                    break;
-
-                    default: {
-                    List nodeInfoList = nodeInfo.findAccessibilityNodeInfosByText(“跳过”);
-                    for (AccessibilityNodeInfo info : nodeInfoList) {
-                    CharSequence charSequence = info.getText();
-                    if (charSequence != null) {
-                        String msg = charSequence.toString();
-                        if (msg.contains(“跳过”)) {
-                            info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                            Toast.makeText(this, “跳过广告”, Toast.LENGTH_SHORT).show();
-                        }
+    /**
+     * 获得当前视图根节点
+     * */
+    private fun getCurrentRootNode() = try {
+        rootInActiveWindow
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 
     override fun onInterrupt() { //辅助服务被中断了
@@ -191,7 +175,7 @@ abstract class GlobalsAccessServiceObserver(val service: GlobalsAccessService) {
 
     open fun onStartCommand(intent:Intent?) {}
 
-    val gestureResultCallback = object : GestureResultCallback() {
+    val gestureResultCallback = object : AccessibilityService.GestureResultCallback() {
         override fun onCompleted(gestureDescription: GestureDescription?) {
             super.onCompleted(gestureDescription)
             Log.d(Const.TAG, "tap 自动点击完成")
@@ -203,7 +187,7 @@ abstract class GlobalsAccessServiceObserver(val service: GlobalsAccessService) {
         }
     }
 
-    val swipeGestureResultCallback = object : GestureResultCallback() {
+    val swipeGestureResultCallback = object : AccessibilityService.GestureResultCallback() {
         override fun onCompleted(gestureDescription: GestureDescription?) {
             super.onCompleted(gestureDescription)
             Log.d(Const.TAG, "swipe 自动点击完成")

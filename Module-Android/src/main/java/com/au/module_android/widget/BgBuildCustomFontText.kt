@@ -1,14 +1,9 @@
 package com.au.module_android.widget
 
 import android.content.Context
-import android.graphics.Paint.FontMetricsInt
-import android.graphics.Rect
-import android.text.Layout
 import android.util.AttributeSet
 import com.au.module.android.R
-import com.au.module_android.ui.viewBackgroundBuild
-import com.google.android.material.textview.MaterialTextView
-import kotlin.math.ceil
+import com.au.module_android.utils.viewBackgroundBuild
 
 /**
  * @author au

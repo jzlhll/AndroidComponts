@@ -1,4 +1,4 @@
-package com.au.module_android.ui
+package com.au.module_android.utils
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray

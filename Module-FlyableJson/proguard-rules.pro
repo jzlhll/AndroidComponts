@@ -162,10 +162,6 @@ androidx.recyclerview.widget.RecyclerView mRecyclerView;
 androidx.recyclerview.widget.LinearLayoutManager mLayoutManager;
 }
 
-#litepal
--keep class org.litepal.** {*;}
--keep class * extends org.litepal.crud.LitePalSupport {*;}
-
 #gilde
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {

@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import com.au.module_android.ui.ViewBackgroundBuilder
+import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.BUNDLE_KEY0
 import com.au.module_android.utils.BUNDLE_KEY2
 import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.dp
 import com.au.module_androidex.dialog.AbsFragmentBottomSheetDialog
-import com.au.module_androiduilight.R
 
 class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottomSheetDialog(hasEditText) {
     companion object {

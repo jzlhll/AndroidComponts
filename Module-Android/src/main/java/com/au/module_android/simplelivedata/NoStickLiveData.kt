@@ -14,15 +14,23 @@ open class NoStickLiveData<T : Any> : SafeLiveData<T> {
     private var mVersion:Int
 
     //反射拿到父类的field mObservers。
-    private var mObservers:(Iterable<MutableMap.MutableEntry<Observer<*>, *>>)? = null
+    private var mObservers:(java.lang.Iterable<java.util.Map.Entry<*, *>>)? = null
 
-    private fun requireMObservers() : Iterable<MutableMap.MutableEntry<Observer<*>, *>> {
+    private fun requireMObservers() : java.lang.Iterable<java.util.Map.Entry<*, *>> {
         val mOb = mObservers
         if (mOb == null) {
-            val ob = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mObservers", true)
-            val nob = ob as Iterable<MutableMap.MutableEntry<Observer<*>, *>>
-            mObservers = nob
-            return nob
+            var superClass: Class<*>? = javaClass.superclass
+            while (superClass != null && superClass != Any::class.java) {
+                if (superClass == LiveData::class.java) {
+                    val field = superClass.getDeclaredField("mObservers")
+                    field.isAccessible = true
+                    val o = field.get(this)
+                    mObservers = o as java.lang.Iterable<java.util.Map.Entry<*, *>>
+                    break
+                }
+                superClass = superClass.superclass
+            }
+            return mObservers!!
         }
         return mOb
     }
@@ -58,19 +66,23 @@ open class NoStickLiveData<T : Any> : SafeLiveData<T> {
 
     fun removeObserverUnStick(observer: Observer<*>) {
         requireMObservers().let { iter->
-            for ((key, _) in iter) {
-                val wrap = key as? NoStickWrapObserver<*>
+            val foundList = ArrayList<Observer<in T>>()
+            for (entry in iter) {
+                val wrap = entry.key as? NoStickWrapObserver<*>
                 if (wrap != null && wrap.observer == observer) {
                     wrap.asOrNull<Observer<in T>>()?.apply {
-                        super.removeObserver(this)
+                        foundList.add(this)
                     }
                 }
+            }
+            foundList.forEach {
+                super.removeObserver(it)
             }
         }
     }
 
     private class NoStickWrapObserver<D:Any>(val self:NoStickLiveData<D>,
-                                         val observer: Observer<in D>) : Observer<D> {
+                                             val observer: Observer<in D>) : Observer<D> {
         private val version: Int = self.mVersion //标记进入的时候的版本
 
         override fun onChanged(value: D) {

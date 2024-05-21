@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.au.module_android.ui.ViewBackgroundBuilder
+import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
 import com.au.module_androiduilight.R
 import com.au.module_androiduilight.databinding.SwitchButtonsLayoutBinding
