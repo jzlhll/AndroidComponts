@@ -11,7 +11,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.au.module_android.Apps
-import com.au.module_android.utils.ALog
 import com.au.module_android.utils.asOrNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -46,9 +45,6 @@ object AppDataStore {
             }
         }
         val t = Apps.app.dataStore.data.map {
-            it.asMap().forEach { (t, u) ->
-                ALog.t("allData: $t -> $u")
-            }
             it.contains(prefKey)
         }.first()
         return t
@@ -56,14 +52,12 @@ object AppDataStore {
 
     fun clear() {
         runBlocking {Apps.app.dataStore.edit {
-            ALog.t("clear!")
             it.clear()
         } }
     }
 
     fun save(key:String, value: Any) {
         runBlocking {
-            ALog.t("save $key <to> $value")
             saveSuspend(key, value)
         }
     }

@@ -1,7 +1,6 @@
 package com.au.module_android.init
 
 import android.app.Application
-import com.au.module_android.utils.ALog
 
 /**
  * @author au
@@ -10,7 +9,6 @@ import com.au.module_android.utils.ALog
  */
 open class InitApplication : Application() {
     override fun onCreate() {
-        ALog.d("init application")
         FirstInitial.init(this)
         super.onCreate()
     }

@@ -9,6 +9,7 @@ import com.allan.androidlearning.activities.DataStoreFragment
 import com.allan.androidlearning.activities.DialogsFragment
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
+import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Apps
@@ -20,14 +21,14 @@ import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {
-
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
         listOf(FontTestFragment::class.java,
             WebBridgeFragment::class.java,
             DataStoreFragment::class.java,
             LiveDataFragment::class.java,
             DialogsFragment::class.java,
-            CanvasFragment::class.java)
+            CanvasFragment::class.java,
+            MonoSpaceFragment::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

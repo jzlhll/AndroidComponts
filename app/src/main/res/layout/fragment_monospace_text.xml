@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="150dp"
+    android:paddingHorizontal="80dp"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="05:33 / 78:59"
+        android:textSize="16sp"
+        android:textColor="#99aaff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.MonospaceTimeView
+        android:id="@+id/firstMonoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textSize="16sp"
+        android:text="12:34 / 56:09"
+        android:id="@+id/two"
+        android:textColor="#99aaff"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.MonospaceTimeView
+        android:id="@+id/secondMonoText"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textSize="16sp"
+        android:text="12:34 / 56:09"
+        android:id="@+id/third"
+        android:textColor="#99aaff"
+        android:includeFontPadding="false"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.MonospaceTimeView
+        android:id="@+id/thirdMonoText"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

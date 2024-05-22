@@ -220,13 +220,13 @@ open class ImeHelper(
     override fun onPrepare(animation: WindowInsetsAnimationCompat) {
         //如果这里回调可以走，那么onProgress回调就会走
         _animIsRunning = true
-        if(DEBUG) Log.d(ALog.TAG, "on Prepare")
+        if(DEBUG) Log.d(TAG, "on Prepare")
         super.onPrepare(animation)
     }
 
     override fun onEnd(animation: WindowInsetsAnimationCompat) {
         super.onEnd(animation)
-        if(DEBUG) Log.d(ALog.TAG, "on end $_imeCurrentHeight $imeMaxHeight")
+        if(DEBUG) Log.d(TAG, "on end $_imeCurrentHeight $imeMaxHeight")
         _animIsRunning = false
         //实测，从第一个普通框点击到第二个密码框，则布局会跳动
         mEndCallback?.invoke(imeMaxHeight, _imeCurrentHeight == imeMaxHeight) //todo 这里需要更为好的算法，比如根据progress的方向来确定。尤其是多框跳变
@@ -240,7 +240,7 @@ open class ImeHelper(
         //所以这里的[insets.getInsets(WindowInsetsCompat.Type.ime())]获取高度，如果有导航栏，则是导航栏+真实键盘的高度
         //如果导航栏不存在，[insets.getInsets(WindowInsetsCompat.Type.ime())]获取的就是键盘真实高度
         _imeMaxHeight = bounds.upperBound.bottom
-        if(DEBUG) Log.d(ALog.TAG, "on start")
+        if(DEBUG) Log.d(TAG, "on start")
         return super<WindowInsetsAnimationCompat.Callback>.onStart(animation, bounds)
     }
 

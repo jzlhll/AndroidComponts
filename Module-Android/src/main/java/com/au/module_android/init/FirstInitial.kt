@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.au.module_android.Apps
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
-import com.au.module_android.utils.ALog
 
 /**
  * 自动初始化
@@ -20,7 +19,6 @@ object FirstInitial {
 
     fun init(context: Context): Application {
         val app = context as Application
-        ALog.d("first init....")
         ToutiaoScreenAdapter.init(app)
         app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
         Apps.internalApp = app

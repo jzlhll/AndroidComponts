@@ -17,19 +17,24 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 
 	final BridgeObject bridgeObject;
 
-	public BridgeWebView(Context context) {
-		this(context, null, 0);
-	}
-
-    public BridgeWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public BridgeWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+	public BridgeWebView(Context context) { //必须保留三个构造，不能this。会导致无法弹起键盘
+		super(context);
 		bridgeObject = new BridgeObject(this);
 		init();
-    }
+	}
+
+	public BridgeWebView(Context context, AttributeSet attrs) {//必须保留三个构造，不能this。会导致无法弹起键盘
+		super(context, attrs);
+		bridgeObject = new BridgeObject(this);
+		init();
+	}
+
+	public BridgeWebView(Context context, AttributeSet attrs, int defStyleAttr) {//必须保留三个构造，不能this。会导致无法弹起键盘
+		super(context, attrs, defStyleAttr);
+		bridgeObject = new BridgeObject(this);
+		init();
+	}
+
 
 	private void init() {
 		this.setVerticalScrollBarEnabled(false);
