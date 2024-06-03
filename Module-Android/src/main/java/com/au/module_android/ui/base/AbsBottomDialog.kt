@@ -32,6 +32,16 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
 
     override var rootView: View? = null
 
+    private var _onInitUiBlock:((rootView:View)->Unit)? = null
+
+    /**
+     * 尽量早一点调用。构建dialog对象的时候就调用。
+     * 只用作初始化一些界面。
+     */
+    open fun setOnInitUiBlock(block:((rootView:View)->Unit)) {
+        _onInitUiBlock = block
+    }
+
     /**
      * 对话框的window
      */
@@ -65,6 +75,8 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return onCreatingView(inflater, container, savedInstanceState).also {
             rootView = it
+            _onInitUiBlock?.invoke(it)
+            _onInitUiBlock = null
         }
     }
 
