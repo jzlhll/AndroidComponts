@@ -13,8 +13,8 @@ import com.au.jobstudy.saves.ISaveViewModel
 import com.au.jobstudy.saves.SaveImpl
 import com.au.module_android.simplelivedata.Bus
 import com.au.module_android.simplelivedata.BusLiveData
-import com.au.module_android.utils.ALog
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.logd
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.Collections
@@ -140,7 +140,7 @@ object GlobalDataViewModel : ISaveViewModel {
                 saved.loadWeekData(day, notExistGenerate)
             }
             val list = saved.getWeekData(day)
-            ALog.d("get week data $list")
+            logd{"get week data $list"}
             busLiveData.publishSuccess(mask?:"getWeekData", list ?: Collections.emptyList<DataItem>())
         }
     }
@@ -170,7 +170,7 @@ object GlobalDataViewModel : ISaveViewModel {
         scope.launch {
             if (saved.isLoadedWeek(day)) {
                 val list = saved.getDay(day)
-                ALog.d("getDay $day--< $list")
+                logd { "getDay $day--< $list" }
                 busLiveData.publishSuccess(mask?:"getDay", list ?: Collections.emptyList<DataItem>())
             } else {
                 busLiveData.publishError(mask?:"getDay", "do not call loadWeekData early.")

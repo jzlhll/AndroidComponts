@@ -24,7 +24,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
             FragmentRootOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
         }
 
-        binding.nongyaoBtn.onClick {
+        binding.nongyaoBtn?.onClick {
 
         }
 

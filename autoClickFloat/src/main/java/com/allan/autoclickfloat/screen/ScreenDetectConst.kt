@@ -11,11 +11,10 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.util.Log
-import com.au.module_android.utils.ALog
+import com.au.module_android.utils.logd
 import java.nio.ByteBuffer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
 
 class ScreenDetectConst {
     companion object {
@@ -79,7 +78,7 @@ class ScreenDetectConst {
         image.close()
 
         for (point in pickColorArray) {
-            ALog.d("pick Color $point #" + Integer.toHexString(bitmap.getPixel(point.x, point.y)))
+            logd { "pick Color $point #" + Integer.toHexString(bitmap.getPixel(point.x, point.y)) }
         }
 
         lastParsedTime = System.currentTimeMillis()

@@ -7,8 +7,8 @@ import com.au.jobstudy.bean.randomGetSubject
 import com.au.jobstudy.bean.randomGetTwoSubjects
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
-import com.au.module_android.utils.ALog
 import com.au.module_android.utils.awaitOnIoThread
+import com.au.module_android.utils.logd
 import java.lang.RuntimeException
 import java.util.Collections
 import kotlin.coroutines.resume
@@ -20,7 +20,7 @@ class SaveImpl : ISave {
     private val loadedWeekDaos = HashMap<String, EntityListDao<DataItem>>()
 
     private suspend fun loadFromDb(weekStartDay: String, generate:Boolean) : List<DataItem> {
-        ALog.d("generate OrLoad FromDb....")
+        logd { "generate OrLoad FromDb...." }
         val weekDao =
             if (loadedWeekDaos.containsKey(weekStartDay))
                 loadedWeekDaos[weekStartDay]!!
@@ -30,13 +30,13 @@ class SaveImpl : ISave {
                 }
 
         return awaitOnIoThread { cancellableContinuation->
-            ALog.d("generate OrLoad FromDb awaitOnIoThread....")
+            logd { "generate OrLoad FromDb awaitOnIoThread...."}
             cancellableContinuation.invokeOnCancellation {
                 cancellableContinuation.resume(Collections.emptyList())
             }
 
             weekDao.loadAllFilter("weekStartDay", weekStartDay) { dbList->
-                ALog.d("generate OrLoad FromDb awaitOnIoThread11....")
+                logd { "generate OrLoad FromDb awaitOnIoThread11...."}
                 if (dbList.isNotEmpty()) {
                     cancellableContinuation.resume(dbList)
                 } else if (generate) {
