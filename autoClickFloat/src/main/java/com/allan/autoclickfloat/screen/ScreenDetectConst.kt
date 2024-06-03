@@ -1,8 +1,6 @@
 package com.allan.autoclickfloat.screen
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.Point

@@ -13,6 +13,9 @@ object Const {
     const val TAG = "autoclickfloat"
 
     val autoOnePoint = OnePointAuto()
+
+    val appClickTasks = AppClickTasks()
+
     val rotationLiveData = NoStickLiveData(WindowMgr.mWindowManager.defaultDisplay.rotation)
 
     private val mConfigChangeReceiver = object : BroadcastReceiver() {

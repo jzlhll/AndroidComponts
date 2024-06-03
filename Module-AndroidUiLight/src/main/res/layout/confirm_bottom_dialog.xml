@@ -24,7 +24,6 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="3"
             android:layout_marginTop="16dp"
             android:gravity="center"
             tools:text="fir asdfjk z9 " />
@@ -37,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:maxLines="3"
             android:gravity="center"
             tools:text="Yourkd 18941 jfifz 1`2894 zmnkzj 12849" />
 

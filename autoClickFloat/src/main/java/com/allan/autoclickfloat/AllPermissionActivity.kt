@@ -11,6 +11,7 @@ import com.allan.autoclickfloat.activities.startup.OnlyFloatPermissionViewModel
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
+import com.allan.autoclickfloat.accessibility.GlobalsAccessService
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment

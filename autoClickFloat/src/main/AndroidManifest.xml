@@ -28,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".GlobalsAccessService"
+            android:name=".accessibility.AutoClickFloatAccessService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaProjection"

@@ -34,7 +34,7 @@ class PermissionsHelper {
             val ac = fragment.requireActivity()
             if (!isAccessibilityEnabled(ac)) {
                 ConfirmCenterDialog.show(fragment.childFragmentManager,
-                    "请授予辅助权限。",
+                    "请授予辅助权限",
                     "请点击确定，跳转去辅助服务，打开「AShoot辅助点击方案」，并建议开启快捷开关。如果已经存在快捷开关，则可以快捷开关开启。",
                     "确定") {
                     ac.gotoAccessibilityPermission()
@@ -48,7 +48,7 @@ class PermissionsHelper {
             val ac = fragment.requireActivity()
             if (!isFloatWindowEnabled(ac)) {
                 ConfirmCenterDialog.show(fragment.childFragmentManager,
-                    "请授予悬浮窗权限。",
+                    "请授予悬浮窗权限",
                     "请点击确定，跳转去设置，给「AShoot辅助点击方案」开启悬浮窗权限。",
                     "确定") {
                     ac.gotoFloatWindowPermission()

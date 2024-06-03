@@ -5,18 +5,24 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.Dialog
 import android.app.KeyguardManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.ResolveInfo
 import android.os.Build.VERSION
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
 import android.view.View
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import com.au.module_android.Apps
 import com.au.module_android.Apps.app
 import java.math.BigDecimal
 import java.math.RoundingMode
+
 
 val isMainThread: Boolean
     get() = Looper.getMainLooper() === Looper.myLooper()
@@ -172,4 +178,45 @@ private fun isAppForeground(context: Context) : Boolean {
         }
     }
     return false
+}
+
+/**
+ *
+ * 未知activity，打开一个packageName的应用。
+ * 如果是android11需要添加可见性：在androidManifest中申明:
+ * <code><queries>
+ *     <!-- Specific apps you interact with, eg: -->
+ *     <package android:name="com.example.store" />
+ *     <package android:name="com.example.service" />
+ *
+ *     <!--
+ *     Specific intents you query for,
+ *     eg: for a custom share UI
+ *     -->
+ *     <intent>
+ *     <action android:name="android.intent.action.SEND" />
+ *     <data android:mimeType="image/jpeg" />
+ *     </intent>
+ * </queries></code>
+ */
+fun openApp(context: Context, packageName: String) : Boolean{
+    try {
+        val pm = context.packageManager
+        val pi: PackageInfo = pm.getPackageInfo(packageName, 0)
+        val resolveIntent = Intent(Intent.ACTION_MAIN, null)
+        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        resolveIntent.setPackage(pi.packageName)
+
+        val apps: List<ResolveInfo> = pm.queryIntentActivities(resolveIntent, 0)
+
+        val ri = apps.iterator().next()
+        val cn = ComponentName(ri.activityInfo.packageName, ri.activityInfo.name)
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setComponent(cn)
+        context.startActivityFix(intent)
+        return true
+    } catch (e:Exception) {
+        return false
+    }
 }

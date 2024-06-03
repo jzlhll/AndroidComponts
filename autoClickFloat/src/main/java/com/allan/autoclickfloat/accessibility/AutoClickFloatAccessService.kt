@@ -1,9 +1,7 @@
-package com.allan.autoclickfloat
+package com.allan.autoclickfloat.accessibility
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.accessibilityservice.GestureDescription
-import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.ComponentName
@@ -12,13 +10,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.graphics.Path
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityNodeInfo
-import androidx.lifecycle.MutableLiveData
+import com.allan.autoclickfloat.AllPermissionActivity
+import com.allan.autoclickfloat.R
+import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickObserver
 import com.allan.autoclickfloat.consts.Const
+import com.allan.autoclickfloat.nongyao.AppClickTasksObserver
 import com.au.module_android.Apps
+import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.utils.ForeNotificationUtil
 import com.au.module_android.utils.logd
 
@@ -27,19 +27,19 @@ import com.au.module_android.utils.logd
  * @date :2024/3/19 10:04
  * @description:
  */
-class GlobalsAccessService : AccessibilityService() {
+class AutoClickFloatAccessService : AccessibilityService() {
     companion object {
-        var isAlive = false
-        val isEnabledLiveData = MutableLiveData<Any>()
+        val isEnabledLiveData = SafeLiveData<Boolean>()
     }
 
+    private val children:List<AbsAccessServiceObserver> = listOf(
+        AutoContinuousClickObserver(this),
+        AppClickTasksObserver(this)
+    )
     private var broadcastHandler: BroadcastHandler? = null
-
-    private val children = listOf(GlobalsAccessServiceAutoOneKey(this))
 
     override fun onCreate() {
         super.onCreate()
-        isAlive = true
         Log.d(Const.TAG, "onCreate on start command====")
         ForeNotificationUtil.startForeground(
             this,
@@ -52,11 +52,12 @@ class GlobalsAccessService : AccessibilityService() {
         )
 
         broadcastHandler = BroadcastHandler(this).also { it.register() }
-        isEnabledLiveData.value = Unit
 
         children.forEach {
             it.onCreate()
         }
+
+        isEnabledLiveData.setValueSafe(true)
     }
 
     override fun onServiceConnected() {
@@ -76,22 +77,26 @@ class GlobalsAccessService : AccessibilityService() {
             Log.d(Const.TAG, "on start command stop service")
             stopSelf()
         }
+
         children.forEach {
             it.onStartCommand(intent)
         }
+
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        broadcastHandler?.unregister()
-        Log.d(Const.TAG, "service onDestroy")
-        ForeNotificationUtil.stopForeground(this)
-        isEnabledLiveData.value = Unit
-        isAlive = false
+
         children.forEach {
             it.onDestroy()
         }
+
+        isEnabledLiveData.setValueSafe(false)
+
+        broadcastHandler?.unregister()
+        Log.d(Const.TAG, "service onDestroy")
+        ForeNotificationUtil.stopForeground(this)
     }
 
     private fun tryGetActivity(componentName:ComponentName) :ActivityInfo? {
@@ -132,6 +137,18 @@ class GlobalsAccessService : AccessibilityService() {
     override fun onInterrupt() { //辅助服务被中断了
     }
 
+    private fun onScreenOff() {
+        children.forEach {
+            it.onScreenOff()
+        }
+    }
+
+    private fun onScreenOn() {
+        children.forEach {
+            it.onScreenOn()
+        }
+    }
+
     private inner class BroadcastHandler(val context: Context) : BroadcastReceiver() {
         fun register() {
             context.registerReceiver(
@@ -152,89 +169,13 @@ class GlobalsAccessService : AccessibilityService() {
             intent?.apply {
                 when (action) {
                     Intent.ACTION_SCREEN_OFF -> {
-                        children.forEach {
-                            it.onDestroy()
-                        }
+                        onScreenOff()
                     }
                     Intent.ACTION_SCREEN_ON -> {
-                        children.forEach {
-                            it.onCreate()
-                        }
+                        onScreenOn()
                     }
                 }
             }
         }
     }
-
-}
-
-abstract class GlobalsAccessServiceObserver(val service: GlobalsAccessService) {
-    abstract fun onCreate()
-
-    abstract fun onDestroy()
-
-    open fun onStartCommand(intent:Intent?) {}
-
-    val gestureResultCallback = object : AccessibilityService.GestureResultCallback() {
-        override fun onCompleted(gestureDescription: GestureDescription?) {
-            super.onCompleted(gestureDescription)
-            Log.d(Const.TAG, "tap 自动点击完成")
-        }
-
-        override fun onCancelled(gestureDescription: GestureDescription?) {
-            super.onCancelled(gestureDescription)
-            Log.d(Const.TAG, "tap 自动点击取消")
-        }
-    }
-
-    val swipeGestureResultCallback = object : AccessibilityService.GestureResultCallback() {
-        override fun onCompleted(gestureDescription: GestureDescription?) {
-            super.onCompleted(gestureDescription)
-            Log.d(Const.TAG, "swipe 自动点击完成")
-        }
-
-        override fun onCancelled(gestureDescription: GestureDescription?) {
-            super.onCancelled(gestureDescription)
-            Log.d(Const.TAG, "swipe 自动点击取消")
-        }
-    }
-
-    open fun tap(x:Float, y:Float) {
-        val path = Path()
-        path.moveTo(x, y)
-        val gestureDescription = GestureDescription.Builder()
-            .addStroke(StrokeDescription(path, 0L, 200L)) //默认比较好的150ms。
-            .build()
-        val r = service.dispatchGesture(
-            gestureDescription,
-            gestureResultCallback,
-            null
-        )
-        Log.d(Const.TAG, "tap dispatch gesture $r")
-    }
-
-    /**
-     * 模拟滑动事件
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param startTime 0即可执行
-     * @param duration  滑动时长
-     * @return 执行是否成功
-     */
-    private fun swipe(x1: Int, y1: Int, x2: Int, y2: Int) {
-        Log.e("Tag", "模拟滑动事件")
-
-        val builder = GestureDescription.Builder()
-        val p = Path()
-        p.moveTo(x1.toFloat(), y1.toFloat())
-        p.lineTo(x2.toFloat(), y2.toFloat())
-        builder.addStroke(StrokeDescription(p, 0L, 400L)) //尝试修改时间。
-        val gesture = builder.build()
-        val r = service.dispatchGesture(gesture, swipeGestureResultCallback, null)
-        Log.d(Const.TAG, "swipe dispatch gesture $r")
-    }
-
 }

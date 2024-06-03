@@ -1,12 +1,14 @@
-package com.allan.autoclickfloat
+package com.allan.autoclickfloat.activities.autooneclick
 
 import android.util.Log
 import androidx.lifecycle.Observer
 import com.allan.autoclickfloat.consts.Const
+import com.allan.autoclickfloat.accessibility.AutoClickFloatAccessService
+import com.allan.autoclickfloat.accessibility.AbsAccessServiceObserver
 import com.au.module_android.postToMainHandler
 import com.au.module_android.removeFromMainHandler
 
-class GlobalsAccessServiceAutoOneKey(service: GlobalsAccessService) : GlobalsAccessServiceObserver(service) {
+class AutoContinuousClickObserver(service: AutoClickFloatAccessService) : AbsAccessServiceObserver(service) {
     private val onceRun = Runnable {
         val point = Const.autoOnePoint.autoOnePointLocLiveData.value
         Log.d(Const.TAG, "click point ${point?.first} ${point?.second}")
@@ -43,5 +45,12 @@ class GlobalsAccessServiceAutoOneKey(service: GlobalsAccessService) : GlobalsAcc
         Log.d(Const.TAG, "onekey on destroy")
         Const.autoOnePoint.autoOnePointOpenLiveData.removeObserver(openObserver)
         stopAutoClickView()
+    }
+
+    override fun onScreenOff() {
+        onDestroy()
+    }
+
+    override fun onScreenOn() {
     }
 }
