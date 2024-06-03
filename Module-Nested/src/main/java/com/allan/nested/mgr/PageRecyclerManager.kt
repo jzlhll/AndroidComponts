@@ -8,7 +8,7 @@ import com.allan.nested.recyclerview.DataChangeExtraInfoInit
 import com.allan.nested.recyclerview.DataExtraInfo
 import com.allan.nested.recyclerview.IOnChangeListener
 import com.allan.nested.recyclerview.page.AbstractPageViewModel
-import com.au.module_android.utils.ALog
+import com.au.module_android.utils.logd
 
 /**
  * 用于联动下拉刷新框架。
@@ -42,7 +42,7 @@ open class PageRecyclerManager<Bean:Any>(
         this.adapter.addDataChanged(object : IOnChangeListener {
             override fun onChange(info: DataExtraInfo) {
                 if (info is DataChangeExtraInfoInit) {
-                    ALog.d("onInitDatasFinished")
+                    logd { "onInitDatasFinished" }
                     layout.refresher.refreshCompleted()
                 }
             }
