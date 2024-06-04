@@ -1,8 +1,8 @@
 package com.au.module.cached
 
 import android.os.Parcelable
-import com.au.module_android.Apps.gson
-import com.au.module_android.Apps.mmkv
+import com.au.module_android.Globals.gson
+import com.au.module_android.Globals.mmkv
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 

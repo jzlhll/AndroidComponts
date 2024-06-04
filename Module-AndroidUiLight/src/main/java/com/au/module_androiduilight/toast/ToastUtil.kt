@@ -1,20 +1,15 @@
 package com.au.module_androiduilight.toast
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module.android.R
-import com.au.module_android.Apps
 import com.au.module_android.click.onClick
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.visible
 import com.au.module_androidex.toast.AbsToastBuilder
+import com.au.module_androidex.toast.IconType
 import com.au.module_androidex.toast.ToastUtil
 import com.au.module_androidex.toast.ToastUtil.checkToastMsgAndDesc
 import com.au.module_androidex.toast.ToastUtil.dismissToastByTag
@@ -36,7 +31,7 @@ private fun createToastBinding(view: ViewGroup,
     return ToastUtil.createToastBinding(view, viewBinding, duration, textLen, isAlwaysShown)
 }
 
-fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:String?, icon:String?,
+private fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:String?, icon:String?,
                isAlwaysShown: Boolean = false, hasClose: Boolean = false) : ViewBinding? {
     view ?: return null
     //view不存在，则不处理
@@ -91,7 +86,7 @@ fun toastPopup(view: ViewGroup?, duration: Long, message:String?, description:St
             }
 
             binding.closeBtn.onClick {
-                ToastUtil.dismissToastByTag(tag)
+                dismissToastByTag(tag)
             }
         }
     }
@@ -105,29 +100,8 @@ private fun iconStrToId(icon:String?) = when(icon) {
     else -> -1
 }
 
-fun Fragment.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(requireActivity().window.decorView.asOrNull(), duration, msg, desc, null)
-
-fun Fragment.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
-
-fun Activity.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(window.decorView.asOrNull(), duration, msg, desc, null)
-
-fun Activity.toast(@StringRes strId: Int, duration: Long = 2200) = toast(getString(strId), duration)
-
-fun Window.toast(msg: String?, duration: Long = 2200, desc:String? = null) =
-    toastPopup(this.decorView.asOrNull(), duration, msg, desc, null)
-
-/**
- * 全局弹出toast，在最上面的activity上。
- */
-fun toastOnTop(@StringRes strId: Int, duration: Long = 2200) =
-    Apps.activityList.lastOrNull()?.toast(strId, duration)
-/**
- * 全局弹出toast，在最上面的activity上。
- */
-fun toastOnTop(msg: String?, duration: Long = 2200, desc:String? = null) =
-    Apps.activityList.lastOrNull()?.toast(msg, duration, desc)
+fun toastOnTop(msg:String, desc:String? = null, @IconType icon:String?= null, duration:Long = 2200)
+    = ToastBuilder().setOnTop().setMessage(msg).setDesc(desc).setIcon(icon).setDuration(duration).toast()
 
 class ToastBuilder : AbsToastBuilder() {
     override fun toastPopup(): View? {

@@ -3,7 +3,7 @@ package com.au.module_android.init
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import com.au.module_android.Apps.activityList
+import com.au.module_android.Globals.activityList
 
 /**
  * @author au

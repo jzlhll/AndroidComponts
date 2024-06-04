@@ -17,7 +17,7 @@ import com.allan.autoclickfloat.R
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickObserver
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.nongyao.AppClickTasksObserver
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.utils.ForeNotificationUtil
 import com.au.module_android.utils.logd
@@ -48,7 +48,7 @@ class AutoClickFloatAccessService : AccessibilityService() {
             "AShoot悬浮点击",
             "AShoot正在工作中，点击关闭。",
             R.drawable.ic_nongyao_click,
-            pendingIntent = PendingIntent.getActivity(this, 0, Intent(Apps.app, AllPermissionActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+            pendingIntent = PendingIntent.getActivity(this, 0, Intent(Globals.app, AllPermissionActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
         )
 
         broadcastHandler = BroadcastHandler(this).also { it.register() }

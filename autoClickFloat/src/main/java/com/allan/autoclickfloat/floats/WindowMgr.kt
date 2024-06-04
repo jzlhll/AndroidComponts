@@ -3,7 +3,7 @@ package com.allan.autoclickfloat.floats
 import android.content.Context
 import android.view.View
 import android.view.WindowManager
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 
 /**
  * @author allan
@@ -13,7 +13,7 @@ import com.au.module_android.Apps
 object WindowMgr {
 
     //获得WindowManager对象
-    var mWindowManager: WindowManager = Apps.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    var mWindowManager: WindowManager = Globals.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     /**
      * 添加悬浮窗
      * @param view

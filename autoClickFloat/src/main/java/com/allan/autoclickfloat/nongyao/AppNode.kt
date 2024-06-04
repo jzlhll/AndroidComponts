@@ -1,7 +1,7 @@
 package com.allan.autoclickfloat.nongyao
 
 import androidx.annotation.CallSuper
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.utils.openApp
 
 abstract class AppNode(val pkg:String,
@@ -9,8 +9,8 @@ abstract class AppNode(val pkg:String,
                        val nextNode:AppNode?) {
     protected var isLive = true
 
-    open fun startNewApp(pkg:String) : Boolean{
-        return openApp(Apps.app, pkg)
+    fun startNewApp() : Boolean{
+        return openApp(Globals.app, pkg)
     }
 
     abstract suspend fun action() : Boolean

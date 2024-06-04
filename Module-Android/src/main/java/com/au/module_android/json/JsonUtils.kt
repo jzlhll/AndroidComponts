@@ -1,7 +1,7 @@
 package com.au.module_android.json
 
 import android.util.Log
-import com.au.module_android.Apps.gson
+import com.au.module_android.Globals.gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser

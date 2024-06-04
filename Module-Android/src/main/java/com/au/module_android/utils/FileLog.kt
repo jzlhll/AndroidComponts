@@ -3,7 +3,7 @@ package com.au.module_android.utils
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import java.io.*
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
@@ -13,7 +13,7 @@ internal class FileItem(val filePath: String?, val log: String)
 object FileLog {
     private val timeFmt = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
-    private fun logRoot() = Apps.app.getExternalFilesDir(null)?.absolutePath + File.separator + "Log"
+    private fun logRoot() = Globals.app.getExternalFilesDir(null)?.absolutePath + File.separator + "Log"
 
     ///更新
 /*    fun updateDay() {

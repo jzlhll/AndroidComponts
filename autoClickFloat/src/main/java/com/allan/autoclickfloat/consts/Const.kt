@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import com.allan.autoclickfloat.floats.WindowMgr
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.NoStickLiveData
 
 object Const {
@@ -33,6 +33,6 @@ object Const {
 
         val configChangeFilter = IntentFilter()
         configChangeFilter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
-        Apps.app.registerReceiver(mConfigChangeReceiver, configChangeFilter)
+        Globals.app.registerReceiver(mConfigChangeReceiver, configChangeFilter)
     }
 }

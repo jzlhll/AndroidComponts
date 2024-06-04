@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.BUNDLE_KEY0
 import com.au.module_android.utils.BUNDLE_KEY1
@@ -56,7 +56,7 @@ class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottom
         } else {
             val root = inflater.inflate(com.au.module.android.R.layout.dialog_bottomsheet, container, false)
             root.background = ViewBackgroundBuilder()
-                .setBackground(Apps.app.getColor(com.au.module.android.R.color.color1f1f1f))
+                .setBackground(Globals.app.getColor(com.au.module.android.R.color.color1f1f1f))
                 .setCornerRadius(20f.dp, 20f.dp, 0f, 0f)
                 .build()
             val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)

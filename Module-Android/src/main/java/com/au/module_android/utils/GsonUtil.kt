@@ -1,9 +1,7 @@
 package com.au.module_android.utils
 
-import com.au.module_android.Apps.gson
+import com.au.module_android.Globals.gson
 import com.google.gson.reflect.TypeToken
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 //一级泛型解析
 inline fun <reified T> String.parseJson(): T {

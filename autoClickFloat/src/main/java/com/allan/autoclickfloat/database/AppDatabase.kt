@@ -7,7 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.allan.autoclickfloat.consts.Const
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 
 @Keep
 @Database(entities = [Project::class, Step::class], version = 1, exportSchema = false)
@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
                         if (_db == null) {
                             _db = Room
                                 //inMemoryDatabaseBuilder 改为则创建一个内存数据库（进程销毁后，数据丢失）
-                                .databaseBuilder(Apps.app, AppDatabase::class.java, "record_projects")
+                                .databaseBuilder(Globals.app, AppDatabase::class.java, "record_projects")
                                 .allowMainThreadQueries() //数据库的操作是否允许在主线程中执行
                                 .addCallback(object : Callback() { //数据库创建和打开后的回调，可以重写其中的方法
                                     override fun onCreate(db: SupportSQLiteDatabase) {

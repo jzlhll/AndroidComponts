@@ -16,10 +16,9 @@ import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
 import android.view.View
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
-import com.au.module_android.Apps
-import com.au.module_android.Apps.app
+import com.au.module_android.Globals
+import com.au.module_android.Globals.app
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -105,8 +104,8 @@ val Int.dpFloat:Float
  */
 suspend fun getAppCacheSize(): String {
     return withIoThread {
-        val cacheDir = Apps.app.cacheDir.getDirSize()
-        val externalCacheDir = Apps.app.externalCacheDir.getDirSize()
+        val cacheDir = Globals.app.cacheDir.getDirSize()
+        val externalCacheDir = Globals.app.externalCacheDir.getDirSize()
         (cacheDir + externalCacheDir).formatLength()
     }
 }

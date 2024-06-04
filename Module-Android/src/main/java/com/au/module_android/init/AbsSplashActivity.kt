@@ -2,7 +2,7 @@ package com.au.module_android.init
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -50,7 +50,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
         }
 
         android.util.Log.d("SplashActivity", "launch app")
-        Apps.activityList.forEach {
+        Globals.activityList.forEach {
             if (it != this) {
                 it.finish()
             }

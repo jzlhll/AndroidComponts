@@ -38,6 +38,7 @@
     </style>
 
     <style name="StyleFontSecondaryTextDark">
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/color_text_secondary_dark</item>
         <item name="android:lineSpacingMultiplier">1.05</item>
     </style>
@@ -48,11 +49,10 @@
     <!--显示成为粗-->
     <style name="StyleFontBTextDark" parent="StyleFontTextDark"/>
 
-    <!-- minText 15sp 和 smallText 12sp默认灰色 -->
     <style name="StyleMinTextDark">
-        <item name="android:lineSpacingMultiplier">1.05</item>
-        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/color_text_normal_dark</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="StyleSmallTextDark">

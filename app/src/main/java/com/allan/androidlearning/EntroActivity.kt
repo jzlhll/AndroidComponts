@@ -12,7 +12,7 @@ import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.click.onClick
@@ -84,8 +84,8 @@ object NetworkHelperToastMgr {
     fun toastSuccess() {
         mTargetSuccess = true
         Log.d("allan", "delay to toast Target true")
-        Apps.mainHandler.removeCallbacks(toastRun)
-        Apps.mainHandler.postDelayed(toastRun, 3000)
+        Globals.mainHandler.removeCallbacks(toastRun)
+        Globals.mainHandler.postDelayed(toastRun, 3000)
     }
 
     fun toastConnectionLost() {
@@ -94,8 +94,8 @@ object NetworkHelperToastMgr {
         if (lastTarget != null) {
             Log.d("allan", "delay to toast Target false")
             mTargetSuccess = false //不得随意调整位置
-            Apps.mainHandler.removeCallbacks(toastRun)
-            Apps.mainHandler.postDelayed(toastRun, 3000)
+            Globals.mainHandler.removeCallbacks(toastRun)
+            Globals.mainHandler.postDelayed(toastRun, 3000)
         } else {
             Log.d("allan", "delay to toast Target false no toast")
         }

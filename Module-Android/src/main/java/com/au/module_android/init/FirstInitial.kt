@@ -3,7 +3,7 @@ package com.au.module_android.init
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 
 /**
@@ -21,7 +21,7 @@ object FirstInitial {
         val app = context as Application
         ToutiaoScreenAdapter.init(app)
         app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
-        Apps.internalApp = app
+        Globals.internalApp = app
 
         if (isInitSharedPrefHook) {
             optimizeSpTask()

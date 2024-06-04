@@ -3,7 +3,7 @@ package com.allan.autoclickfloat.consts
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.NoStickLiveData
 import kotlinx.coroutines.launch
@@ -38,20 +38,20 @@ class OnePointAuto {
     val autoOnePointBeClickedData = NoStickLiveData<Any>()
 
     fun loadAutoOnePointMs() {
-        Apps.mainScope.launch {
+        Globals.mainScope.launch {
             _autoOnePointClickMsLiveData.postValue(AppDataStore.read("autoOnePointClickMs", 250))
         }
     }
 
     fun saveAutoOnePointMs(ms:Int) {
-        Apps.mainScope.launch {
+        Globals.mainScope.launch {
             AppDataStore.save("autoOnePointClickMs", ms)
             _autoOnePointClickMsLiveData.postValue(ms)
         }
     }
 
     fun loadAutoOnePoint() {
-        Apps.mainScope.launch {
+        Globals.mainScope.launch {
             val x:Int = AppDataStore.read("auto_continuous_click_point_x", 100)
             val y:Int = AppDataStore.read("auto_continuous_click_point_y", 400)
             val rotation:Int = AppDataStore.read<Int>("auto_continuous_click_point_rot", -1)
@@ -69,7 +69,7 @@ class OnePointAuto {
 
     fun saveAutoOnePoint(x:Int, y:Int, locationX:Int, locationY:Int, rotation:Int) {
         Log.d(Const.TAG, "saveAutoOnePoint rotation $rotation x-y $x $y")
-        Apps.mainScope.launch {
+        Globals.mainScope.launch {
             AppDataStore.save(
                 "auto_continuous_click_point_x" to x,
                 "auto_continuous_click_point_y" to y,

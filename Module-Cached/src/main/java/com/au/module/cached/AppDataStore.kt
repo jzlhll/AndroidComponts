@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.au.module_android.Apps
+import com.au.module_android.Globals
 import com.au.module_android.utils.asOrNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -44,14 +44,14 @@ object AppDataStore {
                 throw IllegalArgumentException("This type can be removed from DataStore")
             }
         }
-        val t = Apps.app.dataStore.data.map {
+        val t = Globals.app.dataStore.data.map {
             it.contains(prefKey)
         }.first()
         return t
     }
 
     fun clear() {
-        runBlocking {Apps.app.dataStore.edit {
+        runBlocking {Globals.app.dataStore.edit {
             it.clear()
         } }
     }
@@ -78,7 +78,7 @@ object AppDataStore {
 
     suspend inline fun <reified T> removeSuspend(key:String) : T?{
         var ret : T? = null
-        Apps.app.dataStore.edit { setting ->
+        Globals.app.dataStore.edit { setting ->
             ret = when (T::class.java) {
                 Int::class.java -> setting.remove(intPreferencesKey(key)).asOrNull()
                 Long::class.java -> setting.remove(longPreferencesKey(key)).asOrNull()
@@ -100,7 +100,7 @@ object AppDataStore {
      */
     @Deprecated("不建议直接使用，因为可能协程被取消，除非你明白你的scope一定保存成功")
     private suspend fun saveSuspend(key:String, value:Any) {
-        Apps.app.dataStore.edit { setting ->
+        Globals.app.dataStore.edit { setting ->
             when (value) {
                 is Int -> setting[intPreferencesKey(key)] = value
                 is Long -> setting[longPreferencesKey(key)] = value
@@ -113,7 +113,7 @@ object AppDataStore {
                     @Suppress("UNCHECKED_CAST") // Checked by reflection.
                     when {
                         String::class.java.isAssignableFrom(componentType) -> {
-                            Apps.app.dataStore.edit { preferences ->
+                            Globals.app.dataStore.edit { preferences ->
                                 preferences[stringSetPreferencesKey(key)] = value as Set<String>
                             }
                         }
@@ -132,32 +132,32 @@ object AppDataStore {
     suspend inline fun < reified T : Any> read(key: String, defaultValue:T): T {
         return  when (T::class) {
             Int::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[intPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
             Long::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[longPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
             Double::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[doublePreferencesKey(key)] ?:defaultValue
                 }.first() as T
             }
             Float::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[floatPreferencesKey(key)] ?:defaultValue
                 }.first() as T
             }
             Boolean::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[booleanPreferencesKey(key)]?:defaultValue
                 }.first() as T
             }
             String::class -> {
-                Apps.app.dataStore.data.map { setting ->
+                Globals.app.dataStore.data.map { setting ->
                     setting[stringPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }

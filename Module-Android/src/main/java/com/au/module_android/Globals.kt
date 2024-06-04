@@ -5,13 +5,12 @@ import android.app.Application
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
 
-object Apps {
+object Globals {
     /**
      * 点击事件间隔时间
      */
@@ -66,26 +65,26 @@ object Apps {
 
 //----------------------handler start
 fun postToMainHandler(run:Runnable) {
-    Apps.mainHandler.post(run)
+    Globals.mainHandler.post(run)
 }
 
 fun postToMainHandler(run:Runnable, delay:Long) {
-    Apps.mainHandler.postDelayed(run, delay)
+    Globals.mainHandler.postDelayed(run, delay)
 }
 
 fun removeFromMainHandler(run:Runnable) {
-    Apps.mainHandler.removeCallbacks(run)
+    Globals.mainHandler.removeCallbacks(run)
 }
 
 fun postToBgHandler(run:Runnable) {
-    Apps.backgroundHandler.post(run)
+    Globals.backgroundHandler.post(run)
 }
 
 fun postToBgHandler(run:Runnable, delay:Long) {
-    Apps.backgroundHandler.postDelayed(run, delay)
+    Globals.backgroundHandler.postDelayed(run, delay)
 }
 
 fun removeFromBgHandler(run:Runnable) {
-    Apps.backgroundHandler.removeCallbacks(run)
+    Globals.backgroundHandler.removeCallbacks(run)
 }
 //----------------------handler end

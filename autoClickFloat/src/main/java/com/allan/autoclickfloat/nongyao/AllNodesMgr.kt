@@ -6,7 +6,7 @@ class AllNodesMgr {
     suspend fun start(progressChangeBlock:(Int)->Unit) : String {
         while (true) {
             progressChangeBlock(currentNode.progress)
-            if (!currentNode.startNewApp(currentNode.pkg)) {
+            if (!currentNode.startNewApp()) {
                 return "当前正在 $progress %, 无法启动应用。已停止。"
             }
 

@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@StringDef({"success", "fail", "error", "warn", "none"})
+@StringDef({"success", "fail", "error", "warn", "info", "none"})
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.PARAMETER})
 public @interface IconType {

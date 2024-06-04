@@ -6,8 +6,7 @@ import com.allan.autoclickfloat.accessibility.AutoClickFloatAccessService
 import com.allan.autoclickfloat.accessibility.AbsAccessServiceObserver
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.WindowMgr
-import com.au.module_android.Apps
-import com.au.module_android.utils.launchOnThread
+import com.au.module_android.Globals
 import kotlinx.coroutines.launch
 
 /**
@@ -56,7 +55,7 @@ class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessSer
     }
 
     private fun startWork() {
-        Apps.mainScope.launch {
+        Globals.mainScope.launch {
 
             mgr.start {
 
