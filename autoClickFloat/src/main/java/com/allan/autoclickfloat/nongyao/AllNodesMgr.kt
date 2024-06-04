@@ -20,6 +20,10 @@ class AllNodesMgr {
         }
     }
 
+    fun stop() {
+        currentNode.stop()
+    }
+
     val progress:Int
         get() {
             return currentNode.progress

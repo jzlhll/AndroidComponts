@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
  * @description:
  */
 class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessServiceObserver(service) {
-    private var isScreenOn = true
+    private var isPaused = true
 
     private val mgr = AllNodesMgr()
 
@@ -24,14 +24,10 @@ class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessSer
         Log.d(Const.TAG, "open ob $it")
         if (it) {
             AppClickTasksInfoView.getInstance().show(100, 200, WindowMgr.mWindowManager.defaultDisplay.rotation)
-            Apps.mainScope.launch {
-
-                mgr.start {
-
-                }
-            }
+            startWork()
         } else {
             AppClickTasksInfoView.getInstanceOrNull()?.remove()
+            stopWork()
         }
     }
 
@@ -44,10 +40,31 @@ class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessSer
     }
 
     override fun onScreenOff() {
-        isScreenOn = false
+        isPaused = true
+        AppClickTasksInfoView.getInstance().apply {
+            updateInfo("已经暂停，\n点击重新开始。")
+            disableTouch = false
+            clickCallback = {
+                isPaused = false
+                AppClickTasksInfoView.getInstance().disableTouch = true
+                startWork()
+            }
+        }
     }
 
     override fun onScreenOn() {
-        isScreenOn = true
+    }
+
+    private fun startWork() {
+        Apps.mainScope.launch {
+
+            mgr.start {
+
+            }
+        }
+    }
+
+    private fun stopWork() {
+        mgr.stop()
     }
 }
