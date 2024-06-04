@@ -8,8 +8,8 @@
     <com.au.module_android.widget.CustomFontText
         style="@style/StyleFontMText"
         android:textSize="16sp"
-        android:textColor="#111111"
-        android:alpha="0.6"
+        android:textColor="#222222"
+        android:alpha="0.5"
         tools:text="info"
         android:id="@+id/infoTv"
         android:layout_width="wrap_content"

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="4dp"
     android:paddingEnd="@dimen/ui_padding_edge"
     android:layout_height="48dp">
@@ -24,7 +25,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/fakeToolbarBack"
-        android:src="@drawable/icon_back"
+        tools:src="@drawable/icon_back"
         android:padding="4dp"
         android:layout_width="48dp"
         android:layout_height="match_parent"/>

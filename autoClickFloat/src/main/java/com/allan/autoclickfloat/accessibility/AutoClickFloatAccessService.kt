@@ -99,7 +99,7 @@ class AutoClickFloatAccessService : AccessibilityService() {
         ForeNotificationUtil.stopForeground(this)
     }
 
-    private fun tryGetActivity(componentName:ComponentName) :ActivityInfo? {
+    fun tryGetActivity(componentName:ComponentName) :ActivityInfo? {
         return try {
             packageManager.getActivityInfo(componentName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
@@ -108,26 +108,15 @@ class AutoClickFloatAccessService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
-        logd { "-------" }
-        val nodeInfo = event?.source //当前界面的可访问节点信息
-        logd { "onAccessibilityEvent $event and nodeInfo: $nodeInfo" }
-        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {//界面变化事件
-            val componentName = ComponentName(event.packageName.toString(), event.className.toString());
-            val activityInfo = tryGetActivity(componentName)
-            val isActivity = activityInfo != null
-            logd { "$isActivity componentName $componentName $activityInfo" }
-            getCurrentRootNode()?.findAccessibilityNodeInfosByText("我")?.forEach {
-                //it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                logd { "viewIdResourceName ${it.viewIdResourceName}"  }
-            }
+        children.forEach {
+            it.onAccessibilityEvent(event)
         }
     }
 
     /**
      * 获得当前视图根节点
      * */
-    private fun getCurrentRootNode() = try {
+    fun getCurrentRootNode() = try {
         rootInActiveWindow
     } catch (e: Exception) {
         e.printStackTrace()

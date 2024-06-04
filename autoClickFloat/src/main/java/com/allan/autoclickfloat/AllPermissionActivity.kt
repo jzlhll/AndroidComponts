@@ -6,12 +6,12 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.allan.autoclickfloat.accessibility.AutoClickFloatAccessService
 import com.allan.autoclickfloat.activities.startup.AllFeaturesFragment
 import com.allan.autoclickfloat.activities.startup.OnlyFloatPermissionViewModel
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
-import com.allan.autoclickfloat.accessibility.GlobalsAccessService
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
@@ -75,7 +75,7 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
             }
         }
 
-        GlobalsAccessService.isEnabledLiveData.observe(this) {
+        AutoClickFloatAccessService.isEnabledLiveData.observe(this) {
             enabledFromServiceJob?.cancel()
             enabledFromServiceJob = lifecycleScope.launchOnUi {
                 delay(1000)

@@ -5,6 +5,8 @@ import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
 import android.util.Log
+import android.view.accessibility.AccessibilityEvent
+import androidx.annotation.EmptySuper
 import com.allan.autoclickfloat.consts.Const
 
 abstract class AbsAccessServiceObserver(val service: AutoClickFloatAccessService) {
@@ -15,6 +17,9 @@ abstract class AbsAccessServiceObserver(val service: AutoClickFloatAccessService
     abstract fun onScreenOff()
 
     abstract fun onScreenOn()
+
+    @EmptySuper
+    open fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
     open fun onStartCommand(intent: Intent?) {}
 

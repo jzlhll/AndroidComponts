@@ -183,7 +183,9 @@ private fun isAppForeground(context: Context) : Boolean {
  *
  * 未知activity，打开一个packageName的应用。
  * 如果是android11需要添加可见性：在androidManifest中申明:
- * <code><queries>
+ * <code>
+ *
+ *  <queries>
  *     <!-- Specific apps you interact with, eg: -->
  *     <package android:name="com.example.store" />
  *     <package android:name="com.example.service" />
@@ -196,7 +198,9 @@ private fun isAppForeground(context: Context) : Boolean {
  *     <action android:name="android.intent.action.SEND" />
  *     <data android:mimeType="image/jpeg" />
  *     </intent>
- * </queries></code>
+ *  </queries>
+ *
+ * </code>
  */
 fun openApp(context: Context, packageName: String) : Boolean{
     try {
@@ -216,6 +220,7 @@ fun openApp(context: Context, packageName: String) : Boolean{
         context.startActivityFix(intent)
         return true
     } catch (e:Exception) {
+        e.printStackTrace()
         return false
     }
 }
