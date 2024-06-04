@@ -67,16 +67,20 @@ class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessSer
         //当界面发生改变时，这个方法就会被调用，界面改变的具体信息就会包含在这个参数中。
         log { "-------" }
         val nodeInfo = event?.source //当前界面的可访问节点信息
-        log { "onAccessibilityEvent $event and nodeInfo: $nodeInfo" }
+        log { "a: $event" }
+        log { "b: $nodeInfo" }
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {//界面变化事件
-            val componentName = ComponentName(event.packageName.toString(), event.className.toString());
+            val componentName = ComponentName(event.packageName.toString(), event.className.toString())
             val activityInfo = service.tryGetActivity(componentName)
             val isActivity = activityInfo != null
-            log { "$isActivity componentName $componentName $activityInfo" }
-            service.getCurrentRootNode()?.findAccessibilityNodeInfosByText("游戏礼包")?.forEach {
+            log { "isActivity:$isActivity componentName $componentName $activityInfo" }
+            service.getCurrentRootNode()?.findAccessibilityNodeInfosByText("去查看")?.forEach {
                 //it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                 log { "viewIdResourceName ${it.viewIdResourceName}"  }
             }
+        } else if (event?.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            // 这里处理点击事件
+            log{"View clicked: " + event.className }
         }
     }
 
