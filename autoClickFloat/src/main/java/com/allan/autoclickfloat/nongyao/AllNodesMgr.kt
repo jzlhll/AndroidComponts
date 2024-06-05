@@ -1,10 +1,10 @@
 package com.allan.autoclickfloat.nongyao
 
 class AllNodesMgr {
-    private val wechatNode = WechatNode(null)
-    private val tgClubNode = TgClubNode(wechatNode)
+    private val tgClubNode = TgClubNode(null)
+    private val wechatNode = WechatNode(tgClubNode)
 
-    private var currentNode:AppNode = tgClubNode
+    private var currentNode:AppNode = wechatNode
 
     suspend fun start(progressChangeBlock:(Int)->Unit) : String {
         while (true) {

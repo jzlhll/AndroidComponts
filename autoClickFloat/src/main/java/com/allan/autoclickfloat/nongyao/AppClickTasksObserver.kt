@@ -69,14 +69,18 @@ class AppClickTasksObserver(service: AutoClickFloatAccessService) : AbsAccessSer
         val nodeInfo = event?.source //当前界面的可访问节点信息
         log { "a: $event" }
         log { "b: $nodeInfo" }
+        nodeInfo?.findAccessibilityNodeInfosByViewId("发现")?.forEach {
+            //it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            log { "c: ${it.viewIdResourceName}"  }
+        }
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {//界面变化事件
-            val componentName = ComponentName(event.packageName.toString(), event.className.toString())
-            val activityInfo = service.tryGetActivity(componentName)
-            val isActivity = activityInfo != null
-            log { "isActivity:$isActivity componentName $componentName $activityInfo" }
-            service.getCurrentRootNode()?.findAccessibilityNodeInfosByText("去查看")?.forEach {
+            //val componentName = ComponentName(event.packageName.toString(), event.className.toString())
+            //val activityInfo = service.tryGetActivity(componentName)
+            //val isActivity = activityInfo != null
+            //log { "isActivity:$isActivity componentName $componentName $activityInfo" }
+            service.getCurrentRootNode()?.findAccessibilityNodeInfosByViewId("发现")?.forEach {
                 //it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                log { "viewIdResourceName ${it.viewIdResourceName}"  }
+                log { "viewIdResourceName1 ${it.viewIdResourceName}"  }
             }
         } else if (event?.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
             // 这里处理点击事件

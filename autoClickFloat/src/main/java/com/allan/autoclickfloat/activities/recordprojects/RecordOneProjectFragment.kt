@@ -1,20 +1,18 @@
 package com.allan.autoclickfloat.activities.recordprojects
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.allan.autoclickfloat.consts.Const
-import com.allan.autoclickfloat.database.Step
 import com.allan.autoclickfloat.databinding.RecordProjectOneFragmentBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingParamsFragment
 import com.au.module_android.utils.gone
-import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
@@ -75,9 +73,9 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
     }
 
     private fun addStep() {
-        val appList = requireActivity().packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
+        FragmentRootActivity.start(requireContext(), AllAppListFragment::class.java)
     }
+
 
     private fun refreshRcv(steps:List<StepWrap>) {
         if (adapter == null) {

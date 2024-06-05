@@ -15,6 +15,7 @@ import android.os.Build.VERSION
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals
@@ -217,6 +218,18 @@ fun openApp(context: Context, packageName: String) : Boolean{
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_LAUNCHER)
         intent.setComponent(cn)
+        context.startActivityFix(intent)
+        return true
+    } catch (e:Exception) {
+        e.printStackTrace()
+        return false
+    }
+}
+
+fun openAppActivity(context: Context, packageName: String, activityName:String) : Boolean{
+    try {
+        val intent = Intent()
+        intent.setComponent(ComponentName(packageName, activityName))
         context.startActivityFix(intent)
         return true
     } catch (e:Exception) {
