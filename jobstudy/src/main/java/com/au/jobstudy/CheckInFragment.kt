@@ -22,6 +22,7 @@ class CheckInFragment : BindingParamsFragment<FragmentCheckInBinding>() {
     private val dataItem = getTempParams<DataItem>("dataItem")!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.title.text = dataItem.subject
         binding.descText.text = dataItem.desc
     }

@@ -19,8 +19,8 @@ class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.button.onClick {
+    override fun onBindingCreated(savedInstanceState: Bundle?) {
+        binding.root.onClick {
             binding.webView.callHandler("registerNative",
                 "jkadfjkfadjkfjk djkfj1290309 ajdfk mkadf12893918 " +
                         "dfjakdfjk z89zcznsfk 3904-=21930 ml]]dafi u12803 jadf" +

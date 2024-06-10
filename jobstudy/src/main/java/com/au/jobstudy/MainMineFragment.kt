@@ -35,6 +35,7 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val appName = getString(R.string.app_name)
         val system = AndroidSdkMapping().currentVersionStr
         val name = "$appName${BuildConfig.VERSION_NAME} - versionCode:${BuildConfig.VERSION_CODE}\n$system"

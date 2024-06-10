@@ -124,13 +124,13 @@ public class BridgeWebChromeClient extends WebChromeClient {
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
     }
 
-    @Override
-    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        // 处理 console.log() 输出
-        Log.d(BridgeUtil.TAG, consoleMessage.message() + " -- From line "
-                + consoleMessage.lineNumber() + " of "
-                + consoleMessage.sourceId());
-        return super.onConsoleMessage(consoleMessage);
-    }
+//    @Override
+//    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        // 处理 console.log() 输出。android默认有日志。
+//        Log.d(BridgeUtil.TAG, consoleMessage.message() + " -- From line "
+//                + consoleMessage.lineNumber() + " of "
+//                + consoleMessage.sourceId());
+//        return super.onConsoleMessage(consoleMessage);
+//    }
 }
 

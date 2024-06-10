@@ -11,6 +11,8 @@ import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
+import com.allan.androidlearning.activities.WebEChartsRecordFragment
+import com.allan.androidlearning.activities.WebVideoPlayFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
 import com.au.module_android.ui.bindings.BindingActivity
@@ -24,6 +26,8 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
         listOf(FontTestFragment::class.java,
             WebBridgeFragment::class.java,
+            WebEChartsRecordFragment::class.java,
+            WebVideoPlayFragment::class.java,
             DataStoreFragment::class.java,
             LiveDataFragment::class.java,
             DialogsFragment::class.java,

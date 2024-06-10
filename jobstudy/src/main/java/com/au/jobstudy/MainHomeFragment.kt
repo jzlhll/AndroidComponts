@@ -34,6 +34,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.root.refresher.apply {
             initEarlyAsFake(binding.root)
         }

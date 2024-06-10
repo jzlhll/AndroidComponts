@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:networkSecurityConfig="@xml/network_release"
         android:name="com.au.module_android.init.InitApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"

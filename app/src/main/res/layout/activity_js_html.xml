@@ -4,17 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
-    <com.github.lzyzsd.jsbridge.BridgeWebView
-        android:id="@+id/web_view"
+    <com.github.lzyzsd.jsbridge.BridgeExWebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <Button
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="100dp"
-        android:id="@+id/button"
-        android:layout_height="40dp"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

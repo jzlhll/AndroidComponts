@@ -17,9 +17,9 @@ import com.github.lzyzsd.jsbridge.R
  * @date :2024/1/19 14:50
  * @description:
  */
-class BridgeWebViewExFragment : Fragment(), BridgeExWebView.OnH5EventListener {
-    private lateinit var webView:BridgeExWebView
-    private lateinit var fullVideoLayout: FrameLayout
+open class BridgeWebViewExFragment : Fragment(), BridgeExWebView.OnH5EventListener {
+    lateinit var webView:BridgeExWebView
+    lateinit var fullVideoLayout: FrameLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bridge_web_view, container, false)

@@ -60,6 +60,7 @@ class SoundRecordFragment : BindingFragment<PartialSoundRecordBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.recordBtn.onClick {
             if (mediaRecord == null) {
                 mFile = createExternalFileName(Dayer().currentDay,
