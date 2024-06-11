@@ -26,11 +26,11 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
             FragmentRootOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
         }
 
-        binding.nongyaoBtn?.onClick {
+        binding.nongyaoBtn.onClick {
             FragmentRootOrientationActivity.start(requireActivity(), NongyaoFragment::class.java)
         }
 
-        binding.debugBtn?.onClick {
+        binding.debugBtn.onClick {
             openApp(Globals.app, "com.tencent.tgclub")
         }
 

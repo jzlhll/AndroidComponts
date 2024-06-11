@@ -66,9 +66,14 @@ class RecordProjectsAllFragment : BindingFragment<RecordProjectsAllFragmentBindi
         binding.rcv.setHasFixedSize(true)
 
         viewModel.allProjectsData.observe(viewLifecycleOwner) { list->
-            val mapList = list.map { RecordProjectsItemInfo(false, it) }
-            adapter.submitList(mapList, false)
-            binding.emptyText.visibleOrGone(list.isEmpty())
+            if (list.isEmpty()) {
+                requireActivity().finish()
+                RecordOneProjectFragment.startAsAdd(requireActivity())
+            } else {
+                val mapList = list.map { RecordProjectsItemInfo(false, it) }
+                adapter.submitList(mapList, false)
+                binding.emptyText.visibleOrGone(list.isEmpty())
+            }
         }
 
         viewModel.getAll()
