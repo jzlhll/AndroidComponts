@@ -1,7 +1,10 @@
 package com.au.module_android.utils
 
+import android.graphics.Outline
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import androidx.core.view.forEach
 
 fun View.visible() {
@@ -45,4 +48,27 @@ fun View?.forEachChild(action: ((View) -> Unit)) {
             it.forEachChild(action)
         }
     }
+}
+
+
+/**
+ * 通过outlineProvider和setClipToOutline来给View设置圆角。
+ */
+fun View.setOutlineProviderRoundCorner(radius:Float) {
+    val provider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val rect = Rect()
+            view.getGlobalVisibleRect(rect)
+            val leftMargin = 0
+            val topMargin = 0
+            val selfRect = Rect(
+                leftMargin, topMargin,
+                rect.right - rect.left - leftMargin, rect.bottom - rect.top - topMargin
+            )
+            outline.setRoundRect(selfRect, radius)
+        }
+    }
+
+    this.outlineProvider = provider
+    this.setClipToOutline(true)
 }

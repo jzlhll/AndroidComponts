@@ -3,7 +3,7 @@
 <head>
     <title>ECharts with recordRTC</title>
     <script src="echarts.js"></script>
-    <script src="RecordRTC.min.js"></script>
+    <script src="recordRTC.min.js"></script>
     <script src="html2canvas.min.js"></script>
     <style>
         html, body {
@@ -149,6 +149,7 @@
 
     // 按钮点击事件
     document.getElementById('btn-start-recording').onclick = function() {
+        console.log("allanlog start");
         registerWebBridge();
 
         showEcharts();

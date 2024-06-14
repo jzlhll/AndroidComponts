@@ -90,7 +90,7 @@ class WebEChartsRecordFragment : BridgeWebViewExFragment() {
                 arrayOf(
                 "echarts.js",
                 "index.html",
-                "RecordRTC.min.js",
+                "recordRTC.min.js",
                 "html2canvas.min.js"), echartsCacheDir)
             delay(10)
             unziped = true
