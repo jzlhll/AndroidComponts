@@ -41,7 +41,7 @@ dependencies {
     implementation project(":Module-AndroidUiLight")
     implementation project(":Module-Nested")
     implementation project(':AuLiteSql')
-    implementation project(':MultiMedia')
+//    implementation project(':MultiMedia')
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat

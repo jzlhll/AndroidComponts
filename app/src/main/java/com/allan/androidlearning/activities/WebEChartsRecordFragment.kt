@@ -23,7 +23,7 @@ class WebEChartsRecordFragment : BridgeWebViewExFragment() {
     }
 
     private val unzipHelper = UnzipHelper()
-    private val echartsCacheDir = "/data/data/com.allan.androidlearning/cache/echarts"
+    private val echartsCacheDir = Globals.app.cacheDir.path + "/echarts_record"
 
     private fun findIndexHtml() : String {
         val path = "$echartsCacheDir/index.html"
@@ -86,7 +86,7 @@ class WebEChartsRecordFragment : BridgeWebViewExFragment() {
         lifecycleScope.launchOnThread {
             delay(50)
             unzipHelper.copyFromAssets(Globals.app.assets,
-                "echarts",
+                "echarts_record",
                 arrayOf(
                 "echarts.js",
                 "index.html",

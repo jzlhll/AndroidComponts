@@ -5,23 +5,38 @@ import android.util.Log
 import com.au.module.android.BuildConfig
 
 const val TAG:String = "au_log"
+var hasFileLog = false
 
 inline fun loge(block:()->String) {
-    android.util.Log.e(TAG, block())
+    val str = block()
+    Log.e(TAG, str)
+    if (hasFileLog) {
+        FileLog.write("E $TAG: $str", true)
+    }
 }
 
 inline fun logw(block:()->String) {
-    android.util.Log.w(TAG, block())
+    val str = block()
+    Log.w(TAG, block())
+    if (hasFileLog) {
+        FileLog.write("W $TAG: $str")
+    }
 }
 
 inline fun logd(block:()->String) {
-    if(BuildConfig.DEBUG) android.util.Log.d(TAG, block())
+    if (BuildConfig.DEBUG) {
+        val str = block()
+        Log.d(TAG, str)
+        if (hasFileLog) {
+            FileLog.write("D $TAG: $str")
+        }
+    }
 }
 
 inline fun logt(block:()->String) {
     if(BuildConfig.DEBUG) {
         val isMainThread = (Thread.currentThread().id == Looper.getMainLooper().thread.id)
-        android.util.Log.d(TAG, "thread${Thread.currentThread().id}-$isMainThread: " + block())
+        Log.d(TAG, "thread${Thread.currentThread().id}-$isMainThread: " + block())
     }
 }
 

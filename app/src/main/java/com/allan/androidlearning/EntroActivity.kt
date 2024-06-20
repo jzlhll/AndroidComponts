@@ -11,13 +11,14 @@ import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
+import com.allan.androidlearning.activities.WebEChartsFragment
 import com.allan.androidlearning.activities.WebEChartsRecordFragment
 import com.allan.androidlearning.activities.WebVideoPlayFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
-import com.au.module_android.ui.bindings.BindingActivity
-import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.click.onClick
+import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
@@ -26,6 +27,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
     private val allFragments:List<Class<out Fragment>> by unsafeLazy {
         listOf(FontTestFragment::class.java,
             WebBridgeFragment::class.java,
+            WebEChartsFragment::class.java,
             WebEChartsRecordFragment::class.java,
             WebVideoPlayFragment::class.java,
             DataStoreFragment::class.java,
@@ -38,6 +40,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(findViewById(R.id.toolbar))
+
         allFragments.forEach {fragmentClass->
             val btn = MaterialButton(this)
             btn.text = fragmentClass.simpleName.replace("Fragment", "")

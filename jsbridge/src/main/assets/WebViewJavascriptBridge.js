@@ -132,5 +132,5 @@
     readyEvent.initEvent('WebViewJavascriptBridgeReady');
     readyEvent.bridge = WebViewJavascriptBridge;
     doc.dispatchEvent(readyEvent);
-    console.log("js bridge run over.");
+    console.log("js bridge init end.");
 })();

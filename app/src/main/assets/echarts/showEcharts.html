@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECharts with recordRTC</title>
+    <script src="echarts.js"></script>
+    <style>
+        html, body {
+            margin: 0!important;
+            padding: 0!important;
+        }
+
+        video {
+            width: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="element-to-record" style="width: 300px; height: 400px; border: 1px solid red;">
+    <div id="time"></div><br>
+    <div id="echartsDiv" style="width: 296px;height: 380px;"></div>
+</div>
+
+<script>
+    var isTimeDisplaying = true;
+
+    function displayTime() {
+      if (!isTimeDisplaying) return;
+      let now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      let ms = now.getMilliseconds();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+      seconds = (seconds < 10 ? "0" : "") + seconds;
+      document.getElementById('time').textContent = hours + ":" + minutes + ":" + seconds + ":" + ms;
+      setTimeout(displayTime, 100);
+    }
+
+    displayTime();
+
+    function showEcharts() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echartsDiv'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 示例'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['销量']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    rotate: 0,
+                    interval: 0,
+                    minInterval: 1
+                },
+                data: ['周一','周二','周三','周四','周五','周六','周日', '周一','周二','周三','周四','周五','周六','周日']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'销量',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data:[120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110, 130],
+                    // 动画效果设置
+                    animationEasing: 'cubicOut',
+                    animationDuration:3000,
+                    animationDelay: function (idx) {
+                        // 使得每一点显示时有一定的延迟，实现动画效果
+                        return idx * 100;
+                    }
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+
+    function startAndAutoStop() {
+        if (isTimeDisplaying) {
+            showEcharts();
+            setTimeout(function() {
+                console.log("delay to notify native");
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "runOver");
+                isTimeDisplaying = false;
+            }, 3200);
+        }
+    }
+
+    document.addEventListener("WebViewJavascriptBridgeReady",
+        function() {
+            window.WebViewJavascriptBridge.init(function(handlerName, callback) {
+                console.log("normal handlerName " + handlerName);
+                callback("aaa");
+            });
+            window.WebViewJavascriptBridge.registerHandler("nativeCallWeb", function(data, callback) {
+                console.log("nativeCallWeb " + data);
+                if (data == "startEcharts") {
+                    startAndAutoStop();
+                }
+            });
+
+            window.WebViewJavascriptBridge.callHandler("webCallNative", "initOver");
+        }
+    );
+
+</script>
+</body>
+</html>
