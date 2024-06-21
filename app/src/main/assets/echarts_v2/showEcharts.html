@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ECharts with recordRTC</title>
+    <script src="echarts.js"></script>
+    <style>
+        html, body {
+            margin: 0!important;
+            padding: 0!important;
+        }
+
+        video {
+            width: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="element-to-record" style="width: 99%; height: 98vh; border: 1px solid red;overflow:hidden;">
+<!--    <div id="time" style="height: 10vh;"></div><br>-->
+    <div id="echartsDiv" style="width: 100%;height: 100%;"></div>
+</div>
+
+<script>
+    var isTimeDisplaying = true;
+    var myChart;
+
+    function displayTime() {
+      if (!isTimeDisplaying) return;
+      let now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      let ms = now.getMilliseconds();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+      seconds = (seconds < 10 ? "0" : "") + seconds;
+      document.getElementById('time').textContent = hours + ":" + minutes + ":" + seconds + ":" + ms;
+      setTimeout(displayTime, 100);
+    }
+
+    //displayTime();
+
+    function showEcharts() {
+        // 基于准备好的dom，初始化echarts实例
+        myChart = echarts.init(document.getElementById('echartsDiv'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 示例'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['销量']
+            },
+            grid: {
+                left: '1%',
+                right: '4%',
+                bottom: '6%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    rotate: 0,
+                    interval: 0,
+                    minInterval: 1
+                },
+                data: ['1','2','3','4','5','6','7', '8','9','10','11','12','13']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'销量',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data:[120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110],
+                    // 动画效果设置
+                    animationEasing: 'cubicOut',
+                    animationDuration:4400,
+                    animationDelay: function (idx) {
+                        // 使得每一点显示时有一定的延迟，实现动画效果
+                        return idx * 100;
+                    }
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+
+    function startAndAutoStop() {
+        if (isTimeDisplaying) {
+            showEcharts();
+            var devicePixelRatio = window.devicePixelRatio || 1;
+            console.log("Device Pixel Ratio: " + devicePixelRatio);
+            var intervalId = setInterval(function() {
+                var base64Image = myChart.getDataURL({
+                    type: 'png',
+                    pixelRatio: devicePixelRatio,
+                    backgroundColor: '#fff'
+                });
+
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "base64Image:" + base64Image);
+            }, 20);
+
+            setTimeout(function() {
+                console.log("delay to notify native");
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "runOver");
+                isTimeDisplaying = false;
+                clearInterval(intervalId);
+            }, 4500);
+        }
+    }
+
+    document.addEventListener("WebViewJavascriptBridgeReady",
+        function() {
+            window.WebViewJavascriptBridge.init(function(handlerName, callback) {
+                console.log("normal handlerName " + handlerName);
+                callback("aaa");
+            });
+            window.WebViewJavascriptBridge.registerHandler("nativeCallWeb", function(data, callback) {
+                console.log("nativeCallWeb " + data);
+                if (data == "startEcharts") {
+                    startAndAutoStop();
+                }
+            });
+
+            window.WebViewJavascriptBridge.callHandler("webCallNative", "initOver");
+        }
+    );
+
+</script>
+</body>
+</html>

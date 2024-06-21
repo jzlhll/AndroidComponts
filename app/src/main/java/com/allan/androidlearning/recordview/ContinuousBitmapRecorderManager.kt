@@ -1,19 +1,19 @@
 package com.allan.androidlearning.recordview
 
+import android.graphics.Bitmap
 import android.media.MediaRecorder
-import android.view.View
 import com.au.module_android.utils.logStace
 import com.au.module_android.utils.logd
 import java.io.File
 import java.io.IOException
 
-class ViewRecorderManager {
+class ContinuousBitmapRecorderManager {
     private var mRecording = false
-    private var mViewRecorder:ViewRecorder? = null
+    private var mRecorder:ContinuousBitmapRecorder? = null
 
     var curRecordFile : File? = null
 
-    fun setup(outputFileStr: String, recordView:View) : Boolean {
+    fun setup(outputFileStr: String, bitmapOffer:()-> Bitmap?) : Boolean {
         if (mRecording) {
             return false
         }
@@ -33,7 +33,7 @@ class ViewRecorderManager {
             return false
         }
 
-        val record = ViewRecorder().apply {
+        val record = ContinuousBitmapRecorder(bitmapOffer).apply {
 //            setAudioSource(MediaRecorder.AudioSource.MIC) // uncomment this line if audio required
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
@@ -41,20 +41,18 @@ class ViewRecorderManager {
             setVideoFrameRate(30) // 5fps
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             setVideoSize(720, 1280)
-            setVideoEncodingBitRate(2000 * 1000)
+            setVideoEncodingBitRate(3000 * 1000)
             setOutputFile(outputFile)
             setOnErrorListener { mr, what, extra->
                 logd { "record error: $what, $extra" }
             }
-
-            setRecordedView(recordView)
         }
-        mViewRecorder = record
+        mRecorder = record
         return true
     }
 
     fun startRecord() : Boolean {
-        val r = mViewRecorder?: return false
+        val r = mRecorder?: return false
         try {
             r.prepare()
             r.start()
@@ -69,13 +67,13 @@ class ViewRecorderManager {
     }
 
     fun stopRecord() : Boolean{
-        val r = mViewRecorder ?: return false
+        val r = mRecorder ?: return false
         mRecording = false
         try {
             r.stop()
             r.reset()
             r.release()
-            mViewRecorder = null
+            mRecorder = null
         } catch (e: Exception) {
             e.printStackTrace()
             return false

@@ -13,6 +13,7 @@ import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
 import com.allan.androidlearning.activities.WebEChartsFragment
 import com.allan.androidlearning.activities.WebEChartsRecordFragment
+import com.allan.androidlearning.activities.WebEChartsBitmapFragment
 import com.allan.androidlearning.activities.WebVideoPlayFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
@@ -28,6 +29,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
         listOf(FontTestFragment::class.java,
             WebBridgeFragment::class.java,
             WebEChartsFragment::class.java,
+            WebEChartsBitmapFragment::class.java,
             WebEChartsRecordFragment::class.java,
             WebVideoPlayFragment::class.java,
             DataStoreFragment::class.java,
