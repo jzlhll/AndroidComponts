@@ -19,10 +19,12 @@ import com.github.lzyzsd.jsbridge.R
  */
 open class BridgeWebViewExFragment : Fragment(), BridgeExWebView.OnH5EventListener {
     lateinit var webView:BridgeExWebView
+    lateinit var root:FrameLayout
     lateinit var fullVideoLayout: FrameLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bridge_web_view, container, false)
+        root = view as FrameLayout
         webView = view.findViewById(R.id.webView)
         fullVideoLayout = view.findViewById(R.id.fullVideoLayout)
 

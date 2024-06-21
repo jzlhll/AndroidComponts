@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>ECharts with recordRTC</title>
     <script src="echarts.js"></script>
@@ -16,9 +16,9 @@
     </style>
 </head>
 <body>
-<div id="element-to-record" style="width: 300px; height: 400px; border: 1px solid red;">
-    <div id="time"></div><br>
-    <div id="echartsDiv" style="width: 296px;height: 380px;"></div>
+<div id="element-to-record" style="width: 99%; height: 98vh; border: 1px solid red;overflow:hidden;">
+    <div id="time" style="height: 10vh;"></div><br>
+    <div id="echartsDiv" style="width: 100%;height: 88vh;"></div>
 </div>
 
 <script>
@@ -55,9 +55,9 @@
                 data:['销量']
             },
             grid: {
-                left: '3%',
+                left: '1%',
                 right: '4%',
-                bottom: '3%',
+                bottom: '6%',
                 containLabel: true
             },
             xAxis: {
@@ -68,7 +68,7 @@
                     interval: 0,
                     minInterval: 1
                 },
-                data: ['周一','周二','周三','周四','周五','周六','周日', '周一','周二','周三','周四','周五','周六','周日']
+                data: ['1','2','3','4','5','6','7', '8','9','10','11','12','13']
             },
             yAxis: {
                 type: 'value'
@@ -82,10 +82,10 @@
                     emphasis: {
                         focus: 'series'
                     },
-                    data:[120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110, 130],
+                    data:[120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110],
                     // 动画效果设置
                     animationEasing: 'cubicOut',
-                    animationDuration:3000,
+                    animationDuration:4400,
                     animationDelay: function (idx) {
                         // 使得每一点显示时有一定的延迟，实现动画效果
                         return idx * 100;
@@ -104,7 +104,7 @@
                 console.log("delay to notify native");
                 window.WebViewJavascriptBridge.callHandler("webCallNative", "runOver");
                 isTimeDisplaying = false;
-            }, 3200);
+            }, 4500);
         }
     }
 

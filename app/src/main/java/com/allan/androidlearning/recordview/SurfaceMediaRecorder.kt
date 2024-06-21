@@ -68,7 +68,7 @@ open class SurfaceMediaRecorder : MediaRecorder {
     }
 
     private var mVideoSource: Int = 0
-    private var mOnErrorListener: OnErrorListener? = null
+    var mOnErrorListener: OnErrorListener? = null
     private var mInterframeGap = DEFAULT_INTERFRAME_GAP // 默认为1000毫秒
     private var mSurface: Surface? = null
     // 如果设置，这个类的工作方式与 MediaRecorder 相同

@@ -1,15 +1,20 @@
 package com.allan.androidlearning.recordview
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Looper
 import android.util.Size
 import android.view.View
+import android.view.View.MeasureSpec
+import android.webkit.WebView
 import androidx.annotation.RequiresApi
+
 
 /**
  * Used to record a video with view that can be captured. It also supports to switch views during recording.
@@ -59,10 +64,16 @@ class ViewRecorder : SurfaceMediaRecorder {
         }
 
         override fun onDraw(canvas: Canvas) {
-            val rv = mRecordedView ?: return
+            val v = mRecordedView ?: return
+            //onDrawOrig(canvas, v)
+            //onDrawNew1(canvas, v)
+            onDrawNew2(canvas, v)
+        }
 
-            rv.isDrawingCacheEnabled = true
-            val bitmap = rv.drawingCache
+        //无法拿到echarts
+        fun onDrawOrig(canvas: Canvas, v:View) {
+            v.isDrawingCacheEnabled = true
+            val bitmap = v.drawingCache
 
             val bitmapWidth = bitmap.width
             val bitmapHeight = bitmap.height
@@ -72,7 +83,100 @@ class ViewRecorder : SurfaceMediaRecorder {
             canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR)
             canvas.drawBitmap(bitmap, matrix, null)
 
-            rv.isDrawingCacheEnabled = false
+            v.isDrawingCacheEnabled = false
+        }
+
+        //无法拿到echarts
+        fun onDrawNew1(canvas: Canvas, v:View) {
+            val bitmap = loadBitmapFromView(v)
+
+            val bitmapWidth = bitmap.width
+            val bitmapHeight = bitmap.height
+            val videoWidth = mVideoSize!!.width
+            val videoHeight = mVideoSize!!.height
+            val matrix = getMatrix(bitmapWidth, bitmapHeight, videoWidth, videoHeight)
+            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR)
+            canvas.drawBitmap(bitmap, matrix, null)
+            //不太需要调用 bitmap.recycle()
+        }
+
+        fun loadBitmapFromView(v: View): Bitmap {
+            val screenshot = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.RGB_565)
+            val c = Canvas(screenshot)
+            // c.translate(-v.scrollX.toFloat(), -v.scrollY.toFloat())
+            v.draw(c)
+            return screenshot
+        }
+
+        //无法拿到echarts
+        fun onDrawNew2(canvas: Canvas, v:View) {
+            val bitmap = loadBitmapFromWebView2(v as WebView, 1f) ?: return
+
+            val bitmapWidth = bitmap.width
+            val bitmapHeight = bitmap.height
+            val videoWidth = mVideoSize!!.width
+            val videoHeight = mVideoSize!!.height
+            val matrix = getMatrix(bitmapWidth, bitmapHeight, videoWidth, videoHeight)
+            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR)
+            canvas.drawBitmap(bitmap, matrix, null)
+            //不太需要调用 bitmap.recycle()
+        }
+
+        /**
+         * WebView 截图
+         *
+         * @param webView 要截图的WebView
+         * @param scale11 （保留参数，但当前未使用）
+         * @return 截图后的Bitmap
+         */
+        fun loadBitmapFromWebView2(webView: WebView, scale11: Float): Bitmap? {
+            try {
+                val scale = webView.scale //scale11
+                val height = webView.height //(webView.contentHeight * scale + 0.5f).toInt()
+                val bitmap = Bitmap.createBitmap(webView.width, height, Bitmap.Config.RGB_565)//ARGB_8888
+                val canvas = Canvas(bitmap)
+                webView.draw(canvas)
+                return bitmap
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+        fun loadBitmapFromWebView3(webView: WebView): Bitmap? {
+            try {
+                val picture = webView.capturePicture()
+                val bitmap = Bitmap.createBitmap(picture.width, picture.height, Bitmap.Config.RGB_565)
+                val canvas = Canvas(bitmap)
+                picture.draw(canvas)
+                return bitmap
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+        fun screenshot2(webView: WebView): Bitmap {
+            webView.measure(
+                MeasureSpec.makeMeasureSpec(
+                    MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED
+                ),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+            webView.layout(0, 0, webView.measuredWidth, webView.measuredHeight)
+            webView.isDrawingCacheEnabled = true
+            webView.buildDrawingCache()
+            val bitmap = Bitmap.createBitmap(
+                webView.measuredWidth,
+                webView.measuredHeight, Bitmap.Config.ARGB_8888
+            )
+
+            val canvas = Canvas(bitmap)
+            val paint = Paint()
+            val iHeight = bitmap.height
+            canvas.drawBitmap(bitmap, 0f, iHeight.toFloat(), paint)
+            webView.draw(canvas)
+            return bitmap
         }
     }
 
