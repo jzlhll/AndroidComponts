@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class BridgeExWebView extends BridgeWebView {
     @Nullable
-    public FrameLayout fullLayout;
+    public ViewGroup fullLayout;
 
     @Nullable
     public Activity activity;

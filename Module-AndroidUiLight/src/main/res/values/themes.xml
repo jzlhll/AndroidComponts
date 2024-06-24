@@ -5,7 +5,7 @@
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
         <item name="android:colorControlNormal">#212121</item>
-        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorPrimaryVariant">#333333</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:navigationBarColor">@android:color/white</item>

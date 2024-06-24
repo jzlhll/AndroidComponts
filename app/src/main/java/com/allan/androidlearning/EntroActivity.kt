@@ -2,7 +2,10 @@ package com.allan.androidlearning
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.LinearLayout
+import android.widget.Space
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.allan.androidlearning.activities.CanvasFragment
 import com.allan.androidlearning.activities.DataStoreFragment
@@ -11,39 +14,44 @@ import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.activities.MonoSpaceFragment
 import com.allan.androidlearning.activities.WebBridgeFragment
-import com.allan.androidlearning.activities.WebEChartsFragment
-import com.allan.androidlearning.activities.WebEChartsRecordFragment
-import com.allan.androidlearning.activities.WebEChartsBitmapFragment
 import com.allan.androidlearning.activities.WebVideoPlayFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingActivity
+import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {
-    private val allFragments:List<Class<out Fragment>> by unsafeLazy {
-        listOf(FontTestFragment::class.java,
+    private val allFragments: List<Class<out Fragment>> by unsafeLazy {
+        listOf(
+            FontTestFragment::class.java,
             WebBridgeFragment::class.java,
-            WebEChartsFragment::class.java,
-            WebEChartsBitmapFragment::class.java,
-            WebEChartsRecordFragment::class.java,
             WebVideoPlayFragment::class.java,
             DataStoreFragment::class.java,
             LiveDataFragment::class.java,
             DialogsFragment::class.java,
             CanvasFragment::class.java,
-            MonoSpaceFragment::class.java)
+            MonoSpaceFragment::class.java
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        allFragments.forEach {fragmentClass->
+        transparentStatusBar(window, false) { insets, statusBarsHeight, navigationBarHeight ->
+            binding.root.updatePadding(top = statusBarsHeight)
+            insets
+        }
+        window.statusBarColor = getColor(com.au.module_androiduilight.R.color.color_primary)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+        allFragments.forEach { fragmentClass ->
             val btn = MaterialButton(this)
             btn.text = fragmentClass.simpleName.replace("Fragment", "")
             btn.onClick {
@@ -52,7 +60,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
             binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
         binding.buttonsHost.addView(MaterialButton(this).also {
-                                                              it.text = "success"
+            it.text = "success"
             it.onClick {
                 NetworkHelperToastMgr.toastSuccess()
             }
@@ -63,9 +71,11 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
                 NetworkHelperToastMgr.toastConnectionLost()
             }
         }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-        binding.buttonsHost
+
+        binding.buttonsHost.addView(Space(this), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getScreenFullSize().second / 5))
     }
 }
+
 
 object NetworkHelperToastMgr {
     private var toastRun:Runnable = Runnable {

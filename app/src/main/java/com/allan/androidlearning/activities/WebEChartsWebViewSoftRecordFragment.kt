@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 
-class WebEChartsFragment : BindingFragment<ActivityEchartsBinding>() {
+class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBinding>() {
     companion object {
         var unziped = false
     }

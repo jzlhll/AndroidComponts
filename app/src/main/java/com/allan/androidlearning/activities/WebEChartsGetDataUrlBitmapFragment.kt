@@ -30,7 +30,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 
 
-class WebEChartsBitmapFragment : BindingFragment<ActivityEchartsBinding>() {
+class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBinding>() {
     companion object {
         var unziped = false
     }

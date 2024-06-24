@@ -13,13 +13,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/Theme.AndroidLearning"
+        android:theme="@style/CustomModuleTheme"
         tools:targetApi="31">
         <activity
             android:name=".EntroActivity"
             android:exported="true"
-            android:label="AllanComponents"
-            android:theme="@style/Theme.AndroidLearning.NoActionBar">
+            android:label="AllanComponents">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

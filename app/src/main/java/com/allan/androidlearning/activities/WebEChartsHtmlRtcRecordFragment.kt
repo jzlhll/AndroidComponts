@@ -17,7 +17,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 
 
-class WebEChartsRecordFragment : BridgeWebViewExFragment() {
+class WebEChartsHtmlRtcRecordFragment : BridgeWebViewExFragment() {
     companion object {
         var unziped = false
     }
