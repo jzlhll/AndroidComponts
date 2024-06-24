@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
@@ -39,7 +40,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 	private void init() {
 		this.setVerticalScrollBarEnabled(false);
 		this.setHorizontalScrollBarEnabled(false);
-		var setting = getSettings();
+		WebSettings setting = getSettings();
 		setting.setJavaScriptEnabled(true);
 		setting.setAllowFileAccess(true);
 		setting.setAllowContentAccess(true);

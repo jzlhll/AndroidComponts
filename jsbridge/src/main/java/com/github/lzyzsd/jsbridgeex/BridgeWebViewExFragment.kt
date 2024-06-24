@@ -15,7 +15,7 @@ import com.github.lzyzsd.jsbridge.R
 /**
  * @author au
  * @date :2024/1/19 14:50
- * @description:
+ * @description: use as Fragment
  */
 open class BridgeWebViewExFragment : Fragment(), BridgeExWebView.OnH5EventListener {
     lateinit var webView:BridgeExWebView
@@ -27,10 +27,16 @@ open class BridgeWebViewExFragment : Fragment(), BridgeExWebView.OnH5EventListen
      */
     open fun bridgeWebViewLayoutId() = R.layout.bridge_web_view
 
+    open fun customUserAgent(originalUA:String) : String{
+        return originalUA
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(bridgeWebViewLayoutId(), container, false)
         root = view as ViewGroup
         webView = view.findViewById(R.id.webView)
+        webView.settings.textZoom = 100 //禁止文字缩放
+        webView.settings.userAgentString = customUserAgent(webView.settings.userAgentString)
         fullVideoLayout = view.findViewById(R.id.fullVideoLayout)
         webView.fullLayout = fullVideoLayout
         webView.activity = activity

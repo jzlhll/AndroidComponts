@@ -57,7 +57,7 @@ public class BridgeObject {
 
     void clearStartupMessage() {
         if (startupMessage != null) {
-            for (var m : startupMessage) {
+            for (Message m : startupMessage) {
                 dispatchMessage(m);
             }
         }
