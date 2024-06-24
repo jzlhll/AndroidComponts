@@ -50,7 +50,8 @@ dependencies {
 
     implementation libs.gson
 
-    implementation project(":jsbridge")
+//    implementation project(":jsbridge")
+    implementation libs.jsbridgev2
 
     implementation project(":Module-Android")
     implementation project(":Module-Cached")

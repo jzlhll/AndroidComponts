@@ -42,7 +42,7 @@ include ':Module-Cached'
 //include ':Module-FlyableJson'
 //include ':Module-FlyableJsonAPT'
 //include ':Module-FlyableJsonBase'
-include ':jsbridge'
+//include ':jsbridge'
 
 include ':studyjob'
 include ':jobstudy'
