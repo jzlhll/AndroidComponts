@@ -5,24 +5,25 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.Dialog
 import android.app.KeyguardManager
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import android.content.pm.ResolveInfo
+import android.os.Build
 import android.os.Build.VERSION
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals
 import com.au.module_android.Globals.app
 import java.math.BigDecimal
 import java.math.RoundingMode
-
 
 val isMainThread: Boolean
     get() = Looper.getMainLooper() === Looper.myLooper()
@@ -235,5 +236,20 @@ fun openAppActivity(context: Context, packageName: String, activityName:String) 
     } catch (e:Exception) {
         e.printStackTrace()
         return false
+    }
+}
+
+/**
+ * 兼容android13+的广播注册，避免报错
+ */
+fun Context.registerReceiverFix(receiver: BroadcastReceiver, filter: IntentFilter,
+                                receiverSystemOrOtherApp:Boolean = true) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(
+            receiver, filter,
+            if (receiverSystemOrOtherApp) Context.RECEIVER_EXPORTED else Context.RECEIVER_NOT_EXPORTED
+        )
+    } else {
+        registerReceiver(receiver, filter)
     }
 }

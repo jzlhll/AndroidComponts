@@ -1,7 +1,5 @@
 package com.allan.androidlearning
 
-import com.allan.androidlearning.utils.logd
-import com.au.module_android.json.toJsonString
 import org.junit.Test
 
 import org.junit.Assert.*

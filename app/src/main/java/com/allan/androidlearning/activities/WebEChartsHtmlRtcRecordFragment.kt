@@ -8,14 +8,13 @@ import com.au.module_android.Globals
 import com.au.module_android.utils.UnzipHelper
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
-import com.github.lzyzsd.jsbridgeex.BridgeWebViewExFragment
+import com.github.lzyzsd.jsbridge.BridgeWebViewExFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
-
 
 class WebEChartsHtmlRtcRecordFragment : BridgeWebViewExFragment() {
     companion object {

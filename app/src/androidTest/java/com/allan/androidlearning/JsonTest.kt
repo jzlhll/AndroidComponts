@@ -2,10 +2,10 @@ package com.allan.androidlearning
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.allan.androidlearning.utils.logd
 import com.au.module_android.json.fromJson
 import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utils.logd
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +44,7 @@ class JsonTest {
         val revertList = listStr.fromJsonList<Bean>()
         val revertList2 = listStr.fromJsonList(Bean::class.java)
 
-        logd("beans1 $bean1Str bean2str $bean2Str $listStr $revertList")
+        logd{"beans1 $bean1Str bean2str $bean2Str $listStr $revertList"}
 
         val str = ""
         val bytes = str.toByte()

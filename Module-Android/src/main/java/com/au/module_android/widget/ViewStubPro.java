@@ -21,6 +21,8 @@ import com.au.module.android.R;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import androidx.annotation.NonNull;
+import androidx.viewbinding.ViewBinding;
 
 /**
  * ViewStub的Pro版本;
@@ -52,6 +54,10 @@ public final class ViewStubPro extends View {
 
     private static final class ReplaceView implements IReplace {
         private Class<? extends View> mViewClass;
+    }
+
+    private static final class ReplaceViewBinding<T extends ViewBinding> implements IReplace {
+        private T mViewBinding;
     }
 
     private static final String TAG = "ViewStubPro";
@@ -99,20 +105,25 @@ public final class ViewStubPro extends View {
     public ViewStubPro(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewStubPro);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewStubPro);
+
         //从xml初始化
         int layout = a.getResourceId(R.styleable.ViewStubPro_replaceLayout, 0);
         if (layout > 0) {
             setReplaceLayoutResource(layout);
         } else {
             String viewClass = a.getString(R.styleable.ViewStubPro_replaceViewClass);
-            setReplaceViewClass(viewClass);
+            if (viewClass != null && !viewClass.isBlank()) {
+                setReplaceViewClass(viewClass);
+            }
         }
 
         inflatedId = a.getResourceId(R.styleable.ViewStubPro_inflatedId, NO_ID);
 
         allCornerSize = (int) a.getDimension(R.styleable.ViewStubPro_inflatedCornerSize, 0);
+
         a.recycle();
+
         setVisibility(GONE);
         setWillNotDraw(true);
     }
@@ -134,6 +145,13 @@ public final class ViewStubPro extends View {
         ReplaceView v = new ReplaceView();
         v.mViewClass = replaceView;
         mReplace = v;
+        return this;
+    }
+
+    public <T extends ViewBinding> ViewStubPro setReplaceViewBinding(@NonNull T viewBinding) {
+        ReplaceViewBinding<T> vb = new ReplaceViewBinding<>();
+        vb.mViewBinding = viewBinding;
+        mReplace = vb;
         return this;
     }
 
@@ -173,6 +191,11 @@ public final class ViewStubPro extends View {
                 view = (View) c.newInstance(mContext);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
+            }
+        } else if (mReplace instanceof ReplaceViewBinding<?>) {
+            view = ((ReplaceViewBinding) mReplace).mViewBinding.getRoot();
+            if (view.getParent() != null) {
+                throw new IllegalStateException();
             }
         }
 

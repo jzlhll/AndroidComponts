@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.R
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
-import com.github.lzyzsd.jsbridgeex.BridgeWebViewExFragment
+import com.github.lzyzsd.jsbridge.BridgeWebViewExFragment
 import kotlinx.coroutines.launch
 
 class WebVideoPlayFragment : BridgeWebViewExFragment() {
