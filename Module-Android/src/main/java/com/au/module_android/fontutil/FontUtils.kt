@@ -1,11 +1,12 @@
-package com.au.module_android.widget
+package com.au.module_android.fontutil
 
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.TextView
 import com.au.module.android.R
-import com.au.module_android.init.FirstInitial
+import com.au.module_android.widget.FontMode
+import com.au.module_android.widget.TextViewCheckMode
 
 /**
  * 全局字体默认文件。可以自行更换任意一项，目前虽然一样。
@@ -21,26 +22,29 @@ const val FONT_NUMBER_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
 
 private val fontFaceMap by lazy { hashMapOf<String, Typeface>() }
 
+fun getOrCreateFontFace(context: Context, assetsPath: String?) : Typeface? {
+    if(assetsPath.isNullOrEmpty()) return null
+    val cacheTypeFace = fontFaceMap[assetsPath]
+    if (cacheTypeFace != null) {
+        return cacheTypeFace
+    }
+    val newTypeFace = Typeface.createFromAsset(context.assets, assetsPath)
+    fontFaceMap[assetsPath] = newTypeFace
+    return newTypeFace
+}
+
 /**
  * 设置assets里面的字体文件
  */
 private fun TextView.setFontFromAssets(context: Context, assetsPath: String?) {
     if (isInEditMode) return
-    if(assetsPath.isNullOrEmpty()) return
-
-    val cacheTypeFace = fontFaceMap[assetsPath]
+    val tf = getOrCreateFontFace(context, assetsPath) ?: return
     //性能优化，防止多次赋值
-    if (cacheTypeFace != null && cacheTypeFace == typeface) {
+    if (tf == typeface) {
         return
     }
 
-    typeface = if (cacheTypeFace == null) {
-        val newTypeFace = Typeface.createFromAsset(context.assets, assetsPath)
-        fontFaceMap[assetsPath] = newTypeFace
-        newTypeFace
-    } else {
-        cacheTypeFace
-    }
+    typeface = tf
 }
 
 /**

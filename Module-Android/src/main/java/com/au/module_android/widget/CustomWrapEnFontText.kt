@@ -3,6 +3,8 @@ package com.au.module_android.widget
 import android.content.Context
 import android.text.Layout
 import android.util.AttributeSet
+import com.au.module_android.fontutil.checkBoldAndSetFont
+import com.au.module_android.fontutil.setFontFromAsset
 import com.google.android.material.textview.MaterialTextView
 import kotlin.math.ceil
 
