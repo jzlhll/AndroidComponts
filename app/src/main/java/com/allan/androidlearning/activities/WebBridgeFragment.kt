@@ -83,7 +83,7 @@ class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
                         Uri.parse("myapp://app")
                     ).also { it.flags = it.flags or Intent.FLAG_ACTIVITY_NEW_TASK }
                 )
-                toastOnTop("start typhur!")
+                toastOnTop("start app!")
             }, 3000)
         }
     }

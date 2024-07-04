@@ -12,7 +12,7 @@ class AllEntroFragmentNamesTemplate : AbsCodeTemplate() {
      * com.allan.androidlearning.activities.LiveDataFragment.class
      */
     fun insert(javaClass:String) {
-        insertCode.append("list.add(").append(javaClass).append(");").appendLine()
+        insertCode.append("list.add(").append(javaClass).append(".class);").appendLine()
     }
 
     fun end() : String {

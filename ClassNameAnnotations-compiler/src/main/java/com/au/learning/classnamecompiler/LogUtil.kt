@@ -12,6 +12,7 @@ private val lock = Any()
 fun logw(s:String) {
     //不能调用Diagnostic.Kind.ERROR
     Globals.mMessager?.printMessage(Diagnostic.Kind.WARNING, TAG + s)
+    environment.logger.warn("log")
     logfile(s)
 }
 

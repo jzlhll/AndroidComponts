@@ -1,6 +1,7 @@
 package com.au.learning.classnamecompiler
 
 import com.allan.classnameanno.EntroFragmentName
+import java.io.IOException
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -8,6 +9,8 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
+import javax.tools.JavaFileObject
+
 
 class Processor : AbstractProcessor() {
     override fun init(processingEnv: ProcessingEnvironment?) {
@@ -16,6 +19,7 @@ class Processor : AbstractProcessor() {
         Globals.mFiler = processingEnv?.filer
         Globals.mMessager = processingEnv?.messager
         Globals.mElementUtils = processingEnv?.elementUtils
+        println("myApt.....init.")
         logw("init...")
     }
 
@@ -60,6 +64,7 @@ class Processor : AbstractProcessor() {
      * @param roundEnv 注解处理器所需的环境，帮助进行解析注解。
      */
     override fun process(annotations: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment?): Boolean {
+        println("myApt.....process.")
         val elements = roundEnv?.rootElements?.let {
             if (annotations != null) {
                 getMyElements(annotations, it)
@@ -78,6 +83,21 @@ class Processor : AbstractProcessor() {
         val code = names.end()
         logw("code:")
         logw(code)
+
+        Globals.mFiler?.let {
+            try {
+                // 创建一个JavaFileObject来表示要生成的文件
+                val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntroList", null)
+                sourceFile.openWriter().use { writer ->
+                    // 写入Java（或Kotlin）代码
+                    writer.write(code)
+                    writer.flush()
+                }
+            } catch (e: IOException) {
+                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate file: " + e.message)
+            }
+        }
+
 
         return true
     }

@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'kotlin'
     alias(libs.plugins.jetbrains.kotlin.jvm)
 }
 
@@ -10,4 +11,5 @@ java {
 
 dependencies {
     implementation project(':ClassNameAnnotations')
+    implementation(libs.symbol.processing.api)//引入ksp
 }
