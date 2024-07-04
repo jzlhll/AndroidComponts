@@ -18,9 +18,8 @@ import java.lang.IllegalArgumentException
 /**
  * 当初始化完成这个对象后，请在onCreate里面调用 函数（onCreate）即可
  */
-internal class ActivityForResult(context:Any,
-                                 private var resultCallback:(ActivityResultCallback<ActivityResult>)? = null)
-        :  DefaultLifecycleObserver, IActivityResult {
+internal class ActivityForResult(context:Any)
+        :  DefaultLifecycleObserver, IActivityResult() {
     init {
         if (context is Fragment) {
             context.lifecycle.addObserver(this)
@@ -38,17 +37,6 @@ internal class ActivityForResult(context:Any,
 
     private var launcher: ActivityResultLauncher<Intent>? = null
     private val resultContract: ActivityResultContract<Intent, ActivityResult> = ActivityResultContracts.StartActivityForResult()
-    private val resultCallbackWrap = ActivityResultCallback<ActivityResult> {
-        resultCallback?.onActivityResult(it)
-    }
-
-    override fun setOnResultCallback(callback: ActivityResultCallback<ActivityResult>) {
-        resultCallback = callback
-    }
-
-    override fun getOnResultCallback(): ActivityResultCallback<ActivityResult> {
-        return resultCallbackWrap
-    }
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
@@ -69,7 +57,8 @@ internal class ActivityForResult(context:Any,
     /**
      * 启动activity
      */
-    override fun start(intent: Intent, option: ActivityOptionsCompat?) {
+    override fun start(intent: Intent, callback: ActivityResultCallback<ActivityResult>?, option: ActivityOptionsCompat?) {
+        callback?.let { setOnResultCallback(it) }
         launcher?.launch(intent, option)
     }
 }

@@ -1,11 +1,17 @@
 package com.allan.androidlearning.activities
 
+import android.content.ComponentName
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import com.allan.androidlearning.databinding.ActivityJsHtmlBinding
-import com.au.module_android.ui.bindings.BindingFragment
+import com.allan.classnameanno.EntroFragmentName
+import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.logd
+import com.au.module_androiduilight.toast.toastOnTop
 import com.github.lzyzsd.jsbridge.BridgeUtil
 import com.github.lzyzsd.jsbridge.DefaultHandler
 import com.google.gson.Gson
@@ -15,6 +21,8 @@ import com.google.gson.Gson
  * @date :2023/10/8 10:26
  * @description:
  */
+
+@EntroFragmentName
 class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1
@@ -67,6 +75,16 @@ class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
                 func.onCallBack(json)
             }
 
+            Globals.mainHandler.postDelayed({
+                logd { "aaaaaaaaaa" }
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("myapp://app")
+                    ).also { it.flags = it.flags or Intent.FLAG_ACTIVITY_NEW_TASK }
+                )
+                toastOnTop("start typhur!")
+            }, 3000)
         }
     }
 }

@@ -8,17 +8,19 @@
 <body>
 <p>js调用java</p>
 <div id="show">My Header</div>
-<div align="center">
+<div>
     <p>
-        <input type="button" id="enter" value="获取用户信息" onclick="getUserInfo();"
-        />
+        <input type="button" id="enter" value="获取用户信息" onclick="getUserInfo();"/>
+    </p>
+    <br>
+    <p>
+        <a href="myapp://app">跳转至Typhur</a>
     </p>
 </div>
 </body>
 <script>
     function getUserInfo(){
         window.WebViewJavascriptBridge.init({})
-        window.WebViewJavascriptBridge.loge("get user info")
         window.WebViewJavascriptBridge.callHandler(
             'getUserInfo',
             {'info': 'I am JS, want to get UserInfo from Java'},

@@ -8,11 +8,21 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.core.app.ActivityOptionsCompat
 
-interface IActivityResult {
-    fun setOnResultCallback(callback:(ActivityResultCallback<ActivityResult>))
-    fun getOnResultCallback() : (ActivityResultCallback<ActivityResult>)
+abstract class IActivityResult {
+    private var resultCallback:(ActivityResultCallback<ActivityResult>)? = null
+    private val resultCallbackWrap = ActivityResultCallback<ActivityResult> {
+        resultCallback?.onActivityResult(it)
+    }
 
-    fun start(intent: Intent, option: ActivityOptionsCompat? = null)
+    fun setOnResultCallback(callback: ActivityResultCallback<ActivityResult>) {
+        resultCallback = callback
+    }
+
+    fun getOnResultCallback(): ActivityResultCallback<ActivityResult> {
+        return resultCallbackWrap
+    }
+
+    abstract fun start(intent: Intent, callback:ActivityResultCallback<ActivityResult>? = null, option: ActivityOptionsCompat? = null)
 
     fun jumpToAppDetail(appContext: Context, callback:(ActivityResult)->Unit) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

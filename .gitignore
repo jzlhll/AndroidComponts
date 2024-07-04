@@ -4,6 +4,8 @@
 /.idea
 .DS_Store
 /build
+ClassNameAnnotations/build/
+ClassNameAnnotations-compiler/build/
 /captures
 /jsbridge
 .externalNativeBuild

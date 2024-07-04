@@ -1,61 +1,96 @@
 package com.au.module_android.permissions.permission
 
+import android.view.View
 import androidx.activity.result.ActivityResultCallback
-import androidx.core.app.ActivityOptionsCompat
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
-import com.au.module_android.permissions.hasPermission
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import com.au.module_android.utils.asOrNull
 
 /**
  * @author au
  * @date :2023/12/13 10:52
  * @description:
  */
-interface IPermissionResult<O> : DefaultLifecycleObserver {
-    fun setOnResultCallback(callback:(ActivityResultCallback<O>))
-    fun getOnResultCallback() : (ActivityResultCallback<O>)
+abstract class IPermissionResult<I, O> (cxt:LifecycleOwner): DefaultLifecycleObserver {
+    private var onResultCallback: ActivityResultCallback<O>? = null
 
-    fun start(option: ActivityOptionsCompat?)
+    var launcher: ActivityResultLauncher<I>? = null
+        private set
 
-    /**
-     * 使用
-     * createMultiPermissionForResult(permissions)
-     * createPermissionForResult(permission)
-     * 创建，不用传入第二参数。
-     *
-     * 因为block放在了这里设置。
-     */
-    fun safeRun(block:()->Unit, notGivePermissionBlock:(()->Unit)? = null) {
-        when (this) {
-            is PermissionForResult -> {
-                if(hasPermission(permission())) {
-                    block.invoke()
+    abstract val resultContract:ActivityResultContract<I, O>
+
+    private var isObserved = false
+
+    init {
+        initObserver(cxt)
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        createLauncher(owner)
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        createLauncher(owner)
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        launcher?.unregister()
+        clearLauncher()
+    }
+
+    private fun initObserver(owner:LifecycleOwner) {
+        var isAlreadyResumed = false
+        if (!isObserved) {
+            if (owner is Fragment) {
+                isAlreadyResumed = owner.lifecycle.currentState == Lifecycle.State.RESUMED
+                owner.lifecycle.addObserver(this)
+            } else if (owner is AppCompatActivity) {
+                isAlreadyResumed = owner.lifecycle.currentState == Lifecycle.State.RESUMED
+                owner.lifecycle.addObserver(this)
+            } else if (owner is View) {
+                val activity = owner.context.asOrNull<AppCompatActivity>()
+                if (activity != null) {
+                    isAlreadyResumed = activity.lifecycle.currentState == Lifecycle.State.RESUMED
+                    activity.lifecycle.addObserver(this)
                 } else {
-                    setOnResultCallback {
-                        if(it) block.invoke() else notGivePermissionBlock?.invoke()
-                    }
-                    this.start(null)
+                    throw IllegalArgumentException("init at onCreate $owner is not illegal.")
                 }
             }
+            isObserved = true
+        }
 
-            is PermissionsForResult -> {
-                if (hasPermission(*permissions())) {
-                    block.invoke()
-                } else {
-                    setOnResultCallback {
-                        var hasPermission = false
-                        for (entry in it) {
-                            if (!entry.value) {
-                                hasPermission = false
-                                break
-                            } else {
-                                hasPermission = true
-                            }
-                        }
-                        if(hasPermission) block.invoke() else notGivePermissionBlock?.invoke()
-                    }
-                    this.start(null)
-                }
+        if (isAlreadyResumed) {
+            createLauncher(owner)
+        }
+    }
+
+    private fun createLauncher(owner:LifecycleOwner) {
+        if (launcher != null) {
+            if (owner is Fragment) {
+                launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
+            } else if (owner is AppCompatActivity) {
+                launcher = owner.registerForActivityResult(resultContract, getOnResultCallback())
             }
         }
+    }
+
+    fun clearLauncher() {
+        launcher = null
+    }
+
+    protected fun setOnResultCallback(callback: ActivityResultCallback<O>) {
+        onResultCallback = callback
+    }
+
+    protected fun getOnResultCallback(): ActivityResultCallback<O> {
+        return onResultCallback ?: ActivityResultCallback {  }
     }
 }

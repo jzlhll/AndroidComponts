@@ -4,11 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
 import android.view.View
-import androidx.activity.result.ActivityResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,52 +15,34 @@ import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.permissions.activity.IActivityResult
-import com.au.module_android.permissions.other.TakePictureForResult
-import com.au.module_android.permissions.other.TakePicturePreviewForResult
 import com.au.module_android.permissions.permission.IMultiPermissionsResult
 import com.au.module_android.permissions.permission.IOnePermissionResult
-import com.au.module_android.permissions.permission.IPermissionResult
 import com.au.module_android.permissions.permission.PermissionForResult
 import com.au.module_android.permissions.permission.PermissionsForResult
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.startActivityFix
 
 const val REQUEST_OVERLAY_CODE: Int = 1001
+//todo https://article.juejin.cn/post/7082314521284444173 增加拍照等
 
 /**
  * 多权限的申请
  */
-fun LifecycleOwner.createMultiPermissionForResult(permissions:Array<String>,
-    onResultCallback:((Map<String, @JvmSuppressWildcards Boolean>) -> Unit)? = null)
+fun LifecycleOwner.createMultiPermissionForResult(permissions:Array<String>)
         : IMultiPermissionsResult
-    = PermissionsForResult(this, permissions) { onResultCallback?.invoke(it) }
+    = PermissionsForResult(this, permissions)
 
 /**
  * 单权限的申请
  */
-fun LifecycleOwner.createPermissionForResult(permission:String, onResultCallback:((Boolean)->Unit)? = null) : IOnePermissionResult
-        = PermissionForResult(this, permission) { onResultCallback?.invoke(it) }
+fun LifecycleOwner.createPermissionForResult(permission:String) : IOnePermissionResult
+        = PermissionForResult(this, permission)
 
 /**
  * activity 跳转，返回拿结果。
  */
-fun LifecycleOwner.createActivityForResult(
-    onResultCallback : ((ActivityResult)->Unit)? = null) : IActivityResult
-        = ActivityForResult(this, onResultCallback ?: {})
-
-/**
- * activity 跳转，返回拿结果。
- * @param uri 请使用AndroidUtils的方法来实现.getPictureFileUri.
- */
-fun LifecycleOwner.createTakePictureForResult(uri:Uri, onResultCallback:((Boolean)->Unit)? = null) : IPermissionResult<Boolean>
-        = TakePictureForResult(this, uri) {onResultCallback?.invoke(it)}
-
-/**
- * activity 跳转，返回拿结果。
- */
-fun LifecycleOwner.createTakeBitmapForResult(onResultCallback:((Bitmap?)->Unit)? = null) : IPermissionResult<Bitmap?>
-        = TakePicturePreviewForResult(this) {onResultCallback?.invoke(it)}
-
+fun LifecycleOwner.createActivityForResult() : IActivityResult
+        = ActivityForResult(this)
 /**
  * 跳转到辅助服务
  */

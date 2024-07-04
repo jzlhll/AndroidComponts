@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentDatastoreBinding
+import com.allan.classnameanno.EntroFragmentName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logt
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
  * @date :2023/11/7 15:33
  * @description:
  */
+@EntroFragmentName
 class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

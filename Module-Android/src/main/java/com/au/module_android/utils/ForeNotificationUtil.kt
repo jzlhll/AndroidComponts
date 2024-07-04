@@ -1,12 +1,17 @@
 package com.au.module_android.utils
 
+import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.core.app.ActivityCompat
 
 object ForeNotificationUtil {
     private const val CHANNEL_ONE_ID = "foreNotifyId"
