@@ -6,6 +6,7 @@
 /build
 ClassNameAnnotations/build/
 ClassNameAnnotations-compiler/build/
+ClassNameAnnotations-ksp/build/
 /captures
 /jsbridge
 .externalNativeBuild
