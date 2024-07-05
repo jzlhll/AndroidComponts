@@ -14,21 +14,7 @@ import com.au.module_androiduilight.toast.toastOnTop
 class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding>() {
     private var mediaProjectionManager:MediaProjectionManager? = null
 
-    private val activityForResult = createActivityForResult {result->
-        if (result.resultCode == RESULT_OK) {
-            // 用户已授权，可以开始录屏
-            val data = result.data
-            // 获取录屏权限的结果数据
-            val mgr = mediaProjectionManager
-            if (data != null && mgr != null) {
-                val projection = mgr.getMediaProjection(result.resultCode, data)
-                ScreenDetectService.start(requireContext(), projection)
-            }
-        } else {
-            // 用户未授权
-            toastOnTop("没有授予录屏权限。")
-        }
-    }
+    private val activityForResult = createActivityForResult()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +26,21 @@ class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding
             val captureIntent = projectionManager.createScreenCaptureIntent()
 
             // 请求录屏权限
-            activityForResult.start(captureIntent)
+            activityForResult.start(captureIntent) {result->
+                if (result.resultCode == RESULT_OK) {
+                    // 用户已授权，可以开始录屏
+                    val data = result.data
+                    // 获取录屏权限的结果数据
+                    val mgr = mediaProjectionManager
+                    if (data != null && mgr != null) {
+                        val projection = mgr.getMediaProjection(result.resultCode, data)
+                        ScreenDetectService.start(requireContext(), projection)
+                    }
+                } else {
+                    // 用户未授权
+                    toastOnTop("没有授予录屏权限。")
+                }
+            }
         }
     }
 }

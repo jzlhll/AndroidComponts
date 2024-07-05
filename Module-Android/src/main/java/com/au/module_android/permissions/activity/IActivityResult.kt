@@ -22,7 +22,7 @@ abstract class IActivityResult {
         return resultCallbackWrap
     }
 
-    abstract fun start(intent: Intent, callback:ActivityResultCallback<ActivityResult>? = null, option: ActivityOptionsCompat? = null)
+    abstract fun start(intent: Intent, option: ActivityOptionsCompat? = null, callback:ActivityResultCallback<ActivityResult>? = null)
 
     fun jumpToAppDetail(appContext: Context, callback:(ActivityResult)->Unit) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

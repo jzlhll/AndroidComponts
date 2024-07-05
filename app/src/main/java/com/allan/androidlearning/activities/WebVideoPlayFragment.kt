@@ -5,14 +5,14 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.R
-import com.allan.classnameanno.EntroFragmentName
+import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.utils.logd
 import com.github.lzyzsd.jsbridge.BridgeWebViewExFragment
 import kotlinx.coroutines.launch
 
-@EntroFragmentName
+@EntroFrgName
 class WebVideoPlayFragment : BridgeWebViewExFragment() {
     override fun bridgeWebViewLayoutId(): Int {
         logd { "aaa" }

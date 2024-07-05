@@ -27,18 +27,6 @@ import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {
-    private val allFragments: List<Class<out Fragment>> by unsafeLazy {
-        listOf(
-            FontTestFragment::class.java,
-            WebBridgeFragment::class.java,
-            WebVideoPlayFragment::class.java,
-            DataStoreFragment::class.java,
-            LiveDataFragment::class.java,
-            DialogsFragment::class.java,
-            CanvasFragment::class.java,
-            MonoSpaceFragment::class.java
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +39,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
         window.statusBarColor = getColor(com.au.module_androiduilight.R.color.color_primary)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
-        allFragments.forEach { fragmentClass ->
+        EntroList().getEntroList().forEach { fragmentClass ->
             val btn = MaterialButton(this)
             btn.text = fragmentClass.simpleName.replace("Fragment", "")
             btn.onClick {

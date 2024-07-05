@@ -53,5 +53,8 @@ include ':autoClickFloat'
 
 //include ':appcontentprovider'
 //include ':appcontentresolver'
+
+//自定义apt
 include ':ClassNameAnnotations'
-include ':ClassNameAnnotations-compiler'
+//include ':ClassNameAnnotations-compiler'
+include ':ClassNameAnnotations-ksp'

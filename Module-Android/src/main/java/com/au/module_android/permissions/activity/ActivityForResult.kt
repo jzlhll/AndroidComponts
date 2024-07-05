@@ -57,7 +57,7 @@ internal class ActivityForResult(context:Any)
     /**
      * 启动activity
      */
-    override fun start(intent: Intent, callback: ActivityResultCallback<ActivityResult>?, option: ActivityOptionsCompat?) {
+    override fun start(intent: Intent, option: ActivityOptionsCompat?, callback: ActivityResultCallback<ActivityResult>?) {
         callback?.let { setOnResultCallback(it) }
         launcher?.launch(intent, option)
     }

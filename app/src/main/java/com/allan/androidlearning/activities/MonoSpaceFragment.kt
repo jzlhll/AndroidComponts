@@ -2,7 +2,7 @@ package com.allan.androidlearning.activities
 
 import android.os.Bundle
 import com.allan.androidlearning.databinding.FragmentMonospaceTextBinding
-import com.allan.classnameanno.EntroFragmentName
+import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.ui.bindings.BindingFragment
 
 /**
@@ -10,7 +10,7 @@ import com.au.module_android.ui.bindings.BindingFragment
  * @date :2024/5/24 9:48
  * @description:
  */
-@EntroFragmentName
+@EntroFrgName
 class MonoSpaceFragment : BindingFragment<FragmentMonospaceTextBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.firstMonoText.setTimeString("05:33 / 78:59")

@@ -64,7 +64,8 @@ dependencies {
     implementation project(":Module-Android")
     implementation project(":Module-Cached")
     implementation project(':Module-AndroidUiLight')
+    //my apt
     implementation project(':ClassNameAnnotations')
-
-    ksp project(':ClassNameAnnotations-compiler')
+    ksp project(':ClassNameAnnotations-ksp')
+//    kapt project(':ClassNameAnnotations-compiler')
 }

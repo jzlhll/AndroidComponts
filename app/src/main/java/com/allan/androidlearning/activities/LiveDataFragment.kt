@@ -6,13 +6,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.databinding.FragmentLiveDataBinding
-import com.allan.classnameanno.EntroFragmentName
+import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.ui.bindings.BindingFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@EntroFragmentName
+@EntroFrgName
 class LiveDataFragment : BindingFragment<FragmentLiveDataBinding>() {
     private val viewModel by viewModels<MyViewModel>()
 

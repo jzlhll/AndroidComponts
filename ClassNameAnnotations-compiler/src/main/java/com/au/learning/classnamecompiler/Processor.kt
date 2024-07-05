@@ -1,6 +1,6 @@
 package com.au.learning.classnamecompiler
 
-import com.allan.classnameanno.EntroFragmentName
+import com.allan.classnameanno.EntroFrgName
 import java.io.IOException
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
@@ -11,23 +11,20 @@ import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 import javax.tools.JavaFileObject
 
-
 class Processor : AbstractProcessor() {
+    private var processingEnv:ProcessingEnvironment? = null
+
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
-        processingEnv?.messager?.printMessage(Diagnostic.Kind.NOTE, "init...!")
-        Globals.mFiler = processingEnv?.filer
-        Globals.mMessager = processingEnv?.messager
-        Globals.mElementUtils = processingEnv?.elementUtils
-        println("myApt.....init.")
-        logw("init...")
+        this.processingEnv = processingEnv
+        processingEnv?.messager?.printMessage(Diagnostic.Kind.WARNING, "init...!")
     }
 
     /**
      * 所支持的注解合集
      */
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(EntroFragmentName::class.java.canonicalName)
+        return mutableSetOf(EntroFrgName::class.java.canonicalName)
     }
 
     private fun isElementInAnnotations(target:Element, annotations: Set<TypeElement>) : Boolean {
@@ -64,7 +61,6 @@ class Processor : AbstractProcessor() {
      * @param roundEnv 注解处理器所需的环境，帮助进行解析注解。
      */
     override fun process(annotations: MutableSet<out TypeElement>?, roundEnv: RoundEnvironment?): Boolean {
-        println("myApt.....process.")
         val elements = roundEnv?.rootElements?.let {
             if (annotations != null) {
                 getMyElements(annotations, it)
@@ -73,31 +69,27 @@ class Processor : AbstractProcessor() {
             }
         }
 
-        logw("elments " + elements?.size)
         val names = AllEntroFragmentNamesTemplate()
-        if (elements != null) {
+        if (!elements.isNullOrEmpty()) {
             for (e in elements) {
                 names.insert(e.qualifiedName.toString())
             }
-        }
-        val code = names.end()
-        logw("code:")
-        logw(code)
 
-        Globals.mFiler?.let {
-            try {
-                // 创建一个JavaFileObject来表示要生成的文件
-                val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntroList", null)
-                sourceFile.openWriter().use { writer ->
-                    // 写入Java（或Kotlin）代码
-                    writer.write(code)
-                    writer.flush()
+            val code = names.end()
+            processingEnv.filer?.let {
+                try {
+                    // 创建一个JavaFileObject来表示要生成的文件
+                    val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntroList", null)
+                    sourceFile.openWriter().use { writer ->
+                        // 写入Java（或Kotlin）代码
+                        writer.write(code)
+                        writer.flush()
+                    }
+                } catch (e: IOException) {
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate file: " + e.message)
                 }
-            } catch (e: IOException) {
-                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate file: " + e.message)
             }
         }
-
 
         return true
     }

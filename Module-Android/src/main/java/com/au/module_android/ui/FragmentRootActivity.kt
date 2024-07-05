@@ -59,7 +59,7 @@ open class FragmentRootActivity : ViewActivity() {
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
             if (activityResult != null) {
-                activityResult.start(intent, null, optionsCompat)
+                activityResult.start(intent, optionsCompat)
             } else {
                 ActivityCompat.startActivity(context, intent, optionsCompat?.toBundle())
             }
