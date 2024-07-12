@@ -48,18 +48,20 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
             val top1 = getStatusBarHeight(requireContext())
             val bottom1 = getNavigationBarHeight(requireContext())
 
-            lifecycleScope.launch {
-                val appRes = Globals.app.resources.displayMetrics
-                val activityRes = requireActivity().resources.displayMetrics
-                val adapter = ToutiaoScreenAdapter.toString()
-                val sb = buildString {
-                    append(name)
-                    append("\nstatusBar $top ($top1) navBar $bottom ($bottom1)")
-                    append("\nappDensity ${appRes.density} activity ${activityRes.density}")
-                    append("\nappDensityDpi ${appRes.densityDpi} activity ${activityRes.densityDpi}")
-                    append("\n$adapter")
+            if (BuildConfig.DEBUG) {
+                lifecycleScope.launch {
+                    val appRes = Globals.app.resources.displayMetrics
+                    val activityRes = requireActivity().resources.displayMetrics
+                    val adapter = ToutiaoScreenAdapter.toString()
+                    val sb = buildString {
+                        append(name)
+                        append("\nstatusBar $top ($top1) navBar $bottom ($bottom1)")
+                        append("\nappDensity ${appRes.density} activity ${activityRes.density}")
+                        append("\nappDensityDpi ${appRes.densityDpi} activity ${activityRes.densityDpi}")
+                        append("\n$adapter")
+                    }
+                    binding.logoText.text = sb
                 }
-                binding.logoText.text = sb
             }
 
             insets

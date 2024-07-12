@@ -1,10 +1,10 @@
 package com.au.jobstudy.saves
 
 import com.au.aulitesql.dao.EntityListDao
-import com.au.jobstudy.bean.DataItem
-import com.au.jobstudy.bean.fillDataItemMode
-import com.au.jobstudy.bean.randomGetSubject
-import com.au.jobstudy.bean.randomGetTwoSubjects
+import com.au.jobstudy.deprecatedproj.DataItem
+import com.au.jobstudy.deprecatedproj.fillDataItemMode
+import com.au.jobstudy.deprecatedproj.randomGetSubject
+import com.au.jobstudy.deprecatedproj.randomGetTwoSubjects
 import com.au.jobstudy.consts.Dayer
 import com.au.jobstudy.consts.WeekDateUtil
 import com.au.module_android.utils.awaitOnIoThread

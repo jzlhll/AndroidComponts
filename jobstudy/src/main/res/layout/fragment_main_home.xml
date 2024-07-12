@@ -36,7 +36,6 @@
                 app:layout_constraintTop_toBottomOf="@id/title"
                 android:layout_width="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="今天，天气，气温"
                 android:layout_marginTop="12dp"
                 android:textSize="18sp"
                 android:textColor="#444444"
@@ -51,146 +50,28 @@
                 android:src="@drawable/ic_heart"
                 android:layout_height="32dp"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/headBlockHost"
-                app:layout_constraintTop_toBottomOf="@id/weather"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/small_shadow_bg"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:minHeight="150dp"
-                android:layout_height="wrap_content">
-                <!-- 圆形背景 -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/mineHeadImageHost"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    app:cardCornerRadius="21dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_gravity="center"
-                        android:src="@mipmap/new_icon"
-                        app:shapeAppearanceOverlay="@style/shape_circle_Style"
-                        android:id="@+id/mineHeadImage"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"/>
-                </androidx.cardview.widget.CardView>
-
-                <com.au.module_android.widget.CustomFontText
-                    android:id="@+id/mineName"
-                    app:layout_constraintStart_toEndOf="@id/mineHeadImageHost"
-                    app:layout_constraintTop_toTopOf="@id/mineHeadImageHost"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_width="wrap_content"
-                    tools:text="#Name"
-                    android:textSize="20sp"
-                    android:textColor="#212121"
-                    android:layout_height="wrap_content"/>
-
-                <com.au.module_android.widget.CustomFontText
-                    android:id="@+id/mineScholl"
-                    app:layout_constraintStart_toEndOf="@id/mineHeadImageHost"
-                    app:layout_constraintTop_toBottomOf="@id/mineName"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="9dp"
-                    android:layout_width="wrap_content"
-                    android:text="#Scroll"
-                    android:textSize="18sp"
-                    android:textColor="#414141"
-                    android:layout_height="wrap_content"/>
-
-                <View
-                    android:id="@+id/mineGrayLine"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintTop_toBottomOf="@id/mineScholl"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:background="#cccccc"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/mineCheckPointImage"
-                    android:layout_width="32dp"
-                    app:layout_constraintStart_toStartOf="@id/mineHeadImageHost"
-                    android:layout_marginTop="21dp"
-                    app:layout_constraintTop_toBottomOf="@id/mineGrayLine"
-                    android:src="@drawable/ic_checkpoint"
-                    android:layout_height="32dp"/>
-
-                <com.au.module_android.widget.CustomFontText
-                    android:id="@+id/mineWeeklyText"
-                    app:layout_constraintStart_toEndOf="@id/mineCheckPointImage"
-                    app:layout_constraintTop_toTopOf="@id/mineCheckPointImage"
-                    app:layout_constraintBottom_toBottomOf="@id/mineCheckPointImage"
-                    android:layout_marginStart="6dp"
-                    android:layout_width="wrap_content"
-                    android:text="@string/this_week_works_list"
-                    android:textSize="18sp"
-                    android:textColor="#414141"
-                    android:layout_height="wrap_content"/>
-
-                <com.allan.nested.layout.SimpleItemsLayout
-                    android:id="@+id/thisWeekList"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@id/mineWeeklyText"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    tools:layout_height="50dp"
-                    android:layout_height="wrap_content"/>
-
-                <Space
-                    app:layout_constraintTop_toBottomOf="@id/thisWeekList"
-                    android:layout_width="match_parent"
-                    android:layout_height="9dp"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <com.au.module_android.widget.CustomFontText
+                android:id="@+id/lookWeeklyText"
+                android:text="任务完成情况 >"
+                android:layout_gravity="end"
+                android:layout_marginEnd="22dp"
+                android:textSize="17sp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.au.module_android.widget.CustomFontText
-            android:id="@+id/lookWeeklyText"
-            android:text="任务完成情况 >"
-            android:layout_gravity="end"
-            android:layout_marginEnd="22dp"
-            android:textSize="17sp"
-            android:layout_marginTop="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/headBlockHost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_marginTop="24dp"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/rcv"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="33dp"
-            android:id="@+id/rcv"
-            tools:listitem="@layout/home_check_item"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/passFab"
-            android:layout_marginEnd="16dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/pass_it"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:scaleType="center"
-            android:layout_width="42dp"
-            android:visibility="gone"
-            android:layout_height="42dp"/>
-    </RelativeLayout>
+        tools:listitem="@layout/home_check_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </com.allan.nested.layout.NestedCoordinatorLayout>

@@ -1,6 +1,6 @@
 package com.au.jobstudy.saves
 
-import com.au.jobstudy.bean.DataItem
+import com.au.jobstudy.deprecatedproj.DataItem
 import com.au.module_android.simplelivedata.BusLiveData
 
 /**

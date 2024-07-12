@@ -1,6 +1,10 @@
 package com.au.jobstudy.consts
 
+import com.au.jobstudy.R
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -114,7 +118,7 @@ object WeekDateUtil {
 
     fun currentTimeToHelloGood() : String {
         val time = DAY_FORMAT_HHMM.format(Date(System.currentTimeMillis())).toInt()
-        if (time >= 2230 || time <= 645) {
+        if (time >= 2200 || time <= 700) {
             return "夜深了，注意休息"
         }
 
@@ -131,5 +135,27 @@ object WeekDateUtil {
         }
 
         return "晚上好"
+    }
+
+    fun getTodayWeekN() : String{
+        // 获取当前时间
+        val now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"))
+        // 格式化时间
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        // 输出当前时间
+        println("当前时间: " + now.format(formatter))
+        // 获取周几
+        val dayOfWeek = now.dayOfWeek.value // 周一为1, 周日为7
+        val s = when (dayOfWeek) {
+            1 -> "周一"
+            2 -> "周二"
+            3 -> "周三"
+            4 -> "周四"
+            5 -> "周五"
+            6 -> "周六"
+            7 -> "周日"
+            else -> ""
+        }
+        return now.format(formatter) + " $s"
     }
 }

@@ -1,7 +1,7 @@
 package com.au.jobstudy
 
 import com.au.aulitesql.AuLiteSql
-import com.au.jobstudy.bean.DataItem
+import com.au.jobstudy.deprecatedproj.DataItem
 import com.au.module_android.init.InitApplication
 
 /**

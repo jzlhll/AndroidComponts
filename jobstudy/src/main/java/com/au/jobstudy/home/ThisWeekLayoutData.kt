@@ -1,6 +1,6 @@
 package com.au.jobstudy.home
 
-import com.au.jobstudy.bean.Subject
+import com.au.jobstudy.deprecatedproj.Subject
 
 /**
  * @author au

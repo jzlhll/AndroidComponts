@@ -1,6 +1,6 @@
 package com.au.jobstudy.home
 
-import com.au.jobstudy.bean.DataItem
+import com.au.jobstudy.deprecatedproj.DataItem
 
 /**
  * @author au

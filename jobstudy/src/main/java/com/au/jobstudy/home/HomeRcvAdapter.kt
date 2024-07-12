@@ -1,10 +1,16 @@
 package com.au.jobstudy.home
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
+import com.allan.nested.layout.SimpleItemsLayout
 import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.jobstudy.databinding.HolderHomeHeadBinding
 import com.au.jobstudy.databinding.HomeCheckItemBinding
 import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
+import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
+import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
@@ -20,6 +26,8 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
         var click:((HomeRcvItemBean)->Unit)? = null
     }
 
+    var headBinding:HomeRcvHeadViewHolder? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<HomeRcvBean, *> {
         return when (viewType) {
             1 -> {
@@ -28,6 +36,8 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
             2 -> {
                 HomeRcvItemViewHolder(create(parent))
             }
+
+            3 -> HomeRcvHeadViewHolder(create(parent)).also { headBinding = it }
             else -> throw RuntimeException("no way.")
         }
     }
@@ -38,6 +48,58 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
 
     override fun getItemViewType(position: Int): Int {
         return datas[position].viewType
+    }
+}
+
+class HomeRcvHeadViewHolder(viewBinding: HolderHomeHeadBinding) : BindViewHolder<HomeRcvBean, HolderHomeHeadBinding>(viewBinding) {
+    override fun bindData(bean: HomeRcvBean) {
+        super.bindData(bean)
+        bean as HomeRcvHeadBean
+        binding.mineName.text = bean.userName
+        binding.mineScholl.text = bean.scroll
+        binding.thisWeekList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)-> ViewBinding) {
+            override fun invoke(layoutInflate: LayoutInflater, me: SimpleItemsLayout, attachedToParent: Boolean, data: Any): ViewBinding {
+                return when (val uiData = data as ThisWeekUiData) {
+                    is ThisWeekUiData.ThisWeekLayoutData -> {
+                        HomeStarOnlyOneBigBinding.inflate(layoutInflate, me, attachedToParent).also {
+                            it.numbersTv.text = "${uiData.num}"
+                        }
+                    }
+
+                    is ThisWeekUiData.ThisWeekEachLayoutData -> {
+                        HomeStarThreeStarsBinding.inflate(layoutInflate, me, attachedToParent).also { vb->
+                            var count = 0
+                            uiData.eachStars.forEach {
+                                count++
+                                when (count) {
+                                    1 -> {
+                                        vb.name1.text = it.first.name
+                                        vb.value1.text = "${it.second}"
+                                        vb.name1.visible()
+                                        vb.value1.visible()
+                                        vb.pic1.visible()
+                                    }
+                                    2 -> {
+                                        vb.name2.text = it.first.name
+                                        vb.value2.text = "${it.second}"
+                                        vb.name2.visible()
+                                        vb.value2.visible()
+                                        vb.pic2.visible()
+                                    }
+                                    3 -> {
+                                        vb.name3.text = it.first.name
+                                        vb.value3.text = "${it.second}"
+                                        vb.name3.visible()
+                                        vb.value3.visible()
+                                        vb.pic3.visible()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
