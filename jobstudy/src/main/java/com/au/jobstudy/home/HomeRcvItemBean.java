@@ -2,22 +2,17 @@ package com.au.jobstudy.home;
 
 import androidx.annotation.NonNull;
 
-import com.au.jobstudy.deprecatedproj.DataItem;
+import com.au.jobstudy.check.bean.WorkEntity;
 
-/**
- * @author au
- * @date :2023/12/1 16:46
- * @description:
- */
-public class HomeRcvItemBean extends HomeRcvBean{
-    public HomeRcvItemBean(int viewType, int colorId, @NonNull DataItem dataItem) {
+public class HomeRcvItemBean extends HomeRcvBean {
+    public HomeRcvItemBean(int viewType, int colorId, @NonNull WorkEntity oneWork) {
         super(viewType);
         this.colorId = colorId;
-        this.dataItem = dataItem;
+        this.oneWork = oneWork;
     }
 
     public final int colorId;
 
     @NonNull
-    public final DataItem dataItem;
+    public final WorkEntity oneWork;
 }

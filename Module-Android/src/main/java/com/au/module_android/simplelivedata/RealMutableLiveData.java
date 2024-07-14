@@ -2,11 +2,6 @@ package com.au.module_android.simplelivedata;
 
 import androidx.lifecycle.MutableLiveData;
 
-/**
- * @author allan
- * @date :2024/6/20 11:20
- * @description:
- */
 public class RealMutableLiveData<T> extends MutableLiveData<T> {
     public RealMutableLiveData(T value) {
         super(value);

@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.nested.decoration.PaddingItemDecoration
-import com.au.jobstudy.consts.Dayer
-import com.au.jobstudy.consts.WeekDateUtil
-import com.au.jobstudy.consts.WeekDateUtil.currentTimeToHelloGood
+import com.au.jobstudy.utils.Dayer
+import com.au.jobstudy.utils.WeekDateUtil
+import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
-import com.au.jobstudy.deprecatedproj.DataItem
-import com.au.jobstudy.deprecatedproj.GlobalDataViewModel
 import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.HomeRcvItemBean
-import com.au.jobstudy.pass.Pass
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
-
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -43,34 +38,6 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
         HomeRcvAdapter.click = itemClick
         binding.rcv.adapter = HomeRcvAdapter().also { adapter = it }
-
-        GlobalDataViewModel.busLiveData.observe(viewLifecycleOwner) { bus->
-
-            val shouldWork = GlobalDataViewModel.isBusGetTodayAndYesterday(bus)
-            if (shouldWork) {
-                adapter.submitList(GlobalDataViewModel.busToAdapterData(bus), false)
-            }
-
-            bus.foreach { key, content ->
-                if (key.startsWith("getWeekData-")) {
-                    val list = content.real.asOrNull<List<DataItem>>()
-                    if (list != null) {
-                        val arr = GlobalDataViewModel.dataListToCompletedCount(list)
-                        for (a in arr) {
-                            adapter.headBinding?.binding?.thisWeekList?.addItem(a)
-                        }
-                    }
-
-                    val currentDay = key.replace("getWeekData-", "")
-
-                    GlobalDataViewModel.getDay(WeekDateUtil.getYesterday(currentDay), "getDay-Yesterday")
-                    GlobalDataViewModel.getDay(currentDay, "getDay-Today")
-                    true
-                } else {
-                    false
-                }
-            }
-        }
 //
 //        binding.passFab.onClick {_->
 //            Pass().useOnePassCount {
@@ -92,11 +59,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         if (binding.title.text != time) {
             binding.title.text = time
             val curDay = Dayer()
-            GlobalDataViewModel.getWeekData(curDay.currentDay, true, "getWeekData-" + curDay.currentDay)
-        }
-
-        Pass().isThisWeekCanUse {
-
+            //todo
         }
     }
 

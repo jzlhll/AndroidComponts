@@ -62,6 +62,7 @@ dependencies {
     api libs.okhttp
 
     api libs.glide
+    implementation libs.androidx.lifecycle.process
     ksp libs.glideKsp
     api libs.okhttp3.integration
 

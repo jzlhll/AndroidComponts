@@ -1,7 +1,7 @@
-package com.au.jobstudy.consts
+package com.au.jobstudy.utils
 
-import com.au.jobstudy.consts.WeekDateUtil.anyDayToWeekStartDay
-import com.au.jobstudy.consts.WeekDateUtil.timeToDayInt
+import com.au.jobstudy.utils.WeekDateUtil.anyDayToWeekStartDay
+import com.au.jobstudy.utils.WeekDateUtil.timeToDayInt
 
 /**
  * @author au
@@ -32,5 +32,20 @@ class Dayer {
 
         weekStartDay = anyDayToWeekStartDay(currentDay)
         weekStartDayInt = weekStartDay.toInt()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Dayer) {
+            if (other.currentDayInt == currentDayInt) {
+                return true
+            }
+            return false
+        } else {
+            throw IllegalArgumentException("Error equals dayer !!")
+        }
+    }
+
+    override fun hashCode(): Int {
+        return currentDayInt
     }
 }

@@ -3,8 +3,8 @@ package com.au.jobstudy
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.au.jobstudy.deprecatedproj.DataItem
 import com.au.jobstudy.databinding.FragmentCheckInBinding
+import com.au.jobstudy.check.bean.WorkEntity
 import com.au.module_android.ui.bindings.BindingParamsFragment
 
 /**
@@ -14,12 +14,12 @@ import com.au.module_android.ui.bindings.BindingParamsFragment
  */
 class CheckInFragment : BindingParamsFragment<FragmentCheckInBinding>() {
     companion object {
-        fun start(context:Context, dataItem: DataItem) {
+        fun start(context:Context, dataItem: WorkEntity) {
             putTempParams(CheckInFragment::class.java, "dataItem" to dataItem)
         }
     }
 
-    private val dataItem = getTempParams<DataItem>("dataItem")!!
+    private val dataItem = getTempParams<WorkEntity>("dataItem")!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

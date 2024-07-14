@@ -3,6 +3,7 @@ package com.au.module_android.init
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 
@@ -21,6 +22,8 @@ object FirstInitial {
         val app = context as Application
         ToutiaoScreenAdapter.init(app)
         app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
+        ProcessLifecycleOwner.get().lifecycle.addObserver(GlobalBackgroundCallback)
+
         Globals.internalApp = app
 
         if (isInitSharedPrefHook) {

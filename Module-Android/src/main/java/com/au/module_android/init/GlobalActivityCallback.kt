@@ -25,6 +25,7 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityStopped(activity: Activity) {
+
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {

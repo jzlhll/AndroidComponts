@@ -43,8 +43,8 @@ include ':Module-Cached'
 
 include ':studyjob'
 include ':jobstudy'
-include ':AuLiteSql'
-include ':AuLiteSqlKt'
+//include ':AuLiteSql'
+//include ':AuLiteSqlKt'
 //include ':MultiMedia'
 include ':autoClickFloat'
 

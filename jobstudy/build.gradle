@@ -42,7 +42,7 @@ dependencies {
     api project(":Module-Cached")
     implementation project(":Module-AndroidUiLight")
     implementation project(":Module-Nested")
-    implementation project(':AuLiteSql')
+//    implementation project(':AuLiteSql')
 //    implementation project(':MultiMedia')
 
     implementation libs.androidx.core.ktx

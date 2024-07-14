@@ -27,6 +27,7 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
     }
 
     var headBinding:HomeRcvHeadViewHolder? = null
+    var headBindingCreatedCallback : ((HomeRcvHeadViewHolder)->Unit) ? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<HomeRcvBean, *> {
         return when (viewType) {
@@ -37,7 +38,9 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
                 HomeRcvItemViewHolder(create(parent))
             }
 
-            3 -> HomeRcvHeadViewHolder(create(parent)).also { headBinding = it }
+            3 -> HomeRcvHeadViewHolder(this, create(parent)).also {
+                headBinding = it
+            }
             else -> throw RuntimeException("no way.")
         }
     }
@@ -51,55 +54,57 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
     }
 }
 
-class HomeRcvHeadViewHolder(viewBinding: HolderHomeHeadBinding) : BindViewHolder<HomeRcvBean, HolderHomeHeadBinding>(viewBinding) {
+class HomeRcvHeadViewHolder(val adapter:HomeRcvAdapter, viewBinding: HolderHomeHeadBinding) : BindViewHolder<HomeRcvBean, HolderHomeHeadBinding>(viewBinding) {
     override fun bindData(bean: HomeRcvBean) {
         super.bindData(bean)
         bean as HomeRcvHeadBean
         binding.mineName.text = bean.userName
         binding.mineScholl.text = bean.scroll
-        binding.thisWeekList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)-> ViewBinding) {
-            override fun invoke(layoutInflate: LayoutInflater, me: SimpleItemsLayout, attachedToParent: Boolean, data: Any): ViewBinding {
-                return when (val uiData = data as ThisWeekUiData) {
-                    is ThisWeekUiData.ThisWeekLayoutData -> {
-                        HomeStarOnlyOneBigBinding.inflate(layoutInflate, me, attachedToParent).also {
-                            it.numbersTv.text = "${uiData.num}"
-                        }
-                    }
+//        binding.thisWeekList.itemInflateCreator = object : ((LayoutInflater, SimpleItemsLayout, Boolean, Any)-> ViewBinding) {
+//            override fun invoke(layoutInflate: LayoutInflater, me: SimpleItemsLayout, attachedToParent: Boolean, data: Any): ViewBinding {
+//                return when (val uiData = data as ThisWeekUiData) {
+//                    is ThisWeekUiData.ThisWeekLayoutData -> {
+//                        HomeStarOnlyOneBigBinding.inflate(layoutInflate, me, attachedToParent).also {
+//                            it.numbersTv.text = "${uiData.num}"
+//                        }
+//                    }
+//
+//                    is ThisWeekUiData.ThisWeekEachLayoutData -> {
+//                        HomeStarThreeStarsBinding.inflate(layoutInflate, me, attachedToParent).also { vb->
+//                            var count = 0
+//                            uiData.eachStars.forEach {
+//                                count++
+//                                when (count) {
+//                                    1 -> {
+//                                        vb.name1.text = it.first.name
+//                                        vb.value1.text = "${it.second}"
+//                                        vb.name1.visible()
+//                                        vb.value1.visible()
+//                                        vb.pic1.visible()
+//                                    }
+//                                    2 -> {
+//                                        vb.name2.text = it.first.name
+//                                        vb.value2.text = "${it.second}"
+//                                        vb.name2.visible()
+//                                        vb.value2.visible()
+//                                        vb.pic2.visible()
+//                                    }
+//                                    3 -> {
+//                                        vb.name3.text = it.first.name
+//                                        vb.value3.text = "${it.second}"
+//                                        vb.name3.visible()
+//                                        vb.value3.visible()
+//                                        vb.pic3.visible()
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
-                    is ThisWeekUiData.ThisWeekEachLayoutData -> {
-                        HomeStarThreeStarsBinding.inflate(layoutInflate, me, attachedToParent).also { vb->
-                            var count = 0
-                            uiData.eachStars.forEach {
-                                count++
-                                when (count) {
-                                    1 -> {
-                                        vb.name1.text = it.first.name
-                                        vb.value1.text = "${it.second}"
-                                        vb.name1.visible()
-                                        vb.value1.visible()
-                                        vb.pic1.visible()
-                                    }
-                                    2 -> {
-                                        vb.name2.text = it.first.name
-                                        vb.value2.text = "${it.second}"
-                                        vb.name2.visible()
-                                        vb.value2.visible()
-                                        vb.pic2.visible()
-                                    }
-                                    3 -> {
-                                        vb.name3.text = it.first.name
-                                        vb.value3.text = "${it.second}"
-                                        vb.name3.visible()
-                                        vb.value3.visible()
-                                        vb.pic3.visible()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        adapter.headBindingCreatedCallback?.invoke(this)
     }
 }
 
@@ -128,8 +133,8 @@ class HomeRcvItemViewHolder(viewBinding: HomeCheckItemBinding) : BindViewHolder<
     override fun bindData(bean: HomeRcvBean) {
         super.bindData(bean)
         bean as HomeRcvItemBean
-        binding.descText.text = bean.dataItem.desc
-        binding.subjectText.text = bean.dataItem.subject
+        binding.descText.text = bean.oneWork.desc
+        binding.subjectText.text = bean.oneWork.subject
 //        binding.subjectColor.setBackgroundColor(binding.root.resources.getColor(bean.colorId))
         binding.subjectColor.background = ViewBackgroundBuilder()
             .setBackground(binding.root.resources.getColor(bean.colorId))

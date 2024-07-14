@@ -1,6 +1,5 @@
-package com.au.jobstudy.consts
+package com.au.jobstudy.utils
 
-import com.au.jobstudy.R
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -40,7 +39,7 @@ object WeekDateUtil {
 
     fun getYesterday(day:String) = getYesterday(DAY_FORMAT.parse(day)!!)
 
-    fun getYesterday(dataTime: Date): String {
+    private fun getYesterday(dataTime: Date): String {
         val calendar = Calendar.getInstance()
         calendar.time = dataTime
         calendar.add(Calendar.DAY_OF_YEAR, -1)
@@ -55,14 +54,7 @@ object WeekDateUtil {
         return DAY_FORMAT.format(calendar.time)
     }
 
-    fun getFirstWeekData(dataTime: Date): String {
-        /**
-         * 转为calendar格式
-         * calendar.get(Calendar.MONTH)+1  calendar中的月份以0开头
-         * Calendar.DAY_OF_WEEK 当前日期是所在周的第几天（以周日为一周的第一天）
-         * Calendar.DATE 当前日期是几号
-         */
-        val week: MutableList<String> = ArrayList(8)
+    private fun getFirstWeekData(dataTime: Date): String {
         val calendar = Calendar.getInstance()
         calendar.time = dataTime
 
@@ -78,9 +70,12 @@ object WeekDateUtil {
         return DAY_FORMAT.format(calendar.time)
     }
 
+    /**
+     * 获取一周的日期
+     */
     fun getWeekData(anyDay:String) = getWeekData(DAY_FORMAT.parse(anyDay)!!)
 
-    fun getWeekData(dataTime: Date): List<String> {
+    private fun getWeekData(dataTime: Date): List<String> {
         val week: MutableList<String> = ArrayList(8)
         val calendar = Calendar.getInstance()
         calendar.time = dataTime

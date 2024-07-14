@@ -1,8 +1,11 @@
 package com.au.jobstudy
 
-import com.au.aulitesql.AuLiteSql
-import com.au.jobstudy.deprecatedproj.DataItem
+import com.au.jobstudy.check.CheckConsts
+import com.au.module_android.Globals
+import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.InitApplication
+import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 
 /**
  * @author au
@@ -12,10 +15,13 @@ import com.au.module_android.init.InitApplication
 class MyInitApplication : InitApplication() {
     override fun onCreate() {
         super.onCreate()
-        AuLiteSql.getInstance()
-            .setDb("jobStudy", 1)
-            .setTableClasses(listOf(DataItem::class.java))
-            .useThreadPool()
-            .openDataBase(this)
+        GlobalBackgroundCallback.addListener {
+            if (it) {
+                logd { "update SummerConst when foreground" }
+                Globals.mainScope.launchOnThread {
+                    CheckConsts.whenEnterForeground()
+                }
+            }
+        }
     }
 }
