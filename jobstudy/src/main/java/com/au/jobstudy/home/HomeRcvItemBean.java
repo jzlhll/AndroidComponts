@@ -5,13 +5,10 @@ import androidx.annotation.NonNull;
 import com.au.jobstudy.check.bean.WorkEntity;
 
 public class HomeRcvItemBean extends HomeRcvBean {
-    public HomeRcvItemBean(int viewType, int colorId, @NonNull WorkEntity oneWork) {
-        super(viewType);
-        this.colorId = colorId;
+    public HomeRcvItemBean(@NonNull WorkEntity oneWork) {
+        super(HomeRcvBean.VIEW_TYPE_ITEM);
         this.oneWork = oneWork;
     }
-
-    public final int colorId;
 
     @NonNull
     public final WorkEntity oneWork;

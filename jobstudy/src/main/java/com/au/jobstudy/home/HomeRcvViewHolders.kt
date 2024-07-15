@@ -1,5 +1,6 @@
 package com.au.jobstudy.home
 
+import android.graphics.Color
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.R
 import com.au.jobstudy.databinding.HolderHomeHeadBinding
@@ -53,7 +54,7 @@ class HomeRcvItemViewHolder(viewBinding: HomeCheckItemBinding) : BindViewHolder<
         binding.subjectText.text = bean.oneWork.subject
 //        binding.subjectColor.setBackgroundColor(binding.root.resources.getColor(bean.colorId))
         binding.subjectColor.background = ViewBackgroundBuilder()
-            .setBackground(binding.root.resources.getColor(bean.colorId))
+            .setBackground(Color.parseColor(bean.oneWork.colorStr))
             .setCornerRadius(3f.dp)
             .build()
     }

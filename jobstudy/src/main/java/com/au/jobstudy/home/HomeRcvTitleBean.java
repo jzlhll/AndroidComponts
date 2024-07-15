@@ -6,8 +6,8 @@ package com.au.jobstudy.home;
  * @description:
  */
 public class HomeRcvTitleBean extends HomeRcvBean {
-    public HomeRcvTitleBean(int viewType, String title) {
-        super(viewType);
+    public HomeRcvTitleBean(String title) {
+        super(HomeRcvBean.VIEW_TYPE_TITLE);
         this.title = title;
     }
 

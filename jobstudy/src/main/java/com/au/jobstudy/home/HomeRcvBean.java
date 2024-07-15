@@ -10,4 +10,8 @@ public abstract class HomeRcvBean {
     public HomeRcvBean(int viewType) {
         this.viewType = viewType;
     }
+
+    public static final int VIEW_TYPE_HEAD = 1;
+    public static final int VIEW_TYPE_TITLE = 2;
+    public static final int VIEW_TYPE_ITEM = 3;
 }

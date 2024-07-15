@@ -8,15 +8,20 @@ import com.allan.nested.decoration.PaddingItemDecoration
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.check.StarList
+import com.au.jobstudy.check.StatusMode
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
 import com.au.jobstudy.home.HomeRcvAdapter
+import com.au.jobstudy.home.HomeRcvBean
+import com.au.jobstudy.home.HomeRcvHeadBean
 import com.au.jobstudy.home.HomeRcvItemBean
+import com.au.jobstudy.home.HomeRcvTitleBean
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
 import kotlinx.coroutines.launch
+import java.util.jar.Attributes.Name
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -43,12 +48,30 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         HomeRcvAdapter.click = itemClick
         binding.rcv.adapter = HomeRcvAdapter().also { adapter = it }
 
-        CheckConsts.workChangedLiveData.observe(viewLifecycleOwner) {
+        CheckConsts.statusChangedLiveData.observe(viewLifecycleOwner) {
+            val list = mutableListOf<HomeRcvBean>()
+            list.add(HomeRcvHeadBean(NameList.NAMES_JIANG_TJ, NameList.HUAZHONG_SCROLL))
+            val uncompletedWorks = CheckConsts.todayUncompletedWorks()
+            if (uncompletedWorks.isEmpty()) {
+                list.add(HomeRcvTitleBean("今天的任务已经全部完成，棒棒的！"))
+            } else {
+                list.add(HomeRcvTitleBean("今天的任务："))
+                uncompletedWorks.forEach {
+                    list.add(HomeRcvItemBean(it))
+                }
+            }
 
-        }
+            val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
+            if (uncompletedWorksYesterday.isEmpty()) {
+                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！"))
+            } else {
+                list.add(HomeRcvTitleBean("昨天的任务："))
+                uncompletedWorksYesterday.forEach {
+                    list.add(HomeRcvItemBean(it))
+                }
+            }
 
-        CheckConsts.completedChangedLiveData.observe(viewLifecycleOwner) {
-
+            adapter.submitList(list, false)
         }
     }
 
@@ -61,9 +84,5 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         if (binding.title.text != time) {
             binding.title.text = time
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 }

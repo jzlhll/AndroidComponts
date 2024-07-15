@@ -1,20 +1,8 @@
 package com.au.jobstudy.home
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
-import com.allan.nested.layout.SimpleItemsLayout
 import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
-import com.au.jobstudy.databinding.HolderHomeHeadBinding
-import com.au.jobstudy.databinding.HomeCheckItemBinding
-import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
-import com.au.jobstudy.databinding.HomeStarOnlyOneBigBinding
-import com.au.jobstudy.databinding.HomeStarThreeStarsBinding
-import com.au.module_android.utils.ViewBackgroundBuilder
-import com.au.module_android.utils.dp
-import com.au.module_android.utils.gone
-import com.au.module_android.utils.visible
 
 /**
  * @author au
@@ -31,14 +19,14 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<HomeRcvBean, *> {
         return when (viewType) {
-            1 -> {
+            HomeRcvBean.VIEW_TYPE_TITLE -> {
                 HomeRcvTitleViewHolder(create(parent))
             }
-            2 -> {
+            HomeRcvBean.VIEW_TYPE_ITEM -> {
                 HomeRcvItemViewHolder(create(parent))
             }
 
-            3 -> HomeRcvHeadViewHolder(this, create(parent)).also {
+            HomeRcvBean.VIEW_TYPE_HEAD -> HomeRcvHeadViewHolder(this, create(parent)).also {
                 headBinding = it
             }
             else -> throw RuntimeException("no way.")

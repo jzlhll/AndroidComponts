@@ -8,13 +8,16 @@ import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.RealMutableLiveData
-import com.au.module_android.simplelivedata.Status
 import kotlinx.coroutines.delay
 
+enum class StatusMode {
+    Completed,
+    All
+}
 /**
  * statusMode 1表示work更新；2表示completed更新。3表示一起更新。
  */
-data class UpdateChangeStatus(val statusMode:Int, val index:Long)
+data class UpdateChangeStatus(val statusMode:StatusMode, val index:Long)
 
 object CheckConsts {
 
@@ -25,8 +28,8 @@ object CheckConsts {
 
     private val api : AbsGeneratorApi = SummerGeneratorApi()
 
-    var curWeekWorks:List<WorkEntity>? = null
-    var lastWeekWorks:List<WorkEntity>? = null
+    lateinit var curWeekWorks:List<WorkEntity>
+    lateinit var lastWeekWorks:List<WorkEntity>
 
     val statusChangedLiveData = RealMutableLiveData<UpdateChangeStatus>()
 
@@ -36,33 +39,33 @@ object CheckConsts {
     /**
      * 必须保证已经有值了才能调用
      */
-    fun todayWorks() = curWeekWorks?.filter { it.day == dayerLiveData.realValue.currentDay }
+    fun todayWorks() = curWeekWorks.filter { it.day == dayerLiveData.realValue.currentDay }
 
     /**
      * 必须保证已经有值了才能调用
      */
-    fun yesterdayWorks() = curWeekWorks?.filter { it.day == dayerLiveData.realValue.yesterday }
+    fun yesterdayWorks() = curWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
 
     /**
      * 从liveData中得到今天还有什么没有做的。
      */
-    fun todayUncompletedWorks() : List<WorkEntity>?{
+    fun todayUncompletedWorks() : List<WorkEntity> {
         val completedWorkIds = todayCompletedWorks?.map { it.dayWorkId }
         if (completedWorkIds == null) {
             return todayWorks() //一个都没有完成，直接完成。
         }
-        return todayWorks()?.filter { !completedWorkIds.contains(it.id) }
+        return todayWorks().filter { !completedWorkIds.contains(it.id) }
     }
 
     /**
      * 从liveData中得到昨天还有什么没有做的。
      */
-    fun yesterdayUncompletedWorks() : List<WorkEntity>? {
+    fun yesterdayUncompletedWorks() : List<WorkEntity> {
         val completedWorkIds = yesterdayCompletedWorks?.map { it.dayWorkId }
         if (completedWorkIds == null) {
             return yesterdayWorks() //一个都没有完成，直接完成。
         }
-        return yesterdayWorks()?.filter { !completedWorkIds.contains(it.id) }
+        return yesterdayWorks().filter { !completedWorkIds.contains(it.id) }
     }
 
     /**
@@ -82,19 +85,28 @@ object CheckConsts {
         val curDayer = dayerLiveData.realValue
         if (curDayer == null) { //为空就进行db的读取，看看是否已经生成
             weekChanged(newDayer)
+            updateStatusChangedLiveData(true)
         } else {
             if (newDayer != curDayer) {
                 val newWeekStartDay = WeekDateUtil.anyDayToWeekStartDay(newDayer.weekStartDay)
                 if (newWeekStartDay == newDayer.weekStartDay) {
                     //只是变了一周内的一天。更新today和yesterday即可。
                     inWeekChangeDay(newDayer)
+                    updateStatusChangedLiveData(false)
                 } else {
                     //变周了
                     weekChanged(newDayer)
+                    updateStatusChangedLiveData(true)
                 }
             }
         }
         dayerLiveData.postValue(newDayer)
+    }
+
+    private fun updateStatusChangedLiveData(isAll:Boolean) {
+        val st = if(isAll) StatusMode.All else StatusMode.Completed
+        val oldIndex = (statusChangedLiveData.realValue?.index ?: 0)
+        statusChangedLiveData.postValue(UpdateChangeStatus(st, oldIndex + 1))
     }
 
     private suspend fun weekChanged(newDayer: Dayer) {
@@ -103,11 +115,7 @@ object CheckConsts {
         curWeekWorks = thisWeekData
         lastWeekWorks = lastWeekData
 
-        workChangedLiveData.postValue((workChangedLiveData.realValue ?: 0) + 1)
-
         inWeekChangeDay(newDayer)
-
-        statusChangedLiveData.postValue(Status(3, (statusChangedLiveData.realValue.index ?: 0) + 1))
     }
 
     private suspend fun inWeekChangeDay(newDayer: Dayer) {
@@ -115,8 +123,6 @@ object CheckConsts {
         val yesterdayCompleted = getDbTodayCompletedWorks(newDayer.yesterday)
         todayCompletedWorks = (todayCompleted)
         yesterdayCompletedWorks = (yesterdayCompleted)
-
-        completedChangedLiveData.postValue((completedChangedLiveData.realValue ?: 0) + 1)
     }
 
     private suspend fun getOrCreateDbWeekData(weekStartDayInt:Int) : List<WorkEntity>{

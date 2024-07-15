@@ -13,6 +13,9 @@ class NameList {
         @JvmField
         val NAMES_JIANG_TJ = "6JKL5re76Z2W".nameFromBase64()
 
+        @JvmField
+        val HUAZHONG_SCROLL = "5Y2O5Lit5biI6IyD5aSn5a2m5a6d5a6J6ZmE5bGe5a2m5qCh".nameFromBase64()
+
         private fun String.nameFromBase64() = String(Base64.getDecoder().decode(this))
     }
 }
