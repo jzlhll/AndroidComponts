@@ -14,6 +14,7 @@
         android:id="@+id/title"
         android:layout_height="wrap_content"
         android:textSize="24sp"
+        android:textColor="@color/color_text_normal"
         android:layout_marginTop="24dp"
         android:text="开始打卡"
         />
@@ -50,41 +51,95 @@
         tools:text="5-3天天练"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomFontText
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subjectText"
-        android:id="@+id/descText"
-        android:layout_marginTop="24dp"
-        android:maxLines="3"
-        tools:text="5-3天天练Desc"
-        android:textColor="#212121"
-        android:textSize="20sp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/descTextHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="64dp"
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="21dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subjectText">
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/descText"
+            android:padding="12dp"
+            android:maxLines="3"
+            tools:text="5-3天天练Desc"
+            android:textColor="@color/color_text_normal"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.cardview.widget.CardView>
 
     <com.au.module_android.widget.CustomFontText
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descText"
-        android:id="@+id/durationText"
-        android:layout_marginTop="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descTextHost"
+        android:id="@+id/checkupText"
+        android:layout_marginTop="33dp"
         android:maxLines="3"
         tools:text="时长描述"
-        android:textColor="#212121"
-        android:textSize="20sp"
+        android:textColor="@color/color_text_secondary"
+        android:textSize="16sp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:id="@+id/checkModesHost"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/checkupText"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkUpModePicture"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_b_camera"
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkupModeVoice"
+            android:layout_marginStart="20dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:src="@drawable/ic_b_voice"
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkupModeVideo"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_b_video_record"
+            android:layout_width="42dp"
+            android:layout_height="42dp"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkupModeParent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_b_parent"
+            android:layout_width="46dp"
+            android:layout_height="44dp"/>
+    </LinearLayout>
+
     <androidx.fragment.app.FragmentContainerView
-        app:layout_constraintTop_toBottomOf="@id/durationText"
-        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@id/checkModesHost"
+        android:layout_marginTop="24dp"
         android:id="@+id/fragmentContainerView"
         android:minHeight="60dp"
         android:layout_width="match_parent"

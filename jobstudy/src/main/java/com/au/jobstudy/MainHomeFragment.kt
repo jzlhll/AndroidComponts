@@ -9,6 +9,7 @@ import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.check.StarList
 import com.au.jobstudy.check.StatusMode
+import com.au.jobstudy.checkwith.CheckWithFragment
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
@@ -28,6 +29,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private val userName = NameList.NAMES_JIANG_TJ
 
     private val itemClick : (HomeRcvItemBean)->Unit = { itemBean->
+        CheckWithFragment.start(requireContext(), itemBean.oneWork)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
