@@ -11,8 +11,8 @@ data class WorkEntity(
     val subject:String,
     val desc:String,
     val checkModes: List<CheckMode>,
-    val checkModeDesc: String,
     val day:Int,
     val weekStartDay:Int,
     val weekJob:Boolean,
+    val colorStr:String,
     @PrimaryKey(autoGenerate = true) val id : Int = 0)

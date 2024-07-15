@@ -12,49 +12,47 @@ object WeekDateUtil {
     private val DAY_FORMAT_HHMMSS = SimpleDateFormat("HH_mm_ss_SSS", Locale.getDefault())
     private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.getDefault())
+//
+//    fun currentHHmmssSSS() : String {
+//        val calendar = Calendar.getInstance()
+//        calendar.time = Date(System.currentTimeMillis())
+//        return DAY_FORMAT_HHMMSS.format(calendar.time)
+//    }
+//
+//    fun longToDate(timestamp: Long) = Date(timestamp)
+//
+//    fun longToDate() = Date(System.currentTimeMillis())
+//
+//    fun longToCalendar(timestamp: Long): Calendar {
+//        val timeStampCalendar = Calendar.getInstance()
+//        timeStampCalendar.timeInMillis = timestamp
+//        return timeStampCalendar
+//    }
+//
+//    fun longToCalendar(): Calendar {
+//        val timeStampCalendar = Calendar.getInstance()
+//        timeStampCalendar.timeInMillis = System.currentTimeMillis()
+//        return timeStampCalendar
+//    }
 
-    fun currentHHmmssSSS() : String {
-        val calendar = Calendar.getInstance()
-        calendar.time = Date(System.currentTimeMillis())
-        return DAY_FORMAT_HHMMSS.format(calendar.time)
-    }
+    fun getYesterday(day:Int) = getYesterday(DAY_FORMAT.parse("" + day)!!)
 
-    fun offsetDayTs(day:Int) = day * (3600L * 24 * 1000)
-
-    fun longToDate(timestamp: Long) = Date(timestamp)
-
-    fun longToDate() = Date(System.currentTimeMillis())
-
-    fun longToCalendar(timestamp: Long): Calendar {
-        val timeStampCalendar = Calendar.getInstance()
-        timeStampCalendar.timeInMillis = timestamp
-        return timeStampCalendar
-    }
-
-    fun longToCalendar(): Calendar {
-        val timeStampCalendar = Calendar.getInstance()
-        timeStampCalendar.timeInMillis = System.currentTimeMillis()
-        return timeStampCalendar
-    }
-
-    fun getYesterday(day:String) = getYesterday(DAY_FORMAT.parse(day)!!)
-
-    private fun getYesterday(dataTime: Date): String {
+    private fun getYesterday(dataTime: Date): Int {
         val calendar = Calendar.getInstance()
         calendar.time = dataTime
         calendar.add(Calendar.DAY_OF_YEAR, -1)
-        return DAY_FORMAT.format(calendar.time)
+        return DAY_FORMAT.format(calendar.time).toInt()
     }
 
-    fun getTomorrow(day:String) : String{
-        val date = DAY_FORMAT.parse(day)!!
+    fun getTomorrow(day:Int) : Int{
+        val date = DAY_FORMAT.parse("" + day)!!
         val calendar = Calendar.getInstance()
         calendar.time = date
         calendar.add(Calendar.DAY_OF_YEAR, 1)
-        return DAY_FORMAT.format(calendar.time)
+        return DAY_FORMAT.format(calendar.time).toInt()
     }
 
-    private fun getFirstWeekData(dataTime: Date): String {
+    private fun getFirstWeekData(dataTime: Date): Int {
         val calendar = Calendar.getInstance()
         calendar.time = dataTime
 
@@ -67,16 +65,16 @@ object WeekDateUtil {
 
         // 获取当前日期所在周的第一天
         calendar.add(Calendar.DATE, -i + 1)
-        return DAY_FORMAT.format(calendar.time)
+        return DAY_FORMAT.format(calendar.time).toInt()
     }
 
     /**
      * 获取一周的日期
      */
-    fun getWeekData(anyDay:String) = getWeekData(DAY_FORMAT.parse(anyDay)!!)
+    fun getWeekData(anyDay:Int) = getWeekData(DAY_FORMAT.parse("" + anyDay)!!)
 
-    private fun getWeekData(dataTime: Date): List<String> {
-        val week: MutableList<String> = ArrayList(8)
+    private fun getWeekData(dataTime: Date): List<Int> {
+        val week: MutableList<Int> = ArrayList(8)
         val calendar = Calendar.getInstance()
         calendar.time = dataTime
 
@@ -93,23 +91,28 @@ object WeekDateUtil {
             if (j > 0) {
                 calendar.add(Calendar.DATE, 1)
             }
-            week.add(DAY_FORMAT.format(calendar.time))
+            week.add(DAY_FORMAT.format(calendar.time).toInt())
         }
         return week
     }
 
     fun timeToDayInt(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time)).toInt()
-
-    fun timeToDay(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time))
-
-    fun currentDay() = DAY_FORMAT.format(Date(System.currentTimeMillis()))
-
-    fun timeToWeekStartDay(time:Long? = null) = getFirstWeekData(Date(time ?: System.currentTimeMillis()))
+//
+//    fun timeToDay(time:Long = System.currentTimeMillis()) = DAY_FORMAT.format(Date(time))
+//
+//    fun currentDay() = DAY_FORMAT.format(Date(System.currentTimeMillis()))
+//
+//    fun timeToWeekStartDay(time:Long? = null) = getFirstWeekData(Date(time ?: System.currentTimeMillis()))
 
     /**
      * anyDay必须是20231201的格式。即yyyyMMdd
      */
-    fun anyDayToWeekStartDay(anyDay:String) = getFirstWeekData(DAY_FORMAT.parse(anyDay)!!)
+    fun anyDayToWeekStartDay(anyDay:Int) = getFirstWeekData(DAY_FORMAT.parse("" + anyDay)!!)
+
+    /**
+     * 传入这周的起始日期，得到上周的起始日期
+     */
+    fun lastWeekStartDay(weekStartDay: Int) = getFirstWeekData(DAY_FORMAT.parse("" + getYesterday(weekStartDay))!!)
 
     fun currentTimeToHelloGood() : String {
         val time = DAY_FORMAT_HHMM.format(Date(System.currentTimeMillis())).toInt()

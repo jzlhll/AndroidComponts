@@ -1,6 +1,8 @@
 package com.au.jobstudy.utils
 
 import com.au.jobstudy.utils.WeekDateUtil.anyDayToWeekStartDay
+import com.au.jobstudy.utils.WeekDateUtil.getYesterday
+import com.au.jobstudy.utils.WeekDateUtil.lastWeekStartDay
 import com.au.jobstudy.utils.WeekDateUtil.timeToDayInt
 
 /**
@@ -9,10 +11,10 @@ import com.au.jobstudy.utils.WeekDateUtil.timeToDayInt
  * @description:
  */
 class Dayer {
-    lateinit var currentDay:String
-    var currentDayInt:Int = 0
-    var weekStartDayInt:Int = 0
-    lateinit var weekStartDay:String
+    var yesterday: Int = 0
+    var currentDay:Int = 0
+    var weekStartDay:Int = 0
+    var lastWeekStartDay = 0
 
     constructor() {
         init(timeToDayInt())
@@ -27,25 +29,21 @@ class Dayer {
     }
 
     private fun init(anyDay: Int) {
-        currentDay = anyDay.toString()
-        currentDayInt = anyDay
-
-        weekStartDay = anyDayToWeekStartDay(currentDay)
-        weekStartDayInt = weekStartDay.toInt()
+        currentDay = anyDay
+        yesterday = getYesterday(currentDay)
+        weekStartDay = anyDayToWeekStartDay(anyDay)
+        lastWeekStartDay = lastWeekStartDay(weekStartDay)
     }
 
     override fun equals(other: Any?): Boolean {
         if (other is Dayer) {
-            if (other.currentDayInt == currentDayInt) {
-                return true
-            }
-            return false
+            return other.currentDay == currentDay
         } else {
             throw IllegalArgumentException("Error equals dayer !!")
         }
     }
 
     override fun hashCode(): Int {
-        return currentDayInt
+        return currentDay
     }
 }

@@ -19,7 +19,7 @@ class MyInitApplication : InitApplication() {
             if (it) {
                 logd { "update SummerConst when foreground" }
                 Globals.mainScope.launchOnThread {
-                    CheckConsts.whenEnterForeground()
+                    CheckConsts.whenTrigger()
                 }
             }
         }

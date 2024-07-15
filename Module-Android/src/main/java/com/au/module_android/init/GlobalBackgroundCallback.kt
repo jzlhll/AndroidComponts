@@ -42,7 +42,7 @@ object GlobalBackgroundCallback : DefaultLifecycleObserver {
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        isInBackground = activityList.isNotEmpty()
+        isInBackground = activityList.isNotEmpty() //ProcessLifecycleOwner.get().lifecycle监听的结果，onStop就代表进入了后台。如果应用还活着就会回调。
         if (isInBackground) {
             notifyListener()
         }

@@ -1,21 +1,50 @@
 package com.au.jobstudy.check
 
-import com.au.jobstudy.utils.Dayer
-import com.au.jobstudy.utils.WeekDateUtil
+import com.au.jobstudy.check.api.AbsGeneratorApi
+import com.au.jobstudy.check.api.SummerGeneratorApi
 import com.au.jobstudy.check.bean.CompletedEntity
 import com.au.jobstudy.check.bean.WorkEntity
-import com.au.jobstudy.check.generator.IDbGenerator
-import com.au.jobstudy.check.generator.SummerDbGenerator
+import com.au.jobstudy.utils.Dayer
+import com.au.jobstudy.utils.WeekDateUtil
+import com.au.module_android.simplelivedata.RealMutableLiveData
 import com.au.module_android.simplelivedata.SafeLiveData
 import kotlinx.coroutines.delay
 
 object CheckConsts {
-    var currentDayer = Dayer()
-        private set
+    /**
+     * 可以用来监听更新日期显示，更新上下午变化等等。
+     */
+    val dayerLiveData = RealMutableLiveData<Dayer>()
 
-    val generator : IDbGenerator = SummerDbGenerator()
+    private val api : AbsGeneratorApi = SummerGeneratorApi()
 
     val curWeekWorks = SafeLiveData<List<WorkEntity>>()
+
+    /**
+     * 必须保证已经有值了才能调用
+     */
+    fun todayWorks() = curWeekWorks.realValue.filter { it.day == dayerLiveData.realValue.currentDay }
+
+    /**
+     * 必须保证已经有值了才能调用
+     */
+    fun yesterdayWorks() = curWeekWorks.realValue.filter { it.day == dayerLiveData.realValue.yesterday }
+
+    /**
+     * 从liveData中得到今天还有什么没有做的。
+     */
+    fun todayUncompletedWorks() : List<WorkEntity>{
+        val completedWorkIds = todayCompletedWorks.realValue.map { it.dayWorkId }
+        return todayWorks().filter { !completedWorkIds.contains(it.id) }
+    }
+
+    /**
+     * 从liveData中得到昨天还有什么没有做的。
+     */
+    fun yesterdayUncompletedWorks() : List<WorkEntity>{
+        val completedWorkIds = yesterdayCompletedWorks.realValue.map { it.dayWorkId }
+        return yesterdayWorks().filter { !completedWorkIds.contains(it.id) }
+    }
 
     val lastWeekWorks = SafeLiveData<List<WorkEntity>>()
 
@@ -23,21 +52,72 @@ object CheckConsts {
 
     val yesterdayCompletedWorks = SafeLiveData<List<CompletedEntity>>()
 
-    suspend fun whenEnterForeground() {
+    /**
+     * 从liveData中得到本周还有什么没有做的。
+     */
+    fun thisWeekUncompletedWorks() : List<WorkEntity>{
+        TODO()
+    }
+
+    /**
+     * 当进入前台或者一些想检测变化日期的时候，校验结果。
+     */
+    suspend fun whenTrigger() {
+        delay(0)
+
         val newDayer = Dayer()
-        if (newDayer != currentDayer) {
-            val dao = AppDatabase.db.getDao()
-            val newWeekStartDay = WeekDateUtil.anyDayToWeekStartDay(newDayer.weekStartDay)
-            if (newWeekStartDay == newDayer.weekStartDay) {
-            //只是变了一周内的一天
-
-            } else {
-            //变周了
-
+        val curDayer = dayerLiveData.realValue
+        if (curDayer == null) { //为空就进行db的读取，看看是否已经生成
+            weekChanged(newDayer)
+        } else {
+            if (newDayer != curDayer) {
+                val newWeekStartDay = WeekDateUtil.anyDayToWeekStartDay(newDayer.weekStartDay)
+                if (newWeekStartDay == newDayer.weekStartDay) {
+                    //只是变了一周内的一天。更新today和yesterday即可。
+                    inWeekChangeDay(newDayer)
+                } else {
+                    //变周了
+                    weekChanged(newDayer)
+                }
             }
-            currentDayer = newDayer
         }
+        dayerLiveData.postValue(newDayer)
+    }
 
-        delay(1)
+    private suspend fun weekChanged(newDayer: Dayer) {
+        val thisWeekData = getOrCreateDbWeekData(newDayer.weekStartDay)
+        val lastWeekData = getOrCreateDbWeekData(newDayer.lastWeekStartDay)
+        curWeekWorks.setValueSafe(thisWeekData)
+        lastWeekWorks.setValueSafe(lastWeekData)
+
+        inWeekChangeDay(newDayer)
+    }
+
+    private suspend fun inWeekChangeDay(newDayer: Dayer) {
+        val todayCompleted = getDbTodayCompletedWorks(newDayer.currentDay)
+        val yesterdayCompleted = getDbTodayCompletedWorks(newDayer.yesterday)
+        todayCompletedWorks.setValueSafe(todayCompleted)
+        yesterdayCompletedWorks.setValueSafe(yesterdayCompleted)
+    }
+
+    private suspend fun getOrCreateDbWeekData(weekStartDayInt:Int) : List<WorkEntity>{
+        val dao = AppDatabase.db.getWorkDao()
+        val dbList = dao.queryAWeek(weekStartDayInt)
+        if (dbList.isEmpty()) {
+            val works = api.getWeekWorks(weekStartDayInt)
+            dao.insert(works)
+            return works
+        }
+        return dbList
+    }
+
+    private suspend fun getDbTodayCompletedWorks(day:Int) : List<CompletedEntity>{
+        delay(0)
+        return AppDatabase.db.getCompletedDao().queryCompletedByDay(day)
+    }
+
+    fun markCompleted(completedEntity: CompletedEntity) {
+        val dao = AppDatabase.db.getCompletedDao()
+        dao.insert(completedEntity)
     }
 }

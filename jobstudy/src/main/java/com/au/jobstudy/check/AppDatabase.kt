@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.au.jobstudy.check.bean.WorkEntity
+import com.au.jobstudy.check.dao.CompletedEntityDao
+import com.au.jobstudy.check.dao.WorkEntityDao
 import com.au.module_android.Globals
 
 @Database(entities = [WorkEntity::class], version = 1)
@@ -35,5 +37,6 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun getDao():CheckDao
+    abstract fun getWorkDao(): WorkEntityDao
+    abstract fun getCompletedDao(): CompletedEntityDao
 }

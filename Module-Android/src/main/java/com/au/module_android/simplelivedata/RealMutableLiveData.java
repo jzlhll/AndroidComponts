@@ -1,5 +1,6 @@
 package com.au.module_android.simplelivedata;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 public class RealMutableLiveData<T> extends MutableLiveData<T> {
@@ -28,7 +29,7 @@ public class RealMutableLiveData<T> extends MutableLiveData<T> {
         super.postValue(value);
     }
 
-    T getRealValue() {
+    public T getRealValue() {
         if (mRealData == null) {
             return null;
         }

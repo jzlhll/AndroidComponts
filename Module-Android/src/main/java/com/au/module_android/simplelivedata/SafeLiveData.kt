@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 /**
  * 最基础的LiveData。常规使用它。
  */
-open class SafeLiveData<T : Any> : LiveData<T> {
+open class SafeLiveData<T : Any> : RealMutableLiveData<T> {
     constructor()
 
     constructor(data:T?) : super(data)
