@@ -70,6 +70,7 @@ object AppDataStore {
         }
     }
 
+
     inline fun <reified T> remove(key:String) {
         runBlocking {
             removeSuspend<T>(key)
@@ -126,11 +127,18 @@ object AppDataStore {
         }
     }
 
+    inline fun < reified T : Any> readBlocked(key:String, defaultValue:T) : T {
+        val r = runBlocking {
+            read(key, defaultValue)
+        }
+        return r
+    }
+
     /**
      * 获取数据
      * */
     suspend inline fun < reified T : Any> read(key: String, defaultValue:T): T {
-        return  when (T::class) {
+        return when (T::class) {
             Int::class -> {
                 Globals.app.dataStore.data.map { setting ->
                     setting[intPreferencesKey(key)] ?: defaultValue

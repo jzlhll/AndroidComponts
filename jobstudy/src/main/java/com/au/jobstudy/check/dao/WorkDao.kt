@@ -7,7 +7,7 @@ import androidx.room.Update
 import com.au.jobstudy.check.bean.WorkEntity
 
 @Dao
-interface WorkEntityDao {
+interface WorkDao {
     @Insert
     fun insert(bean: WorkEntity)
     @Insert

@@ -5,7 +5,7 @@ import com.au.jobstudy.check.modes.CheckMode
 import com.au.jobstudy.check.modes.MediaType
 
 class SummerGeneratorApi : AbsGeneratorApi() {
-    override fun createADayWorkEntities(weekStartDay: Int, day: String): List<WorkEntity> {
+    override fun createADayWorkEntities(weekStartDay: Int, day: Int): List<WorkEntity> {
         val yuwen = WorkEntity("语文", "练字2页。",
             listOf(CheckMode(MediaType.TYPE_PIC, "拍照1~3张上传。",1, 3)),
             day.toInt(), weekStartDay, false,

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.nested.decoration.PaddingItemDecoration
+import com.au.jobstudy.check.NameList
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
@@ -15,7 +16,7 @@ import com.au.module_android.utils.dp
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
-    private val userName = "蒋添靖"
+    private val userName = NameList.NAMES_JIANG_TJ
 
     private val itemClick : (HomeRcvItemBean)->Unit = { itemBean->
     }

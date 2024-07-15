@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.au.jobstudy.check.NameList
 import com.au.jobstudy.databinding.FragmentMainMineBinding
 import com.au.module_android.Globals
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
@@ -36,6 +37,7 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.name.text = NameList.NAMES_JIANG_TJ
         val appName = getString(R.string.app_name)
         val system = AndroidSdkMapping().currentVersionStr
         val name = "$appName${BuildConfig.VERSION_NAME} - versionCode:${BuildConfig.VERSION_CODE}\n$system"
@@ -48,21 +50,21 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
             val top1 = getStatusBarHeight(requireContext())
             val bottom1 = getNavigationBarHeight(requireContext())
 
-            if (BuildConfig.DEBUG) {
-                lifecycleScope.launch {
-                    val appRes = Globals.app.resources.displayMetrics
-                    val activityRes = requireActivity().resources.displayMetrics
-                    val adapter = ToutiaoScreenAdapter.toString()
-                    val sb = buildString {
-                        append(name)
-                        append("\nstatusBar $top ($top1) navBar $bottom ($bottom1)")
-                        append("\nappDensity ${appRes.density} activity ${activityRes.density}")
-                        append("\nappDensityDpi ${appRes.densityDpi} activity ${activityRes.densityDpi}")
-                        append("\n$adapter")
-                    }
-                    binding.logoText.text = sb
-                }
-            }
+//            if (BuildConfig.DEBUG) {
+//                lifecycleScope.launch {
+//                    val appRes = Globals.app.resources.displayMetrics
+//                    val activityRes = requireActivity().resources.displayMetrics
+//                    val adapter = ToutiaoScreenAdapter.toString()
+//                    val sb = buildString {
+//                        append(name)
+//                        append("\nstatusBar $top ($top1) navBar $bottom ($bottom1)")
+//                        append("\nappDensity ${appRes.density} activity ${activityRes.density}")
+//                        append("\nappDensityDpi ${appRes.densityDpi} activity ${activityRes.densityDpi}")
+//                        append("\n$adapter")
+//                    }
+//                    binding.logoText.text = sb
+//                }
+//            }
 
             insets
         }

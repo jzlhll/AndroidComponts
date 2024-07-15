@@ -6,6 +6,7 @@ import com.au.jobstudy.check.bean.CompletedEntity
 import com.au.jobstudy.check.bean.WorkEntity
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
+import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.RealMutableLiveData
 import com.au.module_android.simplelivedata.SafeLiveData
 import kotlinx.coroutines.delay
@@ -116,8 +117,24 @@ object CheckConsts {
         return AppDatabase.db.getCompletedDao().queryCompletedByDay(day)
     }
 
+    const val SELF_STAR_COUNT_KEY = "selfStarCount"
+    const val SELF_DING_COUNT_KEY = "selfDingCount"
+
     fun markCompleted(completedEntity: CompletedEntity) {
         val dao = AppDatabase.db.getCompletedDao()
         dao.insert(completedEntity)
+        AppDataStore.save(SELF_STAR_COUNT_KEY, AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0) + 1)
+    }
+
+    fun updateMyDingCount() {
+        AppDataStore.save(SELF_DING_COUNT_KEY, AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0) + 1)
+    }
+
+    fun readMyDingCount() : Int{
+        return AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0)
+    }
+
+    fun readMyStarCount() : Int {
+        return AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0)
     }
 }
