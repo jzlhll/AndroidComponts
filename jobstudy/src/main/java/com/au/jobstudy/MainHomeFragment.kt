@@ -2,9 +2,12 @@ package com.au.jobstudy
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.nested.decoration.PaddingItemDecoration
+import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
+import com.au.jobstudy.check.StarList
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
@@ -13,6 +16,7 @@ import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
+import kotlinx.coroutines.launch
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -23,7 +27,6 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         binding.root.refresher.apply {
             initEarlyAsFake(binding.root)
@@ -39,16 +42,14 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
         HomeRcvAdapter.click = itemClick
         binding.rcv.adapter = HomeRcvAdapter().also { adapter = it }
-//
-//        binding.passFab.onClick {_->
-//            Pass().useOnePassCount {
-//                if (it > 0) {
-//                    toastOnTop("今天已经免做啦！还有${it}次机会!")
-//                } else {
-//                    toastOnTop("今天免做啦！本周免做机会已用完。")
-//                }
-//            }
-//        }
+
+        CheckConsts.workChangedLiveData.observe(viewLifecycleOwner) {
+
+        }
+
+        CheckConsts.completedChangedLiveData.observe(viewLifecycleOwner) {
+
+        }
     }
 
     override fun onResume() {
@@ -59,8 +60,6 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         val time = String.format(getString(R.string.name_hello_format), userName, currentTimeToHelloGood())
         if (binding.title.text != time) {
             binding.title.text = time
-            val curDay = Dayer()
-            //todo
         }
     }
 

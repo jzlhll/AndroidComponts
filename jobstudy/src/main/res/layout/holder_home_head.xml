@@ -83,17 +83,51 @@
             android:textColor="#414141"
             android:layout_height="wrap_content"/>
 
-        <com.allan.nested.layout.SimpleItemsLayout
-            android:id="@+id/thisWeekList"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/mineWeeklyText"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mineStarImage"
+            android:layout_width="32dp"
+            app:layout_constraintStart_toStartOf="@id/mineHeadImageHost"
             android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
-            tools:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/mineWeeklyText"
+            android:src="@drawable/ic_star"
+            android:layout_height="32dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/mineStarText"
+            app:layout_constraintStart_toEndOf="@id/mineStarImage"
+            app:layout_constraintTop_toTopOf="@id/mineStarImage"
+            app:layout_constraintBottom_toBottomOf="@id/mineStarImage"
+            android:layout_marginStart="6dp"
+            android:layout_width="wrap_content"
+            tools:text="10"
+            android:textSize="18sp"
+            android:textColor="#414141"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mineDingImage"
+            android:layout_width="28dp"
+            android:layout_marginStart="100dp"
+            app:layout_constraintStart_toEndOf="@id/mineStarText"
+            app:layout_constraintTop_toTopOf="@id/mineStarImage"
+            android:src="@drawable/ic_b_good"
+            android:layout_height="28dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/mineDingCount"
+            app:layout_constraintStart_toEndOf="@id/mineDingImage"
+            app:layout_constraintTop_toTopOf="@id/mineDingImage"
+            app:layout_constraintBottom_toBottomOf="@id/mineDingImage"
+            android:layout_marginStart="6dp"
+            android:layout_width="wrap_content"
+            tools:text="10"
+            android:textSize="18sp"
+            android:textColor="#414141"
             android:layout_height="wrap_content"/>
 
         <Space
-            app:layout_constraintTop_toBottomOf="@id/thisWeekList"
-            android:layout_width="match_parent"
-            android:layout_height="9dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mineDingCount"
+            android:layout_width="1dp"
+            android:layout_height="8dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

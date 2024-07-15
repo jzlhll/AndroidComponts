@@ -1,6 +1,7 @@
 package com.au.jobstudy
 
 import com.au.jobstudy.check.CheckConsts
+import com.au.jobstudy.check.StarList
 import com.au.module_android.Globals
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.InitApplication
@@ -22,6 +23,10 @@ class MyInitApplication : InitApplication() {
                     CheckConsts.whenTrigger()
                 }
             }
+        }
+
+        Globals.mainScope.launchOnThread {
+            StarList.initData(CheckConsts.readMyStarCount(), CheckConsts.readMyDingCount())
         }
     }
 }

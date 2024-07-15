@@ -1,6 +1,5 @@
 package com.au.jobstudy.check
 
-import androidx.lifecycle.ViewModel
 import com.au.jobstudy.check.star.Star
 import com.au.module_android.simplelivedata.SafeLiveData
 import kotlinx.coroutines.delay
@@ -20,10 +19,17 @@ object StarList {
     //给出随即的名次
     private val selfRank = if(Math.random() > 0.5) 1 else 0
 
+    private var isInited = false
+
     /**
      * 加载星星榜。现在是假数据。根据自己来生成。
      */
     suspend fun initData(myStarCt:Int, myDingCt:Int) {
+        if (isInited) {
+            return
+        }
+
+        isInited = true
         delay(0)
 
         val my = Star(NameList.NAMES_JIANG_TJ, myStarCt, myDingCt)

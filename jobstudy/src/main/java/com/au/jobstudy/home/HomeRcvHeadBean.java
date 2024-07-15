@@ -9,4 +9,6 @@ public class HomeRcvHeadBean extends HomeRcvBean {
 
     public final String userName;
     public final String scroll;
+    public int starCount;
+    public int dingCount;
 }
