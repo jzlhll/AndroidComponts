@@ -53,9 +53,9 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             list.add(HomeRcvHeadBean(NameList.NAMES_JIANG_TJ, NameList.HUAZHONG_SCROLL))
             val uncompletedWorks = CheckConsts.todayUncompletedWorks()
             if (uncompletedWorks.isEmpty()) {
-                list.add(HomeRcvTitleBean("今天的任务已经全部完成，棒棒的！", false))
+                list.add(HomeRcvTitleBean("今天的任务已经全部完成，棒棒的！", 1))
             } else {
-                list.add(HomeRcvTitleBean("今天的任务：", false))
+                list.add(HomeRcvTitleBean("今天的任务：", 1))
                 uncompletedWorks.forEach {
                     list.add(HomeRcvItemBean(it))
                 }
@@ -63,9 +63,9 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
             val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
             if (uncompletedWorksYesterday.isEmpty()) {
-                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！", false))
+                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！", 2))
             } else {
-                list.add(HomeRcvTitleBean("昨天的任务：", false))
+                list.add(HomeRcvTitleBean("昨天还有剩余的任务没有完成：", 2))
                 uncompletedWorksYesterday.forEach {
                     list.add(HomeRcvItemBean(it))
                 }
@@ -73,11 +73,11 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
             val uncompletedWorksWeekly = CheckConsts.weeklyUncompletedWorks()
             if (uncompletedWorksWeekly.isEmpty()) {
-                list.add(HomeRcvTitleBean("每周任务已经全部完成，棒棒的！", true))
+                list.add(HomeRcvTitleBean("每周任务已经全部完成，棒棒的！", 3))
             } else {
                 val todayIndex = WeekDateUtil.getTodayWeekIndex()
                 val leftDay = 7 - todayIndex
-                list.add(HomeRcvTitleBean("每周任务 (剩余完成时间${leftDay}天)：", true))
+                list.add(HomeRcvTitleBean("每周任务 (剩余完成时间${leftDay}天)：", 3))
                 uncompletedWorksWeekly.forEach {
                     list.add(HomeRcvItemBean(it))
                 }

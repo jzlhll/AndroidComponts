@@ -1,11 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AndroidLearning" parent="CustomModuleTheme">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
-
-    <style name="Theme.AndroidLearning" parent="Base.Theme.AndroidLearning" />
+    <style name="Theme.AndroidLearning" parent="CustomModuleTheme" />
 
     <style name="SplashTheme" parent="BaseSplashTheme">
         <item name="postSplashScreenTheme">@style/Theme.AndroidLearning</item>

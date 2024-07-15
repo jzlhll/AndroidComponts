@@ -45,14 +45,19 @@ object CheckConsts {
     /**
      * 必须保证已经有值了才能调用
      */
-    fun yesterdayWorks() = curWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
+    fun yesterdayWorks() : List<WorkEntity> {
+        if (dayerLiveData.realValue.isYesterdayIsLastWeek()) {
+            return lastWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
+        }
+        return curWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
+    }
 
     /**
      * 从liveData中得到今天还有什么没有做的。
      */
     fun todayUncompletedWorks() : List<WorkEntity> {
         val completedWorkIds = todayCompletedWorks?.map { it.dayWorkId }
-        if (completedWorkIds == null) {
+        if (completedWorkIds.isNullOrEmpty()) {
             return todayWorks() //一个都没有完成，直接完成。
         }
         return todayWorks().filter { !completedWorkIds.contains(it.id) }
@@ -63,7 +68,7 @@ object CheckConsts {
      */
     fun yesterdayUncompletedWorks() : List<WorkEntity> {
         val completedWorkIds = yesterdayCompletedWorks?.map { it.dayWorkId }
-        if (completedWorkIds == null) {
+        if (completedWorkIds.isNullOrEmpty()) {
             return yesterdayWorks() //一个都没有完成，直接完成。
         }
         return yesterdayWorks().filter { !completedWorkIds.contains(it.id) }

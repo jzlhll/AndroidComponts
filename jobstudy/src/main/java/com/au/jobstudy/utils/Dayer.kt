@@ -16,6 +16,10 @@ class Dayer {
     var weekStartDay:Int = 0
     var lastWeekStartDay = 0
 
+    fun isYesterdayIsLastWeek() : Boolean {
+        return anyDayToWeekStartDay(yesterday) == lastWeekStartDay
+    }
+
     constructor() {
         init(timeToDayInt())
     }

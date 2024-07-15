@@ -1,13 +1,13 @@
 package com.au.jobstudy.home;
 
 public class HomeRcvTitleBean extends HomeRcvBean {
-    public HomeRcvTitleBean(String title, boolean isWeekly) {
+    public HomeRcvTitleBean(String title, int colorIndex) {
         super(HomeRcvBean.VIEW_TYPE_TITLE);
         this.title = title;
-        this.isWeekly = isWeekly;
+        this.colorIndex = colorIndex;
     }
 
-    public final boolean isWeekly;
+    public final int colorIndex;
     public final String title;
     public boolean isFirstTitle;
 }

@@ -36,10 +36,16 @@ class HomeRcvTitleViewHolder(viewBinding: HomeCheckItemTitleBinding) : BindViewH
         } else {
             binding.secondGroupSpace.visible()
         }
-        if (bean.isWeekly) {
-            binding.host.setBackgroundResource(R.drawable.corner_title_bar2)
-        } else {
-            binding.host.setBackgroundResource(R.drawable.corner_title_bar)
+        when (bean.colorIndex) {
+            3 -> {
+                binding.host.setBackgroundResource(R.drawable.corner_title_bar3)
+            }
+            2 -> {
+                binding.host.setBackgroundResource(R.drawable.corner_title_bar2)
+            }
+            else -> {
+                binding.host.setBackgroundResource(R.drawable.corner_title_bar)
+            }
         }
     }
 }
