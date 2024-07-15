@@ -19,6 +19,9 @@ class HomeRcvAdapter : BindRcvAdapter<HomeRcvBean, BindViewHolder<HomeRcvBean, *
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<HomeRcvBean, *> {
         return when (viewType) {
+            HomeRcvBean.VIEW_TYPE_MARKUP -> {
+                HomeRcvMarkupViewHolder(create(parent))
+            }
             HomeRcvBean.VIEW_TYPE_TITLE -> {
                 HomeRcvTitleViewHolder(create(parent))
             }

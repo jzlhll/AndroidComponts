@@ -37,8 +37,8 @@ object GlobalBackgroundCallback : DefaultLifecycleObserver {
     override fun onStart(owner: LifecycleOwner) {
         if (isInBackground) {
             isInBackground = false
-            notifyListener()
         }
+        notifyListener()
     }
 
     override fun onStop(owner: LifecycleOwner) {

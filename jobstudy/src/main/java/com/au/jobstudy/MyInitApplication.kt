@@ -17,8 +17,8 @@ class MyInitApplication : InitApplication() {
     override fun onCreate() {
         super.onCreate()
         GlobalBackgroundCallback.addListener {
-            if (it) {
-                logd { "update SummerConst when foreground" }
+            logd { "update SummerConst when foreground $it" }
+            if (!it) {
                 Globals.mainScope.launchOnThread {
                     CheckConsts.whenTrigger()
                 }

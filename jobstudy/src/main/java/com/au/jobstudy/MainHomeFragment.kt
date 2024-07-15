@@ -53,9 +53,9 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
             list.add(HomeRcvHeadBean(NameList.NAMES_JIANG_TJ, NameList.HUAZHONG_SCROLL))
             val uncompletedWorks = CheckConsts.todayUncompletedWorks()
             if (uncompletedWorks.isEmpty()) {
-                list.add(HomeRcvTitleBean("今天的任务已经全部完成，棒棒的！"))
+                list.add(HomeRcvTitleBean("今天的任务已经全部完成，棒棒的！", false))
             } else {
-                list.add(HomeRcvTitleBean("今天的任务："))
+                list.add(HomeRcvTitleBean("今天的任务：", false))
                 uncompletedWorks.forEach {
                     list.add(HomeRcvItemBean(it))
                 }
@@ -63,14 +63,27 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
             val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
             if (uncompletedWorksYesterday.isEmpty()) {
-                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！"))
+                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！", false))
             } else {
-                list.add(HomeRcvTitleBean("昨天的任务："))
+                list.add(HomeRcvTitleBean("昨天的任务：", false))
                 uncompletedWorksYesterday.forEach {
                     list.add(HomeRcvItemBean(it))
                 }
             }
 
+            val uncompletedWorksWeekly = CheckConsts.weeklyUncompletedWorks()
+            if (uncompletedWorksWeekly.isEmpty()) {
+                list.add(HomeRcvTitleBean("每周任务已经全部完成，棒棒的！", true))
+            } else {
+                val todayIndex = WeekDateUtil.getTodayWeekIndex()
+                val leftDay = 7 - todayIndex
+                list.add(HomeRcvTitleBean("每周任务 (剩余完成时间${leftDay}天)：", true))
+                uncompletedWorksWeekly.forEach {
+                    list.add(HomeRcvItemBean(it))
+                }
+            }
+
+            list.add(HomeRcvBean.empty)
             adapter.submitList(list, false)
         }
     }

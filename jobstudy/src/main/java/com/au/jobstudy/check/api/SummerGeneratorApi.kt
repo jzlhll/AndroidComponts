@@ -22,7 +22,7 @@ class SummerGeneratorApi : AbsGeneratorApi() {
             day.toInt(), weekStartDay, false,
             "#ff77aa")
 
-        val song = WorkEntity("背诗", "从小书上，学习与背诵一首新诗。",
+        val song = WorkEntity("背诗", "从小书上，学习并背诵一首新诗。",
             listOf(CheckMode(MediaType.TYPE_VOICE, "录音上传。", 10, 60)),
                 day.toInt(), weekStartDay, false,
                 "#5ddd11")

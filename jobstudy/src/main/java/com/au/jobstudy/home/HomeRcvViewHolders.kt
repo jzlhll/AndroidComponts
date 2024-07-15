@@ -6,6 +6,7 @@ import com.au.jobstudy.R
 import com.au.jobstudy.databinding.HolderHomeHeadBinding
 import com.au.jobstudy.databinding.HomeCheckItemBinding
 import com.au.jobstudy.databinding.HomeCheckItemTitleBinding
+import com.au.jobstudy.databinding.HomeMarkupBinding
 import com.au.module_android.Globals
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
@@ -35,6 +36,11 @@ class HomeRcvTitleViewHolder(viewBinding: HomeCheckItemTitleBinding) : BindViewH
         } else {
             binding.secondGroupSpace.visible()
         }
+        if (bean.isWeekly) {
+            binding.host.setBackgroundResource(R.drawable.corner_title_bar2)
+        } else {
+            binding.host.setBackgroundResource(R.drawable.corner_title_bar)
+        }
     }
 }
 
@@ -59,3 +65,5 @@ class HomeRcvItemViewHolder(viewBinding: HomeCheckItemBinding) : BindViewHolder<
             .build()
     }
 }
+
+class HomeRcvMarkupViewHolder(viewBinding:HomeMarkupBinding) : BindViewHolder<HomeRcvBean, HomeMarkupBinding>(viewBinding)

@@ -14,6 +14,7 @@
         android:layout_height="22dp"/>
 
     <LinearLayout
+        android:id="@+id/host"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:paddingVertical="10dp"

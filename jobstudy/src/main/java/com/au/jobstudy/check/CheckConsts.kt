@@ -8,6 +8,7 @@ import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.RealMutableLiveData
+import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
 
 enum class StatusMode {
@@ -69,10 +70,10 @@ object CheckConsts {
     }
 
     /**
-     * 从liveData中得到本周还有什么没有做的。
+     * 从liveData中得到周任务
      */
-    fun thisWeekUncompletedWorks() : List<WorkEntity>{
-        TODO()
+    fun weeklyUncompletedWorks() : List<WorkEntity> {
+        return curWeekWorks.filter { it.day == 0 }
     }
 
     /**
@@ -81,6 +82,7 @@ object CheckConsts {
     suspend fun whenTrigger() {
         delay(0)
 
+        logd { "when trigger" }
         val newDayer = Dayer()
         val curDayer = dayerLiveData.realValue
         if (curDayer == null) { //为空就进行db的读取，看看是否已经生成

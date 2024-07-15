@@ -156,4 +156,19 @@ object WeekDateUtil {
         }
         return now.format(formatter) + " $s"
     }
+
+    /**
+     * 返回现在是周几。1~7代表周一到周日。
+     */
+    fun getTodayWeekIndex() : Int{
+        // 获取当前时间
+        val now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"))
+        // 格式化时间
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        // 输出当前时间
+        println("当前时间: " + now.format(formatter))
+        // 获取周几
+        val dayOfWeek = now.dayOfWeek.value // 周一为1, 周日为7
+        return dayOfWeek
+    }
 }
