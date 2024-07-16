@@ -13,7 +13,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
-import com.au.module_android.permissions.activity.IActivityResult
+import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.unsafeLazy
 
@@ -39,27 +39,30 @@ open class FragmentRootActivity : ViewActivity() {
          */
         fun start(context: Context,
                             fragmentClass:Class<out Fragment>,
-                            activityResult:IActivityResult? = null,
+                            activityResult:ActivityForResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
-                            hasWebView:Boolean = false) {
-            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView)
+                            hasWebView:Boolean = false,
+                            autoHideIme: Boolean = false) {
+            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme)
         }
 
         internal fun start(context: Context,
                            showActivityClass:Class<out Activity>,
                            fragmentClass:Class<out Fragment>,
-                           activityResult:IActivityResult?,
+                           activityResult:ActivityForResult?,
                            arguments: Bundle?,
                            optionsCompat: ActivityOptionsCompat?,
-                           hasWebView:Boolean) {
+                           hasWebView:Boolean,
+                           autoHideIme:Boolean) {
             val intent = Intent(context, showActivityClass)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
+            intent.putExtra(KEY_INTENT_AUTO_HIDE_IME, autoHideIme)
             if(hasWebView) intent.putExtra(KEY_HAS_WEB_VIEW, hasWebView)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
             if (activityResult != null) {
-                activityResult.start(intent, optionsCompat)
+                activityResult.start(intent, optionsCompat, null)
             } else {
                 ActivityCompat.startActivity(context, intent, optionsCompat?.toBundle())
             }
@@ -75,7 +78,9 @@ open class FragmentRootActivity : ViewActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         v.id = View.generateViewId()
-
+        if (BuildConfig.DEBUG) {
+            Log.d("AU_APP", "FragmentRootActivity: fragmentClass $fragmentClass")
+        }
         val instance = fragmentClass.getDeclaredConstructor().newInstance()
         instance.arguments = intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS)
         if (BuildConfig.DEBUG) {

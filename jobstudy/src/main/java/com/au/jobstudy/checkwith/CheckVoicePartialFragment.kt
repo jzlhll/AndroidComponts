@@ -8,5 +8,5 @@ import com.au.module_android.ui.bindings.BindingFragment
  * @date :2024/7/15 19:36
  * @description:
  */
-class CheckWithPartialFragment : BindingFragment<PartialPicturesBinding>() {
+class CheckVoicePartialFragment : BindingFragment<PartialPicturesBinding>() {
 }

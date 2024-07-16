@@ -5,5 +5,5 @@ public interface MediaType {
     int TYPE_VOICE = 2;
     int TYPE_PIC = 3;
     int TYPE_PARENT = 4;
-    int TYPE_DIRECTLY = 5;
+    int TYPE_BELIEVE = 5;
 }

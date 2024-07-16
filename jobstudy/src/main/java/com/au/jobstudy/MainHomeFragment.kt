@@ -2,27 +2,22 @@ package com.au.jobstudy
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.nested.decoration.PaddingItemDecoration
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
-import com.au.jobstudy.check.StarList
-import com.au.jobstudy.check.StatusMode
 import com.au.jobstudy.checkwith.CheckWithFragment
-import com.au.jobstudy.utils.Dayer
-import com.au.jobstudy.utils.WeekDateUtil
-import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
 import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.HomeRcvBean
 import com.au.jobstudy.home.HomeRcvHeadBean
 import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.jobstudy.home.HomeRcvTitleBean
+import com.au.jobstudy.utils.WeekDateUtil
+import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
+import com.au.module.cached.AppDataStoreMemCache
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
-import kotlinx.coroutines.launch
-import java.util.jar.Attributes.Name
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -31,6 +26,8 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private val itemClick : (HomeRcvItemBean)->Unit = { itemBean->
         CheckWithFragment.start(requireContext(), itemBean.oneWork)
     }
+
+    private val mFirstRunDay = AppDataStoreMemCache("firstRunDay", 0)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,14 +60,19 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
                 }
             }
 
-            val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
-            if (uncompletedWorksYesterday.isEmpty()) {
-                list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！", 2))
-            } else {
-                list.add(HomeRcvTitleBean("昨天还有剩余的任务没有完成：", 2))
-                uncompletedWorksYesterday.forEach {
-                    list.add(HomeRcvItemBean(it))
+            val firstRunDay = this.mFirstRunDay.readInt()
+            if (firstRunDay != 0 && firstRunDay != CheckConsts.currentDay()) {
+                val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
+                if (uncompletedWorksYesterday.isEmpty()) {
+                    list.add(HomeRcvTitleBean("昨天的任务已经全部完成，棒棒的！", 2))
+                } else {
+                    list.add(HomeRcvTitleBean("昨天还有剩余的任务没有完成：", 2))
+                    uncompletedWorksYesterday.forEach {
+                        list.add(HomeRcvItemBean(it))
+                    }
                 }
+            } else {
+                this.mFirstRunDay.save(CheckConsts.currentDay())
             }
 
             val uncompletedWorksWeekly = CheckConsts.weeklyUncompletedWorks()

@@ -26,6 +26,7 @@ object CheckConsts {
      * 可以用来监听更新日期显示，更新上下午变化等等。
      */
     val dayerLiveData = RealMutableLiveData<Dayer>()
+    fun currentDay() = dayerLiveData.realValue.currentDay
 
     private val api : AbsGeneratorApi = SummerGeneratorApi()
 
@@ -36,6 +37,7 @@ object CheckConsts {
 
     var todayCompletedWorks: List<CompletedEntity>? = null
     var yesterdayCompletedWorks: List<CompletedEntity>? = null
+    var curWeekWorksCompleted:List<CompletedEntity>? = null
 
     /**
      * 必须保证已经有值了才能调用
@@ -77,8 +79,13 @@ object CheckConsts {
     /**
      * 从liveData中得到周任务
      */
-    fun weeklyUncompletedWorks() : List<WorkEntity> {
+    fun weeklyWorks() : List<WorkEntity> {
         return curWeekWorks.filter { it.day == 0 }
+    }
+
+    fun weeklyUncompletedWorks() : List<WorkEntity> {
+        val weekCompletedIds = curWeekWorksCompleted?.map { it.dayWorkId } ?: return weeklyWorks()
+        return weeklyWorks().filter { !weekCompletedIds.contains(it.id)  }
     }
 
     /**
@@ -105,6 +112,10 @@ object CheckConsts {
                     weekChanged(newDayer)
                     updateStatusChangedLiveData(true)
                 }
+            } else {
+                //如果是同一天。
+                inWeekChangeDay(newDayer)
+                updateStatusChangedLiveData(false)
             }
         }
         dayerLiveData.postValue(newDayer)
@@ -120,16 +131,18 @@ object CheckConsts {
         val thisWeekData = getOrCreateDbWeekData(newDayer.weekStartDay)
         val lastWeekData = getOrCreateDbWeekData(newDayer.lastWeekStartDay)
         curWeekWorks = thisWeekData
+
+        val workIds = weeklyWorks().map { it.id }
+        curWeekWorksCompleted = AppDatabase.db.getCompletedDao().queryCompletedListByWorkIds(workIds)
+
         lastWeekWorks = lastWeekData
 
         inWeekChangeDay(newDayer)
     }
 
     private suspend fun inWeekChangeDay(newDayer: Dayer) {
-        val todayCompleted = getDbTodayCompletedWorks(newDayer.currentDay)
-        val yesterdayCompleted = getDbTodayCompletedWorks(newDayer.yesterday)
-        todayCompletedWorks = (todayCompleted)
-        yesterdayCompletedWorks = (yesterdayCompleted)
+        todayCompletedWorks = getDbCompletedWorks(newDayer.currentDay)
+        yesterdayCompletedWorks = getDbCompletedWorks(newDayer.yesterday)
     }
 
     private suspend fun getOrCreateDbWeekData(weekStartDayInt:Int) : List<WorkEntity>{
@@ -143,7 +156,7 @@ object CheckConsts {
         return dbList
     }
 
-    private suspend fun getDbTodayCompletedWorks(day:Int) : List<CompletedEntity>{
+    private suspend fun getDbCompletedWorks(day:Int) : List<CompletedEntity>{
         delay(0)
         return AppDatabase.db.getCompletedDao().queryCompletedByDay(day)
     }
@@ -151,10 +164,12 @@ object CheckConsts {
     const val SELF_STAR_COUNT_KEY = "selfStarCount"
     const val SELF_DING_COUNT_KEY = "selfDingCount"
 
-    fun markCompleted(completedEntity: CompletedEntity) {
+    suspend fun markCompleted(completedEntity: CompletedEntity) {
         val dao = AppDatabase.db.getCompletedDao()
         dao.insert(completedEntity)
         AppDataStore.save(SELF_STAR_COUNT_KEY, AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0) + 1)
+
+        whenTrigger()
     }
 
     fun updateMyDingCount() {

@@ -17,7 +17,6 @@ class HomeRcvHeadViewHolder(val adapter:HomeRcvAdapter, viewBinding: HolderHomeH
     override fun bindData(bean: HomeRcvBean) {
         super.bindData(bean)
         bean as HomeRcvHeadBean
-        binding.mineName.text = bean.userName
         binding.mineScholl.text = bean.scroll
         binding.mineWeeklyText.text = String.format(Globals.app.resources.getString(R.string.this_week_works_list), bean.starCount)
         binding.mineStarText.text = "" + bean.starCount

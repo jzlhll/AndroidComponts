@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingHorizontal="20dp"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <!-- 不能做成invisible，不然不生效。把他藏在布局底下。-->
+    <com.au.module_android.widget.CustomEditText
+        android:id="@+id/hiddenEdit"
+        android:inputType="number"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="8dp"
+        android:layout_height="6dp"/>
+
+    <LinearLayout
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/code1"
+            style="@style/StyleFakeEditText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <android.widget.Space android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/code2"
+            style="@style/StyleFakeEditText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <android.widget.Space android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/code3"
+            style="@style/StyleFakeEditText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <android.widget.Space android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/code4"
+            style="@style/StyleFakeEditText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <android.widget.Space android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/code5"
+            style="@style/StyleFakeEditText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+        <android.widget.Space android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomFontText
+            style="@style/StyleFakeEditText"
+            android:id="@+id/code6"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+    </LinearLayout>
+
+</FrameLayout>

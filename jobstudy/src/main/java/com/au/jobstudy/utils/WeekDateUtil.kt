@@ -13,11 +13,11 @@ object WeekDateUtil {
     private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.getDefault())
 //
-//    fun currentHHmmssSSS() : String {
-//        val calendar = Calendar.getInstance()
-//        calendar.time = Date(System.currentTimeMillis())
-//        return DAY_FORMAT_HHMMSS.format(calendar.time)
-//    }
+    fun currentHHmmssSSS() : String {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date(System.currentTimeMillis())
+        return DAY_FORMAT_HHMMSS.format(calendar.time)
+    }
 //
 //    fun longToDate(timestamp: Long) = Date(timestamp)
 //

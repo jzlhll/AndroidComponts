@@ -2,13 +2,13 @@ package com.au.module.cached
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.au.module_android.Globals
 import com.au.module_android.utils.asOrNull
@@ -16,6 +16,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
+/**
+ * 不支持Set，List。请自行使用Gson进行转换存储。
+ * 支持如下：
+ *             Int::class.java
+ *             Long::class.java
+ *             Double::class.java
+ *             Float::class.java
+ *             Boolean::class.java
+ *             String::class.java
+ *             ByteArray::class.java
+ */
 object AppDataStore {
     /**
      * @author au
@@ -39,7 +50,7 @@ object AppDataStore {
             Float::class.java -> floatPreferencesKey(key)
             Boolean::class.java -> booleanPreferencesKey(key)
             String::class.java -> stringPreferencesKey(key)
-            Set::class.java -> stringSetPreferencesKey(key)
+            ByteArray::class.java -> byteArrayPreferencesKey(key)
             else -> {
                 throw IllegalArgumentException("This type can be removed from DataStore")
             }
@@ -70,7 +81,6 @@ object AppDataStore {
         }
     }
 
-
     inline fun <reified T> remove(key:String) {
         runBlocking {
             removeSuspend<T>(key)
@@ -87,7 +97,7 @@ object AppDataStore {
                 Float::class.java -> setting.remove(floatPreferencesKey(key)).asOrNull()
                 Boolean::class.java -> setting.remove(booleanPreferencesKey(key)).asOrNull()
                 String::class.java -> setting.remove(stringPreferencesKey(key)).asOrNull()
-                Set::class.java -> setting.remove(stringSetPreferencesKey(key)).asOrNull() //later: 这里不做二次检查了。默认就认为是stringSet
+                ByteArray::class.java -> setting.remove(byteArrayPreferencesKey(key)).asOrNull()
                 else -> {
                     throw IllegalArgumentException("This type can be removed from DataStore")
                 }
@@ -109,17 +119,7 @@ object AppDataStore {
                 is Float -> setting[floatPreferencesKey(key)] = value
                 is Boolean -> setting[booleanPreferencesKey(key)] = value
                 is String -> setting[stringPreferencesKey(key)] = value
-                is Set<*> -> {
-                    val componentType = value::class.java.componentType!!
-                    @Suppress("UNCHECKED_CAST") // Checked by reflection.
-                    when {
-                        String::class.java.isAssignableFrom(componentType) -> {
-                            Globals.app.dataStore.edit { preferences ->
-                                preferences[stringSetPreferencesKey(key)] = value as Set<String>
-                            }
-                        }
-                    }
-                }
+                is ByteArray -> setting[byteArrayPreferencesKey(key)] = value
                 else -> {
                     throw IllegalArgumentException("This type can be saved into DataStore")
                 }
@@ -169,10 +169,14 @@ object AppDataStore {
                     setting[stringPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
+            ByteArray::class -> {
+                Globals.app.dataStore.data.map { setting ->
+                    setting[stringPreferencesKey(key)] ?: defaultValue
+                }.first() as T
+            }
             else -> {
                 throw IllegalArgumentException("This type can be get into DataStore")
             }
         }
     }
 }
-

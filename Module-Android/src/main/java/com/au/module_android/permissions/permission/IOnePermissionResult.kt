@@ -1,11 +1,12 @@
 package com.au.module_android.permissions.permission
 
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
-import androidx.lifecycle.LifecycleOwner
 
 abstract class IOnePermissionResult(val permission:String,
-                                    cxt: LifecycleOwner)
-    : IPermissionResult<String, Boolean>(cxt) {
+                                    cxt: Any,
+                                    contract: ActivityResultContract<String, Boolean>)
+    : IPermissionResult<String, Boolean>(cxt, contract) {
     /**
      * 使用
      * createMultiPermissionForResult(permissions)

@@ -14,7 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.permissions.activity.ActivityForResult
-import com.au.module_android.permissions.activity.IActivityResult
+import com.au.module_android.permissions.activity.SystemTakePictureForResult
+import com.au.module_android.permissions.activity.SystemTakeVideoFaceForResult
+import com.au.module_android.permissions.activity.SystemTakeVideoForResult
 import com.au.module_android.permissions.permission.IMultiPermissionsResult
 import com.au.module_android.permissions.permission.IOnePermissionResult
 import com.au.module_android.permissions.permission.PermissionForResult
@@ -24,6 +26,20 @@ import com.au.module_android.utils.startActivityFix
 
 const val REQUEST_OVERLAY_CODE: Int = 1001
 //todo https://article.juejin.cn/post/7082314521284444173 增加拍照等
+
+/**
+ * 无需权限就可以拉起系统拍照。
+ */
+fun LifecycleOwner.systemTakePictureForResult() = SystemTakePictureForResult(this)
+/**
+ * 无需权限就可以拉起系统录像。
+ */
+fun LifecycleOwner.systemTakeVideoForResult() = SystemTakeVideoForResult(this)
+
+fun LifecycleOwner.systemTakeVideo2FrontForResult(isFront:Boolean = false,
+                                                       maxSec:Int = 60,
+                                                       isLowQuality:Boolean = true)
+        = SystemTakeVideoFaceForResult(this, isFront, maxSec, isLowQuality)
 
 /**
  * 多权限的申请
@@ -41,8 +57,7 @@ fun LifecycleOwner.createPermissionForResult(permission:String) : IOnePermission
 /**
  * activity 跳转，返回拿结果。
  */
-fun LifecycleOwner.createActivityForResult() : IActivityResult
-        = ActivityForResult(this)
+fun LifecycleOwner.createActivityForResult() : ActivityForResult = ActivityForResult(this)
 /**
  * 跳转到辅助服务
  */

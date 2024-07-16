@@ -16,7 +16,7 @@ interface CompletedDao {
 //    @Query("select * from completed WHERE dayWorkId = :dayWorkId")
 //    fun queryCompletedByWorkId(dayWorkId:Int) : List<CompletedEntity>
 //
-//    @Query("select * from completed WHERE dayWorkId IN (:dayWorkIds)")
-//    fun queryCompletedListByWorkIds(dayWorkIds:List<Int>) : List<CompletedEntity>
+    @Query("select * from completed WHERE dayWorkId IN (:dayWorkIds)")
+    fun queryCompletedListByWorkIds(dayWorkIds:List<Int>) : List<CompletedEntity>
 
 }

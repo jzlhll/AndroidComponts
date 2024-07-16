@@ -2,10 +2,9 @@ package com.au.module_android.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
-import com.au.module_android.permissions.activity.IActivityResult
+import com.au.module_android.permissions.activity.ActivityForResult
 
 /**
  * @author au
@@ -25,21 +24,12 @@ class FragmentRootOrientationActivity : FragmentRootActivity() {
          */
         fun start(context: Context,
                             fragmentClass:Class<out Fragment>,
-                            activityResult:IActivityResult? = null,
+                            activityResult:ActivityForResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
-                            hasWebView:Boolean = false)  {
-            start(context, FragmentRootOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView)
+                            hasWebView:Boolean = false,
+                            autoHideIme:Boolean = false)  {
+            start(context, FragmentRootOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme)
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("FragmentRootOrientationActivity", "onCreate: ")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("FragmentRootOrientationActivity", "onDestroy: ")
     }
 }
