@@ -41,7 +41,7 @@ class CheckWithFragment : BindingParamsFragment<FragmentCheckInBinding>() {
                 binding.checkUpModePicture.visible()
             } else if (it.mediaType == MediaType.TYPE_VIDEO) {
                 binding.checkupModeVideo.visible()
-            } else if (it.mediaType == MediaType.TYPE_MANUAL) {
+            } else if (it.mediaType == MediaType.TYPE_PARENT) {
                 binding.checkupModeParent.visible()
             } else if (it.mediaType == MediaType.TYPE_VOICE) {
                 binding.checkupModeVoice.visible()

@@ -1,4 +1,4 @@
-package com.au.jobstudy.check.star
+package com.au.jobstudy.star
 
 /**
  * @author allan

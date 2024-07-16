@@ -7,46 +7,6 @@
     android:paddingEnd="20dp"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar_layout"
-        android:orientation="vertical"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.au.module_android.widget.CustomFontText
-            style="@style/StyleMinText"
-            android:paddingTop="20dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:text="朋友圈, 维护中..."
-            android:textSize="30sp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            app:layout_scrollFlags="scroll|snap"/>
-
-        <com.allan.nested.tab.AuTabLayout
-            android:layout_gravity="bottom"
-            android:id="@+id/tabLayout"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:background="@android:color/transparent"
-            style="@style/StyleTabLayoutNormally"
-            />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- 设置自定义Behavior -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </androidx.viewpager2.widget.ViewPager2>
-
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:layout_width="wrap_content"
         android:id="@+id/progressCircle"
