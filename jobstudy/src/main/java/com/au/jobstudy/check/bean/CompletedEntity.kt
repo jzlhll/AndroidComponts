@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "completed")
 data class CompletedEntity(
-    val dayWorkId:Int,
-    val day:Int,
+    val dayWorkId:Long,
+    val workDay:Int,
+    val workWeekStartDay:Int,
     val files:String?,
-    @PrimaryKey(autoGenerate = true) val id : Int = 0
+    @PrimaryKey(autoGenerate = true) var id : Long
 )

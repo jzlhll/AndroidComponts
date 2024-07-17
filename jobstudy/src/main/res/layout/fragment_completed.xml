@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:layout_height="match_parent">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/title"
+        style="@style/StyleFontText"
+        android:textSize="22sp"
+        android:text="任务列表"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+</RelativeLayout>

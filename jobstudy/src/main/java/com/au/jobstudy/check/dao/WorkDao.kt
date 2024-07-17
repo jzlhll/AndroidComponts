@@ -9,9 +9,7 @@ import com.au.jobstudy.check.bean.WorkEntity
 @Dao
 interface WorkDao {
     @Insert
-    fun insert(bean: WorkEntity)
-    @Insert
-    fun insert(beans:List<WorkEntity>)
+    fun insert(beans:List<WorkEntity>) : LongArray
 
     @Update
     fun update(bean: WorkEntity)
@@ -21,4 +19,7 @@ interface WorkDao {
 
     @Query("select * from work WHERE weekStartDay = :weekStartDay")
     fun queryAWeek(weekStartDay:Int) : List<WorkEntity>
+
+    @Query("select * from work WHERE weekStartDay = :weekStartDay AND day = 0")
+    fun queryAWeekNotDayWork(weekStartDay:Int) : List<WorkEntity>
 }

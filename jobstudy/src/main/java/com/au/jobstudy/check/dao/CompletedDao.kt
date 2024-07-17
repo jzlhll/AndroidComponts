@@ -10,13 +10,13 @@ interface CompletedDao {
     @Insert
     fun insert(bean: CompletedEntity)
 
-    @Query("select * from completed WHERE day = :day")
+    @Query("select * from completed WHERE workDay = :day")
     fun queryCompletedByDay(day:Int) : List<CompletedEntity>
 //
 //    @Query("select * from completed WHERE dayWorkId = :dayWorkId")
 //    fun queryCompletedByWorkId(dayWorkId:Int) : List<CompletedEntity>
 //
     @Query("select * from completed WHERE dayWorkId IN (:dayWorkIds)")
-    fun queryCompletedListByWorkIds(dayWorkIds:List<Int>) : List<CompletedEntity>
+    fun queryCompletedListByWorkIds(dayWorkIds:List<Long>) : List<CompletedEntity>
 
 }

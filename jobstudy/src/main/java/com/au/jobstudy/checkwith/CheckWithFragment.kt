@@ -52,7 +52,7 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
 
         binding.submitButton.onClick {
             lifecycleScope.launchOnThread {
-                CheckConsts.markCompleted(CompletedEntity(dataItem.id, dataItem.day, partialFragment?.getUploadFiles()))
+                CheckConsts.markCompleted(CompletedEntity(dataItem.id, dataItem.day, dataItem.weekStartDay, partialFragment?.getUploadFiles(), 0))
                 requireActivity().finishAfterTransition()
             }
         }

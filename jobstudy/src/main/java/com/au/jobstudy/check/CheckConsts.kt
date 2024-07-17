@@ -1,5 +1,6 @@
 package com.au.jobstudy.check
 
+import com.au.jobstudy.BuildConfig
 import com.au.jobstudy.check.api.AbsGeneratorApi
 import com.au.jobstudy.check.api.SummerGeneratorApi
 import com.au.jobstudy.check.bean.CompletedEntity
@@ -150,7 +151,14 @@ object CheckConsts {
         curWeekWorks = thisWeekData
 
         val workIds = weeklyWorks().map { it.id }
+        logd { "weekChanged workIds $workIds" }
         curWeekWorksCompleted = AppDatabase.db.getCompletedDao().queryCompletedListByWorkIds(workIds)
+
+        if (BuildConfig.DEBUG) {
+            curWeekWorksCompleted?.forEach {
+                logd { "curWeekWorksCompleted workid ${it.dayWorkId}" }
+            }
+        }
 
         lastWeekWorks = lastWeekData
 
@@ -167,7 +175,10 @@ object CheckConsts {
         val dbList = dao.queryAWeek(weekStartDayInt)
         if (dbList.isEmpty()) {
             val works = api.getWeekWorks(weekStartDayInt)
-            dao.insert(works)
+            val longs = dao.insert(works)
+            works.forEachIndexed { index, workEntity ->
+                works[index].id = longs[index]
+            }
             return works
         }
         return dbList
@@ -183,6 +194,7 @@ object CheckConsts {
     suspend fun markCompleted(completedEntity: CompletedEntity) {
         val dao = AppDatabase.db.getCompletedDao()
         dao.insert(completedEntity)
+        logd { "mark completed id: ${completedEntity.dayWorkId}" }
 
         StarConsts.updateNameStar(NameList.NAMES_JIANG_TJ)
 

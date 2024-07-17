@@ -7,6 +7,8 @@ import com.allan.nested.decoration.PaddingItemDecoration
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.checkwith.CheckWithFragment
+import com.au.jobstudy.completed.CompletedBeforeFragment
+import com.au.jobstudy.completed.CompletedFragment
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
 import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.HomeRcvBean
@@ -17,6 +19,8 @@ import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.module.cached.AppDataStoreMemCache
+import com.au.module_android.click.onClick
+import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
 
@@ -34,6 +38,10 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.lookWeeklyText.onClick {
+            FragmentRootActivity.start(requireContext(), CompletedBeforeFragment::class.java)
+        }
 
         binding.root.refresher.apply {
             initEarlyAsFake(binding.root)

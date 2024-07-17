@@ -49,6 +49,11 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
     fun getCurrentStatus(): PullRefreshStatus = status
 
     internal var hasMore = false
+
+    fun setNoMore() {
+        hasMore = false
+    }
+
     /**
      * 加载更多数据
      */

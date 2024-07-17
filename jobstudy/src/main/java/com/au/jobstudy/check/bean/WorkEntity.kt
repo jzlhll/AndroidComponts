@@ -19,4 +19,4 @@ data class WorkEntity(
      * 是否可以完成。默认false表示正常可以完成；true一直显示在列表中。
      */
     val notCollapse:Boolean,
-    @PrimaryKey(autoGenerate = true) val id : Int = 0)
+    @PrimaryKey(autoGenerate = true) var id : Long)
