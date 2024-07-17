@@ -44,11 +44,11 @@ class MainMineFragment : BindingFragment<FragmentMainMineBinding>() {
         binding.logoText.text = name
 
         ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView) { _, insets ->
-            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            val bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-
-            val top1 = getStatusBarHeight(requireContext())
-            val bottom1 = getNavigationBarHeight(requireContext())
+//            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+//            val bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+//
+//            val top1 = getStatusBarHeight(requireContext())
+//            val bottom1 = getNavigationBarHeight(requireContext())
 
 //            if (BuildConfig.DEBUG) {
 //                lifecycleScope.launch {

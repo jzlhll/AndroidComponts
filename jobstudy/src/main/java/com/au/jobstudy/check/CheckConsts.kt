@@ -3,11 +3,14 @@ package com.au.jobstudy.check
 import com.au.jobstudy.check.api.AbsGeneratorApi
 import com.au.jobstudy.check.api.SummerGeneratorApi
 import com.au.jobstudy.check.bean.CompletedEntity
+import com.au.jobstudy.check.bean.DingEntity
 import com.au.jobstudy.check.bean.WorkEntity
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module.cached.AppDataStore
+import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.RealMutableLiveData
+import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
 
@@ -97,6 +100,15 @@ object CheckConsts {
         logd { "when trigger" }
         val newDayer = Dayer()
         val curDayer = dayerLiveData.realValue
+
+        //增加dingCount
+        val savedDay = readSavedDay(newDayer.currentDay)
+        if (savedDay != newDayer.currentDay) { //后面的天打开
+            updateMyDingCount((Math.random() * 4 + 6).toInt())
+            AppDataStore.save(SAVED_CUR_DAY, newDayer.currentDay)
+        }
+
+        //读取
         if (curDayer == null) { //为空就进行db的读取，看看是否已经生成
             weekChanged(newDayer)
             updateStatusChangedLiveData(true)
@@ -118,6 +130,7 @@ object CheckConsts {
                 updateStatusChangedLiveData(false)
             }
         }
+
         dayerLiveData.postValue(newDayer)
     }
 
@@ -163,6 +176,7 @@ object CheckConsts {
 
     const val SELF_STAR_COUNT_KEY = "selfStarCount"
     const val SELF_DING_COUNT_KEY = "selfDingCount"
+    const val SAVED_CUR_DAY = "savedCurDay"
 
     suspend fun markCompleted(completedEntity: CompletedEntity) {
         val dao = AppDatabase.db.getCompletedDao()
@@ -172,8 +186,8 @@ object CheckConsts {
         whenTrigger()
     }
 
-    fun updateMyDingCount() {
-        AppDataStore.save(SELF_DING_COUNT_KEY, AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0) + 1)
+    fun updateMyDingCount(count:Int = 1) {
+        AppDataStore.save(SELF_DING_COUNT_KEY, AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0) + count)
     }
 
     fun readMyDingCount() : Int{
@@ -182,5 +196,24 @@ object CheckConsts {
 
     fun readMyStarCount() : Int {
         return AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0)
+    }
+
+    fun readSavedDay(defValue:Int) : Int {
+        return AppDataStore.readBlocked(SAVED_CUR_DAY, defValue)
+    }
+
+    /**
+     * 更新某人的某天是否已经顶过了。
+     */
+    fun updateNameDing(name:String, day:Int) {
+        Globals.mainScope.launchOnThread {
+            AppDatabase.db.getDingDao().insert(DingEntity(name, day))
+        }
+    }
+
+    suspend fun queryAllNamesDingToday(day:Int) : List<String>{
+        delay(0)
+        val list = AppDatabase.db.getDingDao().queryDingsByDay(day).map { it.name }
+        return list
     }
 }

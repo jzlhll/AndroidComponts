@@ -72,6 +72,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     )
 
     private val pages = listOf(
-        MainHomeFragment::class.java, MainFriendsFragment::class.java, MainMineFragment::class.java
+        MainHomeFragment::class.java, MainStarsFragment::class.java, MainMineFragment::class.java
     )
 }

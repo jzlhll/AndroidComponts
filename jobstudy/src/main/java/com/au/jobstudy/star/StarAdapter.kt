@@ -3,24 +3,35 @@ package com.au.jobstudy.star
 import android.view.ViewGroup
 import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
-import com.au.jobstudy.databinding.HolderFriendItemBinding
 
-class StarAdapter : BindRcvAdapter<Star, FriendItemViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendItemViewHolder {
-        return FriendItemViewHolder(create(parent))
+class StarAdapter : BindRcvAdapter<IStarBean, BindViewHolder<IStarBean, *>>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<IStarBean, *> {
+        if (viewType == VIEW_TYPE_MARKUP) {
+            return StarMarkupViewHolder(create(parent))
+        }
+        if (viewType == VIEW_TYPE_HEAD) {
+            return StarHeadViewHolder(create(parent))
+        }
+        return StarItemViewHolder(create(parent))
     }
 
-    override fun onBindViewHolder(holder: FriendItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BindViewHolder<IStarBean, *>, position: Int) {
         holder.bindData(datas[position])
     }
-}
 
-class FriendItemViewHolder(vh:HolderFriendItemBinding) : BindViewHolder<Star, HolderFriendItemBinding>(vh) {
-    override fun bindData(bean: Star) {
-        super.bindData(bean)
-
-        binding.name.text = bean.name
-        binding.starCount.text = "" + bean.starCount
-        binding.dingCount.text = "" + bean.dingCount
+    override fun getItemViewType(position: Int): Int {
+        val star = datas[position]
+        return when (star) {
+            is StarHeadBean -> {
+                VIEW_TYPE_HEAD
+            }
+            is StarMarkupBean -> {
+                VIEW_TYPE_MARKUP
+            }
+            else -> {
+                VIEW_TYPE_ITEM
+            }
+        }
     }
 }
+
