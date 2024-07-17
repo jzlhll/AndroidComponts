@@ -13,6 +13,7 @@ import com.au.jobstudy.home.HomeRcvBean
 import com.au.jobstudy.home.HomeRcvHeadBean
 import com.au.jobstudy.home.HomeRcvItemBean
 import com.au.jobstudy.home.HomeRcvTitleBean
+import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.module.cached.AppDataStoreMemCache
@@ -28,6 +29,8 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     }
 
     private val mFirstRunDay = AppDataStoreMemCache("firstRunDay", 0)
+
+    private var mineStarDataIsObservered = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +49,15 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
         HomeRcvAdapter.click = itemClick
         binding.rcv.adapter = HomeRcvAdapter().also { adapter = it }
+
+        adapter.headBindingCreatedCallback = {
+            if (!mineStarDataIsObservered) {
+                mineStarDataIsObservered = true
+                StarConsts.mineStarData.observe(viewLifecycleOwner) {
+                    adapter.headBinding?.update(it.starCount, it.dingCount)
+                }
+            }
+        }
 
         CheckConsts.statusChangedLiveData.observe(viewLifecycleOwner) {
             val list = mutableListOf<HomeRcvBean>()

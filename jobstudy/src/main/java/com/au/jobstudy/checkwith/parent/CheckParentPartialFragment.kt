@@ -13,7 +13,7 @@ import java.io.File
 class CheckParentPartialFragment : FirstResumeBindingFragment<PartialParentBinding>() {
     private var codesManager: CodesManager? = null
 
-    val parentCode = "192837"
+    val parentCode = "198983"
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         codesManager = CodesManager(requireActivity(),

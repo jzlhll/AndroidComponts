@@ -3,14 +3,12 @@ package com.au.jobstudy.check
 import com.au.jobstudy.check.api.AbsGeneratorApi
 import com.au.jobstudy.check.api.SummerGeneratorApi
 import com.au.jobstudy.check.bean.CompletedEntity
-import com.au.jobstudy.check.bean.DingEntity
 import com.au.jobstudy.check.bean.WorkEntity
+import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module.cached.AppDataStore
-import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.RealMutableLiveData
-import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
 
@@ -28,8 +26,8 @@ object CheckConsts {
     /**
      * 可以用来监听更新日期显示，更新上下午变化等等。
      */
-    val dayerLiveData = RealMutableLiveData<Dayer>()
-    fun currentDay() = dayerLiveData.realValue.currentDay
+    var dayer:Dayer? = null
+    fun currentDay() = dayer!!.currentDay
 
     private val api : AbsGeneratorApi = SummerGeneratorApi()
 
@@ -45,16 +43,17 @@ object CheckConsts {
     /**
      * 必须保证已经有值了才能调用
      */
-    fun todayWorks() = curWeekWorks.filter { it.day == dayerLiveData.realValue.currentDay }
+    fun todayWorks() = curWeekWorks.filter { it.day == dayer!!.currentDay }
 
     /**
      * 必须保证已经有值了才能调用
      */
     fun yesterdayWorks() : List<WorkEntity> {
-        if (dayerLiveData.realValue.isYesterdayIsLastWeek()) {
-            return lastWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
+        val d = dayer!!
+        if (d.isYesterdayIsLastWeek()) {
+            return lastWeekWorks.filter { it.day == d.yesterday }
         }
-        return curWeekWorks.filter { it.day == dayerLiveData.realValue.yesterday }
+        return curWeekWorks.filter { it.day == d.yesterday }
     }
 
     /**
@@ -94,44 +93,49 @@ object CheckConsts {
     /**
      * 当进入前台或者一些想检测变化日期的时候，校验结果。
      */
-    suspend fun whenTrigger() {
+    suspend fun whenTrigger(force:Boolean = false) {
         delay(0)
 
         logd { "when trigger" }
         val newDayer = Dayer()
-        val curDayer = dayerLiveData.realValue
+        val curDayer = dayer
+        dayer = newDayer
 
         //增加dingCount
         val savedDay = readSavedDay(newDayer.currentDay)
         if (savedDay != newDayer.currentDay) { //后面的天打开
-            updateMyDingCount((Math.random() * 4 + 6).toInt())
+            StarConsts.updateStudentsDingCount()
             AppDataStore.save(SAVED_CUR_DAY, newDayer.currentDay)
         }
 
         //读取
+        var isWeekChange = false
         if (curDayer == null) { //为空就进行db的读取，看看是否已经生成
-            weekChanged(newDayer)
-            updateStatusChangedLiveData(true)
+            StarConsts.initData()
+            isWeekChange = true
         } else {
-            if (newDayer != curDayer) {
+            isWeekChange = if (newDayer != curDayer) {
                 val newWeekStartDay = WeekDateUtil.anyDayToWeekStartDay(newDayer.weekStartDay)
                 if (newWeekStartDay == newDayer.weekStartDay) {
                     //只是变了一周内的一天。更新today和yesterday即可。
-                    inWeekChangeDay(newDayer)
-                    updateStatusChangedLiveData(false)
+                    false
                 } else {
                     //变周了
-                    weekChanged(newDayer)
-                    updateStatusChangedLiveData(true)
+                    true
                 }
             } else {
                 //如果是同一天。
-                inWeekChangeDay(newDayer)
-                updateStatusChangedLiveData(false)
+                false
             }
         }
 
-        dayerLiveData.postValue(newDayer)
+        if (isWeekChange || force) {
+            weekChanged(newDayer)
+            updateStatusChangedLiveData(true)
+        } else {
+            inWeekChangeDay(newDayer)
+            updateStatusChangedLiveData(false)
+        }
     }
 
     private fun updateStatusChangedLiveData(isAll:Boolean) {
@@ -174,46 +178,18 @@ object CheckConsts {
         return AppDatabase.db.getCompletedDao().queryCompletedByDay(day)
     }
 
-    const val SELF_STAR_COUNT_KEY = "selfStarCount"
-    const val SELF_DING_COUNT_KEY = "selfDingCount"
     const val SAVED_CUR_DAY = "savedCurDay"
 
     suspend fun markCompleted(completedEntity: CompletedEntity) {
         val dao = AppDatabase.db.getCompletedDao()
         dao.insert(completedEntity)
-        AppDataStore.save(SELF_STAR_COUNT_KEY, AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0) + 1)
 
-        whenTrigger()
-    }
+        StarConsts.updateNameStar(NameList.NAMES_JIANG_TJ)
 
-    fun updateMyDingCount(count:Int = 1) {
-        AppDataStore.save(SELF_DING_COUNT_KEY, AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0) + count)
-    }
-
-    fun readMyDingCount() : Int{
-        return AppDataStore.readBlocked(SELF_DING_COUNT_KEY, 0)
-    }
-
-    fun readMyStarCount() : Int {
-        return AppDataStore.readBlocked(SELF_STAR_COUNT_KEY, 0)
+        whenTrigger(true)
     }
 
     fun readSavedDay(defValue:Int) : Int {
         return AppDataStore.readBlocked(SAVED_CUR_DAY, defValue)
-    }
-
-    /**
-     * 更新某人的某天是否已经顶过了。
-     */
-    fun updateNameDing(name:String, day:Int) {
-        Globals.mainScope.launchOnThread {
-            AppDatabase.db.getDingDao().insert(DingEntity(name, day))
-        }
-    }
-
-    suspend fun queryAllNamesDingToday(day:Int) : List<String>{
-        delay(0)
-        val list = AppDatabase.db.getDingDao().queryDingsByDay(day).map { it.name }
-        return list
     }
 }

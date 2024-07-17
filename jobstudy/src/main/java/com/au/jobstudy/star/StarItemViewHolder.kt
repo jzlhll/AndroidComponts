@@ -2,9 +2,9 @@ package com.au.jobstudy.star
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.view.View
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.check.CheckConsts
-import com.au.jobstudy.check.NameList
 import com.au.jobstudy.databinding.HolderStarHeadBinding
 import com.au.jobstudy.databinding.HolderStarItemBinding
 import com.au.jobstudy.databinding.HomeMarkupBinding
@@ -24,17 +24,20 @@ private val grayColorList by unsafeLazy {
     ColorStateList.valueOf(Color.parseColor("#999999"))
 }
 
-class StarItemViewHolder(vh: HolderStarItemBinding) : BindViewHolder<IStarBean, HolderStarItemBinding>(vh) {
+class StarItemViewHolder(vh: HolderStarItemBinding, itemBeforeClick:((View, StarItemBean)->Unit)) : BindViewHolder<IStarBean, HolderStarItemBinding>(vh) {
 
     init {
         vh.dingClick.onClick { v->
             currentData.asOrNull<StarItemBean>()?.let {
-                it.isDing = true
-                if(it.name == NameList.NAMES_JIANG_TJ)
-                    CheckConsts.updateMyDingCount()
+                itemBeforeClick(v, it)
+                if (it.isDing != true) {
+                    StarConsts.updateNameDing(it.name, CheckConsts.currentDay())
+                    it.dingNum += 1
+                    it.isDing = true
 
-                CheckConsts.updateNameDing(it.name, CheckConsts.currentDay())
-                binding.dingClick.imageTintList = redColorList
+                    binding.dingCount.text = "" + it.dingNum
+                    binding.dingClick.imageTintList = redColorList
+                }
             }
         }
     }
@@ -43,8 +46,8 @@ class StarItemViewHolder(vh: HolderStarItemBinding) : BindViewHolder<IStarBean, 
         super.bindData(bean)
         bean as StarItemBean
         binding.name.text = bean.name
-        binding.starCount.text = "" + bean.starCount
-        binding.dingCount.text = "" + bean.dingCount
+        binding.starCount.text = "" + bean.starNum
+        binding.dingCount.text = "" + bean.dingNum
         binding.dingClick.imageTintList = if(bean.isDing == true) redColorList else grayColorList
     }
 }

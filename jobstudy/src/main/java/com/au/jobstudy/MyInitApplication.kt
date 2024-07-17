@@ -1,7 +1,7 @@
 package com.au.jobstudy
 
 import com.au.jobstudy.check.CheckConsts
-import com.au.jobstudy.star.StarList
+import com.au.jobstudy.star.StarConsts
 import com.au.module_android.Globals
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.InitApplication
@@ -20,13 +20,10 @@ class MyInitApplication : InitApplication() {
             logd { "update SummerConst when foreground $it" }
             if (!it) {
                 Globals.mainScope.launchOnThread {
+                    StarConsts.onlyInitOnce()
                     CheckConsts.whenTrigger()
                 }
             }
-        }
-
-        Globals.mainScope.launchOnThread {
-            StarList.initData(CheckConsts.readMyStarCount(), CheckConsts.readMyDingCount())
         }
     }
 }

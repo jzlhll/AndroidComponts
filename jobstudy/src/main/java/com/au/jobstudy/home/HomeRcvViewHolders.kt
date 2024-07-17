@@ -18,10 +18,13 @@ class HomeRcvHeadViewHolder(val adapter:HomeRcvAdapter, viewBinding: HolderHomeH
         super.bindData(bean)
         bean as HomeRcvHeadBean
         binding.mineScholl.text = bean.scroll
-        binding.mineWeeklyText.text = String.format(Globals.app.resources.getString(R.string.this_week_works_list), bean.starCount)
-        binding.mineStarText.text = "" + bean.starCount
-        binding.mineDingCount.text = "" + bean.dingCount
         adapter.headBindingCreatedCallback?.invoke(this)
+    }
+
+    fun update(starNum:Int, dingNum:Int) {
+        binding.mineWeeklyText.text = String.format(Globals.app.resources.getString(R.string.this_week_works_list), starNum)
+        binding.mineStarText.text = "" + starNum
+        binding.mineDingCount.text = "" + dingNum
     }
 }
 

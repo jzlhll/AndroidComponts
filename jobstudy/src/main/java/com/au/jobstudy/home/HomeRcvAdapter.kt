@@ -3,6 +3,8 @@ package com.au.jobstudy.home
 import android.view.ViewGroup
 import com.allan.nested.recyclerview.BindRcvAdapter
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.jobstudy.MainHomeFragment
+import com.au.jobstudy.check.CheckConsts
 
 /**
  * @author au
