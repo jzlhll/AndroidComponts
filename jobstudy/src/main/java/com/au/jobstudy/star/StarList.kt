@@ -1,6 +1,6 @@
-package com.au.jobstudy.check
+package com.au.jobstudy.star
 
-import com.au.jobstudy.star.Star
+import com.au.jobstudy.check.NameList
 import com.au.module_android.simplelivedata.SafeLiveData
 import kotlinx.coroutines.delay
 
@@ -13,8 +13,23 @@ object StarList {
     val allStarsLiveData = SafeLiveData<List<Star>>()
 
     private val bestStudents = listOf(NameList.BEST_STUDENT_1, NameList.BEST_STUDENT_2, NameList.BEST_STUDENT_3, NameList.BEST_STUDENT_4)
-    private val goodStudents = listOf(NameList.GOOD_STUDENT_1, NameList.GOOD_STUDENT_2, NameList.GOOD_STUDENT_3, NameList.GOOD_STUDENT_4, NameList.GOOD_STUDENT_5, NameList.GOOD_STUDENT_6, NameList.GOOD_STUDENT_7, NameList.GOOD_STUDENT_8)
-    private val normalStudents = listOf(NameList.NORMAL_STUDENT_1, NameList.NORMAL_STUDENT_2, NameList.NORMAL_STUDENT_3, NameList.NORMAL_STUDENT_4, NameList.NORMAL_STUDENT_5)
+    private val goodStudents = listOf(
+        NameList.GOOD_STUDENT_1,
+        NameList.GOOD_STUDENT_2,
+        NameList.GOOD_STUDENT_3,
+        NameList.GOOD_STUDENT_4,
+        NameList.GOOD_STUDENT_5,
+        NameList.GOOD_STUDENT_6,
+        NameList.GOOD_STUDENT_7,
+        NameList.GOOD_STUDENT_8
+    )
+    private val normalStudents = listOf(
+        NameList.NORMAL_STUDENT_1,
+        NameList.NORMAL_STUDENT_2,
+        NameList.NORMAL_STUDENT_3,
+        NameList.NORMAL_STUDENT_4,
+        NameList.NORMAL_STUDENT_5
+    )
 
     //给出随即的名次
     private val selfRank = if(Math.random() > 0.5) 1 else 0

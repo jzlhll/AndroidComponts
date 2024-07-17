@@ -1,7 +1,7 @@
 package com.au.jobstudy
 
 import com.au.jobstudy.check.CheckConsts
-import com.au.jobstudy.check.StarList
+import com.au.jobstudy.star.StarList
 import com.au.module_android.Globals
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.InitApplication
