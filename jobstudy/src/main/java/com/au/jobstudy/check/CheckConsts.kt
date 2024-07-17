@@ -87,7 +87,7 @@ object CheckConsts {
 
     fun weeklyUncompletedWorks() : List<WorkEntity> {
         val weekCompletedIds = curWeekWorksCompleted?.map { it.dayWorkId } ?: return weeklyWorks()
-        return weeklyWorks().filter { !weekCompletedIds.contains(it.id)  }
+        return weeklyWorks().filter { !weekCompletedIds.contains(it.id) || it.notCollapse  }
     }
 
     /**
@@ -104,7 +104,7 @@ object CheckConsts {
         //增加dingCount
         val savedDay = readSavedDay(newDayer.currentDay)
         if (savedDay != newDayer.currentDay) { //后面的天打开
-            StarConsts.updateStudentsDingCount()
+            StarConsts.fakeUpdateStudentsDingCount()
             AppDataStore.save(SAVED_CUR_DAY, newDayer.currentDay)
         }
 

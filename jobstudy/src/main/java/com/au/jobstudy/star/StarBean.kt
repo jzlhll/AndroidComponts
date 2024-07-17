@@ -7,6 +7,6 @@ package com.au.jobstudy.star
  */
 
 interface IStarBean
-data class StarItemBean(val name:String, val starNum:Int, var dingNum:Int, var isDing:Boolean? = null) : IStarBean
+data class StarItemBean(val name:String, var starNum:Int, var dingNum:Int, var isDing:Boolean? = null) : IStarBean
 data class StarHeadBean(val html:String) : IStarBean
 class StarMarkupBean():IStarBean

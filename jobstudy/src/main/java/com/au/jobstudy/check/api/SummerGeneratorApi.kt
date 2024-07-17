@@ -56,7 +56,7 @@ class SummerGeneratorApi : AbsGeneratorApi() {
             "#11aaff", false)
 
         val read = WorkEntity("阅读", "每周至少摘抄2篇，拍下读书笔记。",
-            listOf(CheckMode(MediaType.TYPE_PIC, "拍照上传", 1, 2)),
+            listOf(CheckMode(MediaType.TYPE_PIC, "拍照上传", 7, 2)),
             0, weekStartDay, true,
             "#ff0011", true)
 

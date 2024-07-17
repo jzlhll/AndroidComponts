@@ -8,6 +8,7 @@ import com.au.jobstudy.star.IStarBean
 import com.au.jobstudy.star.StarAdapter
 import com.au.jobstudy.star.StarHeadBean
 import com.au.jobstudy.star.StarConsts
+import com.au.jobstudy.star.StarItemBean
 import com.au.jobstudy.star.StarMarkupBean
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.launchOnThread
@@ -21,6 +22,17 @@ class MainStarsFragment : BindingFragment<FragmentMainFriendsBinding>() {
         binding.rcv.adapter = StarAdapter(this).also { adapter = it }
 
         observerAllStarLiveData()
+
+        StarConsts.mineStarData.observe(viewLifecycleOwner) {
+            adapter.datas.forEachIndexed { index, iStarBean ->
+                //later：这里只管star变化更新我的item。dingCount暂时item自行处理
+                if (iStarBean is StarItemBean && iStarBean.name == it.name) {
+                    iStarBean.starNum = it.starCount
+                    adapter.notifyItemChanged(index)
+                    return@observe
+                }
+            }
+        }
     }
 
     private fun observerAllStarLiveData() {

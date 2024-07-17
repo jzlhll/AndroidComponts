@@ -34,7 +34,6 @@ class StarItemViewHolder(vh: HolderStarItemBinding, itemBeforeClick:((View, Star
                     StarConsts.updateNameDing(it.name, CheckConsts.currentDay())
                     it.dingNum += 1
                     it.isDing = true
-
                     binding.dingCount.text = "" + it.dingNum
                     binding.dingClick.imageTintList = redColorList
                 }

@@ -8,8 +8,8 @@ import com.au.module.cached.AppDataStore
 import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
-import kotlin.math.min
 
 /**
  * @author allan
@@ -102,6 +102,7 @@ object StarConsts {
     }
 
     private fun checkIfMineEntityNotify(entity: StarEntity) {
+        logd { "checkIfMine ${entity.name}" }
         if (entity.name == NameList.NAMES_JIANG_TJ) {
             mineStarData.setValueSafe(entity)
         }
@@ -116,7 +117,7 @@ object StarConsts {
         }
     }
 
-    suspend fun updateStudentsDingCount() {
+    suspend fun fakeUpdateStudentsDingCount() {
         delay(0)
         AppDatabase.db.runInTransaction{
             val dao = AppDatabase.db.getStarDao()
@@ -127,8 +128,6 @@ object StarConsts {
             val eachDayUpdateDing = (Math.random() * 5 + 6).toInt()
 
             mineStar.dingCount += eachDayUpdateDing
-
-            checkIfMineEntityNotify(mineStar)
 
             dao.insert(mineStar)
 
@@ -175,7 +174,13 @@ object StarConsts {
         delay(0)
 
         val curDay = CheckConsts.currentDay()
-        val starList = AppDatabase.db.getStarDao().queryAll()
+        val allStars = AppDatabase.db.getStarDao().queryAll()
+
+        allStars.find { it.name == NameList.NAMES_JIANG_TJ }?.let {
+            checkIfMineEntityNotify(it)
+        }
+
+        val starList = allStars
             .map { StarItemBean(it.name, it.starCount, it.dingCount, it.dingDay == curDay) }.toMutableList()
 
         starList.sortWith { o1, o2 ->
