@@ -44,22 +44,6 @@
             android:layout_height="wrap_content"/>
 
         <com.au.module_android.widget.CustomFontText
-            app:layout_constraintStart_toEndOf="@id/subjectText"
-            app:layout_constraintTop_toTopOf="@id/subjectText"
-            app:layout_constraintBottom_toBottomOf="@id/subjectText"
-            android:id="@+id/weekText"
-            android:layout_marginStart="12dp"
-            android:lines="1"
-            android:maxLines="1"
-            android:visibility="visible"
-            android:text="(week)"
-            android:textSize="18sp"
-            android:textColor="#2196F3"
-            android:textStyle="italic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.au.module_android.widget.CustomFontText
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/sucImage"
             app:layout_constraintTop_toBottomOf="@id/subjectText"

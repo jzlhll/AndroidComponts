@@ -1,15 +1,9 @@
 package com.au.jobstudy.completed
 
-import android.graphics.Color
-import android.view.View
 import android.view.ViewGroup
 import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.allan.nested.recyclerview.DiffCallback
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
-import com.au.jobstudy.databinding.HolderCompletedDateItemBinding
-import com.au.jobstudy.databinding.HolderCompletedItemBinding
-import com.au.module_android.utils.ViewBackgroundBuilder
-import com.au.module_android.utils.dp
 
 class CompletedAdapter : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHolder<ICompletedBean, *>>() {
     override fun isSupportDiffer(): Boolean {
@@ -53,29 +47,5 @@ class CompletedAdapter : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHold
 
     override fun getItemViewType(position: Int): Int {
         return if(datas[position] is CompletedDateBean) 0 else 1
-    }
-}
-
-class CompletedViewHolder(vh:HolderCompletedItemBinding) : BindViewHolder<ICompletedBean, HolderCompletedItemBinding>(vh) {
-    override fun bindData(bean: ICompletedBean) {
-        super.bindData(bean)
-        bean as CompletedBean
-        binding.sucImage.visibility = if (bean.completedEntity != null) View.VISIBLE else View.GONE
-        binding.descText.text = bean.workEntity.desc
-        binding.subjectText.text = bean.workEntity.subject
-        binding.subjectColor.background = ViewBackgroundBuilder()
-            .setBackground(Color.parseColor(bean.workEntity.colorStr))
-            .setCornerRadius(3f.dp)
-            .build()
-        binding.weekText.visibility = if(bean.workEntity.weekJob) View.VISIBLE else View.GONE
-        binding.host.alpha = if (bean.completedEntity == null) 0.5f else 1f
-    }
-}
-
-class CompletedDateViewHolder(vh: HolderCompletedDateItemBinding) : BindViewHolder<ICompletedBean, HolderCompletedDateItemBinding>(vh) {
-    override fun bindData(bean: ICompletedBean) {
-        super.bindData(bean)
-        bean as CompletedDateBean
-        binding.dateText.text = (if(bean.isWeek) "Week: " else "") + bean.day
     }
 }

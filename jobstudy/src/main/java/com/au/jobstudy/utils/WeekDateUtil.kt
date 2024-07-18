@@ -9,9 +9,9 @@ import java.util.Date
 import java.util.Locale
 
 object WeekDateUtil {
-    private val DAY_FORMAT_HHMMSS = SimpleDateFormat("HH_mm_ss_SSS", Locale.getDefault())
-    private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-    private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.getDefault())
+    private val DAY_FORMAT_HHMMSS = SimpleDateFormat("HH_mm_ss_SSS", Locale.CHINA)
+    private val DAY_FORMAT = SimpleDateFormat("yyyyMMdd", Locale.CHINA)
+    private val DAY_FORMAT_HHMM = SimpleDateFormat("HHmm", Locale.CHINA)
 //
     fun currentHHmmssSSS() : String {
         val calendar = Calendar.getInstance()
@@ -140,8 +140,6 @@ object WeekDateUtil {
         val now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"))
         // 格式化时间
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        // 输出当前时间
-        println("当前时间: " + now.format(formatter))
         // 获取周几
         val dayOfWeek = now.dayOfWeek.value // 周一为1, 周日为7
         val s = when (dayOfWeek) {
@@ -157,16 +155,54 @@ object WeekDateUtil {
         return now.format(formatter) + " $s"
     }
 
+    fun getDayOfWeek(day: Int): String {
+        val date = DAY_FORMAT.parse("$day")!!
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        return when (calendar.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.SUNDAY -> "星期日"
+            Calendar.MONDAY -> "星期一"
+            Calendar.TUESDAY -> "星期二"
+            Calendar.WEDNESDAY -> "星期三"
+            Calendar.THURSDAY -> "星期四"
+            Calendar.FRIDAY -> "星期五"
+            Calendar.SATURDAY -> "星期六"
+            else -> "未知的星期"
+        }
+    }
+
+    fun checkDateIsTodayOrYesterday(day: Int): String? {
+        val inputDate: Date = DAY_FORMAT.parse("$day")!!
+
+        val calendar = Calendar.getInstance()
+        val today = calendar.time
+
+        // Reset the calendar to today 00:00:00
+        calendar.time = today
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val todayMidnight = calendar.time
+
+        // Calculate yesterday
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+        val yesterdayMidnight = calendar.time
+
+        return when {
+            inputDate >= todayMidnight -> "今天"
+            inputDate >= yesterdayMidnight -> "昨天"
+            else -> null
+        }
+    }
+
     /**
      * 返回现在是周几。1~7代表周一到周日。
      */
     fun getTodayWeekIndex() : Int{
         // 获取当前时间
         val now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"))
-        // 格式化时间
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        // 输出当前时间
-        println("当前时间: " + now.format(formatter))
         // 获取周几
         val dayOfWeek = now.dayOfWeek.value // 周一为1, 周日为7
         return dayOfWeek
