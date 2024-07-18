@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
@@ -15,6 +17,7 @@ import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.views.ViewActivity
+import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 
 /**
@@ -43,8 +46,9 @@ open class FragmentRootActivity : ViewActivity() {
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
                             hasWebView:Boolean = false,
-                            autoHideIme: Boolean = false) {
-            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme)
+                            autoHideIme: Boolean = false,
+                            activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
+            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme, activityResultCallback)
         }
 
         internal fun start(context: Context,
@@ -54,7 +58,8 @@ open class FragmentRootActivity : ViewActivity() {
                            arguments: Bundle?,
                            optionsCompat: ActivityOptionsCompat?,
                            hasWebView:Boolean,
-                           autoHideIme:Boolean) {
+                           autoHideIme:Boolean,
+                           activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
             val intent = Intent(context, showActivityClass)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
             intent.putExtra(KEY_INTENT_AUTO_HIDE_IME, autoHideIme)
@@ -62,9 +67,9 @@ open class FragmentRootActivity : ViewActivity() {
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
             if (activityResult != null) {
-                activityResult.start(intent, optionsCompat, null)
+                activityResult.start(intent, optionsCompat, activityResultCallback)
             } else {
-                ActivityCompat.startActivity(context, intent, optionsCompat?.toBundle())
+                context.startActivityFix(intent, optionsCompat?.toBundle())
             }
         }
     }

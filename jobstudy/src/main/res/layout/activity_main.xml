@@ -20,5 +20,5 @@
         android:orientation="horizontal"
         android:id="@+id/mainBottomNavRcv"
         android:layout_width="match_parent"
-        android:layout_height="57dp"/>
+        android:layout_height="62dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

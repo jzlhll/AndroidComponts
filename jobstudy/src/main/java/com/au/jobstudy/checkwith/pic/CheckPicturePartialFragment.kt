@@ -25,12 +25,8 @@ class CheckPicturePartialFragment : FirstResumeBindingFragment<PartialPicturesBi
     var checkMode:CheckMode? = null
 
     lateinit var adapter:PicAdapter
-    override fun getUploadFiles(): String {
-        val list = adapter.datas.filter { it.file != null }.map { it.file!!.absolutePath }
-        if (list.isEmpty()) {
-            return ""
-        }
-        return Globals.gson.toJson(list)
+    override fun getUploadFiles(): List<String> {
+        return adapter.datas.filter { it.file != null }.map { it.file!!.absolutePath }
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {

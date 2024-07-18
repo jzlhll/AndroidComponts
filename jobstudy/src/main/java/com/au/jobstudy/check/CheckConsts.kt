@@ -191,9 +191,9 @@ object CheckConsts {
 
     const val SAVED_CUR_DAY = "savedCurDay"
 
-    suspend fun markCompleted(completedEntity: CompletedEntity) {
+    suspend fun markCompleted(completedEntity: CompletedEntity, isUpdate:Boolean) {
         val dao = AppDatabase.db.getCompletedDao()
-        dao.insert(completedEntity)
+        if(isUpdate) dao.update(completedEntity) else dao.insert(completedEntity)
         logd { "mark completed id: ${completedEntity.dayWorkId}" }
 
         StarConsts.updateNameStar(NameList.NAMES_JIANG_TJ)

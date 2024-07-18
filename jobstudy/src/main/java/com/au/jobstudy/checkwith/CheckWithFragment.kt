@@ -1,10 +1,15 @@
 package com.au.jobstudy.checkwith
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.lifecycle.lifecycleScope
+import com.au.jobstudy.R
+import com.au.jobstudy.check.AppDatabase
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.bean.CompletedEntity
 import com.au.jobstudy.check.bean.WorkEntity
@@ -14,14 +19,21 @@ import com.au.jobstudy.checkwith.base.FirstResumeBindingFragment
 import com.au.jobstudy.checkwith.parent.CheckParentPartialFragment
 import com.au.jobstudy.checkwith.pic.CheckPicturePartialFragment
 import com.au.jobstudy.checkwith.video.CheckVideoPartialFragment
+import com.au.jobstudy.databinding.AlreadyFilesItemBinding
 import com.au.jobstudy.databinding.FragmentCheckInBinding
 import com.au.module_android.click.onClick
+import com.au.module_android.json.fromJsonList
+import com.au.module_android.json.toJsonString
+import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
 import com.au.module_android.utils.visible
+import java.io.File
 import java.util.stream.Collectors
 
 /**
@@ -32,14 +44,29 @@ import java.util.stream.Collectors
 class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
     companion object {
         private var sDataItem:WorkEntity? = null
+        private var sCompletedItem:CompletedEntity? = null
 
         fun start(context: Context, dataItem: WorkEntity) {
             this.sDataItem = dataItem
             FragmentRootActivity.start(context, CheckWithFragment::class.java, autoHideIme = true)
         }
+
+        fun start(context: Context, forResult: ActivityForResult, dataItem: WorkEntity, completedEntity: CompletedEntity?,
+                  activityResultCallback: ActivityResultCallback<ActivityResult>?) {
+            this.sDataItem = dataItem
+            sCompletedItem = completedEntity
+            FragmentRootActivity.start(context, CheckWithFragment::class.java, autoHideIme = true,
+                activityResult = forResult, activityResultCallback = activityResultCallback)
+        }
     }
 
     private val dataItem = sDataItem!!
+    private val completedItem = sCompletedItem
+
+    private val fromCompletedList:Boolean
+        get() {
+            return completedItem != null
+        }
 
     private var mCheckMode:CheckMode? = null
 
@@ -52,7 +79,14 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
 
         binding.submitButton.onClick {
             lifecycleScope.launchOnThread {
-                CheckConsts.markCompleted(CompletedEntity(dataItem.id, dataItem.day, dataItem.weekStartDay, partialFragment?.getUploadFiles(), 0))
+                val newList = completedItem?.files?.fromJsonList<String>()?.toMutableList() ?: ArrayList()
+                partialFragment?.getUploadFiles()?.let { it1 -> newList.addAll(it1) }
+                val entity = CompletedEntity(dataItem.id, dataItem.day, dataItem.weekStartDay,
+                    newList.toJsonString(), completedItem?.id ?: 0)
+                CheckConsts.markCompleted(entity, fromCompletedList)
+                requireActivity().setResult(0, Intent().also {
+                    it.putExtra("completedEntity", entity.toJsonString())
+                })
                 requireActivity().finishAfterTransition()
             }
         }
@@ -111,6 +145,55 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
                     mCheckMode = it
                     binding.submitButton.visible()
                 }
+            }
+        }
+
+        //later : 现在只有week任务才会加载
+        if (fromCompletedList) {
+            completedItem?.files?.fromJsonList<String>()?.let {
+                alreadyFileListSet(it)
+            }
+        } else {
+            lifecycleScope.launchOnThread {
+                val completed = AppDatabase.db.getCompletedDao().queryCompletedByWorkId(dayWorkId = dataItem.id).firstOrNull()
+                val files = completed?.files?.fromJsonList<String>()
+                files?.let { mFiles->
+                    lifecycleScope.launchOnUi {
+                        alreadyFileListSet(mFiles)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun alreadyFileListSet(mFiles: List<String>) {
+        mFiles.forEach { fileStr ->
+            val file = File(fileStr)
+            val mimeType = MediaHelper.getMimeTypePath(fileStr)
+            if (mimeType.contains("video")) {
+                binding.alreadyFilesList.addView(AlreadyFilesItemBinding.inflate(requireActivity().layoutInflater).also {
+                    it.image.setImageResource(R.drawable.ic_b_video_record)
+                    it.name.text = file.name
+                    it.root.onClick {
+                        SeeFileFragment.showInDialog(this@CheckWithFragment, fileStr)
+                    }
+                }.root)
+            } else if (mimeType.contains("image")) {
+                binding.alreadyFilesList.addView(AlreadyFilesItemBinding.inflate(requireActivity().layoutInflater).also {
+                    it.image.setImageResource(R.drawable.ic_b_picture)
+                    it.name.text = file.name
+                    it.root.onClick {
+                        SeeFileFragment.showInDialog(this@CheckWithFragment, fileStr)
+                    }
+                }.root)
+            } else if (mimeType.contains("audio")) {
+                binding.alreadyFilesList.addView(AlreadyFilesItemBinding.inflate(requireActivity().layoutInflater).also {
+                    it.image.setImageResource(R.drawable.ic_b_voice)
+                    it.name.text = file.name
+                    it.root.onClick {
+                        SeeFileFragment.showInDialog(this@CheckWithFragment, fileStr)
+                    }
+                }.root)
             }
         }
     }

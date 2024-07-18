@@ -5,7 +5,7 @@ import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.allan.nested.recyclerview.DiffCallback
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
 
-class CompletedAdapter : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHolder<ICompletedBean, *>>() {
+class CompletedAdapter(private val itemClick:(CompletedBean)->Unit) : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHolder<ICompletedBean, *>>() {
     override fun isSupportDiffer(): Boolean {
         return true
     }
@@ -36,7 +36,7 @@ class CompletedAdapter : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHold
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder<ICompletedBean, *> {
-        return if(viewType == 1) CompletedViewHolder(create(parent))
+        return if(viewType == 1) CompletedViewHolder(itemClick, create(parent))
         else CompletedDateViewHolder(create(parent))
     }
 

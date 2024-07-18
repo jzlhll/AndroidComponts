@@ -7,12 +7,23 @@ import com.au.jobstudy.check.bean.CompletedEntity
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module_android.simplelivedata.SafeLiveData
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.launchOnUi
 
 class CompletedViewModel : ViewModel() {
     /**
      * 日期 to 任务
      */
     val completedBeans = SafeLiveData<ArrayList<ICompletedBean>>()
+
+    fun updateABean(bean:CompletedBean, cb:()->Unit) {
+        val workId = bean.workEntity.id
+        viewModelScope.launchOnThread {
+            bean.completedEntity = AppDatabase.db.getCompletedDao().queryCompletedByWorkId(workId).firstOrNull()
+            viewModelScope.launchOnUi {
+                cb()
+            }
+        }
+    }
 
     fun fetchWeek(weekStartDays:IntArray) {
         viewModelScope.launchOnThread {

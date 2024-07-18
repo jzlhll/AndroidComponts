@@ -134,15 +134,17 @@
                 android:layout_height="48dp"/>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
             app:layout_constraintTop_toBottomOf="@id/checkModesHost"
             android:layout_marginTop="16dp"
-            android:id="@+id/alreadyFilesRcv"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical"
+            android:id="@+id/alreadyFilesList"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="wrap_content"/>
 
         <androidx.fragment.app.FragmentContainerView
-            app:layout_constraintTop_toBottomOf="@id/alreadyFilesRcv"
+            app:layout_constraintTop_toBottomOf="@id/alreadyFilesList"
             android:layout_marginTop="16dp"
             android:id="@+id/fragmentContainerView"
             android:minHeight="60dp"

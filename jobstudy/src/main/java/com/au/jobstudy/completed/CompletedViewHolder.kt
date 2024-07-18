@@ -6,10 +6,20 @@ import com.allan.nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.databinding.HolderCompletedDateItemBinding
 import com.au.jobstudy.databinding.HolderCompletedItemBinding
 import com.au.jobstudy.utils.WeekDateUtil
+import com.au.module_android.click.onClick
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.dp
 
-class CompletedViewHolder(vh: HolderCompletedItemBinding) : BindViewHolder<ICompletedBean, HolderCompletedItemBinding>(vh) {
+class CompletedViewHolder(itemClick:(CompletedBean)->Unit
+                          , vh: HolderCompletedItemBinding) : BindViewHolder<ICompletedBean, HolderCompletedItemBinding>(vh) {
+    init {
+        vh.root.onClick {
+            if (currentData is CompletedBean) {
+                itemClick(currentData as CompletedBean)
+            }
+        }
+    }
+
     override fun bindData(bean: ICompletedBean) {
         super.bindData(bean)
         bean as CompletedBean

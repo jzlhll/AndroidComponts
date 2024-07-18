@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.views.ViewActivity
+import com.au.module_android.utils.startActivityFix
 
 open class NormalViewActivity : ViewActivity() {
     companion object {
@@ -19,7 +20,7 @@ open class NormalViewActivity : ViewActivity() {
             val mask2 = viewBindingSupply.toString()
             actionMap[maskStr + "_" + mask2] = viewBindingSupply
 
-            startActivity(Intent(this, NormalViewActivity::class.java).also {
+            startActivityFix(Intent(this, NormalViewActivity::class.java).also {
                 it.putExtra(KEY_INTENT_MASK, maskStr)
                 it.putExtra(KEY_INTENT_MASK2, mask2)
             })

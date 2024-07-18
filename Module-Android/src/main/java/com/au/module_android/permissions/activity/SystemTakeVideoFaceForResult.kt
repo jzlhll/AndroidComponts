@@ -30,8 +30,12 @@ class CaptureFaceVideo(private val isFront:Boolean = false, private val maxSec:I
     override fun createIntent(context: Context, input: Uri): Intent {
         val intent: Intent = super.createIntent(context, input)
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, maxSec)
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, if(isLowQuality) 0 else 1)
-        if(isFront) intent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+        //intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, if(isLowQuality) 0.5f else 1f)
+        if(isFront) {
+            intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT)
+            intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
+            intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
+        }
         return intent
     }
 }

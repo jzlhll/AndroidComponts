@@ -3,12 +3,15 @@ package com.au.jobstudy.check.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.au.jobstudy.check.bean.CompletedEntity
 
 @Dao
 interface CompletedDao {
     @Insert
     fun insert(bean: CompletedEntity)
+    @Update
+    fun update(bean: CompletedEntity)
 
     @Query("select * from completed WHERE workDay = :day")
     fun queryCompletedByDay(day:Int) : List<CompletedEntity>

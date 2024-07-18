@@ -1,7 +1,6 @@
 package com.au.jobstudy.checkwith.video
 
 import android.os.Bundle
-import android.widget.MediaController
 import androidx.core.content.FileProvider
 import com.au.jobstudy.BuildConfig
 import com.au.jobstudy.check.CheckConsts
@@ -82,13 +81,15 @@ class CheckVideoPartialFragment : FirstResumeBindingFragment<PartialVideoBinding
                         binding.videoView.start()
                     }
                 }
+            } else {
+                checkWithFragment?.showVideoBtn()
             }
         }
     }
 
-    override fun getUploadFiles(): String {
-        val f = mFile ?: return ""
-        return Globals.gson.toJson(listOf(f.absolutePath))
+    override fun getUploadFiles(): List<String> {
+        val f = mFile ?: return Collections.emptyList()
+        return listOf(f.absolutePath)
     }
 
     override fun usedFiles(): List<File> {

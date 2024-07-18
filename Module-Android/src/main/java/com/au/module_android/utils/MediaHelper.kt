@@ -64,6 +64,16 @@ class MediaHelper {
             val videoExtensions = listOf("mp4", "mov", "flv", "mkv", "webm", "m4v") //"avi" "wmv", "3gp",
             return extension in videoExtensions
         }
+
+        fun getMimeTypePath(filePath: String): String {
+            val extension = filePath.substring(filePath.lastIndexOf(".") + 1).lowercase()
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
+        }
+
+        fun getMimeTypeUrl(url: String): String {
+            val extension = MimeTypeMap.getFileExtensionFromUrl(url)
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
+        }
     }
 
 
@@ -175,13 +185,4 @@ class MediaHelper {
         }
     }
 
-    fun getMimeTypePath(filePath: String): String {
-        val extension = filePath.substring(filePath.lastIndexOf(".") + 1).lowercase()
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-    }
-
-    fun getMimeTypeUrl(url: String): String {
-        val extension = MimeTypeMap.getFileExtensionFromUrl(url)
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-    }
 }

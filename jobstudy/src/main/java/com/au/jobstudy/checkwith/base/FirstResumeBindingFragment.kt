@@ -14,7 +14,7 @@ import java.io.File
 abstract class FirstResumeBindingFragment<VB: ViewBinding> : BindingFragment<VB>() {
     var firstStartCallback:(()->Unit)? = null
 
-    abstract fun getUploadFiles():String
+    abstract fun getUploadFiles():List<String>
 
     override fun onStart() {
         super.onStart()

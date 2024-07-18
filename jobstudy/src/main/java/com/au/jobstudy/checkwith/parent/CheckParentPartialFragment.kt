@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.au.jobstudy.checkwith.base.FirstResumeBindingFragment
 import com.au.jobstudy.databinding.PartialParentBinding
 import java.io.File
+import java.util.Collections
 
 /**
  * @author allan
@@ -26,8 +27,8 @@ class CheckParentPartialFragment : FirstResumeBindingFragment<PartialParentBindi
         }
     }
 
-    override fun getUploadFiles(): String {
-        return ""
+    override fun getUploadFiles(): List<String> {
+        return Collections.emptyList()
     }
 
     override fun usedFiles(): List<File> {
