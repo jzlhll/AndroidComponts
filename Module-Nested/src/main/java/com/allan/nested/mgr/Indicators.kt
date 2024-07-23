@@ -1,12 +1,19 @@
 package com.allan.nested.mgr
 
 import android.view.View
+import androidx.core.view.marginBottom
+import com.au.module_android.utils.dp
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 internal abstract class IndicatorBase {
     val max = 100
     abstract var isIndeterminate:Boolean
     abstract var translationY:Float
+
+    /**
+     * 这是如果加载中，把进度条hold住，等待加载成功后消失的时候的高度
+     */
+    abstract val holdTranslateY:Float
 
     /**
      * 这个有实际的用途，用于判断是否能够加载。必须正确处理。
@@ -19,6 +26,9 @@ internal abstract class IndicatorBase {
 }
 
 internal class NoneIndicator : IndicatorBase() {
+    override val holdTranslateY: Float
+        get() = 0f
+
     override var isIndeterminate: Boolean = false
     override var translationY: Float
         get() = 0f
@@ -32,6 +42,11 @@ internal class NoneIndicator : IndicatorBase() {
 }
 
 internal class RealIndicator(private val indicator: CircularProgressIndicator) : IndicatorBase() {
+    private val _holdTranslateY:Float = (indicator.indicatorSize + indicator.trackThickness * 2 + indicator.marginBottom + 0.5f.dp)
+
+    override val holdTranslateY: Float
+        get() = _holdTranslateY
+
     override var isIndeterminate: Boolean
         get() = indicator.isIndeterminate
         set(value) {

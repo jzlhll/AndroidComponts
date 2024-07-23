@@ -5,6 +5,7 @@ import android.view.View
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.allan.nested.layout.NestedLayoutRefresher
 import com.au.module_android.utils.dp
+import kotlin.math.max
 
 /**
  * author: allan
@@ -55,6 +56,7 @@ internal class NestedPullSmoothManager
     }
 
     private fun hideIndicator() {
+        if(!isIndicatorChildOfBePullView) indicator.translationY = 0f
         if (onRefreshAction != null) {
             indicator.hide()
         }
@@ -86,13 +88,16 @@ internal class NestedPullSmoothManager
                     //不管是不是触发了loadingData，位移都还原。
                     if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "#shrink0MOVING $fra ${bePullView.translationY}")
                     bePullView.translationY = bePullView.translationY * fra
-                    if (!isIndicatorChildOfBePullView) {
-                        indicator.translationY = indicator.translationY * fra
-                    }
-
                     //如果不是加载数据则退进度
                     if (!isLoadingData) {
+                        if (!isIndicatorChildOfBePullView) {
+                            indicator.translationY = indicator.translationY * fra
+                        }
                         indicator.progress = (indicator.translationY * indicator.max / params.pullDownTriggerValue).toInt()
+                    } else {
+                        if (!isIndicatorChildOfBePullView) {
+                            indicator.translationY = max(indicator.translationY * fra, indicator.holdTranslateY)
+                        }
                     }
                 }
                 NestedLayoutRefresher.PullDownShrinkState.END -> {
@@ -100,7 +105,6 @@ internal class NestedPullSmoothManager
                     //不是一直转圈，则恢复; 或者是ResetForce，则代表我们已经加载了数据，也应该恢复
                     if(!isLoadingData) hideIndicator()
                     bePullView.translationY = 0f
-                    if(!isIndicatorChildOfBePullView) indicator.translationY = 0f
                 }
             }
         }
@@ -131,6 +135,7 @@ internal class NestedPullSmoothManager
 
     override fun refreshCompleted() {
         isLoadingData = false
+        indicator.isIndeterminate = false
         if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "refreshCompleted in nestedPullSmooth")
         hideIndicator()
     }

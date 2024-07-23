@@ -26,10 +26,11 @@ class NestedRecyclerViewLayout : NestedConstraintLayout {
     val recyclerView = RecyclerView(context)
 
     init {
-        addProgressIndicator()
-        addRecyclerView()
-
-        refresher.initEarlyAsSmooth(recyclerView, progressIndicator, false)
+        if (!isInEditMode) {
+            addRecyclerView()
+            addProgressIndicator()
+            refresher.initEarlyAsSmooth(recyclerView, progressIndicator, false)
+        }
     }
 
     private fun addProgressIndicator() {
