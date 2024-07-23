@@ -19,6 +19,7 @@ import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.views.ViewFragment
+import com.au.module_android.utils.NotificationUtil
 
 /**
  * @author allan
@@ -32,7 +33,11 @@ class NotifyFragment : ViewFragment() {
         val NO_SOUND = false
     }
 
+    val permissionUtil = NotificationUtil.createPostNotificationPermissionResult(this)
+
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        NotificationUtil.onceRequestPermission(permissionUtil)
+
         return LinearLayout(inflater.context).also {
             it.addView(Button(inflater.context).also {
                 it.text = "通知啊"

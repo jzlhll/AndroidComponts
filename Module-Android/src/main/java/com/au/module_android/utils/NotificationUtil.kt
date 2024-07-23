@@ -32,7 +32,7 @@ class NotificationUtil(private val context:Context = Globals.app) {
                 val notify = NotificationUtil()
                 if ((!notify.isEnabled() || !notify.isCanNotify)) {
                     notify.safeRun(permissionHelper) {
-                        Log.d("tyiot_app", "notify: run success.")
+                        logd { "Notification Util permission run success." }
                     }
                 }
             }

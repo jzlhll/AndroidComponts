@@ -35,7 +35,7 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
     private val processedSymbols = mutableSetOf<KSDeclaration>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        environment.logger.warn("process start....")
+        environment.logger.warn("ksp process start....")
 
         val symbols = resolver.getSymbolsWithAnnotation(EntroFrgName::class.java.canonicalName)
         val ret = mutableListOf<KSAnnotated>()
@@ -44,6 +44,8 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
         var hasMy = false
 
         symbols.toList().forEach { symbol->
+            environment.logger.warn("ksp process symbol $symbol")
+
             if (!symbol.validate())
                 ret.add(symbol)
             else {
