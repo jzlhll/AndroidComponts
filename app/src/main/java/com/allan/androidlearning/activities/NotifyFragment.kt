@@ -20,6 +20,7 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.NotificationUtil
+import com.au.module_android.utils.dp
 
 /**
  * @author allan
@@ -42,9 +43,9 @@ class NotifyFragment : ViewFragment() {
             it.addView(Button(inflater.context).also {
                 it.text = "通知啊"
                 it.onClick {
-                    Globals.mainHandler.postDelayed({sendNotif()}, 3000)
+                    Globals.mainHandler.postDelayed({sendNotif()}, 1500)
                 }
-            })
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 60.dp))
         }
     }
 
@@ -57,26 +58,39 @@ class NotifyFragment : ViewFragment() {
             channel.enableVibration(false) //震动不可用
             channel.setSound(null, null) //设置没有声音
         }
-        channel.description = "notify desc"
+        channel.description = "notify desca"
         notificationManager.createNotificationChannel(channel)
 
 // Get the layouts to use in the custom notification.
         val notificationLayout = RemoteViews(requireActivity().packageName, R.layout.notify_small)
+        notificationLayout.setTextViewText(R.id.notification_desc, "This a long long long long long long long long long long long long desc.")
         val notificationLayoutExpanded = RemoteViews(requireActivity().packageName, R.layout.notify_big)
+
+        val intent1 = Intent(Globals.app, EntroActivity::class.java).also { it.putExtra("goto", "LiveData") }
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        val clickIntent1 = PendingIntent.getActivity(Globals.app,1, intent1, PendingIntent.FLAG_IMMUTABLE)
+
+        val intent2 = Intent(Globals.app, EntroActivity::class.java).also { it.putExtra("goto", "FontTest") }
+        intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        val clickIntent2 = PendingIntent.getActivity(Globals.app,2, intent2, PendingIntent.FLAG_IMMUTABLE)
+
+        notificationLayoutExpanded.setOnClickPendingIntent(R.id.gotoBtn, clickIntent2)
+        notificationLayoutExpanded.setOnClickPendingIntent(R.id.ic_failure, clickIntent1)
+
         notificationLayoutExpanded.setTextViewText(R.id.notification_title, "new title")
         val intent = Intent(Globals.app, EntroActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        val pendingIntent = PendingIntent.getActivity(Globals.app,0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(Globals.app,0, intent, PendingIntent.FLAG_IMMUTABLE) //所有的intent，requstCode必须不同。
 
 // Apply the layouts to the notification.
         val customNotification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(com.au.module.android.R.drawable.ic_warning)
             .setStyle(NotificationCompat.BigTextStyle())
-//            .setCustomContentView(notificationLayout)
-            .setCustomContentView(notificationLayoutExpanded)
+            .setCustomContentView(notificationLayout)
+            .setCustomBigContentView(notificationLayoutExpanded) //华为手机不论Big不bigContentView，都需要自行展开。
             .setPriority(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
+            .setAutoCancel(false) //是否点击整条消失
             .build()
 
         notificationManager.notify(666, customNotification)

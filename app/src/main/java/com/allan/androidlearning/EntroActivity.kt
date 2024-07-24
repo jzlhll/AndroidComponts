@@ -1,26 +1,40 @@
 package com.allan.androidlearning
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Space
 import androidx.core.view.updatePadding
+import com.allan.androidlearning.activities.FontTestFragment
+import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_androiduilight.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        logd { "onNewIntent $intent" }
+        setIntent(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        val goto = intent?.getStringExtra("goto")
+
+        logd { "goto $goto" }
 
         transparentStatusBar(window, false) { insets, statusBarsHeight, navigationBarHeight ->
             binding.root.updatePadding(top = statusBarsHeight)
@@ -39,6 +53,12 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
         }
 
         binding.buttonsHost.addView(Space(this), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getScreenFullSize().second / 5))
+
+        if (goto == "LiveData") {
+            FragmentRootActivity.start(this, LiveDataFragment::class.java)
+        } else if (goto == "FontTest") {
+            FragmentRootActivity.start(this, FontTestFragment::class.java)
+        }
     }
 }
 

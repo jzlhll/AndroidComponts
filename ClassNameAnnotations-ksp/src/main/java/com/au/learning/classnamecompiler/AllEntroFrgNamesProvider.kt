@@ -10,7 +10,6 @@ import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
-import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.google.devtools.ksp.validate
 import java.io.OutputStreamWriter
 
@@ -33,15 +32,14 @@ class AllEntroFrgNamesProvider : SymbolProcessorProvider{
 class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment) : SymbolProcessor {
     // 使用一个集合来跟踪已经处理过的符号
     private val processedSymbols = mutableSetOf<KSDeclaration>()
+    val allEntroFragmentNamesTemplate = AllEntroFragmentNamesTemplate()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        environment.logger.warn("ksp process start....")
+        environment.logger.warn("$this ksp process start....")
 
         val symbols = resolver.getSymbolsWithAnnotation(EntroFrgName::class.java.canonicalName)
+        environment.logger.warn("ksp process symbol Size ${symbols.count()}")
         val ret = mutableListOf<KSAnnotated>()
-
-        val allEntroFragmentNamesTemplate = AllEntroFragmentNamesTemplate()
-        var hasMy = false
 
         symbols.toList().forEach { symbol->
             environment.logger.warn("ksp process symbol $symbol")
@@ -52,7 +50,6 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
                 if (symbol is KSClassDeclaration && symbol.classKind == ClassKind.CLASS) {
                     val qualifiedClassName = symbol.qualifiedName?.asString()
                     allEntroFragmentNamesTemplate.insert(qualifiedClassName!!)
-                    hasMy = true
 //                    symbol.accept(TestKspVisitor(environment), Unit)//处理符号
                 } else {
                     ret.add(symbol)
@@ -60,23 +57,27 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
             }
         }
 
-        if (hasMy) {
-            val code = allEntroFragmentNamesTemplate.end()
-
-            // 生成文件
-            val file = environment.codeGenerator.createNewFile(
-                dependencies = Dependencies(false),
-                packageName = "com.allan.androidlearning",
-                fileName = "EntroList"
-            )
-
-            // 写入文件内容
-            OutputStreamWriter(file).use { writer ->
-                writer.write(code)
-            }
-        }
-
         //返回无法处理的符号
         return ret
+    }
+
+    override fun finish() {
+        val code = allEntroFragmentNamesTemplate.end()
+
+        // 生成文件
+        val file = environment.codeGenerator.createNewFile(
+            dependencies = Dependencies.ALL_FILES,
+            packageName = "com.allan.androidlearning",
+            fileName = "EntroList"
+        )
+
+        // 写入文件内容
+        OutputStreamWriter(file).use { writer ->
+            writer.write(code)
+        }
+    }
+
+    override fun onError() {
+        environment.logger.error("ksp process symbol error!")
     }
 }
