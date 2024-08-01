@@ -17,4 +17,9 @@ interface INestedPullManager {
      * 设置刷新函数，如果不设置，或者设置为null，则变成fake模式。
      */
     fun setOnRefreshAction(onRefreshAction:(()->Unit)?)
+
+    /**
+     * 添加额外的indicator的位移Hold偏差值
+     */
+    fun setIndicatorDeltaHoldY(delta:Float) {}
 }

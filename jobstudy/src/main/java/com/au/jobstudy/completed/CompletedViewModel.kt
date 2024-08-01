@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.au.jobstudy.check.AppDatabase
 import com.au.jobstudy.check.bean.CompletedEntity
 import com.au.jobstudy.utils.WeekDateUtil
-import com.au.module_android.simplelivedata.SafeLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.launchOnUi
 
@@ -13,7 +13,7 @@ class CompletedViewModel : ViewModel() {
     /**
      * 日期 to 任务
      */
-    val completedBeans = SafeLiveData<ArrayList<ICompletedBean>>()
+    val completedBeans = NoStickLiveData<ArrayList<ICompletedBean>>()
 
     fun updateABean(bean:CompletedBean, cb:()->Unit) {
         val workId = bean.workEntity.id

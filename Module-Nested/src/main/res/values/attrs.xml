@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NestedRecyclerViewLayout">
+        <!-- 显示在布局里面 -->
+        <attr name="hasIndicatorInLayout" format="boolean" />
+        <!-- 显示到activity的DecorView上 -->
+        <attr name="hasIndicatorInDecorView" format="boolean" />
+        <!-- 显示的holdY，进行修正的数值 -->
+        <attr name="holdDeltaY" format="dimension" />
+    </declare-styleable>
+</resources>

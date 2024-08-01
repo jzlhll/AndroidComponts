@@ -6,6 +6,11 @@ import com.au.module_android.utils.dp
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 internal abstract class IndicatorBase {
+    /**
+     * 可以额外设置，修正的偏差值。
+     */
+    var holdTranslateDeltaY = 0f
+
     val max = 100
     abstract var isIndeterminate:Boolean
     abstract var translationY:Float
@@ -26,6 +31,8 @@ internal abstract class IndicatorBase {
 }
 
 internal class NoneIndicator : IndicatorBase() {
+    private var mProgress = 0
+
     override val holdTranslateY: Float
         get() = 0f
 
@@ -37,15 +44,15 @@ internal class NoneIndicator : IndicatorBase() {
      * 不显示它；我们一直是0，就可以了。
      */
     override var progress: Int
-        get() = 0
-        set(value) {}
+        get() = mProgress
+        set(value) {mProgress = value}
 }
 
 internal class RealIndicator(private val indicator: CircularProgressIndicator) : IndicatorBase() {
-    private val _holdTranslateY:Float = (indicator.indicatorSize + indicator.trackThickness * 2 + indicator.marginBottom + 0.5f.dp)
+    private val _holdTranslateY:Float = indicator.indicatorSize + indicator.trackThickness * 2 + indicator.marginBottom + 0.5f.dp
 
     override val holdTranslateY: Float
-        get() = _holdTranslateY
+        get() = _holdTranslateY + holdTranslateDeltaY
 
     override var isIndeterminate: Boolean
         get() = indicator.isIndeterminate

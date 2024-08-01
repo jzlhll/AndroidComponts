@@ -18,9 +18,8 @@ import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickObser
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.nongyao.AppClickTasksObserver
 import com.au.module_android.Globals
-import com.au.module_android.simplelivedata.SafeLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.ForeNotificationUtil
-import com.au.module_android.utils.logd
 
 /**
  * @author allan
@@ -29,7 +28,7 @@ import com.au.module_android.utils.logd
  */
 class AutoClickFloatAccessService : AccessibilityService() {
     companion object {
-        val isEnabledLiveData = SafeLiveData<Boolean>()
+        val isEnabledLiveData = NoStickLiveData<Boolean>()
     }
 
     private val children:List<AbsAccessServiceObserver> = listOf(

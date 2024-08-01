@@ -12,14 +12,14 @@ class PageStatusLiveData<T : Any> : StatusLiveData<T>() {
 
     override fun success(data: T?, code: Int?, msg: String?) {
         isSuccessOnce = true
-        super.success(data, code, msg)
+        setValueSafe(data, Status.OVER_SUCCESS, code, msg)
     }
 
     override fun error(data: T?, code: Int?, msg: String?) {
         if (isSuccessOnce) {
-            setValueSafe(createRealDataWrap(data, Status.OVER_ERROR, code, msg))
+            setValueSafe(data, Status.OVER_ERROR, code, msg)
         } else {
-            setValueSafe(createRealDataWrap(data, Status.PAGE_INIT_ERROR, code, msg))
+            setValueSafe(data, Status.PAGE_INIT_ERROR, code, msg)
         }
     }
 

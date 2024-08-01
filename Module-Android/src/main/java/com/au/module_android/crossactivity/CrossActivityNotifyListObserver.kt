@@ -1,4 +1,4 @@
-package com.au.module_android.simplelivedata
+package com.au.module_android.crossactivity
 
 import android.os.Handler
 import android.util.Log
@@ -22,7 +22,7 @@ import com.au.module_android.utils.isMainThread
  *
  * 内部会针对，监听的前后，分别通知不同的时机的数据。
  */
-class CrossActivityNotifyListObserver<T : Any>(private val mainHandler:Handler) : DefaultLifecycleObserver{
+class CrossActivityNotifyListObserver<T : Any>(private val mainHandler: Handler) : DefaultLifecycleObserver {
     //value的左边代表是否监听后，有更新过。右边代表更新后的值。
     private data class CrossActivityNotifyListInfo<T>(var isResumed:Boolean,
                                               val data: ArrayList<T> = ArrayList(4))

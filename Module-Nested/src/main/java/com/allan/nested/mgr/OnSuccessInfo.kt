@@ -7,5 +7,6 @@ package com.allan.nested.mgr
  */
 enum class OnSuccessInfo {
     HasData,
+    HasDataAppend,
     Empty
 }

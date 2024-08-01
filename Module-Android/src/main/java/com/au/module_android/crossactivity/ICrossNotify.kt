@@ -1,4 +1,4 @@
-package com.au.module_android.simplelivedata
+package com.au.module_android.crossactivity
 
 import androidx.annotation.MainThread
 

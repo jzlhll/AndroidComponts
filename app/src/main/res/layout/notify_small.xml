@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="#eee999"
     android:orientation="vertical">
 
     <LinearLayout
@@ -32,6 +33,6 @@
         android:textSize="16dp"
         android:maxLines="1"
         android:lines="1"
-        android:text="Small notification, showing a title and a body long long long " />
+        android:text="Small notification, showing a title and a body long long long aaaadd 2222" />
 
 </LinearLayout>

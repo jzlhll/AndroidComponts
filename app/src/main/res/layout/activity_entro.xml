@@ -9,12 +9,16 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
+        app:liftOnScroll="true"
+        android:background="#ffffff"
+        app:liftOnScrollColor="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="150dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
+            android:background="#ffffff"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">

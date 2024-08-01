@@ -6,7 +6,7 @@ import com.au.jobstudy.check.NameList
 import com.au.jobstudy.check.bean.StarEntity
 import com.au.module.cached.AppDataStore
 import com.au.module_android.Globals
-import com.au.module_android.simplelivedata.SafeLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
@@ -17,9 +17,9 @@ import kotlinx.coroutines.delay
  * @description:
  */
 object StarConsts {
-    val allStarsLiveData = SafeLiveData<List<StarItemBean>>()
+    val allStarsLiveData = NoStickLiveData<List<StarItemBean>>()
 
-    val mineStarData = SafeLiveData<StarEntity>()
+    val mineStarData = NoStickLiveData<StarEntity>()
 
     private val bestStudents = mapOf(
         NameList.NAMES_JIANG_TJ to true,

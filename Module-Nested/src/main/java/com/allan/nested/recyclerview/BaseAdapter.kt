@@ -159,10 +159,8 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         val newDataSize = newList?.size ?: 0
         if (newList.isNullOrEmpty()) {
             datas = mutableListOf()
-        } else if (datas == newList) {
+        } else {
             datas = mutableListOf<DATA>().also { it.addAll(newList) }
-        } else if (newList is MutableList<DATA>) {
-            datas = newList
         }
 
         notifyDataSetChanged()

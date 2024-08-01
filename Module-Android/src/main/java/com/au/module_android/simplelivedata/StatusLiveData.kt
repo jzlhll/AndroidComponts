@@ -1,41 +1,58 @@
 package com.au.module_android.simplelivedata
 
+import android.os.Looper
+
 /**
  * @author au
- * 基础的带状态的LiveData。使用它。
+ * Date: 2023/2/17
+ * Description 重新设计带状态的LiveData。简化之前一堆额外代码。
+ * 传入的泛型是T，监听到的是RealDataWrap。
+ *
+ * 携带状态的LiveData，并且更新数据必定在主线程上。
  */
-open class StatusLiveData<T : Any> : SafeLiveData<StatusData<T>>, IOperator<T> {
-    companion object {
-        fun <T:Any> createRealDataWrap(data: T?, @Status status:Int, code: Int?, msg: String?) =
-            StatusData<T>().also {
-                it.data = data
-                it.status = status
-                it.code = code
-                it.message = msg
-            }
+open class StatusLiveData<T : Any> : NoStickLiveData<RealDataWrap<T>>(), IOperator<T> {
+    private var _wrap: RealDataWrap<T>? = null
+
+    /**
+     * 状态
+     */
+    @Status
+    val status: Int
+        get() = _wrap?.status ?: Status.NONE
+    /**
+     * 被包装的真实数据
+     */
+    val data: T?
+        get() = _wrap?.data
+
+    fun setValueSafe(data:T?, @Status status:Int, code:Int?= null, msg:String? = null) {
+        val wrap = _wrap ?: RealDataWrap<T>().also { _wrap = it }
+
+        wrap.code = code
+        wrap.message = msg
+        wrap.data = data
+        wrap.status = status
+
+        if (Looper.getMainLooper() === Looper.myLooper()) {
+            setValue(wrap)
+        } else {
+            postValue(wrap)
+        }
     }
 
-    constructor()
-    constructor(data:T?, @Status status:Int = Status.OVER_SUCCESS, code:Int?= null, msg:String? = null)
-            : super(createRealDataWrap(data, status, code, msg))
-
     override fun success(data: T?, code: Int?, msg: String?) {
-        setValueSafe(createRealDataWrap(data, Status.OVER_SUCCESS, code, msg))
+        setValueSafe(data, Status.OVER_SUCCESS, code, msg)
     }
 
     override fun error(data: T?, code: Int?, msg: String?) {
-        setValueSafe(createRealDataWrap(data, Status.OVER_ERROR, code, msg))
+        setValueSafe(data, Status.OVER_ERROR, code, msg)
     }
 
     override fun running(data: T?, code: Int?, msg: String?) {
-        setValueSafe(createRealDataWrap(data, Status.RUNNING, code, msg))
+        setValueSafe(data, Status.RUNNING, code, msg)
     }
 
-    fun isRunning() = value?.code == Status.RUNNING
-
-    fun isSuccess() = value?.code == Status.OVER_SUCCESS
-
-    fun isError() = value?.code == Status.OVER_ERROR
-
-    val data:T? = value?.data
+    override fun runningOldData(code: Int?, msg: String?) {
+        setValueSafe(this.data, Status.RUNNING, code, msg)
+    }
 }

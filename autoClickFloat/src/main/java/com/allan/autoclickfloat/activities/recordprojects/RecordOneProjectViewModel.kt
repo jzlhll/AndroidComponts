@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.autoclickfloat.database.AppDatabase
-import com.au.module_android.simplelivedata.SafeLiveData
-import com.au.module_android.simplelivedata.asSafeLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.utils.launchOnThread
 
 class RecordOneProjectViewModel : ViewModel() {
-    val stepsData:LiveData<List<StepWrap>> = SafeLiveData()
+    val stepsData:LiveData<List<StepWrap>> = NoStickLiveData()
 
     private var isDeleteMode = false
 
@@ -18,13 +18,13 @@ class RecordOneProjectViewModel : ViewModel() {
             val steps = AppDatabase.db.stepDao().getAll(projectId).map {
                 StepWrap(false, it)
             }
-            stepsData.asSafeLiveData().setValueSafe(steps)
+            stepsData.asNoStickLiveData().setValueSafe(steps)
         }
     }
 
     fun switchDeleteMode() {
         isDeleteMode = !isDeleteMode
         val list = stepsData.value ?: listOf()
-        stepsData.asSafeLiveData().setValueSafe(list.map { StepWrap(isDeleteMode, it.step) })
+        stepsData.asNoStickLiveData().setValueSafe(list.map { StepWrap(isDeleteMode, it.step) })
     }
 }

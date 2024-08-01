@@ -25,16 +25,15 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
         get() = idGen.incrementAndGet()
 
     //如果你的是android.util.LongSparseArray自行调整。
-    private var mFragments:androidx.collection.LongSparseArray<Fragment>? = null
-    private fun mFragmentsGet() : androidx.collection.LongSparseArray<Fragment> {
-        val frgs = mFragments
-        if (frgs == null) {
-            val r = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mFragments", true)
-                        .asOrNull<androidx.collection.LongSparseArray<Fragment>>()
-            mFragments = r
-            return r!!
+    private var mFragmentsParent:androidx.collection.LongSparseArray<Fragment>? = null
+    private fun mFragmentsRequire() : androidx.collection.LongSparseArray<Fragment>? {
+        var mFragments = mFragmentsParent
+        if (mFragments == null) {
+            mFragments = ReflectionUtils.iteratorGetPrivateFieldValue(this, "mFragments", true).asOrNull<androidx.collection.LongSparseArray<Fragment>>()
+            mFragmentsParent = mFragments
+            return mFragments
         }
-        return frgs
+        return mFragments
     }
 
     /**
@@ -46,7 +45,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
      * Fragment构建器。根据data来创建。
      * 请创建出Fragment，实现IFragmentNeedUpdate。
      */
-    var fragmentCreator:((data:T)-> IFragmentNeedUpdate<T>)? = null
+    var fragmentCreator:((data:T)->IFragmentNeedUpdate<T>)? = null
 
     fun submitData(newDatas:List<T>) {
         if (fragmentCreator == null) {
@@ -56,10 +55,11 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
             throw RuntimeException("you have not set differComparator.")
         }
 
-        if (idGen.get() == 0L) {
+        val mFragments = mFragmentsRequire()
+        if (idGen.get() == 0L || mFragments == null) {
             initData(newDatas)
         } else {
-            updateData(newDatas)
+            updateData(newDatas, mFragments)
         }
     }
 
@@ -79,7 +79,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
     }
 
     //完全按照新列表，顺序来显示。
-    private fun updateData(newDatas:List<T>) {
+    private fun updateData(newDatas:List<T>, mFragments:androidx.collection.LongSparseArray<Fragment>) {
         val minSize = min(datas.size, newDatas.size)
         val deltaSize = kotlin.math.abs(datas.size - newDatas.size)
         //更新前面的Fragment
@@ -88,7 +88,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
             if (differComparator?.invoke(datas[i], newData) == true) {
                 //现在就存在的Fragment，我们需要更新它
                 //先拿到老id进行更新
-                mFragmentsGet().get(myIds[i]).asOrNull<IFragmentNeedUpdate<T>>()?.onNeedUpdate(newData)
+                mFragments.get(myIds[i]).asOrNull<IFragmentNeedUpdate<T>>()?.onNeedUpdate(newData)
                 myIds[i] = nextId //更新id。放到后面，否则提取不匹配。
             }
             datas[i] = newData //不论如何都要换新数据的。

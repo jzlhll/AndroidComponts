@@ -9,7 +9,7 @@ import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module.cached.AppDataStore
-import com.au.module_android.simplelivedata.RealMutableLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
 
@@ -35,7 +35,7 @@ object CheckConsts {
     lateinit var curWeekWorks:List<WorkEntity>
     lateinit var lastWeekWorks:List<WorkEntity>
 
-    val statusChangedLiveData = RealMutableLiveData<UpdateChangeStatus>()
+    val statusChangedLiveData = NoStickLiveData<UpdateChangeStatus>()
 
     var todayCompletedWorks: List<CompletedEntity>? = null
     var yesterdayCompletedWorks: List<CompletedEntity>? = null
@@ -142,7 +142,7 @@ object CheckConsts {
     private fun updateStatusChangedLiveData(isAll:Boolean) {
         val st = if(isAll) StatusMode.All else StatusMode.Completed
         val oldIndex = (statusChangedLiveData.realValue?.index ?: 0)
-        statusChangedLiveData.postValue(UpdateChangeStatus(st, oldIndex + 1))
+        statusChangedLiveData.setValueSafe(UpdateChangeStatus(st, oldIndex + 1))
     }
 
     private suspend fun weekChanged(newDayer: Dayer) {

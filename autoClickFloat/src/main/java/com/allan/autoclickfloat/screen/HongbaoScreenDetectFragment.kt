@@ -26,7 +26,7 @@ class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding
             val captureIntent = projectionManager.createScreenCaptureIntent()
 
             // 请求录屏权限
-            activityForResult.start(captureIntent) {result->
+            activityForResult.start(captureIntent, null) {result->
                 if (result.resultCode == RESULT_OK) {
                     // 用户已授权，可以开始录屏
                     val data = result.data

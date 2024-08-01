@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:background="#cccccc"
     android:orientation="vertical">
 
     <LinearLayout
@@ -35,18 +36,27 @@
         android:textColor="#22aa22"
         android:text="Large notification, showing a title and a body." />
 
-    <ImageView
-        android:id="@+id/ic_failure"
-        android:src="@drawable/ic_failure"
-        android:layout_width="80dp"
-        android:layout_height="80dp"/>
-
-    <TextView
-        android:id="@+id/gotoBtn"
-        style="@style/StyleButtonPrimary"
-        android:text=" goto "
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ic_failure"
+            android:src="@drawable/ic_failure"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+        <TextView
+            android:layout_marginStart="20dp"
+            android:layout_gravity="center_vertical"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
+            android:id="@+id/gotoBtn"
+            android:textColor="#ffffff"
+            android:text="gotoApp"
+            android:background="@drawable/round_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/notification_body"

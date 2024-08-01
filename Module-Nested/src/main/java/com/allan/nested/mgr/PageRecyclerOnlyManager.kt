@@ -167,13 +167,16 @@ open class PageRecyclerOnlyManager<Bean:Any>(
 
                         onSuccess?.invoke(OnSuccessInfo.Empty)
                     } else {
+                        val onSuccessInfo:OnSuccessInfo
                         if (data.isFirst) {
                             adapter.initDatas(data.getPageByIndex(1), !data.isOver)
+                            onSuccessInfo = OnSuccessInfo.HasData
                         } else {
                             adapter.appendDatas(data.getPageByIndex(data.currentPageIndex), !data.isOver)
+                            onSuccessInfo = OnSuccessInfo.HasDataAppend
                         }
 
-                        onSuccess?.invoke(OnSuccessInfo.HasData)
+                        onSuccess?.invoke(onSuccessInfo)
                     }
                 }
 

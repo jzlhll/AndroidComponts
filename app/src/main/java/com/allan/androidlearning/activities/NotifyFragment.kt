@@ -43,7 +43,7 @@ class NotifyFragment : ViewFragment() {
             it.addView(Button(inflater.context).also {
                 it.text = "通知啊"
                 it.onClick {
-                    Globals.mainHandler.postDelayed({sendNotif()}, 1500)
+                    Globals.mainHandler.postDelayed({sendNotif()}, 3000)
                 }
             }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 60.dp))
         }
@@ -58,7 +58,7 @@ class NotifyFragment : ViewFragment() {
             channel.enableVibration(false) //震动不可用
             channel.setSound(null, null) //设置没有声音
         }
-        channel.description = "notify desca"
+        channel.description = "notifyChannelName"
         notificationManager.createNotificationChannel(channel)
 
 // Get the layouts to use in the custom notification.
@@ -84,7 +84,8 @@ class NotifyFragment : ViewFragment() {
 
 // Apply the layouts to the notification.
         val customNotification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(com.au.module.android.R.drawable.ic_warning)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("hahah") //不同手机不一定有显示
             .setStyle(NotificationCompat.BigTextStyle())
             .setCustomContentView(notificationLayout)
             .setCustomBigContentView(notificationLayoutExpanded) //华为手机不论Big不bigContentView，都需要自行展开。

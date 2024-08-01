@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * author: allan.jiang
+ * author: au
  * Time: 2022/11/28
  * Desc: 从网上找到的 https://github.com/nex3z/FlowLayout 2.4K星 使用参考。
  *

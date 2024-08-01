@@ -29,7 +29,7 @@ internal class NestedPullSmoothManager
     private val isIndicatorChildOfBePullView: Boolean,
     private val params: SmoothParams = SmoothParams(80f.dp.toInt(), 0.35f)
 ): INestedPullManager {
-    private val indicator: IndicatorBase
+    private val indicator:IndicatorBase
 
     private var onRefreshAction:(() -> Unit)? = null
 
@@ -38,6 +38,10 @@ internal class NestedPullSmoothManager
      */
     override fun setOnRefreshAction(onRefreshAction: (() -> Unit)?) {
         this.onRefreshAction = onRefreshAction
+    }
+
+    override fun setIndicatorDeltaHoldY(delta: Float) {
+        indicator.holdTranslateDeltaY = delta
     }
 
     /**
@@ -52,6 +56,7 @@ internal class NestedPullSmoothManager
 
     init {
         indicator = if (progressIndicator == null) NoneIndicator() else RealIndicator(progressIndicator)
+
         initial()
     }
 

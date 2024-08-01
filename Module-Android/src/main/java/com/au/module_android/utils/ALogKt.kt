@@ -3,6 +3,7 @@ package com.au.module_android.utils
 import android.os.Looper
 import android.util.Log
 import com.au.module.android.BuildConfig
+import java.util.Locale
 
 const val TAG:String = "au_log"
 var hasFileLog = false
@@ -36,7 +37,12 @@ inline fun logd(block:()->String) {
 inline fun logt(block:()->String) {
     if(BuildConfig.DEBUG) {
         val isMainThread = (Thread.currentThread().id == Looper.getMainLooper().thread.id)
-        Log.d(TAG, "thread${Thread.currentThread().id}-$isMainThread: " + block())
+        val log = if (isMainThread) {
+            "MainThread: " + block()
+        } else {
+            String.format(Locale.ROOT, "Thread[%02d]: %s", Thread.currentThread().id, block())
+        }
+        Log.d(TAG, log)
     }
 }
 

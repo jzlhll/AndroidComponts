@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.android.nested.BuildConfig
-import com.au.module_android.simplelivedata.SafeLiveData
+import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.simplelivedata.Status
 import com.au.module_androiduilight.toast.toastOnTop
 import kotlinx.coroutines.launch
 
@@ -18,12 +19,14 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
         IsLoading,
     }
 
+    var logTag:String = ""
+
     val pageData by lazy (LazyThreadSafetyMode.NONE) { PageStatusLiveData<LoadPage<Bean>>() }
 
     /**
      * 请求的总共size。只会在realLoadData的第一页成功结果后，回调
      */
-    val totalSizeData by lazy (LazyThreadSafetyMode.NONE) { SafeLiveData<Int>() }
+    val totalSizeData by lazy (LazyThreadSafetyMode.NONE) { NoStickLiveData<Int>() }
 
     var pageSize = 20
 
@@ -63,10 +66,10 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
      * 调用加载数据。true则变成init，即从page1开始加载；false则appendData
      */
     open fun loadPageData(initOrAppend:Boolean) : LoadStatus {
-        if(BuildConfig.DEBUG) Log.d("nested", "load PageData initOrAppend: $initOrAppend")
+        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}load PageData initOrAppend: $initOrAppend")
 
         val pageDataData = pageData.data
-        if (pageDataData != null && pageData.isRunning()) {
+        if (pageDataData != null && pageData.status == Status.RUNNING) {
             return LoadStatus.IsLoading
         }
 
@@ -74,39 +77,39 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
             return LoadStatus.NoMore
         }
 
-        if(BuildConfig.DEBUG) Log.d("nested", "loadPageData running...${pageData.data}")
-        pageData.running()
+        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}loadPageData running...${pageData.data}")
+        pageData.runningOldData()
         val currentPage = if(initOrAppend) firstPageIndex else (pageData.data?.nextPageIndex ?: firstPageIndex)
 
         val myData = pageData.data ?: LoadPage()
         viewModelScope.launch {
             try {
-                if(BuildConfig.DEBUG) Log.d("nested", "real LoadData----$currentPage")
+                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData----$currentPage")
                 val data = realLoadData(currentPage, pageSize) //返回获取到的数据
                 val records = data.records
 
                 //todo 可以根据http结果data的page信息修改如下的isOver逻辑
                 if (initOrAppend) {
                     if (records == null || records.size == 0) {
-                        if(BuildConfig.DEBUG) Log.d("nested", "init with empty")
+                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}init with empty")
                         myData.initWithEmpty()
                         totalSizeData.setValueSafe(0)
                     } else {
-                        if(BuildConfig.DEBUG) Log.d("nested", "init with page")
+                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}init with page")
                         myData.initPage(records, isCurrentPageLastPage(data))
                         totalSizeData.setValueSafe(data.pages)
                     }
                 } else {
                     if (records == null || records.size == 0) {
-                        if(BuildConfig.DEBUG) Log.d("nested", "append with end")
+                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}append with end")
                         myData.appendNullMaskEnd()
                     } else {
-                        if(BuildConfig.DEBUG) Log.d("nested", "append with page")
+                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}append with page")
                         myData.appendPage(records, isCurrentPageLastPage(data))
                     }
                 }
 
-                if(BuildConfig.DEBUG) Log.d("nested", "realLoadData success!")
+                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}realLoadData success!")
                 pageData.success(myData)
             } catch (e: Throwable) {
                 //e.printStackTrace()
@@ -114,14 +117,14 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
                 val errorCode:Int?
                 errorCode = -1
                 errorMsg = e.message
-                if(BuildConfig.DEBUG) Log.d("nested", "real LoadData error----$currentPage")
+                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData error----$currentPage")
                 realLoadDataError(e.message)
-                if(BuildConfig.DEBUG) Log.d("nested", "load error!")
+                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}load error!")
                 pageData.error(myData, errorCode, errorMsg)
             }
         }
 
-        if(BuildConfig.DEBUG) Log.d("nested", "start search load page data emitted.")
+        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}start search load page data emitted.")
         return LoadStatus.Emitted
     }
 }

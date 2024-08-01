@@ -133,6 +133,10 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         pullManager.refreshCompleted()
     }
 
+    override fun setIndicatorDeltaHoldY(delta: Float) {
+        pullManager.setIndicatorDeltaHoldY(delta)
+    }
+
     override fun refreshCompleted() {
         if (DEBUG) Log.d(TAG, "refreshCompleted")
         abortTouch = false
