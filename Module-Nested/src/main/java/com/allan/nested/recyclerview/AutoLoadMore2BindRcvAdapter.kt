@@ -45,10 +45,10 @@ abstract class AutoLoadMore2BindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>
         }
     }
 
-    override fun initDatasOnly(datas: List<DATA>?) {
+    override fun initDatasOnly(datas: List<DATA>?, isTraditionalForce: Boolean) {
         if (datas.isNullOrEmpty()) {
             //注意，我们为了屏蔽外部使用，已经改写；所以这里调用super
-            super.updateDataList(null, false)
+            super.updateDataList(null, false, isTraditionalForce)
         } else {
             val realDatas = mutableListOf<DATA>()
             realDatas.addAll(datas)
@@ -57,7 +57,7 @@ abstract class AutoLoadMore2BindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>
                 realDatas.add(loadingBean)
             }
             //注意，我们为了屏蔽外部使用，已经改写；所以这里调用super
-            super.updateDataList(realDatas, false)
+            super.updateDataList(realDatas, false, isTraditionalForce)
         }
     }
 }

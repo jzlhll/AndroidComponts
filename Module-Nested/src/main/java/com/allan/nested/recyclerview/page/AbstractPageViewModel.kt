@@ -19,6 +19,23 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
         IsLoading,
     }
 
+    enum class LoadCode(val code:Int) {
+        /**
+         * 初始化数据：可能是覆盖的老的是一页；或者没有。
+         */
+        Init(1),
+
+        /**
+         * 初始化数据：老的数据一定是多页
+         */
+        InitWithOldMulti(2),
+
+        /**
+         * 拼接数据
+         */
+        Append(3)
+    }
+
     var logTag:String = ""
 
     val pageData by lazy (LazyThreadSafetyMode.NONE) { PageStatusLiveData<LoadPage<Bean>>() }
@@ -89,7 +106,12 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
                 val records = data.records
 
                 //todo 可以根据http结果data的page信息修改如下的isOver逻辑
+
+                val loadCode:Int
+                var needUpdatePageData = true
                 if (initOrAppend) {
+                    loadCode = if(!myData.isFirst) LoadCode.InitWithOldMulti.code else LoadCode.Init.code
+
                     if (records == null || records.size == 0) {
                         if(BuildConfig.DEBUG) Log.d("nested", "${logTag}init with empty")
                         myData.initWithEmpty()
@@ -100,6 +122,8 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
                         totalSizeData.setValueSafe(data.pages)
                     }
                 } else {
+                    loadCode = LoadCode.Append.code
+
                     if (records == null || records.size == 0) {
                         if(BuildConfig.DEBUG) Log.d("nested", "${logTag}append with end")
                         myData.appendNullMaskEnd()
@@ -110,7 +134,7 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
                 }
 
                 if(BuildConfig.DEBUG) Log.d("nested", "${logTag}realLoadData success!")
-                pageData.success(myData)
+                if(needUpdatePageData) pageData.success(myData, code=loadCode)
             } catch (e: Throwable) {
                 //e.printStackTrace()
                 val errorMsg:String?

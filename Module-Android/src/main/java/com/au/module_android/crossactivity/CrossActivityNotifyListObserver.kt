@@ -73,7 +73,7 @@ class CrossActivityNotifyListObserver<T : Any>(private val mainHandler: Handler)
 
             if (info.isResumed) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "changeData owner $owner isResumed onDateChanged")
-                owner.asOrNull<ICrossNotify<T>>()?.onCrossNotify(fetchAndClear(info))
+                owner.asOrNull<ICrossNotify<T>>()?.onCrossNotify(fetchAndClear(info), ICrossNotify.NOTIFY_WHEN_IN_RESUME)
             } else {
                 if (BuildConfig.DEBUG) Log.d(TAG, "changeData owner $owner isNotResumed just save")
             }
@@ -88,7 +88,7 @@ class CrossActivityNotifyListObserver<T : Any>(private val mainHandler: Handler)
         if (info.data.isNotEmpty()) {
             if (BuildConfig.DEBUG) Log.d(TAG, "onResumeCall exist $owner onDataChanged ${info.data}")
             val outList = fetchAndClear(info)
-            owner.asOrNull<ICrossNotify<T>>()?.onCrossNotify(outList)
+            owner.asOrNull<ICrossNotify<T>>()?.onCrossNotify(outList, ICrossNotify.NOTIFY_WHEN_RESUME_POINT)
         } else {
             if (BuildConfig.DEBUG) Log.d(TAG, "onResumeCall exist $owner no change.")
         }

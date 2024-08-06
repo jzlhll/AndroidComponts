@@ -80,29 +80,29 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
     /**
      * 如果是占位图显示；则需要调用initWithPlacesHolder。替换的时候，不能做差异化更新。
      */
-    override fun initDatas(datas: List<DATA>?, hasMore: Boolean) {
+    override fun initDatas(datas: List<DATA>?, hasMore: Boolean, isTraditionalUpdate: Boolean) {
         this.hasMore = hasMore
 
         val oldDataSize = this.datas.size
         val newDataSize = datas?.size ?: 0
 
-        initDatasOnly(datas)
+        initDatasOnly(datas, isTraditionalUpdate)
 
         status = PullRefreshStatus.Normal
 
         onDataChanged(DataChangeExtraInfoInit(oldDataSize, newDataSize))
     }
 
-    internal open fun initDatasOnly(datas: List<DATA>?) {
+    internal open fun initDatasOnly(datas: List<DATA>?, isTraditionalUpdate: Boolean) {
         if (datas.isNullOrEmpty()) {
-            updateDataList(null, false)
+            updateDataList(null, false, isTraditionalUpdate)
         } else {
             val fixDatas = if (datas == this.datas) { //防止跟本地list相同
                 mutableListOf<DATA>().also { it.addAll(datas) }
             } else {
                 datas
             }
-            updateDataList(fixDatas, false)
+            updateDataList(fixDatas, false, isTraditionalUpdate)
         }
     }
 
@@ -112,8 +112,9 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
     internal fun updateDataList(
         newList: List<DATA>?,
         isReplaceData: Boolean,
+        isTraditionalForce:Boolean
     ) {
-        if (!isSupportDiffer() || isPlacesHolder) {
+        if (!isSupportDiffer() || isPlacesHolder || isTraditionalForce) {
             isPlacesHolder = false
             submitTraditional(newList, false)
         } else {

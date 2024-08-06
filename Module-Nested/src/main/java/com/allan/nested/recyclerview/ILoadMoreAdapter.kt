@@ -9,7 +9,7 @@ interface ILoadMoreAdapter<DATA> {
     /**
      * 刷新数据重载为新的一份数据。
      */
-    fun initDatas(datas: List<DATA>?, hasMore: Boolean = false)
+    fun initDatas(datas: List<DATA>?, hasMore: Boolean = false, isTraditionalUpdate:Boolean = false)
     /**
      * 加载更多数据
      */
