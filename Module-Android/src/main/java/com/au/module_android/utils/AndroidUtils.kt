@@ -24,6 +24,7 @@ import com.au.module_android.Globals
 import com.au.module_android.Globals.app
 import java.math.BigDecimal
 import java.math.RoundingMode
+import kotlin.math.roundToInt
 
 val isMainThread: Boolean
     get() = Looper.getMainLooper() === Looper.myLooper()
@@ -86,20 +87,19 @@ val Float.dp:Float
     get() = (this * app.resources.displayMetrics.density)
 
 val Float.dpInt:Int
-    get() = (this * app.resources.displayMetrics.density).toInt()
+    get() = (this * app.resources.displayMetrics.density).roundToInt()
 
 /**
  * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
  */
 val Int.dp:Int
-    get() = (this.toFloat() * app.resources.displayMetrics.density).toInt()
+    get() = (this.toFloat() * app.resources.displayMetrics.density).roundToInt()
 
 /**
  * 如果能使用Activity.dp或者Fragment.dp则使用另外2个。
  */
 val Int.dpFloat:Float
     get() = this.toFloat() * app.resources.displayMetrics.density
-
 
 /**
  * 获取缓存大小

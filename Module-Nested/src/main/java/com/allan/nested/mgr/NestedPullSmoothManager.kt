@@ -141,6 +141,7 @@ internal class NestedPullSmoothManager
     override fun refreshCompleted() {
         isLoadingData = false
         indicator.isIndeterminate = false
+        indicator.progress = 0
         if (NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "refreshCompleted in nestedPullSmooth")
         hideIndicator()
     }

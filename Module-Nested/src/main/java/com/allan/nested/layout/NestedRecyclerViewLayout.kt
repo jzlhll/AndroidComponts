@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.allan.android.nested.R
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.roundDp
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
@@ -62,8 +63,8 @@ class NestedRecyclerViewLayout : NestedConstraintLayout {
      */
     private fun createCircularProgressIndicator(context: Context): CircularProgressIndicator {
         val progressIndicator = CircularProgressIndicator(context)
-        progressIndicator.indicatorSize = 20.dp
-        progressIndicator.trackThickness = 2.dp
+        progressIndicator.indicatorSize = 20.roundDp
+        progressIndicator.trackThickness = 2.roundDp
         progressIndicator.visibility = View.GONE
         return progressIndicator
     }

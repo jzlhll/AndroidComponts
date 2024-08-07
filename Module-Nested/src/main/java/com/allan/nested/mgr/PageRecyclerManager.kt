@@ -31,8 +31,6 @@ open class PageRecyclerManager<Bean:Any>(
     adapter: AutoLoadMoreBindRcvAdapter<Bean, *>,
     supportPullRefresh: Boolean, //不做default值，给调用者提醒
     supportLoadMore: Boolean = true,
-    disablePullUpEffect:Boolean = false,
-    disablePullDownEffect:Boolean = false
 ) : PageRecyclerOnlyManager<Bean>(layout.recyclerView, viewModel, adapter, supportLoadMore) {
     private val rcv:RecyclerView = layout.recyclerView
 
@@ -52,14 +50,6 @@ open class PageRecyclerManager<Bean:Any>(
             layout.refresher.setOnRefreshAction {
                 viewModel.loadPageData(true)
             }
-        }
-
-        if (disablePullDownEffect) {
-            layout.refresher.disablePullDownEffect()
-        }
-
-        if (disablePullUpEffect) {
-            layout.refresher.disablePullUpEffect()
         }
     }
 }

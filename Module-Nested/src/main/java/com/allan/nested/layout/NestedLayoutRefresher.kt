@@ -4,18 +4,17 @@ import android.animation.ValueAnimator
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
-import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
-import android.widget.EdgeEffect
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.allan.nested.mgr.INestedPullManager
 import com.allan.nested.mgr.NestedPullFakeManager
 import com.allan.nested.mgr.NestedPullSmoothManager
 import com.allan.nested.mgr.SmoothParams
+import com.allan.nested.widget.NoTopEffectRecyclerView
 import com.au.module_android.utils.dp
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import java.lang.Long.max
 
 /**
@@ -51,11 +50,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
                 //研究许久，如果想要下拉刷新的嵌套RecyclerView的Layout，则禁用内部的RecyclerView的edge效果即可。
                 //rcv1.3.2的库，额外处理了edge consume掉了nest的距离。因此，我们这里搞一个假的空Effect进去，也符合我们
                 //下拉刷新的本质。要求
-                view.edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
-                    override fun createEdgeEffect(view: RecyclerView, direction: Int): EdgeEffect {
-                        return NoEdgeEffect(view.context)
-                    }
-                }
+                view.edgeEffectFactory = NoTopEffectRecyclerView.NoEdgeTopEffectFactory(view.context)
             }
         }
     }
@@ -92,9 +87,6 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
     override fun pullDownIsTargetTranslated() = pullManager.pullDownIsTargetTranslated()
 
     private lateinit var pullManager: INestedPullManager
-
-    private var isDisablePullUpEffect = false
-    private var isDisablePullDownEffect = false
 
     /**
      * 早一点调用。必须调用，否则，出错。
@@ -152,14 +144,6 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
 
     override fun loadingData() = pullManager.loadingData()
 
-    fun disablePullUpEffect() {
-        isDisablePullUpEffect = true
-    }
-
-    fun disablePullDownEffect() {
-        isDisablePullDownEffect = true
-    }
-
     ///////////////////////////////////
 
     //本轮是否接受成为是下拉刷新的状态。
@@ -202,7 +186,7 @@ class NestedLayoutRefresher(private val layout:ViewGroup) : INestedPullManager {
         if(DEBUG) Log.d(TAG, "$tag onHostNestedPreScroll $dy  ${consumed[0]}  ${consumed[1]}")
         //如果是接收了本次的refresh滑动模式；我们则将全部消费行为给到onPullDownMoving去处理。
         if (mIsATurnScrollAccept == PullDownState.Accept) {
-            if (!isDisablePullDownEffect) {
+            if (true) { //其实可以做点事情
                 consumed[0] = dx
                 consumed[1] = dy //这里我们进行全部消费，later: 虽然我认为没必要，子View也滑不动，因为我们只在顶部的时候往下拉的场景。
                 onPullDownMoving(target, dy.toFloat(), consumed)
