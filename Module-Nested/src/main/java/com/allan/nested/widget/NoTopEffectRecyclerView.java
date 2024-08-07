@@ -44,11 +44,11 @@ public class NoTopEffectRecyclerView extends RecyclerView {
     }
 
     public static final class NoEdgeTopEffectFactory extends EdgeEffectFactory {
-        private final com.tyiot.module.nested.widget.NoEdgeEffect effect;
+        private final NoEdgeEffect effect;
         private final DefaultEdgeEffectFactory defaultFactory = new DefaultEdgeEffectFactory();
 
         public NoEdgeTopEffectFactory(Context context) {
-            this.effect = new com.tyiot.module.nested.widget.NoEdgeEffect(context);
+            this.effect = new NoEdgeEffect(context);
         }
 
         @NonNull

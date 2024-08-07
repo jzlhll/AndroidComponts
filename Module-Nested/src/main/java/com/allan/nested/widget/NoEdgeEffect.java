@@ -1,4 +1,4 @@
-package com.tyiot.module.nested.widget;
+package com.allan.nested.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 /**
- * @author allan.jiang
+ * @author au
  * @date :2023/12/26 14:42
  * @description: 因为RecyclerView内部做了边缘(edge)效果处理，
  * 在1.2.1和1.3.2对于边缘处理不同，进而导致parentView无法监听到Nest事件。
