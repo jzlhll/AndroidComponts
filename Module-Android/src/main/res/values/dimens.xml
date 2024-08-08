@@ -8,4 +8,6 @@
     <dimen name="single_btn_corner_size">8dp</dimen>
     <dimen name="two_btn_corner_size">6dp</dimen>
     <dimen name="dialog_two_btn_corner_size">4dp</dimen>
+
+    <dimen name="toolbar_height">48dp</dimen>
 </resources>

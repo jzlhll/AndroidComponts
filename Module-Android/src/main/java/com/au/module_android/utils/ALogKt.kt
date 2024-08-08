@@ -6,7 +6,7 @@ import com.au.module.android.BuildConfig
 import java.util.Locale
 
 const val TAG:String = "au_log"
-var hasFileLog = false
+val hasFileLog = false
 
 inline fun loge(block:()->String) {
     val str = block()

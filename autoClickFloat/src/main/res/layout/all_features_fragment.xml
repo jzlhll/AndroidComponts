@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
+        app:cardElevation="8dp"
         android:id="@+id/recordModeHost"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,9 +24,10 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="录制方案"/>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
+        app:cardElevation="8dp"
         android:id="@+id/autoClickHost"
         app:layout_constraintTop_toBottomOf="@id/recordModeHost"
         android:layout_marginTop="32dp"
@@ -41,16 +43,16 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="自动点击"/>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
+        app:cardElevation="8dp"
         android:id="@+id/nongyaoHost"
         app:layout_constraintTop_toBottomOf="@id/autoClickHost"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="80dp">
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nongyaoBtn"
@@ -60,9 +62,10 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="AutoWorkTg"/>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
+        app:cardElevation="8dp"
         android:id="@+id/debugHost"
         app:layout_constraintTop_toBottomOf="@id/nongyaoHost"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +81,6 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="Debug"/>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

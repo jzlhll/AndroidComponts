@@ -36,7 +36,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
 
         logd { "goto $goto" }
 
-        transparentStatusBar(window, false) { insets, statusBarsHeight, navigationBarHeight ->
+        transparentStatusBar(window, true) { insets, statusBarsHeight, navigationBarHeight ->
             binding.root.updatePadding(top = statusBarsHeight)
             insets
         }

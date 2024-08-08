@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_primary"
     tools:context=".EntroActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
+        app:elevation="0dp"
+        android:elevation="0dp"
         app:liftOnScroll="true"
-        android:background="#ffffff"
-        app:liftOnScrollColor="#ffffff"
+        app:liftOnScrollColor="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="150dp">
 
@@ -19,6 +19,7 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:background="#ffffff"
+            app:contentScrim="#ffffff"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
