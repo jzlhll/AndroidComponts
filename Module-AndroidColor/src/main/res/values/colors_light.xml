@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- app 主题背景色 -->
-    <color name="color_background_app_lt">#ffffff</color>
+    <color name="windowBackground_lt">#ffffff</color>
     <!-- app dialog的背景色 -->
-    <color name="color_background_dialog_lt">#ffffff</color>
+    <color name="colorBackground_lt">#ffffff</color>
 
     <!-- 背景色 ：文字图标，或者一片框框-->
     <color name="color_normal_block_lt">#f6f6f6</color>
@@ -12,8 +12,8 @@
     <color name="color_secondary_press_lt">#99f0f0f0</color>
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
-    <color name="color_primary_lt">#248067</color>
-    <color name="color_primary_press_lt">#CC248067</color>
+    <color name="colorPrimary_lt">#248067</color>
+    <color name="colorPrimary_press_lt">#CC248067</color>
 
     <!-- 文字颜色 -->
     <color name="color_text_normal_lt">#212121</color>
@@ -23,8 +23,8 @@
     <color name="color_hint_text_lt">#CCCCCC</color>
 
     <!-- button: main button色 -->
-    <color name="color_main_btn_bg_lt">@color/color_primary_lt</color>
-    <color name="color_main_btn_bg_press_lt">@color/color_primary_press_lt</color>
+    <color name="color_main_btn_bg_lt">@color/colorPrimary_lt</color>
+    <color name="color_main_btn_bg_press_lt">@color/colorPrimary_press_lt</color>
     <color name="color_main_btn_text_lt">@color/color_text_reverse_lt</color>
 
     <!-- button: secondary button色 -->
@@ -56,7 +56,7 @@
     <!-- <color name="color_tab_text_select_lt">#ffffff</color> 使用color_text_normal -->
 
     <!-- 分割线的颜色 -->
-    <color name="color_line_lt">#f0f0f0</color>
+    <color name="colorForeground_lt">#f0f0f0</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg_lt">@color/color_secondary_lt</color>
@@ -66,5 +66,5 @@
 
     <!-- toolBar相关 -->
     <color name="color_toolbar_text_lt">@color/color_text_normal_lt</color>
-    <color name="color_toolbar_background_lt">@color/color_background_app_lt</color>
+    <color name="color_toolbar_background_lt">@color/windowBackground_lt</color>
 </resources>

@@ -12,7 +12,7 @@
         android:layout_marginStart="15dp"
         tools:text="20220708"
         android:textStyle="bold"
-        android:textColor="@color/color_primary"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

@@ -47,7 +47,7 @@
             <com.au.module_android.widget.CustomFontTextlink
                 style="@style/StyleFontMText"
                 android:text="this is a link"
-                android:textColor="@color/color_primary"
+                android:textColor="@color/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -58,7 +58,7 @@
                 app:drawableStartHeight="20dp"
                 app:drawableTextPadding="4dp"
                 android:text="primary color Text"
-                android:textColor="@color/color_primary"
+                android:textColor="@color/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -97,7 +97,7 @@
 
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/color_line"
+            android:background="@color/colorForeground"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
@@ -179,7 +179,7 @@
 
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/color_line"
+            android:background="@color/colorForeground"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
@@ -248,7 +248,7 @@
         
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/color_line"
+            android:background="@color/colorForeground"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
@@ -275,7 +275,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <View
-                    android:background="@color/color_background_dialog"
+                    android:background="@color/colorBackground"
                     android:layout_width="48dp"
                     android:layout_height="48dp"/>
                 <TextView
@@ -335,7 +335,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <View
-                    android:background="@color/color_primary"
+                    android:background="@color/colorPrimary"
                     android:layout_width="48dp"
                     android:layout_height="48dp"/>
                 <TextView
@@ -350,7 +350,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <View
-                    android:background="@color/color_primary_press"
+                    android:background="@color/colorPrimary_press"
                     android:layout_width="48dp"
                     android:layout_height="48dp"/>
                 <TextView

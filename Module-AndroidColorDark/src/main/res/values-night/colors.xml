@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- app 主题背景色 -->
-    <color name="color_background_app">@color/color_background_app_dk</color>
+    <color name="windowBackground">@color/windowBackground_dk</color>
     <!-- app dialog的背景色 -->
-    <color name="color_background_dialog">@color/color_background_dialog_dk</color>
+    <color name="colorBackground">@color/colorBackground_dk</color>
 
     <!-- 背景色 ：文字图标，或者一片框框-->
     <color name="color_normal_block">@color/color_normal_block_dk</color>
@@ -12,8 +12,8 @@
     <color name="color_secondary_press">@color/color_secondary_press_dk</color>
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
-    <color name="color_primary">@color/color_primary_dk</color>
-    <color name="color_primary_press">@color/color_primary_press_dk</color>
+    <color name="colorPrimary">@color/colorPrimary_dk</color>
+    <color name="colorPrimary_press">@color/colorPrimary_press_dk</color>
 
     <!-- 文字颜色 -->
     <color name="color_text_normal">@color/color_text_normal_dk</color>
@@ -56,7 +56,7 @@
     <color name="color_tab_text_select">@color/color_text_normal_dk</color>
 
     <!-- 分割线的颜色 -->
-    <color name="color_line">@color/color_line_dk</color>
+    <color name="colorForeground">@color/colorForeground_dk</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg">@color/color_switch_block_bg_dk</color>

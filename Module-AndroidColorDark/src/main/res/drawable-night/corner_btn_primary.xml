@@ -10,14 +10,14 @@
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/color_primary_press_dk"/>
+            <solid android:color="@color/colorPrimary_press_dk"/>
             <corners android:radius="@dimen/single_btn_corner_size"/>
         </shape>
     </item>
 
     <item>
         <shape>
-            <solid android:color="@color/color_primary_dk"/>
+            <solid android:color="@color/colorPrimary_dk"/>
             <corners android:radius="@dimen/single_btn_corner_size"/>
         </shape>
     </item>

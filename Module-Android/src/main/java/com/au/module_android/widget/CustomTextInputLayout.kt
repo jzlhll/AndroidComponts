@@ -97,7 +97,7 @@ open class CustomTextInputLayout : TextInputLayout {
      */
     val defaultBoxBgColor : Int
         get() {
-            return context.getColor(com.au.module_androidcolor.R.color.color_background_app)
+            return context.getColor(com.au.module_androidcolor.R.color.windowBackground)
         }
 
     /**

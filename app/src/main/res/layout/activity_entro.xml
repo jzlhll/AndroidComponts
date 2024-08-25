@@ -18,8 +18,8 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:background="@color/color_background_app"
-            app:contentScrim="@color/color_background_app"
+            android:background="@color/windowBackground"
+            app:contentScrim="@color/windowBackground"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
@@ -48,7 +48,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:background="@color/color_background_app"
+        android:background="@color/windowBackground"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".EntroActivity"

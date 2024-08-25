@@ -57,7 +57,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     private val colorTextGray by unsafeLazy { Color.parseColor("#999999") }
-    private val colorPrimary by unsafeLazy { app.getColor(R.color.color_primary) }
+    private val colorPrimary by unsafeLazy { app.getColor(R.color.colorPrimary) }
 
     private val bottomNavList = listOf(
         BottomPageBean(true, R.string.bottom_home, R.drawable.ic_bottom_home, R.drawable.ic_bottom_home_select,

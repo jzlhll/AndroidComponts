@@ -3,7 +3,7 @@
     <!-- 输入框的外部InputLayout的样式 -->
     <style name="StyleInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundMode">outline</item>
-        <item name="boxBackgroundColor">@color/color_background_app</item>
+        <item name="boxBackgroundColor">@color/windowBackground</item>
         <item name="boxStrokeColor">@color/input_board_color</item>
         <item name="endIconTint">@color/input_text_color</item>
         <item name="boxCollapsedPaddingTop">8dp</item>

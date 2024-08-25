@@ -4,5 +4,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="floating_setting_color">#fff000</color>
-    <color name="floating_working_color">@color/color_primary</color>
+    <color name="floating_working_color">@color/colorPrimary</color>
 </resources>

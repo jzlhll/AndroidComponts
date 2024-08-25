@@ -10,7 +10,7 @@
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="android:overScrollMode">never</item>
         <!--        <item name="tabIndicator">@drawable/tab_indicator</item>-->
-        <item name="tabIndicatorColor">@color/color_primary</item>
+        <item name="tabIndicatorColor">@color/colorPrimary</item>
         <item name="tabRippleColor">@null</item>
     </style>
 

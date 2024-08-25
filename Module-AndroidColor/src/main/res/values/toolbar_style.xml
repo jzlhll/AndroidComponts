@@ -11,7 +11,7 @@
 
     <!--设置toolbar菜单样式-->
     <style name="toolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.DayNight">
-        <item name="android:colorBackground">@color/color_background_app</item>
+        <item name="android:colorBackground">@color/windowBackground</item>
         <item name="android:textColor">@color/color_toolbar_text</item>
         <!--新增一个item，用于控制menu-->
         <item name="actionOverflowMenuStyle">@style/toolbarOverflowMenuStyle</item>
