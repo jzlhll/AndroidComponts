@@ -31,7 +31,7 @@ dependencyResolutionManagement {
         maven { url 'https://www.jitpack.io' }
     }
 }
-rootProject.name = "AndroidLearning"
+rootProject.name = "AndroidComponts"
 include ':app'
 include ':Module-Android'
 include ':Module-AndroidColor'
