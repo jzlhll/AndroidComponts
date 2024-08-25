@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="backgroundNormal" format="color" />
+    <attr name="backgroundPressed" format="color" />
+    <attr name="backgroundDisabled" format="color" />
+
+    <attr name="fakeToolbarBackImage" format="reference" />
+    <attr name="fakeToolbarTitle" format="string" />
+
+    <declare-styleable name="FlowLayout">
+        <attr name="flFlow" format="boolean"/>
+        <attr name="flChildSpacing" format="enum|dimension">
+            <enum name="auto" value="-65536"/>
+        </attr>
+        <attr name="flMinChildSpacing" format="dimension"/>
+        <attr name="flChildSpacingForLastRow" format="enum|dimension">
+            <enum name="auto" value="-65536"/>
+            <enum name="align" value="-65537"/>
+        </attr>
+        <attr name="flRowSpacing" format="enum|dimension">
+            <enum name="auto" value="-65536"/>
+        </attr>
+        <attr name="flRtl" format="boolean"/>
+        <attr name="flMaxRows" format="integer"/>
+        <attr name="flRowVerticalGravity" format="enum">
+            <enum name="auto" value="-65536"/>
+            <enum name="top" value="0x30"/>
+            <enum name="center" value="0x10"/>
+            <enum name="bottom" value="0x50"/>
+        </attr>
+        <attr name="android:gravity"/>
+    </declare-styleable>
+
+    <declare-styleable name="ExpandableLayout">
+        <attr name="el_duration" format="integer" />
+        <attr name="el_expanded" format="boolean" />
+        <attr name="el_parallax" format="float" />
+        <attr name="android:orientation"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewStubPro">
+        <attr name="inflatedId" format="reference" />
+        <attr name="replaceLayout" format="reference" />
+        <attr name="replaceViewClass" format="string" />
+        <attr name="inflatedCornerSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTextView">
+        <attr name="fontMode" />
+        <attr name="isFontNum" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomImageFontText">
+        <attr name="drawableTextPadding" format="dimension"/>
+
+        <attr name="drawableStartWidth" format="dimension"/>
+        <attr name="drawableStartHeight" format="dimension"/>
+        <attr name="drawableTopWidth" format="dimension"/>
+        <attr name="drawableTopHeight" format="dimension"/>
+        <attr name="drawableEndWidth" format="dimension"/>
+        <attr name="drawableEndHeight" format="dimension"/>
+        <attr name="drawableBottomWidth" format="dimension"/>
+        <attr name="drawableBottomHeight" format="dimension"/>
+    </declare-styleable>
+
+    <!-- 没有alpha，水波纹等比较特殊的场景。-->
+    <declare-styleable name="AnySimpleView">
+        <attr name="backgroundNormal" />
+        <attr name="backgroundPressed" />
+        <attr name="backgroundDisabled" />
+
+        <attr name="cornerRadius" />
+        <attr name="cornerSizeTopLeft" />
+        <attr name="cornerSizeTopRight" />
+        <attr name="cornerSizeBottomLeft" />
+        <attr name="cornerSizeBottomRight" />
+
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+    </declare-styleable>
+
+    <declare-styleable name="FakeToolbar">
+        <attr name="fakeToolbarBackImage" />
+        <attr name="fakeToolbarTitle" />
+    </declare-styleable>
+</resources>

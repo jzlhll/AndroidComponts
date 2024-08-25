@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app 主题背景色 -->
+    <color name="color_background_app">@color/color_background_app_lt</color>
+    <!-- app dialog的背景色 -->
+    <color name="color_background_dialog">@color/color_background_dialog_lt</color>
+
+    <!-- 背景色 ：文字图标，或者一片框框-->
+    <color name="color_normal_block">@color/color_normal_block_lt</color>
+    <!-- 背景色 -->
+    <color name="color_secondary">@color/color_secondary_lt</color>
+    <color name="color_secondary_press">@color/color_secondary_press_lt</color>
+
+    <!-- 品牌主题色 | 超链接文字颜色 -->
+    <color name="color_primary">@color/color_primary_lt</color>
+    <color name="color_primary_press">@color/color_primary_press_lt</color>
+
+    <!-- 文字颜色 -->
+    <color name="color_text_normal">@color/color_text_normal_lt</color>
+    <color name="color_text_reverse">@color/color_text_reverse_lt</color>
+
+    <color name="color_text_desc">@color/color_text_desc_lt</color>
+    <color name="color_hint_text">@color/color_hint_text_lt</color>
+
+    <!-- button: main button色 -->
+    <color name="color_main_btn_bg">@color/color_main_btn_bg_lt</color>
+    <color name="color_main_btn_bg_press">@color/color_main_btn_bg_press_lt</color>
+    <color name="color_main_btn_text">@color/color_main_btn_text_lt</color>
+
+    <!-- button: secondary button色 -->
+    <color name="color_second_btn_bg">@color/color_second_btn_bg_lt</color>
+    <color name="color_second_btn_bg_press">@color/color_second_btn_bg_press_lt</color>
+    <color name="color_second_btn_text">@color/color_second_btn_text_lt</color>
+
+    <!-- button: disable 比secondary更深一点-->
+    <color name="color_disable_btn_bg">@color/color_disable_btn_bg_lt</color>
+    <color name="color_disable_btn_text">@color/color_disable_btn_text_lt</color>
+
+    <!-- button: warning button色 -->
+    <color name="color_warn_btn_bg">@color/color_warn_btn_bg_lt</color>
+    <color name="color_warn_btn_bg_press">@color/color_warn_btn_bg_press_lt</color>
+    <color name="color_warn_btn_text">@color/color_warn_btn_text_lt</color>
+
+    <!-- edit: 相关一切颜色 -->
+    <color name="color_edit_text_hint">@color/color_edit_text_hint_lt</color>
+
+    <color name="color_edit_background">@color/color_edit_background_lt</color>
+    <color name="color_edit_background_error">@color/color_edit_background_error_lt</color>
+
+    <color name="color_edit_board_select">@color/color_edit_board_select_lt</color>
+    <color name="color_edit_board_normal">@color/color_edit_board_normal_lt</color>
+    <color name="color_edit_board_error">@color/color_edit_board_error_lt</color>
+
+    <!-- tabLayout: 相关一切颜色。由于tabLayout有不同的样式。这里只提供一个常规的。 -->
+    <color name="color_tab_text_no_select">@color/color_tab_text_no_select_lt</color>
+    <color name="color_tab_text_select">@color/color_text_normal_lt</color>
+
+    <!-- 分割线的颜色 -->
+    <color name="color_line">@color/color_line_lt</color>
+
+    <!-- switch控件的颜色 -->
+    <color name="color_switch_block_bg">@color/color_switch_block_bg_lt</color>
+    <color name="color_switch_block_sel_bg">@color/color_switch_block_sel_bg_lt</color>
+    <color name="color_switch_block_text">@color/color_switch_block_text_lt</color>
+    <color name="color_switch_block_text_sel">@color/color_switch_block_text_sel_lt</color>
+
+    <!-- toolBar相关 -->
+    <color name="color_toolbar_text">@color/color_toolbar_text_lt</color>
+    <color name="color_toolbar_background">@color/color_toolbar_background_lt</color>
+</resources>

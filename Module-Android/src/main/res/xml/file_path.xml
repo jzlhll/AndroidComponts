@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="external_path"
+        path="." />
+    <files-path
+        name="files_path"
+        path="." />
+    <cache-path
+        name="cache_path"
+        path="." />
+    <!--/storage/emulated/0/Android/data/...-->
+    <external-files-path
+        name="external_file_path"
+        path="." />
+    <!--代表app 外部存储区域根目录下的文件 Context.getExternalCacheDir目录下的目录-->
+    <external-cache-path
+        name="external_cache_path"
+        path="." />
+</paths>

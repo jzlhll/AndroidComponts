@@ -1,0 +1,72 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.au.module.android'
+    compileSdk gradle.ext.compileSdk
+
+    defaultConfig {
+        minSdk gradle.ext.minSdk
+        targetSdk gradle.ext.targetSdk
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
+    }
+    kotlinOptions {
+        jvmTarget = gradle.ext.jvmTarget
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.window
+
+    // ViewModel
+    api libs.androidx.lifecycle.viewmodel.ktx
+    // LiveData
+    api libs.androidx.lifecycle.livedata.ktx
+    // Lifecycles only (without ViewModel or LiveData)
+    api libs.androidx.lifecycle.runtime.ktx
+    // Saved state module for ViewModel
+    api libs.androidx.lifecycle.viewmodel.savedstate
+
+    api libs.material
+    api libs.androidx.startup.runtime
+
+    api libs.mmkv.static
+    api libs.gson
+
+    api libs.androidx.recyclerview
+
+    // define a BOM and its version
+    api platform(libs.okhttp.bom)
+    // define any required OkHttp artifacts without version
+    api libs.okhttp
+
+    api libs.glide
+    implementation libs.androidx.lifecycle.process
+    ksp libs.glideKsp
+    api libs.okhttp3.integration
+
+    implementation libs.androidx.core.splashscreen
+
+    api project(":Module-AndroidColor")
+}

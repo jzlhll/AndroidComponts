@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.BgBuildConstraintLayout
+        android:layout_width="match_parent"
+        android:minHeight="224dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        app:backgroundNormal="@color/color_background_dialog"
+        app:cornerSizeTopLeft="12dp"
+        app:cornerSizeTopRight="12dp"
+        app:cornerSizeBottomLeft="12dp"
+        app:cornerSizeBottomRight="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_successful"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/titleTv"
+            style="@style/StyleFontBText"
+            android:textColor="@color/color_text_normal"
+            app:layout_constraintTop_toBottomOf="@id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            tools:text="fir" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/contentTv"
+            style="@style/StyleMinText"
+            app:layout_constraintTop_toBottomOf="@id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            tools:text="Your customiz" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/cancelButton"
+            style="@style/StyleButtonSecondary"
+            android:background="@drawable/corner_btn_secondary"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:text="@string/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sureButton"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/color_text_normal"
+            android:layout_marginEnd="6dp"
+            android:textSize="16sp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/sureButton"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
+            app:layout_constraintTop_toTopOf="@id/cancelButton"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="6dp"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            tools:text="delete"/>
+
+        <View
+            android:id="@+id/bottomView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cancelButton"
+            android:layout_width="1dp"
+            android:layout_height="20dp"/>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
+</LinearLayout>

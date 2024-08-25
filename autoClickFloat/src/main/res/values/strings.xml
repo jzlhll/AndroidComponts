@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AShoot辅助点击方案</string>
+    <string name="float_help_nongyao_click_desc">AShoot辅助点击方案，帮助你实现自行录制点击和延迟间隔方案。</string>
+</resources>

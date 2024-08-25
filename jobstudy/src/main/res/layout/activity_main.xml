@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".MainActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/mainViewPager"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/mainBottomNavRcv"
+        android:layout_height="0dp"/>
+
+    <com.allan.nested.recyclerview.StaticRecyclerView
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        android:id="@+id/mainBottomNavRcv"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,9 @@
+package com.au.jobstudy.check.modes
+
+import androidx.annotation.IntRange
+
+data class CheckMode(
+    @IntRange(from = MediaType.TYPE_VIDEO.toLong(), to = MediaType.TYPE_PIC.toLong()) val mediaType: Int,
+    val desc:String,
+    val max: Int = 0,
+    val min:Int = 0)

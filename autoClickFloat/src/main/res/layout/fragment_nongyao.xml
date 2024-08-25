@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+    <com.au.module_androidui.widget.FakeToolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:fakeToolbarTitle="nong yao auto click"
+        android:layout_height="48dp" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonPrimary"
+        android:id="@+id/startAutoClickBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:text="开始自动点击"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonWarn"
+        android:id="@+id/stopAutoClickBtn"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:visibility="gone"
+        android:text="关闭自动点击"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

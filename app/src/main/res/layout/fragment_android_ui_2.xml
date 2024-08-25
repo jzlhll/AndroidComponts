@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.allan.androidlearning.androidui.AndroidUi2Fragment"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:id="@+id/android_ui_darkmode_title"
+            android:text="dark mode"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.FlowLayout
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginTop="8dp"
+            app:flRowSpacing="8dp"
+            app:flChildSpacing="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/android_ui_darkmode1"
+                android:text="current"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <com.au.module_android.widget.CustomButton
+                android:paddingHorizontal="8dp"
+                android:layout_marginBottom="0dp"
+                style="@style/StyleButtonSecondary"
+                android:id="@+id/android_ui_darkmodeFollowSystem"
+                android:text="Follow Sys"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <com.au.module_android.widget.CustomButton
+                android:paddingHorizontal="8dp"
+                android:layout_marginBottom="0dp"
+                style="@style/StyleButtonSecondary"
+                android:id="@+id/android_ui_darkmodeLight"
+                android:text="Light"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <com.au.module_android.widget.CustomButton
+                android:paddingHorizontal="8dp"
+                android:layout_marginBottom="0dp"
+                style="@style/StyleButtonSecondary"
+                android:id="@+id/android_ui_darkmodeDark"
+                android:text="Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+        </com.au.module_android.widget.FlowLayout>
+
+
+        <View
+            android:layout_marginTop="32dp"
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            style="@style/StyleFontSecondTitleText"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginTop="18dp"
+            android:text="toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.FlowLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            app:flRowSpacing="8dp"
+            app:flChildSpacing="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/android_ui_toast1"
+                android:text="toast1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_toast2"
+                android:text="toast2"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_toast3"
+                android:text="toast3"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+        </com.au.module_android.widget.FlowLayout>
+
+        <View
+            android:layout_marginTop="32dp"
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginTop="18dp"
+            style="@style/StyleFontSecondTitleText"
+            android:text="dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.FlowLayout
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginTop="8dp"
+            app:flRowSpacing="8dp"
+            app:flChildSpacing="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/android_ui_dialog1"
+                android:text="Bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog2"
+                android:text="Center"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog3"
+                android:text="CenterImg"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog4"
+                android:text="ImgBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog5"
+                android:text="Fragment bottomSheet"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog6"
+                android:text="bottom max"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_dialog7"
+                android:text="bottom edit"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+        </com.au.module_android.widget.FlowLayout>
+
+        <View
+            android:layout_marginTop="32dp"
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:layout_marginTop="18dp"
+            android:text="select list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:id="@+id/android_ui_selectList"
+            android:text="select fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

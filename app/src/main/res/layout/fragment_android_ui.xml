@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.allan.androidlearning.androidui.AndroidUiFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_marginTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <View
+            android:id="@+id/tabLayoutBottomLine"
+            android:background="@color/color_line"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+        </View>
+        <com.allan.nested.tab.AuTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_marginStart="12dp"
+            android:background="@android:color/transparent"
+            style="@style/StyleTabLayoutNormally"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.tyiot.ui.module.mine.MineScrollingViewBehavior">
+    </androidx.viewpager2.widget.ViewPager2>
+</LinearLayout>

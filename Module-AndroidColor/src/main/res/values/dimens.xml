@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="btn_font_size">16dp</dimen>
+    <dimen name="btn_height">50dp</dimen>
+    <dimen name="btn_margin_bottom">32dp</dimen>
+
+    <dimen name="single_btn_corner_size">8dp</dimen>
+    <dimen name="two_btn_corner_size">6dp</dimen>
+    <dimen name="dialog_two_btn_corner_size">4dp</dimen>
+
+    <dimen name="toolbar_height">48dp</dimen>
+
+    <dimen name="switch_layout_padding">2dp</dimen>
+    <dimen name="switch_layout_default_corner">8dp</dimen>
+    <dimen name="switch_layout_default_sel_corner">7dp</dimen>
+
+    <dimen name="switch_block_padding">2dp</dimen>
+
+    <dimen name="ui_padding_edge">20dp</dimen>
+</resources>

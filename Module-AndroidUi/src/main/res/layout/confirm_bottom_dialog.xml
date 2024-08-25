@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    tools:layout_height="300dp"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.BgBuildConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:padding="16dp"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        app:backgroundNormal="@color/color_background_dialog"
+        app:cornerRadius="12dp">
+        <!-- 预留一份空间4dp。这样就可以让title是16dp或者20dp的marginTop -->
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/titleTv"
+            style="@style/StyleFontBText"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            tools:text="fir asdfjk z9 " />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/contentTv"
+            style="@style/StyleFontSecondaryText"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            tools:text="Yourkd 18941 jfifz 1`2894 zmnkzj 12849" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/cancelButton"
+            style="@style/StyleButtonSecondary"
+            app:fontMode="mid"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sureButton"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/sureButton"
+            app:fontMode="mid"
+            style="@style/StyleButtonPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            tools:text="delete"/>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
+
+    <android.widget.Space
+        android:layout_width="1dp"
+        android:layout_height="8dp"/>
+</LinearLayout>

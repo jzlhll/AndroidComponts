@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.au.module_androidui.widget.FakeToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/weekBtn"
+        android:text="查看周任务"
+        android:textSize="22sp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
+        style="@style/StyleButtonPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/dayButton"
+        android:text="查看每日任务"
+        android:textSize="22sp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
+        style="@style/StyleButtonPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+</LinearLayout>

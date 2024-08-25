@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.au.module_androidui.widget.FakeToolbar
+        android:id="@+id/fakeToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:fakeToolbarTitle="任务列表"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/fakeToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        android:layout_width="32dp"
+        android:layout_height="32dp"/>
+</RelativeLayout>

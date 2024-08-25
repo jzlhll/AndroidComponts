@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="81dp">
+        <LinearLayout
+            android:layout_marginStart="16dp"
+            android:paddingVertical="8dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/name"
+                    android:layout_width="88dp"
+                    android:text="JTJ"
+                    android:textSize="20sp"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginStart="12dp"
+                    android:layout_width="20dp"
+                    android:src="@drawable/ic_star"
+                    android:layout_height="20dp"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/starCount"
+                    android:layout_width="42dp"
+                    tools:text="10"
+                    android:textSize="22sp"
+                    android:textColor="#414141"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="18dp"
+                    android:src="@drawable/ic_b_good"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/dingCount"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="42dp"
+                    tools:text="10"
+                    android:textSize="20sp"
+                    android:textColor="#414141"
+                    android:layout_height="wrap_content"/>
+
+                <Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="12dp"
+                    android:id="@+id/dingClick"
+                    android:tint="@color/color_text_desc"
+                    android:src="@drawable/ic_ding"/>
+        </LinearLayout>
+        <View
+            android:background="#f0f0f0"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+</LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 非常规的 -->
+    <style name="StyleTabLayoutNotNormally">
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
+        <item name="tabMinWidth">8dp</item>
+        <item name="tabMode">fixed</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:overScrollMode">never</item>
+        <!--        <item name="tabIndicator">@drawable/tab_indicator</item>-->
+        <item name="tabIndicatorColor">@color/color_primary</item>
+        <item name="tabRippleColor">@null</item>
+    </style>
+
+    <!-- 常规的 -->
+    <style name="StyleTabLayoutNormally">
+        <item name="tabIndicatorFullWidth">false</item>
+        <!--        <item name="android:backgroundTint">@android:color/white</item>-->
+        <item name="android:overScrollMode">never</item>
+        <!--        <item name="tabIndicator">@drawable/tab_indicator</item>-->
+        <item name="tabMinWidth">80dp</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabIndicatorHeight">1.5dp</item>
+        <item name="tabIndicator">@drawable/tab_line_indicator</item>
+        <item name="tabIndicatorColor">@color/color_text_normal</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabPaddingEnd">20dp</item>
+        <item name="tabPaddingStart">20dp</item>
+        <item name="tabMode">scrollable</item>
+    </style>
+
+    <style name="StyleTabLayoutViewPagerIndicator" parent="StyleTabLayoutNotNormally">
+        <item name="tabBackground">@android:color/transparent</item>
+        <item name="tabIndicatorColor">@android:color/transparent</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabMinWidth">0dp</item>
+        <item name="tabMode">auto</item>
+        <item name="tabPaddingStart">4dp</item>
+        <item name="tabPaddingEnd">4dp</item>
+    </style>
+</resources>

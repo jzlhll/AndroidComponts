@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="#cccccc"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_successful"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <ImageView
+            android:src="@drawable/round_green"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <ImageView
+            android:src="@drawable/rect_red_bg"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notification_title"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="16dp"
+        android:layout_weight="1"
+        android:textColor="#22aa22"
+        android:text="Large notification, showing a title and a body." />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ic_failure"
+            android:src="@drawable/ic_failure"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+        <TextView
+            android:layout_marginStart="20dp"
+            android:layout_gravity="center_vertical"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
+            android:id="@+id/gotoBtn"
+            android:textColor="#ffffff"
+            android:text="gotoApp"
+            android:background="@drawable/round_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notification_body"
+        android:textColor="#ffaa22"
+        android:includeFontPadding="false"
+        style="@style/TextAppearance.Compat.Notification.Line2"
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        android:layout_height="wrap_content"
+        android:text="This is the body. The height is manually forced to 200dp. and long long long msg." />
+</LinearLayout>

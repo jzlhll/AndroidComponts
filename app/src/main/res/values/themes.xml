@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AndroidLearning" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.AndroidLearning" parent="Base.Theme.AndroidLearning" />
+
+    <!-- 对于textView的二次补充；可以将四个角度的图片大小支持；
+    最后2个margin仅仅做了如果是左边图标的margin。有需要继续扩展。 -->
+    <declare-styleable name="DrawableTextView">
+        <attr name="drawableStartWidth" format="dimension" />
+        <attr name="drawableStartHeight" format="dimension" />
+        <attr name="drawableTopWidth" format="dimension" />
+        <attr name="drawableTopHeight" format="dimension" />
+        <attr name="drawableEndWidth" format="dimension" />
+        <attr name="drawableEndHeight" format="dimension" />
+        <attr name="drawableBottomWidth" format="dimension" />
+        <attr name="drawableBottomHeight" format="dimension" />
+
+        <attr name="drawableMarginStart" format="dimension" />
+    </declare-styleable>
+
+    <style name="CustomTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Theme.AndroidLearning.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AndroidLearning.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AndroidLearning.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

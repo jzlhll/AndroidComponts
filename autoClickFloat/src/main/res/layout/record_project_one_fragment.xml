@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+
+    <com.au.module_androidui.widget.FakeToolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="48dp" />
+
+    <com.au.module_android.widget.CustomImageFontText
+        android:id="@+id/deleteStepBtn"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:drawableStartCompat="@drawable/ic_delete"
+        app:drawableTextPadding="4dp"
+        app:drawableStartWidth="20dp"
+        app:drawableStartHeight="20dp"
+        android:drawableTint="@color/color_warn_btn_text"
+        android:textColor="@color/color_text_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        style="@style/StyleFontText"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:text="删除"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/descBottom"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginBottom="12dp"
+        style="@style/StyleFontSecondaryText"
+        android:visibility="gone"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:text="点击【添加】额外步骤；点击【删除】选择并删除某个步骤；长按拖动来移动步骤的位置。"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/descCenter"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginBottom="12dp"
+        android:textSize="18dp"
+        style="@style/StyleFontText"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:text="点击【添加应用】按钮开始选择一个应用，然后开始点击吧！"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomImageFontText
+        android:background="@drawable/corner_btn_secondary"
+        android:id="@+id/addStepCenterBtn"
+        app:layout_constraintTop_toBottomOf="@id/descCenter"
+        app:drawableStartCompat="@drawable/ic_add"
+        app:drawableTextPadding="4dp"
+        app:drawableStartWidth="20dp"
+        app:drawableStartHeight="20dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableTint="@color/color_text_normal"
+        android:gravity="center"
+        style="@style/StyleFontText"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:text="添加应用"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/rcv"
+        app:layout_constraintTop_toBottomOf="@id/deleteStepBtn"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/descBottom"
+        android:layout_height="0dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="toolbarLogo">@drawable/icon_back</drawable>
+
+    <!--文字外观-->
+    <style name="toolbarTitleTextAppearance">
+        <item name="android:textColor">@color/color_toolbar_text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--设置toolbar菜单样式-->
+    <style name="toolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.DayNight">
+        <item name="android:colorBackground">@color/color_background_app</item>
+        <item name="android:textColor">@color/color_toolbar_text</item>
+        <!--新增一个item，用于控制menu-->
+        <item name="actionOverflowMenuStyle">@style/toolbarOverflowMenuStyle</item>
+        <item name="actionMenuTextAppearance">@style/toolbarMenuTextAppearance</item>
+    </style>
+
+    <!--设置菜单的popup的样式-->
+    <style name="toolbarOverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <!--把该属性改为false即可使menu位置位于toolbar之下-->
+        <item name="overlapAnchor">false</item>
+    </style>
+
+    <!--可点击menu文本样式-->
+    <style name="toolbarMenuTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!--设置菜单的三个点样式-->
+    <!--
+    需要在主题设置这行代码
+    <item name="actionOverflowButtonStyle">@style/toolbarOverflowButtonStyle</item>
+   -->
+<!--    <style name="toolbarOverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">-->
+<!--        <item name="android:src">@android:drawable/ic_menu_more</item>-->
+<!--        <item name="android:tint">@color/toolbarLogoTint</item>-->
+<!--    </style>-->
+</resources>

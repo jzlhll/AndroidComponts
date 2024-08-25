@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.github.lzyzsd.jsbridge.BridgeExWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/fullVideoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startEchartsHtmlBtn"
+            android:layout_width="match_parent"
+            android:text="start echarts html Record"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startEchartsSoftWebViewBtn"
+            android:layout_width="match_parent"
+            android:text="start echarts soft webView record"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startEchartsBitmapBtn"
+            android:layout_width="match_parent"
+            android:text="start echarts getDataUrl bitmap record"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</FrameLayout>

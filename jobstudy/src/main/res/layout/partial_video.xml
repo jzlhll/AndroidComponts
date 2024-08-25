@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:paddingHorizontal="20dp"
+    android:layout_height="match_parent">
+
+    <VideoView
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:id="@+id/videoView"
+        android:layout_width="200dp"
+        android:layout_height="350dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:visibility="gone"
+        android:id="@+id/ivDelete"
+        android:layout_marginStart="197dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:srcCompat="@drawable/pic_delete" />
+
+</FrameLayout>

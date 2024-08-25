@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/name1"
+        android:layout_marginEnd="12dp"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="36dp"
+        android:id="@+id/pic1"
+        android:visibility="invisible"
+        android:src="@drawable/ic_star"
+        android:layout_height="36dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/value1"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="6dp"
+        android:visibility="invisible"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"/>
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/name2"
+        android:layout_marginEnd="12dp"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="36dp"
+        android:visibility="invisible"
+        android:id="@+id/pic2"
+        android:src="@drawable/ic_star"
+        android:layout_height="36dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/value2"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginStart="6dp"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/name3"
+        android:layout_marginEnd="12dp"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="36dp"
+        android:id="@+id/pic3"
+        android:src="@drawable/ic_star"
+        android:visibility="invisible"
+        android:layout_height="36dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/value3"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginStart="6dp"
+        android:textSize="20sp"
+        android:textColor="#212121"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"/>
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.module_android.widget.BgBuildLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:backgroundNormal="@color/color_background_dialog"
+    app:cornerSizeTopRight="8dp"
+    app:cornerSizeTopLeft="8dp"
+    android:orientation="vertical">
+
+    <com.au.module_android.widget.BgBuildView
+        android:id="@+id/headLine"
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        app:backgroundNormal="@color/color_line"
+        app:cornerRadius="4dp" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <Space
+        android:visibility="gone"
+        android:id="@+id/spaceBottom"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+</com.au.module_android.widget.BgBuildLinearLayout>

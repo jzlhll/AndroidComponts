@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 输入框的外部InputLayout的样式 -->
+    <style name="StyleInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxBackgroundColor">@color/color_background_app</item>
+        <item name="boxStrokeColor">@color/input_board_color</item>
+        <item name="endIconTint">@color/input_text_color</item>
+        <item name="boxCollapsedPaddingTop">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <!--不给Layout有hint动画把hint放到editText上，并设置paddingVertical-->
+        <item name="hintEnabled">false</item>
+        <!--必须来一个theme才能让它改变-->
+<!--        <item name="android:theme">@style/Mine.TextInputLayout.FilledBox</item>-->
+    </style>
+
+    <!--输入框的外部InputLayout 配套的内部EditText样式-->
+    <style name="StyleEditInInputLayout">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textColorHint">@color/color_hint_text</item>
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor</item>
+    </style>
+
+    <!-- 单纯一个输入框，只有边框，底部是透明样式-->
+    <style name="StyleBlankEditText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColorHint">@color/color_hint_text</item>
+        <item name="android:background">@drawable/edit_board_bg</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor</item>
+    </style>
+
+    <!-- 主题色背景，单个且长，左右下边距固定，文字大小颜色固定 -->
+    <style name="StyleButtonPrimary">
+        <item name="android:minHeight">42dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:paddingVertical">4dp</item>
+        <item name="android:background">@drawable/corner_btn_primary</item>
+        <item name="android:textSize">@dimen/btn_font_size</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:textColor">@color/primary_btn_text_color</item>
+        <item name="android:layout_marginBottom">@dimen/btn_margin_bottom</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="fontMode">mid</item>
+    </style>
+    
+    <!-- 灰色长按钮-->
+    <style name="StyleButtonSecondary" parent="StyleButtonPrimary">
+        <item name="android:background">@drawable/corner_btn_secondary</item>
+        <item name="android:textColor">@color/secondary_btn_text_color</item>
+    </style>
+
+    <!-- 有的地方需要一个类似disable的btn，却又支持点击 -->
+    <style name="StyleButtonFakeDisabled" parent="StyleButtonPrimary">
+        <item name="android:background">@drawable/corner_btn_disabled</item>
+        <item name="android:textColor">@color/color_disable_btn_text</item>
+    </style>
+
+    <style name="StyleButtonWarn" parent="StyleButtonPrimary">
+        <item name="android:background">@drawable/corner_btn_warn</item>
+        <item name="android:textColor">@color/color_warn_btn_text</item>
+    </style>
+
+    <!--想要字体有粗，请命名为XXXBTextXXX。或者额外设置textStyle=bold
+        如果想要中粗，则必须命名为XXXMTextXXX 或者额外设置fontMode=mid StyleFontUtil中有改。-->
+
+    <!-- 大标题的样式。字体大小不做限定；自行设置；主要约束了行间距和颜色。 -->
+    <style name="StyleTitleBText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="StyleFontSecondTitleText">
+        <item name="android:textColor">@color/color_text_desc</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontMode">mid</item>
+    </style>
+
+    <style name="StyleFontTitleDescText">
+        <item name="android:textColor">@color/color_text_desc</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- 一般的字体 -->
+    <style name="StyleFontText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="StyleFontMenuText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="fontMode">mid</item>
+    </style>
+
+    <style name="StyleFontSecondaryText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_text_desc</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+    </style>
+
+    <!--显示成为中粗-->
+    <style name="StyleFontMText" parent="StyleFontText"/>
+
+    <!--显示成为粗-->
+    <style name="StyleFontBText" parent="StyleFontText"/>
+
+    <style name="StyleMinText">
+        <item name="android:textColor">@color/color_text_normal</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="StyleSmallText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/color_text_desc</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!-- 假装为正方形，长方形，方块背景 -->
+    <style name="StyleFakeEditText" parent="StyleFontText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/color_normal_block</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

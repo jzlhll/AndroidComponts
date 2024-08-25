@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="CustomModuleTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- 自定义菜单项文字颜色 -->
+        <item name="android:actionMenuTextColor">@color/color_text_normal_dk</item>
+        <!-- 重要的4板斧 设置statusBar和navigationBar的颜色-->
+        <item name="android:statusBarColor">@color/color_background_app_dk</item>
+        <item name="android:navigationBarColor">@color/color_background_app_dk</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowBackground">@color/color_background_app_dk</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">
+            @android:color/transparent
+        </item>
+    </style>
+
+    <style name="CustomModuleThemeSplash" parent="CustomModuleTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomModuleThemePush" parent="CustomModuleTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>

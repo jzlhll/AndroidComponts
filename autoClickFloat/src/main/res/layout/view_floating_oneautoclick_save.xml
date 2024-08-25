@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.module_android.widget.BgBuildFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cornerRadius="8dp"
+    android:alpha="0.6"
+    app:backgroundNormal="#8fcccccc"
+    android:layout_height="55dp">
+
+    <TextView
+        style="@style/StyleFontBText"
+        android:textSize="18dp"
+        android:id="@+id/saveBtn"
+        android:textColor="#ffaa00"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="保存"/>
+
+</com.au.module_android.widget.BgBuildFrameLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mineHost"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:padding="12dp"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/recordBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="64dp"
+        android:src="@drawable/ic_b_voice"
+        android:layout_height="64dp"/>
+
+    <com.au.jobstudy.views.CountDownView
+        android:id="@+id/countDownView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#f6f6f6"
+        tools:background="#f0f0f0"
+        android:textSize="36sp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"/>
+
+    <com.au.jobstudy.views.TwoColorsProgressBar
+        app:layout_constraintTop_toTopOf="@id/stopBtn"
+        app:layout_constraintBottom_toBottomOf="@id/stopBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/timeLine"
+        tools:background="#ff00ff"
+        app:layout_constraintWidth_percent="0.6"
+        android:layout_height="10dp"
+        android:layout_width="0dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/stopBtn"
+        app:layout_constraintStart_toEndOf="@id/timeLine"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="64dp"
+        android:padding="3dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_b_paus"
+        android:layout_height="64dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintBottom_toTopOf="@id/timeLine"
+        app:layout_constraintStart_toStartOf="@id/timeLine"
+        android:layout_marginBottom="8dp"
+        android:text="00:00"
+        android:textSize="20sp"
+        android:id="@+id/currentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/timeLine"
+        app:layout_constraintEnd_toEndOf="@id/timeLine"
+        app:layout_constraintStart_toStartOf="@id/timeLine"
+        android:layout_marginTop="8dp"
+        android:text="@string/can_submit_and_left_time"
+        android:textSize="18sp"
+        android:id="@+id/canSubmitText"
+        android:textColor="#39CA3F"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

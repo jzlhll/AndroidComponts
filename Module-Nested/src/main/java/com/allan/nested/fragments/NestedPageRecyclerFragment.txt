@@ -1,0 +1,41 @@
+import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
+import com.allan.nested.mgr.PageRecyclerManager
+import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
+import com.allan.nested.recyclerview.page.AbstractPageViewModel
+
+/**
+ * @author au
+ * Date: 2023/2/28
+ */
+abstract class NestedPageRecyclerFragment : NestedRecyclerFragment() {
+    lateinit var pageManager:PageRecyclerManager<Any>
+        private set
+
+    abstract override val adapter: AutoLoadMoreBindRcvAdapter<Any, *>
+
+    override fun initRecyclerView(rcv: RecyclerView) {
+        throw java.lang.RuntimeException("do not implement")
+    }
+
+    abstract fun createViewModel():AbstractPageViewModel<Any>
+
+    open val supportPullRefresh = true
+    open val supportLoadMore = true
+    private val disablePullUpEffect: Boolean = true
+    private val disablePullDownEffect: Boolean = true
+
+    override fun initUi(savedInstanceState: Bundle?) {
+        super.initUi(savedInstanceState)
+
+        pageManager = PageRecyclerManager(nestedLayout, createViewModel(), adapter,
+            supportPullRefresh, supportLoadMore,
+            disablePullUpEffect, disablePullDownEffect).also {
+            this.pageManager = it
+        }
+
+        initPageMangerOther()
+    }
+
+    abstract fun initPageMangerOther()
+}

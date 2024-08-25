@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingVertical="8dp"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <FrameLayout
+            android:layout_marginHorizontal="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_red_flover"
+                    android:layout_height="30dp"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/info"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="49dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="J T J"
+                    android:textSize="22sp"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+</LinearLayout>

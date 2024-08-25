@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.au.module_androidui.widget.FakeToolbar
+            android:id="@+id/fakeToolbar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:fakeToolbarTitle="开始打卡"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/descTextHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="64dp"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="21dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fakeToolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/subjectColor"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    tools:background="@color/color_chinese"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="28dp"
+                    android:layout_height="26dp"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    app:layout_constraintStart_toEndOf="@id/subjectColor"
+                    app:layout_constraintTop_toTopOf="@id/subjectColor"
+                    app:layout_constraintBottom_toBottomOf="@id/subjectColor"
+                    android:id="@+id/subjectText"
+                    android:layout_marginStart="8dp"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="5-3"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    app:layout_constraintTop_toBottomOf="@id/subjectText"
+                    android:id="@+id/descText"
+                    android:maxLines="3"
+                    android:paddingBottom="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="20dp"
+                    tools:text="5-3"
+                    android:textColor="@color/color_text_normal"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.au.module_android.widget.CustomFontText
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descTextHost"
+            android:id="@+id/checkupText"
+            android:layout_marginTop="28dp"
+            android:maxLines="3"
+            android:text="选择一种方式上传:"
+            android:textColor="@color/color_text_desc"
+            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:paddingHorizontal="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/checkModesHost"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/checkupText"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/checkUpModePicture"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_b_camera"
+                android:layout_width="42dp"
+                android:layout_height="42dp"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/checkupModeVoice"
+                android:layout_marginStart="20dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:src="@drawable/ic_b_voice"
+                android:layout_width="42dp"
+                android:layout_height="42dp"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/checkupModeVideo"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_b_video_record"
+                android:layout_width="46dp"
+                android:layout_height="46dp"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/checkupModeParent"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_b_parent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            app:layout_constraintTop_toBottomOf="@id/checkModesHost"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical"
+            android:id="@+id/alreadyFilesList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            app:layout_constraintTop_toBottomOf="@id/alreadyFilesList"
+            android:layout_marginTop="16dp"
+            android:id="@+id/fragmentContainerView"
+            android:minHeight="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/submitButton"
+            android:text="提交"
+            android:textSize="22sp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/fragmentContainerView"
+            style="@style/StyleButtonPrimary"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+

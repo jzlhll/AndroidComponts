@@ -1,0 +1,143 @@
+import android.util.Log
+import android.view.View
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.allan.nested.layout.NestedLayoutRefresher
+
+/**
+ * author: allan
+ * Time: 2022/11/25
+ * Desc: coordinatorLayout+RecyclerView+AppTabLayout形成滑动嵌套
+ * 下拉刷新的帮助类。
+ *
+ * 真实拉动弹簧刷新模式
+ * 采取的bePullView回弹到params.endOffsetY的位置，等待外部调用[refreshCompleted] 才继续弹回。
+ *
+ * @param refresher 传入NestedXXXXLayout的refresher
+ * @param bePullView 你希望被拉动的布局，不一定需要一定是recyclerView，也可以是任意的布局，比如预设界面，整个滑动View作为被拉动的部分比如host。
+ * @param progressIndicator 顶部的刷新圈，可以没有刷新indicator，并不影响刷新逻辑
+ * @param onRefreshAction  触发加载数据函数，当下拉动作达成(即达到了一定的距离)以后，触发回调。
+ * @param isIndicatorChildOfBePullView 顾名思义。内部则不做indicator的translation
+ */
+internal class NestedPullStickManager
+(
+    private val refresher: NestedLayoutRefresher,
+    private val bePullView: View,
+    progressIndicator: CircularProgressIndicator?,
+    private val isIndicatorChildOfBePullView: Boolean,
+    var onRefreshAction:(() -> Unit),
+    private val params: Params = Params(80.dp, 0.35f, 60f.dp)
+): INestedPullManager {
+    private val indicator:IndicatorBase
+
+    /**
+     * 是否可以加载数据的标记
+     */
+    @Volatile
+    private var isLoadingData = false
+
+    init {
+        indicator = if (progressIndicator == null) NoneIndicator() else RealIndicator(progressIndicator)
+        initial()
+    }
+
+    private fun hideIndicator() {
+        indicator.hide()
+    }
+
+    private fun showIndicator() {
+        indicator.show()
+    }
+
+    private fun initial() {
+        refresher.pullDownIsTargetTranslated = {bePullView.translationY != 0f}
+        refresher.pullDownShrinkCallback = { fra, animMode, state ->
+            when (state) {
+                NestedLayoutRefresher.PullDownShrinkState.START -> {
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink START $fra ${bePullView.translationY}")
+                    if (!isLoadingData) {
+                        val shouldRefresh = indicator.progress >= indicator.max //如果进度条超过，则可以加载。
+                        if (shouldRefresh) {
+                            indicator.isIndeterminate = true
+                            isLoadingData = true
+                            onRefreshAction.invoke()
+                        }
+                    }
+                }
+
+                NestedLayoutRefresher.PullDownShrinkState.MOVING -> {
+                    if (isLoadingData) {
+                        //1. isLoadingData代表正在加载数据 ： 代表了达到了触发刷新条件
+                        //2. 如果是松手逻辑
+                        val isJustLooseFinger = animMode == NestedLayoutRefresher.AnimMode.LooseFinger
+
+                        if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink0MOVING ${params.endOffsetY} $fra ${bePullView.translationY}")
+
+                        val ty1 = bePullView.translationY * fra
+                        //此时，界面将会在endOffsetY程度卡住。直到你调用refreshCompleted()为止，才会再次回弹。
+                        val t1 = if (ty1 <= params.endOffsetY && isJustLooseFinger) params.endOffsetY else ty1
+                        bePullView.translationY = t1
+
+                        if (!isIndicatorChildOfBePullView) {
+                            val ty2 = indicator.translationY * fra
+                            val t2 = if (ty2 <= params.endOffsetY && isJustLooseFinger) params.endOffsetY else ty2
+                            indicator.translationY = t2
+                        }
+                    } else {
+                        //如果不是一直转圈，即表示现在是不能loading，则可以把进度退完
+                        indicator.progress = (indicator.translationY * indicator.max / params.pullDownTriggerValue).toInt()
+                        bePullView.translationY = bePullView.translationY * fra
+                        if(!isIndicatorChildOfBePullView) indicator.translationY = indicator.translationY * fra
+
+                        if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink2MOVING $fra ${bePullView.translationY} ${indicator.translationY}")
+                    }
+                }
+                NestedLayoutRefresher.PullDownShrinkState.END -> {
+                    if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "shrink END $fra ${bePullView.translationY}")
+                    val isJustLooseFinger = animMode == NestedLayoutRefresher.AnimMode.LooseFinger
+
+                    if (!isLoadingData || !isJustLooseFinger) { //later: 其实可以去掉判断松手
+                        //不是一直转圈，则恢复; 或者是refreshCompleted后的触发，则代表我们已经加载了数据，也应该恢复
+                        hideIndicator()
+                        bePullView.translationY = 0f
+                        if(!isIndicatorChildOfBePullView) indicator.translationY = 0f
+                        isLoadingData = false
+                    }
+                }
+            }
+        }
+
+        refresher.pullDownScrollingCallback = { dy ->
+            val ny = -dy * params.realMoveRatio
+            val translation1 = ny + bePullView.translationY
+
+            bePullView.translationY = translation1
+            if (!isIndicatorChildOfBePullView) {
+                val translation2 = ny + indicator.translationY
+                indicator.translationY = translation2
+
+                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1 $translation2")
+            } else {
+                if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown $translation1")
+            }
+
+            indicator.isIndeterminate = false
+            showIndicator()
+            indicator.progress = (indicator.max * translation1 / params.pullDownTriggerValue).toInt()
+        }
+
+        refresher.pullUpScrollingCallback = {dy ->
+            val ny = (-dy * params.realMoveRatio).toInt() shr 1 //再除以2。减少底部滑动
+            val translation1 = ny + bePullView.translationY
+            bePullView.translationY = translation1
+            if(NestedLayoutRefresher.DEBUG) Log.d(NestedLayoutRefresher.TAG, "PullDown ${translation1}")
+
+            indicator.isIndeterminate = false
+            hideIndicator()
+            indicator.progress = 0
+        }
+    }
+
+    override fun refreshCompleted() {
+        refresher.resetAnimForce()
+    }
+}

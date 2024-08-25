@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="30dp"
+    android:paddingEnd="60dp"
+    tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/backBtn"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/title"
+        style="@style/StyleTitleBText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="AShoot辅助工具"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/backBtn"
+        app:layout_constraintTop_toTopOf="@id/backBtn"
+        app:layout_constraintBottom_toBottomOf="@id/backBtn"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/desc"
+        style="@style/StyleFontSecondTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="保存一个点，开启后，连续自动点击"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toTopOf="@id/desc"
+        style="@style/StyleFontBText"
+        android:id="@+id/saveText"
+        android:text="已经保存的点："
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonSecondary"
+        android:id="@+id/showFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:text="开始设置"
+        android:layout_marginEnd="6dp"
+        app:layout_constraintStart_toStartOf="@id/desc"
+        app:layout_constraintEnd_toStartOf="@id/closeFloatViewBtn"
+        app:layout_constraintTop_toBottomOf="@id/saveText" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonSecondary"
+        android:id="@+id/closeFloatViewBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="关闭设置"
+        app:layout_constraintStart_toEndOf="@id/showFloatViewBtn"
+        android:layout_marginStart="6dp"
+        app:layout_constraintEnd_toEndOf="@id/desc"
+        app:layout_constraintTop_toTopOf="@id/showFloatViewBtn" />
+
+    <com.au.module_android.widget.CustomEditText
+        style="@style/StyleEditInInputLayout"
+        android:id="@+id/inputMs"
+        android:inputType="number"
+        app:layout_constraintTop_toTopOf="@id/closeFloatViewBtn"
+        android:hint="输入间隔时间（最小为250）"
+        android:layout_marginBottom="12dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/closeFloatViewBtn"
+        app:layout_constraintEnd_toStartOf="@id/msText"
+        android:layout_height="54dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        style="@style/StyleFontSecondaryText"
+        android:id="@+id/msText"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="@id/inputMs"
+        app:layout_constraintBottom_toBottomOf="@id/inputMs"
+        android:text="毫秒"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonPrimary"
+        android:id="@+id/startAutoClickBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="开始自动点击"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonWarn"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:id="@+id/stopAutoClickBtn"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="关闭自动点击"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

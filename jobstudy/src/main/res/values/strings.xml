@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">萝卜爱打卡</string>
+    <string name="bottom_home">打卡</string>
+    <string name="bottom_boardcast">星星榜</string>
+    <string name="bottom_mine">我的</string>
+    <string name="this_week_works_list">本周完成了%d个任务，棒棒的！</string>
+    <string name="name_hello_format">%s, %s</string>
+    <string name="can_submit_and_left_time">可以提交啦, 还可以继续录制%s秒。</string>
+    <string name="start_checkup">开始打卡</string>
+</resources>

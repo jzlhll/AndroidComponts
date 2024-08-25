@@ -1,0 +1,14 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+ClassNameAnnotations/build/
+ClassNameAnnotations-compiler/build/
+ClassNameAnnotations-ksp/build/
+/captures
+/jsbridge
+.externalNativeBuild
+.cxx
+local.properties

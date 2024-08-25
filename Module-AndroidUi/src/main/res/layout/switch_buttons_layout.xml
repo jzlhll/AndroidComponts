@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.module_android.widget.BgBuildConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="@dimen/switch_layout_padding"
+    tools:layout_height="32dp">
+
+    <View
+        app:layout_constraintStart_toStartOf="@id/left_tv"
+        app:layout_constraintEnd_toEndOf="@id/left_tv"
+        android:id="@+id/select_bg_view"
+        tools:background="#eeeeee"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/left_tv"
+        android:paddingHorizontal="4dp"
+        style="@style/StyleFontText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/padding"
+        android:textColor="@color/color_text_normal"
+        android:textSize="14sp"
+        tools:text="first" />
+
+    <View
+        app:layout_constraintStart_toEndOf="@id/left_tv"
+        app:layout_constraintEnd_toStartOf="@id/right_tv"
+        android:id="@+id/padding"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/right_tv"
+        style="@style/StyleFontText"
+        android:layout_width="wrap_content"
+        android:paddingHorizontal="4dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_text_normal"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/padding"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="second" />
+</com.au.module_android.widget.BgBuildConstraintLayout>

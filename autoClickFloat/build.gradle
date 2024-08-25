@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.allan.autoclickfloat'
+    compileSdk gradle.ext.compileSdk
+
+    defaultConfig {
+        applicationId "com.allan.autoclickfloat"
+        minSdk gradle.ext.minSdk
+        targetSdk gradle.ext.targetSdk
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
+    }
+    kotlinOptions {
+        jvmTarget = gradle.ext.jvmTarget
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation project(":Module-Android")
+    implementation project(':Module-AndroidUi')
+    implementation project(':Module-Cached')
+    implementation project(':Module-Nested')
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.room.runtime
+    ksp libs.androidx.room.compiler
+}

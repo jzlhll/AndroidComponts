@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.allan.androidlearning'
+    compileSdk gradle.ext.compileSdk
+
+    defaultConfig {
+        applicationId "com.allan.androidlearning"
+        minSdk gradle.ext.minSdk
+        targetSdk gradle.ext.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [ customAnnotation: 'com.allan.android.l' ]
+//            }
+//        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
+    }
+    kotlinOptions {
+        jvmTarget = gradle.ext.jvmTarget
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+}
+
+dependencies {
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.androidx.swiperefreshlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+
+    implementation libs.gson
+
+//    implementation project(":jsbridge")
+    implementation libs.jsbridgev2
+
+    implementation project(":Module-Android")
+    implementation project(":Module-Cached")
+    implementation project(':Module-AndroidUi')
+    implementation project(':Module-AndroidColorDark')
+    implementation project(":Module-Nested")
+    //my apt
+    implementation project(':ClassNameAnnotations')
+    ksp project(':ClassNameAnnotations-ksp')
+//    kapt project(':ClassNameAnnotations-compiler')
+}

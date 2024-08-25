@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECharts with recordRTC</title>
+    <script src="echarts.js"></script>
+    <script src="recordRTC.min.js"></script>
+    <script src="html2canvas.min.js"></script>
+    <style>
+        html, body {
+            margin: 0!important;
+            padding: 0!important;
+        }
+
+        video {
+            width: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="element-to-record">
+    <div id="time"></div><br>
+    <div id="echartsDiv" style="height: 500px;"></div>
+</div>
+
+<canvas id="background-canvas" style="position:absolute; top:-99999999px; left:-9999999999px;"></canvas>
+
+<button id="btn-start-recording">Start Recording</button>
+<button id="btn-stop-recording" disabled>Stop Recording</button>
+<script>
+    function registerWebBridge() {
+        window.WebViewJavascriptBridge.init({});
+    }
+
+    // blob 转 base64
+    function blobToDataURI(blob, callback) {
+        var reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = function (e) {
+            callback(e.target.result);
+        };
+    }
+
+    var isTimeDisplaying = true;
+
+    function displayTime() {
+      if (!isTimeDisplaying) return;
+      let now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      let ms = now.getMilliseconds();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+      seconds = (seconds < 10 ? "0" : "") + seconds;
+      document.getElementById('time').textContent = hours + ":" + minutes + ":" + seconds + ":" + ms;
+      setTimeout(displayTime, 100);
+    }
+
+    displayTime();
+
+    function showEcharts() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echartsDiv'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 示例'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['销量']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    rotate: 0,
+                    interval: 0,
+                    minInterval: 1
+                },
+                data: ['周一','周二','周三','周四','周五','周六','周日', '周一','周二','周三','周四','周五','周六','周日']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'销量',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data:[120, 200, 150, 80, 70, 110, 130, 120, 200, 150, 80, 70, 110, 130],
+                    // 动画效果设置
+                    animationEasing: 'cubicOut',
+                    animationDuration:5000,
+                    animationDelay: function (idx) {
+                        // 使得每一点显示时有一定的延迟，实现动画效果
+                        return idx * 200;
+                    }
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+
+    var elementToRecord = document.getElementById('element-to-record');
+    var canvas2d = document.getElementById('background-canvas');
+    var context = canvas2d.getContext('2d');
+
+    canvas2d.width = elementToRecord.clientWidth;
+    canvas2d.height = elementToRecord.clientHeight;
+
+    var isRecordingStarted = false;
+    var isStoppedRecording = false;
+
+    (function looper() {
+        if(!isRecordingStarted) {
+            return setTimeout(looper, 500);
+        }
+
+        html2canvas(elementToRecord).then(function(canvas) {
+            context.clearRect(0, 0, canvas2d.width, canvas2d.height);
+            context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
+
+            if(isStoppedRecording) {
+                return;
+            }
+
+            requestAnimationFrame(looper);
+        });
+    })();
+
+    var recorder = new RecordRTC(canvas2d, {
+        type: 'canvas'
+    });
+
+    // 按钮点击事件
+    document.getElementById('btn-start-recording').onclick = function() {
+        console.log("allanlog start");
+        registerWebBridge();
+
+        showEcharts();
+
+        this.disabled = true;
+        
+        isStoppedRecording = false;
+        isRecordingStarted = true;
+
+        recorder.startRecording();
+        document.getElementById('btn-stop-recording').disabled = false;
+    };
+
+    document.getElementById('btn-stop-recording').onclick = function() {
+        this.disabled = true;
+        
+        recorder.stopRecording(function() {
+            console.log("allanlog stop");
+            isRecordingStarted = false;
+            isStoppedRecording = true;
+            isTimeDisplaying = false;
+
+            var blob = recorder.getBlob();
+            console.log("allanlog blob..." + blob);
+            console.log("allanlog blob to string...");
+            //视频下载 invokeSaveAsDialog（参数1为视频流blob,参数2为视频类型）
+            blobToDataURI(blob, function (result) {
+                console.log('allanlog blob to string size: ', result.length);
+                let cb = function (responseData) {
+                    console.log("allanlog callback from native ", responseData);
+                    document.getElementById('time').textContent = "native: " + responseData;
+                };
+                window.WebViewJavascriptBridge.callHandler("sendVideoBlobBase64", result, cb);
+            });
+        });
+    };
+</script>
+</body>
+</html>

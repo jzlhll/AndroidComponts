@@ -1,0 +1,2 @@
+-keep public class com.allan.nested.layout.* { *; }
+-keep public class com.allan.nested.widget.* { *; }

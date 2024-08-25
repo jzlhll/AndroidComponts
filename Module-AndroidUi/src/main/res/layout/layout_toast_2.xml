@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:minHeight="89dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_shadow_bg"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/icon"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        tools:src="@drawable/ic_successful"/>
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/desc"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/closeBtn"
+        android:layout_marginStart="12dp"
+        android:id="@+id/text"
+        style="@style/StyleFontText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/color_text_desc"
+        android:textSize="15sp"
+        tools:text="The title" />
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/closeBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="12dp"
+        android:id="@+id/desc"
+        style="@style/StyleFontText"
+        android:layout_marginTop="2dp"
+        android:layout_width="0dp"
+        android:textAlignment="gravity"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="15sp"
+        tools:text="very long long long long long long djfkadjf adjsfkja dfjkasdfj adsfk adjf asjdkf" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/closeBtn"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingEnd="2dp"
+        android:paddingStart="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:tint="@color/color_text_desc"
+        android:src="@drawable/ic_close"
+        android:layout_width="30dp"
+        android:layout_height="24dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>
+        js调用java
+    </title>
+</head>
+<body>
+<p>js调用java</p>
+<div id="show">My Header</div>
+<div>
+    <p>
+        <input type="button" id="enter" value="获取用户信息" onclick="getUserInfo();"/>
+    </p>
+    <br>
+    <p>
+        <a href="myapp://app">跳转至MyApp</a>
+    </p>
+</div>
+</body>
+<script>
+    function getUserInfo(){
+        window.WebViewJavascriptBridge.init({})
+        window.WebViewJavascriptBridge.callHandler(
+            'getUserInfo',
+            {'info': 'I am JS, want to get UserInfo from Java'},
+            function(responseData) {
+                document.getElementById("show").innerHTML = "repsonseData from java,\ndata = " + responseData;
+            }
+        )
+
+        window.WebViewJavascriptBridge.registerHandler('registerNative', function(data, cb) {
+            document.getElementById("show").innerHTML = "receiver from java,\ndata = " + data;
+            cb("I have receive native message! 3q!")
+        })
+    }
+</script>
+</html>

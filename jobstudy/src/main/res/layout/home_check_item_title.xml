@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.widget.Space
+        android:id="@+id/secondGroupSpace"
+        android:visibility="gone"
+        android:layout_width="1dp"
+        android:layout_height="22dp"/>
+
+    <LinearLayout
+        android:id="@+id/host"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingVertical="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/corner_title_bar"
+        tools:ignore="MissingDefaultResource">
+
+        <com.au.module_android.widget.CustomFontText
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subjectText"
+            android:id="@+id/workTitle"
+            android:layout_marginStart="12dp"
+            tools:text="今天的任务"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</LinearLayout>

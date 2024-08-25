@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.BgBuildConstraintLayout
+        android:layout_width="match_parent"
+        android:minHeight="234dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:padding="16dp"
+        app:backgroundNormal="@color/color_background_dialog"
+        app:cornerSizeTopLeft="12dp"
+        app:cornerSizeTopRight="12dp"
+        app:cornerSizeBottomLeft="12dp"
+        app:cornerSizeBottomRight="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_successful"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/titleTv"
+            style="@style/StyleFontBText"
+            app:layout_constraintTop_toBottomOf="@id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="24sp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            tools:text="fir" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/contentTv"
+            style="@style/StyleFontSecondaryText"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            tools:text="Your customiz" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/cancelButton"
+            style="@style/StyleButtonSecondary"
+            app:fontMode="mid"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sureButton"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/sureButton"
+            app:fontMode="mid"
+            style="@style/StyleButtonPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
+            app:layout_constraintTop_toBottomOf="@id/contentTv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="32dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            tools:text="delete"/>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
+
+    <android.widget.Space
+        android:layout_width="1dp"
+        android:layout_height="8dp"/>
+</LinearLayout>
