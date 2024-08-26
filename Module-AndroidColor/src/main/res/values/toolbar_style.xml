@@ -19,7 +19,7 @@
     </style>
 
     <!--设置菜单的popup的样式-->
-    <style name="toolbarOverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+    <style name="toolbarOverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
         <!--把该属性改为false即可使menu位置位于toolbar之下-->
         <item name="overlapAnchor">false</item>
     </style>
