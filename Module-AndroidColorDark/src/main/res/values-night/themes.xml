@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="CustomModuleTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="CustomModuleTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- 自定义菜单项文字颜色 -->
         <item name="android:actionMenuTextColor">@color/color_text_normal_dk</item>
         <!-- 重要的4板斧 设置statusBar和navigationBar的颜色-->
