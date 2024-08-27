@@ -1,5 +1,6 @@
 package com.allan.androidlearning.androidui
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
+import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.DarkMode
 import com.au.module_android.utils.DarkModeUtil
@@ -23,13 +25,13 @@ import com.au.module_android.utils.dp
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.showImeNew
+import com.au.module_android.utils.transparentStatusBar
 import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.dialogs.ConfirmCenterImgDialog
 import com.au.module_androidui.dialogs.ConfirmImgBottomDialog
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_androidui.toast.ToastBuilder
-import com.au.module_android.ui.bindings.BindingFragment
 import kotlinx.coroutines.launch
 
 class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
@@ -41,6 +43,14 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
     }
 
     fun dialog() {
+        binding.androidUiDarkmodeTempingForceLight.onClick {
+            transparentStatusBar(requireActivity().window, false)
+        }
+
+        binding.androidUiDarkmodeTempingForceDark.onClick {
+            transparentStatusBar(requireActivity().window, true)
+        }
+
         binding.androidUiDialog1.onClick {
             ConfirmBottomDialog.show(childFragmentManager, "Title", "This is the content desc for title.",
                 "OK", null) {
@@ -139,10 +149,15 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
     }
 
     val getDarkStrFunc = {
-        val util = DarkModeUtil()
-        val s = util.currentSystemIfDarkMode(requireContext())
-        val s2 = util.currentAppDarkMode()
-        "darkMode\nsystem $s app $s2"
+        val mode = requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDark = DarkModeUtil.detectDarkMode(requireContext())
+        val s2 = when (mode) {
+            Configuration.UI_MODE_NIGHT_YES -> "UI_MODE_NIGHT_YES"
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> "UI_MODE_NIGHT_UNDEFINED"
+            Configuration.UI_MODE_NIGHT_NO -> "UI_MODE_NIGHT_NO"
+            else -> "$mode"
+        }
+        "darkMode\n$s2 : $isDark"
     }
 
     fun toast() {

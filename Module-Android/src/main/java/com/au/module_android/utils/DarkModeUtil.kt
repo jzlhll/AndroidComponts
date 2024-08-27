@@ -16,59 +16,39 @@ enum class DarkMode {
 }
 
 class DarkModeUtil {
-    fun currentSystemIfDarkMode(cxt:Context) : Boolean {
-        val mode = cxt.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val modeStr = configurationUiModeToStr(mode)
-        logd { "allan current $modeStr" }
-        return mode == Configuration.UI_MODE_NIGHT_YES
-    }
-
-    /**
-     * 获取当前app的模式；请注意它并不能代表当前app展示的是否是黑色还是白色。
-     * 因为如果是follow的情况，需要以System为主，因此推荐调用currentIfDark()
-     */
-    @Deprecated("")
-    fun currentAppDarkMode() : DarkMode {
-        val mode = AppCompatDelegate.getDefaultNightMode()
-        val modeStr = appNightModeToStr(mode)
-        logd { "allan current $modeStr" }
-        return when (mode) {
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> DarkMode.FOLLOW_SYSTEM
-            AppCompatDelegate.MODE_NIGHT_YES -> DarkMode.DARK
-            AppCompatDelegate.MODE_NIGHT_NO -> DarkMode.LIGHT
-            else -> DarkMode.FOLLOW_SYSTEM
+    companion object {
+        fun configurationUiModeToStr(context: Context) : String{
+            val uiMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            when (uiMode) {
+                Configuration.UI_MODE_NIGHT_YES -> return "[System is Dark]"
+                Configuration.UI_MODE_NIGHT_NO -> return "[System is Light]"
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> return "[System is Undefined]"
+            }
+            return "[system is $uiMode]"
         }
-    }
 
-    /**
-     * 结合了currentAppDarkMode和currentSystemIfDarkMode综合得出现在界面的样式
-     */
-    fun currentIfDark(context: Context) : Boolean{
-        val appDarkMode = currentAppDarkMode()
-        if (appDarkMode == DarkMode.FOLLOW_SYSTEM) {
-            return currentSystemIfDarkMode(context)
+        fun appNightModeToStr() : String{
+            val appMode = AppCompatDelegate.getDefaultNightMode()
+            when (appMode) {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> return "[App is Follow System]"
+                AppCompatDelegate.MODE_NIGHT_YES -> return "[App is Dark]"
+                AppCompatDelegate.MODE_NIGHT_NO -> return "[App is Light]"
+                AppCompatDelegate.MODE_NIGHT_UNSPECIFIED -> return "[App is Undefined]"
+                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> return "[App is Auto battery]"
+            }
+            return "[App is $appMode]"
         }
-        return appDarkMode == DarkMode.DARK
-    }
 
-    private fun configurationUiModeToStr(uiMode:Int) : String{
-        when (uiMode) {
-            Configuration.UI_MODE_NIGHT_YES -> return "[System is Dark]"
-            Configuration.UI_MODE_NIGHT_NO -> return "[System is Light]"
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> return "[System is Undefined]"
+        /**
+         * 获取当前是否是黑暗模式。
+         *
+         * 这个函数application初始化阶段调用不准。
+         * 其他只要是任意activity范围onCreate和其他生命周期都可以。
+         */
+        fun detectDarkMode(cxt:Context) : Boolean {
+            val mode = cxt.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            return mode == Configuration.UI_MODE_NIGHT_YES
         }
-        return "[system is $uiMode]"
-    }
-
-    private fun appNightModeToStr(uiMode:Int) : String{
-        when (uiMode) {
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> return "[App is Follow System]"
-            AppCompatDelegate.MODE_NIGHT_YES -> return "[App is Dark]"
-            AppCompatDelegate.MODE_NIGHT_NO -> return "[App is Light]"
-            AppCompatDelegate.MODE_NIGHT_UNSPECIFIED -> return "[App is Undefined]"
-            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> return "[App is Auto battery]"
-        }
-        return "[App is $uiMode]"
     }
 
     fun changeDarkMode(mode:DarkMode, saveSp:Boolean = true) {

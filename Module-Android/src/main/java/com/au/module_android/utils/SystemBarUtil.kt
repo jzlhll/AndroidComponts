@@ -2,12 +2,12 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.graphics.Color
+import android.os.Build
 import android.view.Window
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.fragment.app.Fragment
 import androidx.window.layout.WindowMetricsCalculator
 
 //参考资料
@@ -16,63 +16,32 @@ import androidx.window.layout.WindowMetricsCalculator
 //https://developer.android.google.cn/develop/ui/views/layout/insets/rounded-corners?hl=zh-cn
 //https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge-manually?hl=zh-cn
 
-@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
-fun transparentStatusBar(fragment: Fragment,
-    isBlackStatusBarTextColor: Boolean? = null,
-    isBlackNavigationBarTextColor: Boolean? = null,
-    force:Boolean = false,
-    insetsBlock: (
-        insets: WindowInsetsCompat,
-        statusBarsHeight: Int,
-        navigationBarHeight: Int
-    ) -> WindowInsetsCompat = {insets, _, _ -> insets}
-) {
-    val window = fragment.activity?.window
-    if (window != null) {
-        transparentStatusBar(window, isBlackStatusBarTextColor, isBlackNavigationBarTextColor, force, insetsBlock)
-    }
-}
-
-@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
-fun transparentStatusBar(activity: Activity,
-    isBlackStatusBarTextColor: Boolean? = null,
-    isBlackNavigationBarTextColor: Boolean? = null,
-    force:Boolean = false,
-    insetsBlock: (
-        insets: WindowInsetsCompat,
-        statusBarsHeight: Int,
-        navigationBarHeight: Int
-    ) -> WindowInsetsCompat = {insets, _, _ -> insets}
-) {
-    transparentStatusBar(activity.window, isBlackStatusBarTextColor, isBlackNavigationBarTextColor, force, insetsBlock)
-}
-
 /**
  * 透明状态栏, 必定做全屏；然后设置参数，修改文字颜色。
- * @param noForce 表示是否强制按照2个color来显示bar的文字颜色。默认false情况下，代码会结合当前是否是黑暗模式来处理
+ * @param forceBarsToDark null 就自动检测app的uiMode。一般不要去传参，保持null。
+ *                          true就statusBar显示白色文案（即黑暗模式）。false就bar显示黑色文案（即亮白模式）。
  */
 @Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(window: Window,
-    isBlackStatusBarTextColor: Boolean? = null,
-    isBlackNavigationBarTextColor: Boolean? = null,
-    noForce:Boolean = false,
-    insetsBlock: (
+                         forceBarsToDark:Boolean? = null,
+                         insetsBlock: (
         insets: WindowInsetsCompat,
         statusBarsHeight: Int,
         navigationBarHeight: Int
     ) -> WindowInsetsCompat = {insets, _, _ -> insets}
 ) {
-    var isBlackStatusBarTextColorFix = isBlackStatusBarTextColor
-    var isBlackNavigationBarTextColorFix = isBlackNavigationBarTextColor
-    if (!noForce) {
-        val isDarkUi = DarkModeUtil().currentIfDark(window.context)
-        if (!isDarkUi) {
-            isBlackStatusBarTextColorFix = true
-            isBlackNavigationBarTextColorFix = true
-        } else {
-            isBlackStatusBarTextColorFix = false
-            isBlackNavigationBarTextColorFix = false
-        }
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    window.statusBarColor = Color.TRANSPARENT
+    window.navigationBarColor = Color.TRANSPARENT
+    if (Build.VERSION.SDK_INT >= 29) {
+        window.isStatusBarContrastEnforced = false
+        window.isNavigationBarContrastEnforced = true
+    }
+
+    val dark = forceBarsToDark ?: DarkModeUtil.detectDarkMode(window.context)
+    WindowInsetsControllerCompat(window, window.decorView).run {
+        isAppearanceLightStatusBars = !dark
+        isAppearanceLightNavigationBars = !dark
     }
 
     //预留导航栏的空间
@@ -82,19 +51,6 @@ fun transparentStatusBar(window: Window,
             insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
             insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
         )
-    }
-    //设置系统不要给状态栏和导航栏预留空间，否则无法透明状态栏 全屏传入false
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    //处理状态栏文字颜色
-    if (isBlackStatusBarTextColorFix != null || isBlackNavigationBarTextColorFix != null) {
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            if (isBlackStatusBarTextColorFix != null) {
-                isAppearanceLightStatusBars = isBlackStatusBarTextColorFix
-            }
-            if (isBlackNavigationBarTextColorFix != null) {
-                isAppearanceLightNavigationBars = isBlackNavigationBarTextColorFix
-            }
-        }
     }
 }
 

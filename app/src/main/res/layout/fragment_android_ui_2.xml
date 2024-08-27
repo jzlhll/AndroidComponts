@@ -28,6 +28,19 @@
             app:flChildSpacing="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/android_ui_darkmodeTempingForceLight"
+                android:text="临时 force light"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_darkmodeTempingForceDark"
+                android:text="临时 force dark"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
             <Button
                 android:id="@+id/android_ui_darkmode1"
                 android:text="current"
@@ -39,7 +52,7 @@
                 android:layout_marginBottom="0dp"
                 style="@style/StyleButtonSecondary"
                 android:id="@+id/android_ui_darkmodeFollowSystem"
-                android:text="Follow Sys"
+                android:text="Follow System"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"/>
 
