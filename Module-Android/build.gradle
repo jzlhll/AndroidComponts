@@ -8,11 +8,14 @@ android {
     namespace 'com.au.module.android'
     compileSdk gradle.ext.compileSdk
 
+    def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
+
     defaultConfig {
         minSdk gradle.ext.minSdk
         targetSdk gradle.ext.targetSdk
 
         consumerProguardFiles "consumer-rules.pro"
+        buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
     }
 
     buildTypes {
@@ -21,6 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility gradle.ext.sourceCompatibility
         targetCompatibility gradle.ext.targetCompatibility

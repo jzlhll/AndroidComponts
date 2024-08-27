@@ -70,4 +70,14 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:text="head"
+        android:layout_width="100dp"
+        android:layout_height="20dp"/>
+
+    <TextView
+        android:layout_gravity="bottom"
+        android:text="tile"
+        android:layout_width="100dp"
+        android:layout_height="20dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

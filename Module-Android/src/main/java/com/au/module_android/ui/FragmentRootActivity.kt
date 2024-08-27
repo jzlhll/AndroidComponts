@@ -3,7 +3,6 @@ package com.au.module_android.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.views.ViewActivity
-import com.au.module_android.utils.logd
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 
@@ -96,13 +94,5 @@ open class FragmentRootActivity : ViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidBug5497Workaround.assistActivity(this)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        logd { "old uiMode ${resources.configuration.uiMode}" }
-        super.onConfigurationChanged(newConfig)
-        logd { "new uiMode ${resources.configuration.uiMode}" }
-        val mode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        logd { "now uiMode mode" }
     }
 }

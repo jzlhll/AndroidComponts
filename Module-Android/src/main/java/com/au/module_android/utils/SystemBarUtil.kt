@@ -2,10 +2,7 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.graphics.Color
-import android.graphics.Point
-import android.os.Build
 import android.view.Window
-import android.view.WindowInsets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +10,13 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.window.layout.WindowMetricsCalculator
 
+//参考资料
+//https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge?hl=zh-cn
+//https://developer.android.google.cn/develop/ui/views/layout/immersive?hl=zh-cn
+//https://developer.android.google.cn/develop/ui/views/layout/insets/rounded-corners?hl=zh-cn
+//https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge-manually?hl=zh-cn
+
+@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(fragment: Fragment,
     isBlackStatusBarTextColor: Boolean? = null,
     isBlackNavigationBarTextColor: Boolean? = null,
@@ -29,6 +33,7 @@ fun transparentStatusBar(fragment: Fragment,
     }
 }
 
+@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(activity: Activity,
     isBlackStatusBarTextColor: Boolean? = null,
     isBlackNavigationBarTextColor: Boolean? = null,
@@ -46,6 +51,7 @@ fun transparentStatusBar(activity: Activity,
  * 透明状态栏, 必定做全屏；然后设置参数，修改文字颜色。
  * @param force 表示是否强制按照2个color来显示bar的文字颜色。默认false情况下，代码会结合当前是否是黑暗模式来处理
  */
+@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(window: Window,
     isBlackStatusBarTextColor: Boolean? = null,
     isBlackNavigationBarTextColor: Boolean? = null,
