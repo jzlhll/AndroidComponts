@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.permissions.activity.ActivityForResult
+import com.au.module_android.ui.base.IFullWindow
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
@@ -87,6 +88,15 @@ open class FragmentRootActivity : ViewActivity() {
         if (BuildConfig.DEBUG) {
             Log.d("AU_APP", "FragmentRootActivity: ${fragmentClass.name} autoHideIme: $isAutoHideIme")
         }
+
+        //根据fragment情况来实现
+        if (instance is IFullWindow) {
+            //精髓所在：通过fragment的接口函数来判断是否updatePadding StatusBar或者NavBar。
+            instance.fullPaddingEdgeToEdge(this, window, v)
+        } else {
+            super.setEdge(v)
+        }
+
         supportFragmentManager.beginTransaction().replace(v.id, instance).commit() //todo 增加tag。
         return v
     }
@@ -94,5 +104,10 @@ open class FragmentRootActivity : ViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidBug5497Workaround.assistActivity(this)
+    }
+
+    override fun setEdge(contentView: View?) {
+        //empty 因为我们其实要判断Fragment中的padding函数。
+        //放在（instance is IFullWindow）去做。
     }
 }

@@ -1,26 +1,26 @@
 package com.allan.androidlearning
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Space
-import androidx.core.view.updatePadding
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntroBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
-import com.au.module_android.utils.transparentStatusBar
 import com.au.module_androidui.toast.toastOnTop
-import com.au.module_android.ui.bindings.BindingActivity
 import com.google.android.material.button.MaterialButton
 
 class EntroActivity : BindingActivity<ActivityEntroBinding>() {
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         logd { "onNewIntent $intent" }
@@ -34,11 +34,6 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
         val goto = intent?.getStringExtra("goto")
 
         logd { "goto $goto" }
-
-        transparentStatusBar(window, true) { insets, statusBarsHeight, navigationBarHeight ->
-            binding.root.updatePadding(top = statusBarsHeight)
-            insets
-        }
 
         EntroList().getEntroList().sortedBy { it.simpleName }.forEach { fragmentClass ->
             val btn = MaterialButton(this)

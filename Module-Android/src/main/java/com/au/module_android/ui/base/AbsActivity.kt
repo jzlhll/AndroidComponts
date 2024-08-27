@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import com.au.module.android.BuildConfig
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
+import com.au.module_android.ui.fullPaddingEdgeToEdge
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
 
 @Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
-open class AbsActivity : AppCompatActivity() {
+open class AbsActivity : AppCompatActivity(), IFullWindow {
     companion object {
         const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
     }
@@ -40,6 +43,30 @@ open class AbsActivity : AppCompatActivity() {
         ToutiaoScreenAdapter.attach(this)
         super.onCreate(savedInstanceState)
         isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
+    }
+
+    override fun setContentView(view: View?) {
+        super.setContentView(view)
+        setEdge(view)
+    }
+
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        setEdge(null)
+    }
+
+    override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
+        super.setContentView(view, params)
+        setEdge(view)
+    }
+
+    /**
+     * 进行全屏实现
+     */
+    open fun setEdge(contentView:View?) {
+        if (BuildConfig.ENABLE_EDGE_TO_EDGE) {
+            fullPaddingEdgeToEdge(this, this.window, contentView ?: findViewById(android.R.id.content))
+        }
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

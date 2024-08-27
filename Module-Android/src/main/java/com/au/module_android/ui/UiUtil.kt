@@ -1,8 +1,16 @@
 package com.au.module_android.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.viewbinding.ViewBinding
+import com.au.module_android.ui.base.IFullWindow
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -46,4 +54,35 @@ fun <T : ViewBinding> createViewBinding(self: Class<*>, inflater: LayoutInflater
         ViewGroup::class.java,
         Boolean::class.java
     ).invoke(null, inflater, container, attach) as T
+}
+
+/**
+ * 子类调用。
+ * 所以子类不得再调用window.decorView
+ * ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
+ */
+fun IFullWindow.fullPaddingEdgeToEdge(activity: ComponentActivity, window: Window, updatePaddingRoot: View) {
+    val isPaddingNav = isPaddingNavBar()
+    val isPaddingStatusBar = isPaddingStatusBar()
+
+    activity.enableEdgeToEdge()
+
+    if (isPaddingNav || isPaddingStatusBar) {
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
+            val statusBarsHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val bottomBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+
+            if (isPaddingStatusBar) {
+                if (isPaddingNav) {
+                    updatePaddingRoot.updatePadding(top = statusBarsHeight, bottom = bottomBarHeight)
+                } else {
+                    updatePaddingRoot.updatePadding(top = statusBarsHeight)
+                }
+            } else {
+                updatePaddingRoot.updatePadding(bottom = bottomBarHeight)
+            }
+
+            insets
+        }
+    }
 }
