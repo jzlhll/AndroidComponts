@@ -15,7 +15,6 @@ import com.allan.autoclickfloat.databinding.RootActivityBinding
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.replaceFragment
-import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.Job
@@ -58,12 +57,6 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(Const.TAG, "onCreate: ")
-
-        transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
-            binding.root.setPadding(binding.root.paddingStart, statusBarsHeight, binding.root.paddingEnd, navigationBarHeight)
-            insets
-        }
-
         viewModel.allPermissionEnabled.observeUnStick(this) { it ->
             when (it) {
                 OnlyFloatPermissionViewModel.STATE_NO_FLOAT_WINDOW -> {

@@ -87,7 +87,7 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
         // warn1: 不能忽略dialog?window的条件，否则就变成了处理activity，而不是本dialog的window
         // warn2: 设置了transparentStatusBar后，键盘无法弹起。
         // warn3: 那么，布局就从底部透到nav之下，从根部开始显示。
-        if (!hasEditText) {
+        if (!hasEditText) { //todo android15 check
             dialog?.window?.let { window ->
                 transparentStatusBar(window) { _, _, navigationBarHeight ->
                     view?.updatePadding(bottom = navigationBarHeight)

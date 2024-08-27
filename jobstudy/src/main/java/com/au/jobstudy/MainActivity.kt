@@ -2,8 +2,6 @@ package com.au.jobstudy
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.allan.nested.bottom_nav.BottomNavAdapter
 import com.allan.nested.bottom_nav.BottomPageBean
@@ -13,13 +11,11 @@ import com.au.jobstudy.databinding.ActivityMainBinding
 import com.au.jobstudy.databinding.BottomPageMenuBinding
 import com.au.module_android.Globals.app
 import com.au.module_android.ui.bindings.BindingActivity
-import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        transparentStatusBar(this, isBlackStatusBarTextColor = true, isBlackNavigationBarTextColor = true, force =false, ::onStatusBar)
 
         binding.mainViewPager.offscreenPageLimit = 1
         binding.mainViewPager.simplePagerAdapter(this, pages) { _, fragment ->
@@ -45,15 +41,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     it.ivLogo
                 })
         }
-    }
-
-    private fun onStatusBar(
-        insets: WindowInsetsCompat,
-        statusBarsHeight: Int,
-        navigationBarHeight: Int
-    ): WindowInsetsCompat {
-        binding.root.updatePadding(top = statusBarsHeight, bottom = navigationBarHeight)
-        return insets
     }
 
     private val colorTextGray by unsafeLazy { Color.parseColor("#999999") }

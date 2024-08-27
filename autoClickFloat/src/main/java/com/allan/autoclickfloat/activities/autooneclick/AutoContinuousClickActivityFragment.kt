@@ -9,7 +9,6 @@ import com.allan.autoclickfloat.databinding.AutoContinuousClickAPointBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.gone
-import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
@@ -30,11 +29,6 @@ class AutoContinuousClickActivityFragment : BindingFragment<AutoContinuousClickA
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        transparentStatusBar(this, true, true) {insets, statusBarsHeight, navigationBarHeight ->
-            binding.root.setPadding(binding.root.paddingStart, statusBarsHeight, binding.root.paddingEnd, navigationBarHeight)
-            insets
-        }
-
         binding.showFloatViewBtn.onClick {
             showOrUpdateFloat()
         }

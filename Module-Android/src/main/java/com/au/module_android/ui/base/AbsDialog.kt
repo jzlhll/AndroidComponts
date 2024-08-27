@@ -31,8 +31,6 @@ abstract class AbsDialog(private val mode: DialogMode) : AppCompatDialogFragment
 
     override var createdDialog: Dialog? = null
 
-    var isDarkFeature = false
-
     /**
      * 查找到可以用于toast的ViewGroup。
      */
@@ -152,8 +150,8 @@ abstract class AbsDialog(private val mode: DialogMode) : AppCompatDialogFragment
     open fun setWindowStyle() {
         window?.apply {
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            if(isDarkFeature) transparentStatusBar(this, false, false)
-            else transparentStatusBar(this)
+            transparentStatusBar(this)
+
             attributes = attributes?.also {
                 //保证对话框弹出的时候状态栏不是黑色
                 it.height = WindowManager.LayoutParams.MATCH_PARENT

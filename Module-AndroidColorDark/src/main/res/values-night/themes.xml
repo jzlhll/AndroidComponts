@@ -4,8 +4,8 @@
         <!-- 自定义菜单项文字颜色 -->
         <item name="android:actionMenuTextColor">@color/color_text_normal_dk</item>
         <!-- 重要的4板斧 设置statusBar和navigationBar的颜色-->
-        <item name="android:statusBarColor">@color/windowBackground_dk</item>
-        <item name="android:navigationBarColor">@color/windowBackground_dk</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="android:windowBackground">@color/windowBackground_dk</item>

@@ -49,13 +49,13 @@ fun transparentStatusBar(activity: Activity,
 
 /**
  * 透明状态栏, 必定做全屏；然后设置参数，修改文字颜色。
- * @param force 表示是否强制按照2个color来显示bar的文字颜色。默认false情况下，代码会结合当前是否是黑暗模式来处理
+ * @param noForce 表示是否强制按照2个color来显示bar的文字颜色。默认false情况下，代码会结合当前是否是黑暗模式来处理
  */
 @Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(window: Window,
     isBlackStatusBarTextColor: Boolean? = null,
     isBlackNavigationBarTextColor: Boolean? = null,
-    force:Boolean = false,
+    noForce:Boolean = false,
     insetsBlock: (
         insets: WindowInsetsCompat,
         statusBarsHeight: Int,
@@ -64,7 +64,7 @@ fun transparentStatusBar(window: Window,
 ) {
     var isBlackStatusBarTextColorFix = isBlackStatusBarTextColor
     var isBlackNavigationBarTextColorFix = isBlackNavigationBarTextColor
-    if (!force) {
+    if (!noForce) {
         val isDarkUi = DarkModeUtil().currentIfDark(window.context)
         if (!isDarkUi) {
             isBlackStatusBarTextColorFix = true
@@ -85,8 +85,6 @@ fun transparentStatusBar(window: Window,
     }
     //设置系统不要给状态栏和导航栏预留空间，否则无法透明状态栏 全屏传入false
     WindowCompat.setDecorFitsSystemWindows(window, false)
-    //设置状态栏颜色透明
-    window.statusBarColor = Color.TRANSPARENT
     //处理状态栏文字颜色
     if (isBlackStatusBarTextColorFix != null || isBlackNavigationBarTextColorFix != null) {
         WindowCompat.getInsetsController(window, window.decorView).apply {
