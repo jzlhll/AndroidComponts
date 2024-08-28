@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="CustomModuleTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- material的颜色值 overlay 实在太多，只要部分。colorPrimary colorAccent 控件颜色； colorSecondaryContainer 修改进度条的背景色；-->
+        <item name="colorPrimary">@color/colorPrimary_dk</item>
+        <item name="colorPrimaryDark">@color/colorPrimary_dk</item>
+        <item name="colorAccent">@color/colorPrimary_dk</item>
+        <item name="android:textColor">@color/color_text_normal_dk</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_dk</item>
+        <item name="android:colorControlNormal">@color/color_text_normal_dk</item>
+        <item name="android:textColorPrimary">@color/color_text_normal_dk</item>
+        <item name="colorPrimaryVariant">@color/color_text_normal_dk</item>
+
         <!-- 自定义菜单项文字颜色 -->
         <item name="android:actionMenuTextColor">@color/color_text_normal_dk</item>
         <!-- 重要的4板斧 设置statusBar和navigationBar的颜色-->

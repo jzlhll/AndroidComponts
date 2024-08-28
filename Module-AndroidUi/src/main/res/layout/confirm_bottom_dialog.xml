@@ -15,7 +15,7 @@
         android:layout_marginStart="@dimen/ui_padding_edge"
         android:padding="16dp"
         android:layout_marginEnd="@dimen/ui_padding_edge"
-        app:backgroundNormal="@color/colorBackground"
+        app:backgroundNormal="@color/windowDialogBackground"
         app:cornerRadius="12dp">
         <!-- 预留一份空间4dp。这样就可以让title是16dp或者20dp的marginTop -->
         <com.au.module_android.widget.CustomFontText

@@ -18,6 +18,8 @@ class ViewBackgroundBuilder {
     private var mStrokeColor:Int = 0
     private var mBg:ColorStateList? = null
 
+    private var mBgAlpha = -1
+
     var isAtLeastOne = false
 
     /**
@@ -71,6 +73,10 @@ class ViewBackgroundBuilder {
             isAtLeastOne = true
         }
         return this
+    }
+
+    fun setBackgroundAlpha(alpha:Int) {
+        mBgAlpha = alpha
     }
 
     fun setBackground(color:Int, pressedColor:Int = 0, disabledColor:Int = 0)
@@ -142,9 +148,9 @@ class ViewBackgroundBuilder {
 //        }
 
         //alpha
-//        if (mAlpha in 0f..1f) {
-//            it.alpha = (225f * mAlpha).toInt()
-//        }
+        if (mBgAlpha >= 0) {
+            it.alpha = mBgAlpha
+        }
         return it
     }
 }
@@ -153,6 +159,16 @@ fun View.viewBackgroundBuild(array:TypedArray) {
     val builder = ViewBackgroundBuilder()
 
     val noColor = 0
+
+    val bgAlpha = array.getFloat(R.styleable.AnySimpleView_backgroundAlpha, -1f)
+    if (bgAlpha in 0f..255f) {
+        val alpha = if (bgAlpha <= 1f) {
+            (225f * bgAlpha).toInt()
+        } else {
+            bgAlpha.toInt()
+        }
+        builder.setBackgroundAlpha(alpha)
+    }
 
     val bgNormalColor = array.getColor(R.styleable.AnySimpleView_backgroundNormal, noColor)
     val bgDisabledColor = array.getColor(R.styleable.AnySimpleView_backgroundDisabled, noColor)

@@ -3,7 +3,7 @@
     <!-- app 主题背景色 -->
     <color name="windowBackground_lt">#ffffff</color>
     <!-- app dialog的背景色 -->
-    <color name="colorBackground_lt">#ffffff</color>
+    <color name="windowDialogBackground_lt">#ffffff</color>
 
     <!-- 背景色 ：文字图标，或者一片框框-->
     <color name="color_normal_block_lt">#f6f6f6</color>

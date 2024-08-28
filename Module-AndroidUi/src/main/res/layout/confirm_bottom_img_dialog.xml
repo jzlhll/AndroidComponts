@@ -15,7 +15,7 @@
         android:layout_marginStart="@dimen/ui_padding_edge"
         android:layout_marginEnd="@dimen/ui_padding_edge"
         android:padding="16dp"
-        app:backgroundNormal="@color/colorBackground"
+        app:backgroundNormal="@color/windowDialogBackground"
         app:cornerSizeTopLeft="12dp"
         app:cornerSizeTopRight="12dp"
         app:cornerSizeBottomLeft="12dp"

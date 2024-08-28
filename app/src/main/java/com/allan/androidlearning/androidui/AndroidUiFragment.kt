@@ -1,19 +1,10 @@
 package com.allan.androidlearning.androidui
 
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.Gravity
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.viewpager2.widget.ViewPager2
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
 import com.allan.classnameanno.EntroFrgName
 import com.allan.nested.viewpager2.simplePagerAdapter
-import com.au.module_android.utils.asOrNull
-import com.au.module_android.widget.CustomFontText
-import com.au.module_android.widget.FontMode
 import com.au.module_android.ui.bindings.BindingFragment
-import com.google.android.material.tabs.TabLayout
 
 /**
  * @author allan
@@ -28,8 +19,8 @@ class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
 
     private val pages = listOf(
         Pair("Components", AndroidUi1Fragment::class.java),
+        Pair("Components2", AndroidUi3Fragment::class.java),
         Pair("Action", AndroidUi2Fragment::class.java),
-        Pair("Edit", AndroidUi3Fragment::class.java),
     )
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {

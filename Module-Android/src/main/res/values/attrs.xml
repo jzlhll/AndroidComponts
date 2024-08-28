@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="backgroundAlpha" format="float|integer" />
     <attr name="backgroundNormal" format="color" />
     <attr name="backgroundPressed" format="color" />
     <attr name="backgroundDisabled" format="color" />
@@ -66,6 +67,7 @@
     <!-- 没有alpha，水波纹等比较特殊的场景。-->
     <declare-styleable name="AnySimpleView">
         <attr name="backgroundNormal" />
+        <attr name="backgroundAlpha" />
         <attr name="backgroundPressed" />
         <attr name="backgroundDisabled" />
 

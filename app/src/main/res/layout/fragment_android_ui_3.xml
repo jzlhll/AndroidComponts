@@ -2,9 +2,10 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingHorizontal="@dimen/ui_padding_edge"
     android:orientation="vertical"
+    tools:context="com.allan.androidlearning.androidui.AndroidUi3Fragment"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,14 +14,70 @@
 
         <com.au.module_android.widget.CustomFontText
             style="@style/StyleFontSecondTitleText"
-            android:text="edit input"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginTop="18dp"
+            android:text="progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.FlowLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            app:flRowSpacing="8dp"
+            app:flChildSpacing="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorSize="20dp"
+                android:layout_marginTop="8dp"
+                android:progress="70"
+                app:trackThickness="2dp"/>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorSize="20dp"
+                android:layout_marginTop="8dp"
+                android:indeterminate="true"
+                app:trackThickness="2dp"/>
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+        </com.au.module_android.widget.FlowLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="300dp"
+            android:progress="60"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_height="12dp"
             android:layout_marginTop="12dp"
+            app:trackThickness="4dp" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="300dp"
+            android:indeterminate="true"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_height="12dp"
+            android:layout_marginTop="24dp"
+            app:trackThickness="4dp" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:text="edit input"
+            android:layout_marginTop="36dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_marginTop="12dp"
             android:orientation="vertical"
+            android:layout_marginStart="@dimen/ui_padding_edge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
