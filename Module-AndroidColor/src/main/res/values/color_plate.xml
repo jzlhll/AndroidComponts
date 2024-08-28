@@ -56,7 +56,7 @@
     <color name="color_tab_text_select">@color/color_text_normal_lt</color>
 
     <!-- 分割线的颜色 -->
-    <color name="colorForeground">@color/colorForeground_lt</color>
+    <color name="color_line">@color/color_line_lt</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg">@color/color_switch_block_bg_lt</color>

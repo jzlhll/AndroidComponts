@@ -56,7 +56,7 @@
     <!-- <color name="color_tab_text_select_dk">#ffffff</color> 使用color_text_normal -->
 
     <!-- 分割线的颜色 -->
-    <color name="colorForeground_dk">#343437</color>
+    <color name="color_line_dk">#343437</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg_dk">@color/color_secondary_dk</color>

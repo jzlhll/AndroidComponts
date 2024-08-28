@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="8dp"
-        app:backgroundNormal="@color/colorForeground"
+        app:backgroundNormal="@color/color_line"
         app:cornerRadius="4dp" />
 
     <androidx.fragment.app.FragmentContainerView

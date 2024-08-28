@@ -97,7 +97,7 @@
 
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/colorForeground"
+            android:background="@color/color_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
@@ -179,7 +179,7 @@
 
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/colorForeground"
+            android:background="@color/color_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
@@ -248,7 +248,7 @@
         
         <View
             android:layout_marginTop="32dp"
-            android:background="@color/colorForeground"
+            android:background="@color/color_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
