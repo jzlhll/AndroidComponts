@@ -6,10 +6,12 @@
         <item name="colorPrimaryDark">@color/colorPrimary_lt</item>
         <item name="colorAccent">@color/colorPrimary_lt</item>
         <item name="android:textColor">@color/color_text_normal_lt</item>
-        <item name="colorSecondaryContainer">@color/color_secondary_lt</item>
+        <item name="colorSecondaryContainer">@color/color_second_btn_bg_lt</item>
         <item name="android:colorControlNormal">@color/color_text_normal_lt</item>
         <item name="android:textColorPrimary">@color/color_text_normal_lt</item>
         <item name="colorPrimaryVariant">@color/color_text_normal_lt</item>
+
+        <item name="colorOnPrimary">@color/color_text_reverse_lt</item>
 
         <!-- 自定义菜单项文字颜色 -->
         <item name="android:actionMenuTextColor">@color/color_text_normal_lt</item>

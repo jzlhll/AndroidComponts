@@ -9,7 +9,6 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         buttons()
         blocks()
-        switchLayout()
     }
 
     fun buttons() {
@@ -23,9 +22,7 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     fun blocks() {
         binding.androidUiSwitchBlock1.initValue(true)
         binding.androidUiSwitchBlock2.initValue(false)
-    }
-
-    fun switchLayout() {
         binding.androidUiSwitchLayout.initValue(false)
+        binding.androidUiSwitchBtnLayout.initValue(false)
     }
 }

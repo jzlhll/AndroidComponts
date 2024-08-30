@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 输入框的外部InputLayout的样式 -->
-    <style name="StyleInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="StyleInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
         <item name="boxBackgroundMode">outline</item>
         <item name="boxBackgroundColor">@color/windowBackground</item>
         <item name="boxStrokeColor">@color/input_board_color</item>
@@ -23,7 +23,7 @@
     <style name="StyleEditInInputLayout">
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingMultiplier">1.05</item>
-        <item name="android:textColorHint">@color/color_hint_text</item>
+        <item name="android:textColorHint">@color/color_edit_text_hint</item>
         <item name="android:textColor">@color/color_text_normal</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor</item>
     </style>

@@ -47,13 +47,19 @@ abstract class NestedRecyclerFragment : ViewFragment() {
     open fun initRecyclerView(rcv: RecyclerView) {
         addLinear(rcv,
             rcv.context.dp(1f).toInt(),
-            Color.parseColor("#eeeeee"),
+            defaultSplitLineColor(),
             drawLastDivider = true)
         rcv.itemAnimator = null
         rcv.updatePadding(top = rcv.context.dp(16f).toInt())
         rcv.clipChildren = false
         rcv.clipToPadding = false
     }
+
+    /**
+     *
+     */
+    @ColorInt
+    abstract fun defaultSplitLineColor() : Int
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

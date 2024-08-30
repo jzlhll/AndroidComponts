@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- app 主题背景色 -->
-    <color name="windowBackground_dk">#111111</color>
+    <color name="windowBackground_dk">#000000</color>
     <!-- app dialog的背景色 -->
-    <color name="windowDialogBackground_dk">#1f1f1f</color> <!-- 与亮模式有区别。-->
+    <color name="windowDialogBackground_dk">#212123</color> <!-- 与亮模式有区别。-->
 
     <!-- 背景色 ：文字图标，或者一片框框-->
-    <color name="color_normal_block_dk">#2b2b30</color>
-    <!-- 背景色 -->
-    <color name="color_secondary_dk">#3B3B40</color>
-    <color name="color_secondary_press_dk">#993B3B40</color>
+    <color name="color_normal_block_dk">#19191A</color>
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
     <color name="colorPrimary_dk">#2A7ACE</color>
@@ -17,28 +14,32 @@
 
     <!-- 文字颜色 -->
     <color name="color_text_normal_dk">#ffffff</color>
+    <color name="color_text_normal_press_dk">#CCFFFFFF</color>
     <color name="color_text_reverse_dk">#212121</color>
+    <color name="color_text_reverse_press_dk">#CC212121</color>
 
-    <color name="color_text_desc_dk">#6D6D73</color>
-    <color name="color_hint_text_dk">#6D6D73</color>
+    <color name="color_text_desc_dk">#707073</color>
+    <color name="color_hint_text_dk">#46464A</color>
 
     <!-- button: main button色 -->
-    <color name="color_main_btn_bg_dk">#f6f6f6</color>
-    <color name="color_main_btn_bg_press_dk">#fcfcfc</color> <!-- 主按钮不用品牌色 与亮模式有区别。-->
+    <color name="color_main_btn_bg_dk">@color/colorPrimary_dk</color>
+    <color name="color_main_btn_bg_press_dk">@color/colorPrimary_press_dk</color> <!-- 主按钮不用品牌色 与亮模式有区别。-->
     <color name="color_main_btn_text_dk">@color/color_text_normal_dk</color><!-- 主按钮不用品牌色 与亮模式有区别。-->
+    <color name="color_main_btn_text_press_dk">@color/color_text_normal_press_dk</color><!-- 主按钮不用品牌色 与亮模式有区别。-->
 
     <!-- button: secondary button色 -->
-    <color name="color_second_btn_bg_dk">@color/color_secondary_dk</color>
-    <color name="color_second_btn_bg_press_dk">@color/color_secondary_press_dk</color>
+    <color name="color_second_btn_bg_dk">#343437</color>
+    <color name="color_second_btn_bg_press_dk">#CC343437</color>
     <color name="color_second_btn_text_dk">@color/color_text_normal_dk</color>
+    <color name="color_second_btn_text_press_dk">@color/color_text_normal_press_dk</color>
 
-    <!-- button: disable 比secondary更深一点-->
-    <color name="color_disable_btn_bg_dk">#505052</color>
-    <color name="color_disable_btn_text_dk">#bbbbbb</color>
+    <!-- button: disable -->
+    <color name="color_disable_btn_bg_dk">#343437</color>
+    <color name="color_disable_btn_text_dk">#707073</color>
 
     <!-- button: warning button色 -->
-    <color name="color_warn_btn_bg_dk">#FF5252</color>
-    <color name="color_warn_btn_bg_press_dk">#FC6769</color>
+    <color name="color_warn_btn_bg_dk">#FA3939</color>
+    <color name="color_warn_btn_bg_press_dk">#CCFA3939</color>
     <color name="color_warn_btn_text_dk">@color/color_text_normal_dk</color> <!-- 与亮模式有区别。-->
 
     <!-- edit: 相关一切颜色 -->
@@ -52,14 +53,14 @@
     <color name="color_edit_board_error_dk">@color/color_warn_btn_bg_dk</color>
 
     <!-- tabLayout: 相关一切颜色。由于tabLayout有不同的样式。这里只提供一个常规的。 -->
-    <color name="color_tab_text_no_select_dk">@color/color_hint_text_dk</color>
+    <color name="color_tab_text_no_select_dk">@color/color_text_desc_dk</color>
     <!-- <color name="color_tab_text_select_dk">#ffffff</color> 使用color_text_normal -->
 
     <!-- 分割线的颜色 -->
     <color name="color_line_dk">#343437</color>
 
     <!-- switch控件的颜色 -->
-    <color name="color_switch_block_bg_dk">@color/color_secondary_dk</color>
+    <color name="color_switch_block_bg_dk">#343437</color>
     <color name="color_switch_block_sel_bg_dk">#ffffff</color>
     <color name="color_switch_block_text_dk">@color/color_text_normal_dk</color>
     <color name="color_switch_block_text_sel_dk">@color/color_text_reverse_dk</color>

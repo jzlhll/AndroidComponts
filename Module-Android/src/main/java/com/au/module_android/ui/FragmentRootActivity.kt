@@ -89,12 +89,14 @@ open class FragmentRootActivity : ViewActivity() {
             Log.d("AU_APP", "FragmentRootActivity: ${fragmentClass.name} autoHideIme: $isAutoHideIme")
         }
 
-        //根据fragment情况来实现
-        if (instance is IFullWindow) {
-            //精髓所在：通过fragment的接口函数来判断是否updatePadding StatusBar或者NavBar。
-            instance.fullPaddingEdgeToEdge(this, window, v)
-        } else {
-            super.setEdge(v)
+        if (BuildConfig.ENABLE_EDGE_TO_EDGE) {
+            //根据fragment情况来实现
+            if (instance is IFullWindow) {
+                //精髓所在：通过fragment的接口函数来判断是否updatePadding StatusBar或者NavBar。
+                instance.fullPaddingEdgeToEdge(this, window, v)
+            } else {
+                super.setEdge(v)
+            }
         }
 
         supportFragmentManager.beginTransaction().replace(v.id, instance).commit() //todo 增加tag。

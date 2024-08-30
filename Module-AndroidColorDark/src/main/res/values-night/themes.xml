@@ -6,10 +6,12 @@
         <item name="colorPrimaryDark">@color/colorPrimary_dk</item>
         <item name="colorAccent">@color/colorPrimary_dk</item>
         <item name="android:textColor">@color/color_text_normal_dk</item>
-        <item name="colorSecondaryContainer">@color/color_secondary_dk</item>
+        <item name="colorSecondaryContainer">@color/color_second_btn_bg_dk</item>
         <item name="android:colorControlNormal">@color/color_text_normal_dk</item>
         <item name="android:textColorPrimary">@color/color_text_normal_dk</item>
         <item name="colorPrimaryVariant">@color/color_text_normal_dk</item>
+
+        <item name="colorOnPrimary">@color/color_text_normal_dk</item>
 
         <!-- 自定义菜单项文字颜色 -->
         <item name="android:actionMenuTextColor">@color/color_text_normal_dk</item>
@@ -34,5 +36,16 @@
 
     <style name="CustomModuleThemePush" parent="CustomModuleTheme">
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="StyleBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/StyleBottomSheetStyle</item>
+        <item name="enableEdgeToEdge">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
