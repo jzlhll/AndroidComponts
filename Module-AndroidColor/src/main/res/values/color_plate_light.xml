@@ -10,16 +10,16 @@
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
     <color name="colorPrimary_lt">#248067</color>
-    <color name="colorPrimary_press_lt">#CC248067</color>
+    <color name="colorPrimary_press_lt">#5f9483</color>
 
     <!-- 文字颜色 -->
     <color name="color_text_normal_lt">#212121</color>
     <color name="color_text_normal_press_lt">#999999</color>
     <color name="color_text_reverse_lt">#ffffff</color>
-    <color name="color_text_reverse_press_lt">#CCffffff</color>
+    <color name="color_text_reverse_press_lt">#fcfcfc</color>
 
     <color name="color_text_desc_lt">#999999</color>
-    <color name="color_hint_text_lt">#CCCCCC</color>
+    <color name="color_hint_text_lt">#cccccc</color>
 
     <!-- button: main button色 -->
     <color name="color_main_btn_bg_lt">@color/colorPrimary_lt</color>
@@ -35,11 +35,11 @@
 
     <!-- button: disable -->
     <color name="color_disable_btn_bg_lt">#f6f6f6</color>
-    <color name="color_disable_btn_text_lt">#CCCCCC</color>
+    <color name="color_disable_btn_text_lt">#cccccc</color>
 
     <!-- button: warning button色 -->
     <color name="color_warn_btn_bg_lt">#FA3939</color>
-    <color name="color_warn_btn_bg_press_lt">#CCFA3939</color>
+    <color name="color_warn_btn_bg_press_lt">#f36863</color>
     <color name="color_warn_btn_text_lt">@color/color_text_reverse_lt</color>
 
     <!-- edit: 相关一切颜色 -->
