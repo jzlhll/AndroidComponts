@@ -24,5 +24,6 @@ android {
 }
 
 dependencies {
-    api libs.material
+    implementation libs.material
+    implementation project(":Module-AndroidColorDark")
 }

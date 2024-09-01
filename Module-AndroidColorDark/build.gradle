@@ -9,16 +9,8 @@ android {
 
     defaultConfig {
         minSdk gradle.ext.minSdk
-
-        consumerProguardFiles "consumer-rules.pro"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         sourceCompatibility gradle.ext.sourceCompatibility
         targetCompatibility gradle.ext.targetCompatibility
@@ -32,6 +24,6 @@ android {
 }
 
 dependencies {
+    implementation libs.material
     implementation project(":Module-Android")
-    implementation project(":Module-AndroidUi")
 }
