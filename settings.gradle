@@ -36,7 +36,6 @@ include ':app'
 include ':Module-Android'
 include ':Module-AndroidColor'
 include ':Module-AndroidUi'
-include ':Module-AndroidColorDark'
 
 include ':Module-Nested'
 include ':Module-Cached'

@@ -40,4 +40,5 @@ dependencies {
 
     implementation project(":Module-Android")
     implementation project(':Module-AndroidUi')
+    implementation project(':Module-AndroidColor')
 }

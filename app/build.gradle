@@ -64,7 +64,6 @@ dependencies {
     implementation project(":Module-Android")
     implementation project(":Module-Cached")
     implementation project(':Module-AndroidUi')
-    implementation project(':Module-AndroidColorDark')
     implementation project(":Module-Nested")
     //my apt
     implementation project(':ClassNameAnnotations')

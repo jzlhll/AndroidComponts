@@ -8,8 +8,6 @@
     <dimen name="two_btn_corner_size">6dp</dimen>
     <dimen name="dialog_two_btn_corner_size">4dp</dimen>
 
-    <dimen name="toolbar_height">48dp</dimen>
-
     <dimen name="switch_layout_padding">2dp</dimen>
     <dimen name="switch_button_padding">4dp</dimen>
     <dimen name="switch_layout_default_corner">8dp</dimen>

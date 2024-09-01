@@ -1,4 +1,4 @@
-package com.au.module_android.widget
+package com.au.module_androidui.widget
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import com.au.module.android.R
+import com.au.module_androidcolor.R
 import com.google.android.material.textfield.TextInputLayout
 import java.util.regex.Pattern
 
@@ -97,7 +97,7 @@ open class CustomTextInputLayout : TextInputLayout {
      */
     val defaultBoxBgColor : Int
         get() {
-            return context.getColor(com.au.module_androidcolor.R.color.windowBackground)
+            return context.getColor(R.color.windowBackground)
         }
 
     /**
@@ -105,7 +105,7 @@ open class CustomTextInputLayout : TextInputLayout {
      */
     val focusedBoxBgColor : Int
         get() {
-            return context.getColor(com.au.module_androidcolor.R.color.color_edit_background)
+            return context.getColor(R.color.color_edit_background)
         }
 
     /**
@@ -113,14 +113,14 @@ open class CustomTextInputLayout : TextInputLayout {
      */
     val errorBoxBgColor : Int
         get() {
-            return context.getColor(com.au.module_androidcolor.R.color.color_edit_background_error)
+            return context.getColor(R.color.color_edit_background_error)
         }
 
     /**
      * 错误的board颜色
      */
     val errorBoardStrokeColor:ColorStateList by lazy(LazyThreadSafetyMode.NONE) {
-        createUsefulColorStateList(context.getColor(com.au.module_androidcolor.R.color.color_edit_board_error))
+        createUsefulColorStateList(context.getColor(R.color.color_edit_board_error))
     }
 
     var xmlBoxStrokeColorList:ColorStateList? = null

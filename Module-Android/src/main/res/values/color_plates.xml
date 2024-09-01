@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_toolbar_background">#ffffff</color>
+    <dimen name="toolbar_height">48dp</dimen>
+    <drawable name="toolbarLogo"/>
+    <style name="toolbarPopupTheme"/>
+    <style name="toolbarTitleTextAppearance"/>
+</resources>

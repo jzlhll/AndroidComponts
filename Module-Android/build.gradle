@@ -71,6 +71,4 @@ dependencies {
     api libs.okhttp3.integration
 
     implementation libs.androidx.core.splashscreen
-
-    api project(":Module-AndroidColor")
 }

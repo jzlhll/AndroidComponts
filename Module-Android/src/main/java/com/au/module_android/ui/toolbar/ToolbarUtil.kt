@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.au.module.android.R
 import com.au.module_android.click.PaddingClickListener
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
@@ -23,7 +24,7 @@ internal fun createToolbarLayout(context: Context, contentView:View) : Pair<Cust
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
 
-        val toolbarHeight = Math.round(context.resources.getDimension(com.au.module_androidcolor.R.dimen.toolbar_height))
+        val toolbarHeight = Math.round(context.resources.getDimension(R.dimen.toolbar_height))
         val toolbarParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, toolbarHeight).also {
             it.marginEnd = 8.dp
         }
@@ -48,12 +49,12 @@ private fun createToolBar(context: Context): CustomToolbar {
         }
         //设置标题居中
         isTitleCentered = true
-        setBackgroundResource(com.au.module_androidcolor.R.color.color_toolbar_background)
-        val drawable = ContextCompat.getDrawable(context, com.au.module_androidcolor.R.drawable.toolbarLogo)
+        setBackgroundResource(R.color.color_toolbar_background)
+        val drawable = ContextCompat.getDrawable(context, R.drawable.toolbarLogo)
         navigationIcon = drawable
         title = context.title
-        popupTheme = com.au.module_androidcolor.R.style.toolbarPopupTheme
-        setTitleTextAppearance(context, com.au.module_androidcolor.R.style.toolbarTitleTextAppearance)
+        popupTheme = R.style.toolbarPopupTheme
+        setTitleTextAppearance(context, R.style.toolbarTitleTextAppearance)
         setNavigationOnClickListener(PaddingClickListener(null) {
             it.context.asOrNull<AppCompatActivity>()?.onBackPressedDispatcher?.onBackPressed()
         })

@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"/>
             </FrameLayout>
 
-            <com.au.module_android.widget.CustomTextInputLayout
+            <com.au.module_androidui.widget.CustomTextInputLayout
                 android:id="@+id/inputLayout2"
                 android:layout_marginTop="12dp"
                 style="@style/StyleInputLayout"
@@ -120,9 +120,9 @@
                     android:paddingStart="53dp"
                     android:text="only click like fake edit"
                     android:paddingEnd="16dp" />
-            </com.au.module_android.widget.CustomTextInputLayout>
+            </com.au.module_androidui.widget.CustomTextInputLayout>
 
-            <com.au.module_android.widget.CustomTextInputLayout
+            <com.au.module_androidui.widget.CustomTextInputLayout
                 android:id="@+id/inputLayout3"
                 android:layout_marginTop="12dp"
                 style="@style/StyleInputLayout"
@@ -143,9 +143,9 @@
                     android:hint="Normal edit with bg change"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
-            </com.au.module_android.widget.CustomTextInputLayout>
+            </com.au.module_androidui.widget.CustomTextInputLayout>
 
-            <com.au.module_android.widget.CustomTextInputLayout
+            <com.au.module_androidui.widget.CustomTextInputLayout
                 android:id="@+id/inputLayoutEmail"
                 style="@style/StyleInputLayout"
                 android:layout_marginTop="12dp"
@@ -166,9 +166,9 @@
                     android:hint="Email address"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
-            </com.au.module_android.widget.CustomTextInputLayout>
+            </com.au.module_androidui.widget.CustomTextInputLayout>
 
-            <com.au.module_android.widget.CustomTextInputLayout
+            <com.au.module_androidui.widget.CustomTextInputLayout
                 android:id="@+id/inputLayoutPassword"
                 android:layout_marginTop="12dp"
                 style="@style/StyleInputLayout"
@@ -190,7 +190,7 @@
                     android:paddingStart="53dp"
                     android:paddingEnd="16dp" />
 
-            </com.au.module_android.widget.CustomTextInputLayout>
+            </com.au.module_androidui.widget.CustomTextInputLayout>
 
             <com.au.module_android.widget.CustomEditText
                 style="@style/StyleBlankEditText"
