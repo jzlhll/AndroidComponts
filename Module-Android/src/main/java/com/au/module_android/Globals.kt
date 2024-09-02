@@ -2,9 +2,14 @@ package com.au.module_android
 
 import android.app.Activity
 import android.app.Application
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import com.au.module_android.utils.DarkModeUtil
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
@@ -60,6 +65,15 @@ object Globals {
         val handlerThread = HandlerThread("app-major-bg-thread")
         handlerThread.start()
         return Handler(handlerThread.looper)
+    }
+
+    @ColorInt
+    fun getColor(@ColorRes resId:Int) : Int {
+        return ContextCompat.getColor(DarkModeUtil.themedContext ?: app, resId)
+    }
+
+    fun getDrawable(@ColorRes resId:Int) : Drawable? {
+        return ContextCompat.getDrawable(DarkModeUtil.themedContext ?: app, resId)
     }
 }
 

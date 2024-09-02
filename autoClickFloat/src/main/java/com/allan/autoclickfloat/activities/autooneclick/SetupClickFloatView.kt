@@ -32,8 +32,8 @@ class SetupClickFloatView private constructor(): BaseFloatingView(R.layout.view_
 
     var callback:(x:Int, y:Int)->Unit = {_,_->}
 
-    val workingColor = ColorStateList.valueOf(Globals.app.getColor(R.color.floating_working_color))
-    val settingColor = ColorStateList.valueOf(Globals.app.getColor(R.color.floating_setting_color))
+    val workingColor = ColorStateList.valueOf(Globals.getColor(R.color.floating_working_color))
+    val settingColor = ColorStateList.valueOf(Globals.getColor(R.color.floating_setting_color))
 
     val icon: ImageView
 
