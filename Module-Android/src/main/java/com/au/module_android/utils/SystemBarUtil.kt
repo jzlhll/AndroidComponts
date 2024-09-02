@@ -17,18 +17,21 @@ import androidx.window.layout.WindowMetricsCalculator
 //https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge-manually?hl=zh-cn
 
 /**
+ * 谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用
+ * 如果是Activity或者Fragment，子类覆盖isPaddingNavBar=false则会让navBar透下去，isPaddingStatusBar=false则会让statusBar透上去。
+ *
  * 透明状态栏, 必定做全屏；然后设置参数，修改文字颜色。
- * @param forceBarsToDark null 就自动检测app的uiMode。一般不要去传参，保持null。
- *                          true就statusBar显示白色文案（即黑暗模式）。false就bar显示黑色文案（即亮白模式）。
+ * null 代码会自动检测app的uiMode。一般不要去传参，保持null。
+ * true bar显示白色文案（即黑暗模式）。false就bar显示黑色文案（即亮白模式）。
  */
-@Deprecated("谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用")
 fun transparentStatusBar(window: Window,
-                         forceBarsToDark:Boolean? = null,
-                         insetsBlock: (
-        insets: WindowInsetsCompat,
-        statusBarsHeight: Int,
-        navigationBarHeight: Int
-    ) -> WindowInsetsCompat = {insets, _, _ -> insets}
+                            isBlackStatusBarTextColor: Boolean? = null,
+                            isBlackNavigationBarTextColor: Boolean? = null,
+                            insetsBlock: (
+                                insets: WindowInsetsCompat,
+                                statusBarsHeight: Int,
+                                navigationBarHeight: Int
+                            ) -> WindowInsetsCompat = {insets, _, _ -> insets}
 ) {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     window.statusBarColor = Color.TRANSPARENT
@@ -38,11 +41,11 @@ fun transparentStatusBar(window: Window,
         window.isNavigationBarContrastEnforced = true
     }
 
-    val dark = forceBarsToDark ?: DarkModeUtil.detectDarkMode(window.context)
-    WindowInsetsControllerCompat(window, window.decorView).run {
-        isAppearanceLightStatusBars = !dark
-        isAppearanceLightNavigationBars = !dark
-    }
+    val wicc = WindowInsetsControllerCompat(window, window.decorView)
+    val statusBarDark = isBlackStatusBarTextColor ?: DarkModeUtil.detectDarkMode(window.context)
+    val navBarDark = isBlackNavigationBarTextColor ?: DarkModeUtil.detectDarkMode(window.context)
+    wicc.isAppearanceLightStatusBars = !statusBarDark
+    wicc.isAppearanceLightNavigationBars = !navBarDark
 
     //预留导航栏的空间
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->

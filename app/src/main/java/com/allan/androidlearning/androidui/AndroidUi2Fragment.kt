@@ -44,11 +44,11 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
     fun dialog() {
         binding.androidUiDarkmodeTempingForceLight.onClick {
-            transparentStatusBar(requireActivity().window, false)
+            transparentStatusBar(requireActivity().window, false, false)
         }
 
         binding.androidUiDarkmodeTempingForceDark.onClick {
-            transparentStatusBar(requireActivity().window, true)
+            transparentStatusBar(requireActivity().window, true, true)
         }
 
         binding.androidUiDialog1.onClick {
