@@ -67,13 +67,32 @@ object Globals {
         return Handler(handlerThread.looper)
     }
 
+    /**
+     * 兼容dark模式获取资源
+     * Application不具备识别night资源的能力。
+     * 需要使用构建的themedContext。
+     */
     @ColorInt
     fun getColor(@ColorRes resId:Int) : Int {
         return ContextCompat.getColor(DarkModeUtil.themedContext ?: app, resId)
     }
 
+    /**
+     * 兼容dark模式获取资源
+     * Application不具备识别night资源的能力。
+     * 需要使用构建的themedContext。
+     */
     fun getDrawable(@ColorRes resId:Int) : Drawable? {
         return ContextCompat.getDrawable(DarkModeUtil.themedContext ?: app, resId)
+    }
+
+    /**
+     * 兼容dark模式获取资源
+     * Application不具备识别night资源的能力。
+     * 需要使用构建的themedContext。
+     */
+    fun getString(@ColorRes resId:Int) : String {
+        return ContextCompat.getString(DarkModeUtil.themedContext ?: app, resId)
     }
 }
 
