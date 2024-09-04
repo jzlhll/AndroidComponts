@@ -11,8 +11,8 @@ import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_androidui.databinding.SwitchButtonsLayoutBinding
 
 /**
- * 自定义SwitchView 全新设计。通过merge减少嵌套。
- * 预览宽度与实际不相同。todo。
+ * 自定义SwitchView 全新设计。todo 通过merge减少嵌套。
+ * 请注意：width必须设置为wrap_content。代码内部会让2个文字一样宽，与preview不同。请注意。
  */
 class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     FrameLayout(
@@ -43,9 +43,9 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
         val selectColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_color,
             context.getColor(com.au.module_androidcolor.R.color.color_switch_block_sel_bg))
 
-        textColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_bg_color,
+        textColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_text_color,
             context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text))
-        textSelectColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_color,
+        textSelectColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_text_color,
             context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text_sel))
 
         val bgCorner = typedArray.getDimension(com.au.module_androidui.R.styleable.SwitchLayoutButton_bg_corner,
@@ -113,7 +113,13 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    fun initValue(isLeft:Boolean) {
+    fun initValue(isLeft:Boolean, leftRightStrs:Pair<String, String>? = null) {
+        isInit = true
+        if (leftRightStrs != null) {
+            mViewBinding.leftTv.text = leftRightStrs.first
+            mViewBinding.rightTv.text = leftRightStrs.second
+        }
+
         isInit = true
         if (!isLeft) { //我们默认true。初始化为false。则需要特殊处理移动下block。
             this.isLeft = false
