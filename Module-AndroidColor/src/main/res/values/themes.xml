@@ -28,13 +28,14 @@
         </item>
     </style>
 
-    <style name="CustomModuleThemeSplash" parent="CustomModuleTheme">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+    <style name="StyleBottomSheetDialogTheme" parent="Theme.Material3.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/StyleBottomSheetStyle</item>
+        <item name="enableEdgeToEdge">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="CustomModuleThemePush" parent="CustomModuleTheme">
-        <item name="android:windowTranslucentStatus">true</item>
+    <style name="StyleBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="shapeAppearance">@null</item>
     </style>
 </resources>

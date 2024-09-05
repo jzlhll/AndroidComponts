@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="btn_font_size">16dp</dimen>
     <dimen name="btn_height">50dp</dimen>
     <dimen name="btn_margin_bottom">32dp</dimen>
@@ -16,4 +16,8 @@
     <dimen name="switch_block_padding">2dp</dimen>
 
     <dimen name="ui_padding_edge">20dp</dimen>
+
+    <!-- 禁用M3的难看进度条效果 -->
+    <dimen name="m3_comp_progress_indicator_active_indicator_track_space" tools:override="true">0dp</dimen>
+    <dimen name="m3_comp_progress_indicator_stop_indicator_size" tools:override="true">0dp</dimen>
 </resources>

@@ -18,8 +18,7 @@ import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ViewFragment
-import com.au.module_android.utils.DarkMode
-import com.au.module_android.utils.DarkModeUtil
+import com.au.module_android.DarkModeUtil
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.hideImeNew
@@ -44,11 +43,11 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
     fun dialog() {
         binding.androidUiDarkmodeTempingForceLight.onClick {
-            transparentStatusBar(requireActivity().window, false, false)
+            requireActivity().transparentStatusBar(false, false)
         }
 
         binding.androidUiDarkmodeTempingForceDark.onClick {
-            transparentStatusBar(requireActivity().window, true, true)
+            requireActivity().transparentStatusBar(true, true)
         }
 
         binding.androidUiDialog1.onClick {
@@ -181,19 +180,19 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
             ToastBuilder().setOnTop().setMessage(getDarkStrFunc()).setIcon("info").toast()
         }
         binding.androidUiDarkmodeDark.onClick {
-            DarkModeUtil().changeDarkMode(DarkMode.DARK)
+            DarkModeUtil().changeDarkMode(Configuration.UI_MODE_NIGHT_YES)
             lifecycleScope.launch {
                 binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
             }
         }
         binding.androidUiDarkmodeLight.onClick {
-            DarkModeUtil().changeDarkMode(DarkMode.LIGHT)
+            DarkModeUtil().changeDarkMode(Configuration.UI_MODE_NIGHT_NO)
             lifecycleScope.launch {
                 binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
             }
         }
         binding.androidUiDarkmodeFollowSystem.onClick {
-            DarkModeUtil().changeDarkMode(DarkMode.FOLLOW_SYSTEM)
+            DarkModeUtil().changeDarkMode(Configuration.UI_MODE_NIGHT_UNDEFINED)
             lifecycleScope.launch {
                 binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
             }

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.au.module.android.R
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.transparentStatusBar
@@ -51,7 +50,7 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
     override var createdDialog : Dialog? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val sheetDialog = BeforeDismissBottomSheetDialog(requireContext(), R.style.StyleBottomSheetDialogTheme).also {
+        val sheetDialog = BeforeDismissBottomSheetDialog(requireContext(), com.au.module_androidcolor.R.style.StyleBottomSheetDialogTheme).also {
             ToutiaoScreenAdapter.attach(it)
         }
         createdDialog = sheetDialog
@@ -88,8 +87,8 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
         // warn2: 设置了transparentStatusBar后，键盘无法弹起。
         // warn3: 那么，布局就从底部透到nav之下，从根部开始显示。
         if (!hasEditText) { //todo android15 check
-            dialog?.window?.let { window ->
-                transparentStatusBar(window) { _, _, navigationBarHeight ->
+            dialog?.window?.apply {
+                transparentStatusBar { _, _, navigationBarHeight ->
                     view?.updatePadding(bottom = navigationBarHeight)
                     WindowInsetsCompat.CONSUMED
                 }

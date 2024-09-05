@@ -9,7 +9,6 @@ import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.au.module_android.utils.DarkModeUtil
 import com.au.module_android.utils.secondLastOrNull
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV

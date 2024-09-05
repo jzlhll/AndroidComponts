@@ -1,20 +1,17 @@
-package com.au.module_android.utils
+package com.au.module_android
 
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-import androidx.annotation.Keep
+import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatDelegate
-import com.au.module_android.Globals
 import com.au.module_android.sp.SharedPrefUtil
 
-@Keep
-enum class DarkMode {
-    FOLLOW_SYSTEM,
-    LIGHT,
-    DARK
-}
+@Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+@IntDef(Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_YES, Configuration.UI_MODE_NIGHT_UNDEFINED)
+annotation class DarkModeInt
 
 class DarkModeUtil {
 
@@ -67,7 +64,7 @@ class DarkModeUtil {
         }
     }
 
-    fun changeDarkMode(mode:DarkMode, saveSp:Boolean = true) {
+    fun changeDarkMode(@DarkModeInt mode:Int, saveSp:Boolean = true) {
         /**
          * MODE_NIGHT_FOLLOW_SYSTEM 跟随系统设置
          * MODE_NIGHT_NO 关闭暗黑模式
@@ -76,40 +73,23 @@ class DarkModeUtil {
          * MODE_NIGHT_UNSPECIFIED 未指定，默认值
          */
         when (mode) {
-            DarkMode.DARK -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 2)
-            }
-            DarkMode.LIGHT -> {
+            Configuration.UI_MODE_NIGHT_NO -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 1)
             }
-            DarkMode.FOLLOW_SYSTEM -> {
+
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 0)
             }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 2)
+            }
         }
 
-        onUiModeChanged(cvtMode(mode))
-    }
-
-    /**
-     * 不仅仅要接受系统的Application的onConfigurationChanged
-     * 还要在自己切换的时候重建
-     */
-    private fun onUiModeChanged(newUiMode:Int) {
-        themedContext = createContext(newUiMode)
-    }
-
-    /**
-     * 将自己的mode转变为系统的uiMode
-     */
-    private fun cvtMode(mode:DarkMode) : Int {
-        return when (mode) {
-            DarkMode.DARK-> Configuration.UI_MODE_NIGHT_YES
-            DarkMode.FOLLOW_SYSTEM -> Configuration.UI_MODE_TYPE_UNDEFINED
-            DarkMode.LIGHT -> Configuration.UI_MODE_NIGHT_NO
-        }
+        themedContext = createContext(mode) //重建
     }
 
     private fun createContext(uiMode:Int) : Context {
@@ -128,17 +108,18 @@ class DarkModeUtil {
     /**
      * 当前sp中保存的标记
      */
-    private fun Context.spCurrentAppDarkMode() : DarkMode {
+    @DarkModeInt
+    private fun Context.spCurrentAppDarkMode() : Int {
         val mode = SharedPrefUtil.getInt(this, "app_dark_mode", 0)
         return when (mode) {
             0 -> {
-                DarkMode.FOLLOW_SYSTEM
+                Configuration.UI_MODE_NIGHT_UNDEFINED
             }
             1 -> {
-                DarkMode.LIGHT
+                Configuration.UI_MODE_NIGHT_NO
             }
             else -> {
-                DarkMode.DARK
+                Configuration.UI_MODE_NIGHT_YES
             }
         }
     }

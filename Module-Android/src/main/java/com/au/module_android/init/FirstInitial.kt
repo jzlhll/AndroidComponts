@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.au.module_android.Globals
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
-import com.au.module_android.utils.DarkModeUtil
+import com.au.module_android.DarkModeUtil
 
 /**
  * 自动初始化

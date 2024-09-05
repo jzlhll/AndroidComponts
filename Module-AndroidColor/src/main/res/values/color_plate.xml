@@ -6,7 +6,9 @@
     <color name="windowDialogBackground">#ffffff</color>
 
     <!-- 背景色 ：文字图标，或者一片框框-->
+    <color name="color_normal_block0">#ffffff</color>
     <color name="color_normal_block">#f6f6f6</color>
+    <color name="color_normal_block2">#f0f0f0</color>
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
     <color name="colorPrimary">#248067</color>
@@ -58,6 +60,8 @@
 
     <!-- 分割线的颜色 -->
     <color name="color_line">#f0f0f0</color>
+    <color name="color_line_on_dialog">#f0f0f0</color>
+    <color name="color_line_on_block">#cccccc</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg">#f0f0f0</color>

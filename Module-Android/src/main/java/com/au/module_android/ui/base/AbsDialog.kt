@@ -148,10 +148,8 @@ abstract class AbsDialog(private val mode: DialogMode) : AppCompatDialogFragment
     }
 
     open fun setWindowStyle() {
-        window?.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            transparentStatusBar(this)
-
+        dialog?.window?.apply {
+            transparentStatusBar()
             attributes = attributes?.also {
                 //保证对话框弹出的时候状态栏不是黑色
                 it.height = WindowManager.LayoutParams.MATCH_PARENT

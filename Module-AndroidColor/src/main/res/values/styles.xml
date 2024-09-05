@@ -136,7 +136,7 @@
     <style name="StyleFakeEditText" parent="StyleFontText">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@color/color_normal_block</item>
+        <item name="android:background">@drawable/fake_edit_board_bg</item>
         <item name="android:gravity">center</item>
     </style>
 </resources>

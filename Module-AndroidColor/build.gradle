@@ -25,5 +25,5 @@ android {
 
 dependencies {
     implementation libs.material
-    implementation project(":Module-Android")
+    implementation libs.androidx.core.splashscreen
 }

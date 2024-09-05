@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StyleActivityTranslucent" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <!--    <style name="StyleActivityLight" parent="Theme.Material3.Light.NoActionBar"/>-->
+    <!--    <style name="StyleActivityDark" parent="Theme.Material3.DayNight.NoActionBar"/>-->
+
+    <style name="StyleSplashTheme" parent="Theme.SplashScreen">
+        <!--        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item> 继承后添加即可-->
+        <item name="windowSplashScreenBackground">@color/windowBackground</item>
+        <item name="postSplashScreenTheme">@style/CustomModuleTheme</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+</resources>

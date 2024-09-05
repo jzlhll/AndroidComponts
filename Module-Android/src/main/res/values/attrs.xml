@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="backgroundAlpha" format="float|integer" />
-    <attr name="backgroundNormal" format="color" />
-    <attr name="backgroundPressed" format="color" />
-    <attr name="backgroundDisabled" format="color" />
-
-    <attr name="fakeToolbarBackImage" format="reference" />
-    <attr name="fakeToolbarTitle" format="string" />
-
     <declare-styleable name="FlowLayout">
         <attr name="flFlow" format="boolean"/>
         <attr name="flChildSpacing" format="enum|dimension">

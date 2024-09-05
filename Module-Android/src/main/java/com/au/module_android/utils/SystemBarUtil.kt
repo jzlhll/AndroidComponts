@@ -2,13 +2,14 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.graphics.Color
-import android.os.Build
-import android.view.Window
+import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.DialogFragment
 import androidx.window.layout.WindowMetricsCalculator
+import com.au.module_android.DarkModeUtil
 
 //参考资料
 //https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge?hl=zh-cn
@@ -17,43 +18,115 @@ import androidx.window.layout.WindowMetricsCalculator
 //https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge-manually?hl=zh-cn
 
 /**
+ * 透明状态栏
+ *
+ * isAppearLightXXX，true表示让bar的文字是黑色的底是白的；false是bar文字是白色的。
+ *
+ * 谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用
+ * 如果是Activity或者显示在FragmentRootActivity中的Fragment，
+ * 子类覆盖isPaddingNavBar=false   则会让navBar透下去，
+ * 子类覆盖isPaddingStatusBar=false则会让statusBar透上去。
+ */
+fun Activity.transparentStatusBar(statusBarTextDark: Boolean? = null,
+                                  navBarTextDark: Boolean? = null,
+                                  insetsBlock: (
+                                      insets: WindowInsetsCompat,
+                                      statusBarsHeight: Int,
+                                      navigationBarHeight: Int
+                                  ) -> WindowInsetsCompat = {insets, _, _ -> insets}
+) {
+    window.run {
+        addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        WindowCompat.setDecorFitsSystemWindows(this, false)
+        statusBarColor = Color.TRANSPARENT
+        navigationBarColor = Color.TRANSPARENT
+
+        //isAppearanceLightXXX true就表示文字就是黑色的。false就表示文字就是白色的。所以要传入正确的值。
+        if (statusBarTextDark != null || navBarTextDark != null) {
+            val controller = WindowInsetsControllerCompat(this, decorView)
+            if(statusBarTextDark != null) controller.isAppearanceLightStatusBars = statusBarTextDark
+            if(navBarTextDark != null) controller.isAppearanceLightNavigationBars = navBarTextDark
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(decorView) { _, insets ->
+            insetsBlock.invoke(
+                insets,
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            )
+        }
+    }
+}
+
+/**
+ * 透明状态栏
+ *
+ * isAppearLightXXX，true表示让bar的文字是黑色的底是白的；false是bar文字是白色的。
+ *
+ * 谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用
+ * 如果是Activity或者显示在FragmentRootActivity中的Fragment，
+ * 子类覆盖isPaddingNavBar=false   则会让navBar透下去，
+ * 子类覆盖isPaddingStatusBar=false则会让statusBar透上去。
+ *
+ * isAutoDetectDarkMode 如果true，则前2个参数无效。
+ */
+fun Activity.transparentStatusBar(insetsBlock: (
+    insets: WindowInsetsCompat,
+    statusBarsHeight: Int,
+    navigationBarHeight: Int
+) -> WindowInsetsCompat = {insets, _, _ -> insets}
+) {
+    window.run {
+        addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        WindowCompat.setDecorFitsSystemWindows(this, false)
+        statusBarColor = Color.TRANSPARENT
+        navigationBarColor = Color.TRANSPARENT
+
+        //isAppearanceLightXXX true就表示文字就是黑色的。false就表示文字就是白色的。所以要传入正确的值。
+        WindowInsetsControllerCompat(this, decorView).also {
+            val detectIsDark = DarkModeUtil.detectDarkMode(context)
+            //当前就是暗黑模式，则无效
+            it.isAppearanceLightStatusBars = !detectIsDark
+            it.isAppearanceLightNavigationBars = !detectIsDark
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(decorView) { _, insets ->
+            insetsBlock.invoke(
+                insets,
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            )
+        }
+    }
+}
+
+/**
  * 谨慎使用：activity和fragment已经通过基础框架默认限定实现；现在只需要在Dialog或者特殊临时切换调用
  * 如果是Activity或者Fragment，子类覆盖isPaddingNavBar=false则会让navBar透下去，isPaddingStatusBar=false则会让statusBar透上去。
  *
  * 透明状态栏, 必定做全屏；然后设置参数，修改文字颜色。
  * null 代码会自动检测app的uiMode。一般不要去传参，保持null。
- * true bar显示白色文案（即黑暗模式）。false就bar显示黑色文案（即亮白模式）。
+ * true 显示黑色文字，即（light模式）。false显示白色文字（即dark模式）。
  */
-fun transparentStatusBar(window: Window,
-                            isBlackStatusBarTextColor: Boolean? = null,
-                            isBlackNavigationBarTextColor: Boolean? = null,
-                            insetsBlock: (
-                                insets: WindowInsetsCompat,
-                                statusBarsHeight: Int,
-                                navigationBarHeight: Int
-                            ) -> WindowInsetsCompat = {insets, _, _ -> insets}
+fun DialogFragment.transparentStatusBar(insetsBlock: (
+    insets: WindowInsetsCompat,
+    statusBarsHeight: Int,
+    navigationBarHeight: Int
+) -> WindowInsetsCompat = {insets, _, _ -> insets}
 ) {
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    window.statusBarColor = Color.TRANSPARENT
-    window.navigationBarColor = Color.TRANSPARENT
-    if (Build.VERSION.SDK_INT >= 29) {
-        window.isStatusBarContrastEnforced = false
-        window.isNavigationBarContrastEnforced = true
-    }
+    dialog?.window?.run {
+        addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        WindowCompat.setDecorFitsSystemWindows(this, false)
+        statusBarColor = Color.TRANSPARENT
+        navigationBarColor = Color.TRANSPARENT
 
-    val wicc = WindowInsetsControllerCompat(window, window.decorView)
-    val statusBarDark = isBlackStatusBarTextColor ?: DarkModeUtil.detectDarkMode(window.context)
-    val navBarDark = isBlackNavigationBarTextColor ?: DarkModeUtil.detectDarkMode(window.context)
-    wicc.isAppearanceLightStatusBars = !statusBarDark
-    wicc.isAppearanceLightNavigationBars = !navBarDark
-
-    //预留导航栏的空间
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
-        insetsBlock.invoke(
-            insets,
-            insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
-            insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-        )
+        ViewCompat.setOnApplyWindowInsetsListener(decorView) { _, insets ->
+            insetsBlock.invoke(
+                insets,
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            )
+        }
     }
 }
 
@@ -66,8 +139,9 @@ fun Activity.myHideSystemUI() {
     }
 }
 
+//todo
 fun Activity.myShowSystemUI() {
-    WindowCompat.setDecorFitsSystemWindows(window, true)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
     WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
 }
 
