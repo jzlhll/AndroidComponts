@@ -34,8 +34,4 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-
-    <style name="StyleBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="shapeAppearance">@null</item>
-    </style>
 </resources>

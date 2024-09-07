@@ -50,11 +50,11 @@ private fun createToolBar(context: Context): CustomToolbar {
         //设置标题居中
         isTitleCentered = true
         setBackgroundResource(R.color.color_toolbar_background)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.toolbarLogo)
+        val drawable = ContextCompat.getDrawable(context, com.au.module_androidcolor.R.drawable.toolbarLogo)
         navigationIcon = drawable
         title = context.title
-        popupTheme = R.style.toolbarPopupTheme
-        setTitleTextAppearance(context, R.style.toolbarTitleTextAppearance)
+        popupTheme = com.au.module_androidcolor.R.style.toolbarPopupTheme
+        setTitleTextAppearance(context, com.au.module_androidcolor.R.style.toolbarTitleTextAppearance)
         setNavigationOnClickListener(PaddingClickListener(null) {
             it.context.asOrNull<AppCompatActivity>()?.onBackPressedDispatcher?.onBackPressed()
         })

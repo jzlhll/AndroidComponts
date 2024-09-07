@@ -10,12 +10,16 @@
     <!--    <style name="StyleActivityLight" parent="Theme.Material3.Light.NoActionBar"/>-->
     <!--    <style name="StyleActivityDark" parent="Theme.Material3.DayNight.NoActionBar"/>-->
 
-    <style name="StyleSplashTheme" parent="Theme.SplashScreen">
+    <style name="AbsStyleSplashTheme" parent="Theme.SplashScreen">
         <!--        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item> 继承后添加即可-->
         <item name="windowSplashScreenBackground">@color/windowBackground</item>
         <item name="postSplashScreenTheme">@style/CustomModuleTheme</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="StyleBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="shapeAppearance">@null</item>
     </style>
 
 </resources>

@@ -1,10 +1,13 @@
 package com.allan.androidlearning.androidui
 
 import android.os.Bundle
+import android.view.View
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
 import com.allan.classnameanno.EntroFrgName
 import com.allan.nested.viewpager2.simplePagerAdapter
+import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.unsafeLazy
 
 /**
  * @author allan
@@ -32,4 +35,11 @@ class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
         binding.tabLayout.initAttachToViewPage2AsCustomFontText(binding.viewPager, pages)
     }
 
+    private val toolbarMgr by unsafeLazy { ToolbarManager(this, com.allan.androidlearning.R.menu.skip_menu) }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbarMgr.showMenu()
+        toolbarMgr.setTitleAlign(false)
+    }
 }
