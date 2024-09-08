@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import com.allan.androidlearning.BuildConfig
 import com.allan.androidlearning.databinding.ActivityEchartsBinding
 import com.allan.androidlearning.recordview.ContinuousBitmapRecorderManager
 import com.au.module_android.Globals
@@ -67,7 +68,7 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
         } else base64ToBitmap(base)
     }
 
-    private val customBase64PrefixLength = "base64Image:".length + "data:image/png;base64,".length
+    private val customBase64PrefixLength = "echartImage:".length + "data:image/png;base64,".length
     private var imagePrintCount = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,19 +97,20 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
 
             h5.webView.registerHandler("webCallNative") { data, func->
                 when (data) {
-                    "initOver" -> {
-                        logd { ">>>webCallNative initOver hasCallback:" }
+                    "echartInitOver" -> {
+                        logd { ">>>web CallNative initOver hasCallback:" }
                         val name = File(Globals.app.cacheDir, "video_${millisToTime()}.mp4").absolutePath
                         val suc = viewRecorder.setup(name, bitmapOffer)
                         binding.desc2Text.text = "generating $name ..."
                         logt { "setup $name $suc" }
                         if (suc) {
                             viewRecorder.startRecord()
-                            h5Fragment.webView.sendEventToH5("nativeCallWeb", "startEcharts")
+                            h5Fragment.webView.sendEventToH5("nativeCallWeb", "echartStartRecord")
                         }
                     }
-                    "runOver" -> {
-                        logd { ">>>webCallNative runOver hasCallback:" }
+
+                    "echartRunOver" -> {
+                        logd { ">>>web CallNative runOver hasCallback:" }
                         if(viewRecorder.stopRecord()) { //xxx
                             val p = viewRecorder.curRecordFile?.absolutePath
                             logd { "toast suc! ${viewRecorder.curRecordFile}" }
@@ -127,13 +129,14 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
 
                     else -> {
                         //减少打印
-                        if (data.startsWith("base64Image:")) {
-                            if (imagePrintCount++ % 50 == 0) {
-                                logd { ">>>webCallNative $data hasCallback:" }
-                                saveBitmapToFile(base64ToBitmap(data.substring(customBase64PrefixLength)), "pic_" + millisToTime() + ".png",
-                                    requireActivity().cacheDir.absolutePath)
-                            }
-                            lastBase64Image = data.substring(customBase64PrefixLength)
+                        if (data.startsWith("echartImage:")) {
+                            val imageData = data.substring(customBase64PrefixLength)
+//                            if (BuildConfig.DEBUG && imagePrintCount++ % 60 == 0) {
+//                                logd { ">>>web CallNative $data hasCallback:" }
+//                                saveBitmapToFile(base64ToBitmap(imageData), "pic_" + millisToTime() + ".png",
+//                                    requireActivity().cacheDir.absolutePath)
+//                            }
+                            lastBase64Image = imageData
                         }
                     }
                 }
@@ -149,21 +152,21 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 
-    fun saveBitmapToFile(bitmap: Bitmap, fileName: String, folderPath: String?) {
-        val file = File(folderPath, "$fileName.png") // 可以更改文件扩展名为.jpg或.jpeg以保存为JPEG
-        try {
-            val out = FileOutputStream(file)
-            // 对于PNG，直接使用compress方法
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            // 对于JPEG，你可以设置压缩质量（0-100）
-            // bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush()
-            out.close()
-            // 成功保存文件后，你可以在这里做一些处理，如通知用户或更新UI
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+//    fun saveBitmapToFile(bitmap: Bitmap, fileName: String, folderPath: String?) {
+//        val file = File(folderPath, "$fileName.png") // 可以更改文件扩展名为.jpg或.jpeg以保存为JPEG
+//        try {
+//            val out = FileOutputStream(file)
+//            // 对于PNG，直接使用compress方法
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+//            // 对于JPEG，你可以设置压缩质量（0-100）
+//            // bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//            out.flush()
+//            out.close()
+//            // 成功保存文件后，你可以在这里做一些处理，如通知用户或更新UI
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
     private fun unzip(cb:()->Unit) {
         if (unziped) {

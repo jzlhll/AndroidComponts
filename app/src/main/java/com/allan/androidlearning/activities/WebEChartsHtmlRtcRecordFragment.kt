@@ -16,6 +16,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 
+@Deprecated("android兼容性存在问题会导致某些手机，当前进程所有WebView会被占用")
 class WebEChartsHtmlRtcRecordFragment : BridgeWebViewExFragment() {
     companion object {
         var unziped = false

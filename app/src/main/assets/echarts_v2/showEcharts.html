@@ -110,12 +110,12 @@
                     backgroundColor: '#fff'
                 });
 
-                window.WebViewJavascriptBridge.callHandler("webCallNative", "base64Image:" + base64Image);
-            }, 20);
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartImage:" + base64Image);
+            }, 16);
 
             setTimeout(function() {
                 console.log("delay to notify native");
-                window.WebViewJavascriptBridge.callHandler("webCallNative", "runOver");
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartRunOver");
                 isTimeDisplaying = false;
                 clearInterval(intervalId);
             }, 4500);
@@ -130,12 +130,12 @@
             });
             window.WebViewJavascriptBridge.registerHandler("nativeCallWeb", function(data, callback) {
                 console.log("nativeCallWeb " + data);
-                if (data == "startEcharts") {
+                if (data == "echartStartRecord") {
                     startAndAutoStop();
                 }
             });
 
-            window.WebViewJavascriptBridge.callHandler("webCallNative", "initOver");
+            window.WebViewJavascriptBridge.callHandler("webCallNative", "echartInitOver");
         }
     );
 
