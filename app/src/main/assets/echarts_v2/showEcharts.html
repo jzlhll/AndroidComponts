@@ -98,7 +98,7 @@
         myChart.setOption(option);
     }
 
-    function startAndAutoStop() {
+    function startRecord() {
         if (isTimeDisplaying) {
             showEcharts();
             var devicePixelRatio = window.devicePixelRatio || 1;
@@ -131,7 +131,7 @@
             window.WebViewJavascriptBridge.registerHandler("nativeCallWeb", function(data, callback) {
                 console.log("nativeCallWeb " + data);
                 if (data == "echartStartRecord") {
-                    startAndAutoStop();
+                    startRecord();
                 }
             });
 
