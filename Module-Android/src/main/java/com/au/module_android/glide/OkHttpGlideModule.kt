@@ -3,6 +3,8 @@ package com.au.module_android.glide
 import android.content.Context
 import android.util.Log
 import com.au.module.android.BuildConfig
+import com.au.module_android.okhttp.OkhttpClients
+import com.au.module_android.okhttp.TrustAllCertsManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
@@ -52,10 +54,10 @@ class OkHttpGlideModule : AppGlideModule() {
         //添加okhttp的使用。
         val builder = OkHttpClient.Builder()
         if (noSslCheck) {
-            val trustAllCerts = TrustAllCerts()
+            val trustAllCerts = TrustAllCertsManager()
             builder
-                .sslSocketFactory(trustAllCerts.createSSLSocketFactory(), trustAllCerts)
-                .hostnameVerifier(TrustAllCerts.TrustAllHostnameVerifier())
+                .sslSocketFactory(OkhttpClients.createSSLSocketFactory(), trustAllCerts)
+                .hostnameVerifier(TrustAllCertsManager.TrustAllHostnameVerifier())
         }
         val okHttpClient = builder.build()
         registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(okHttpClient))

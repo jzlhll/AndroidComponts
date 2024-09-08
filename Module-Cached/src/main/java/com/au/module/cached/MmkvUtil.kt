@@ -1,10 +1,16 @@
 package com.au.module.cached
 
 import android.os.Parcelable
+import com.au.module_android.Globals.app
 import com.au.module_android.Globals.gson
-import com.au.module_android.Globals.mmkv
 import com.google.gson.reflect.TypeToken
+import com.tencent.mmkv.MMKV
 import java.lang.reflect.Type
+
+/**
+ * 腾讯的数据存储库
+ */
+val mmkv by lazy { MMKV.initialize(app);MMKV.defaultMMKV() }
 
 /**
  * E是列表item的类型

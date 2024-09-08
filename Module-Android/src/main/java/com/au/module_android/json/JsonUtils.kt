@@ -5,8 +5,10 @@ import com.au.module_android.Globals.gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
+import kotlin.jvm.Throws
 import kotlin.math.min
 
 /**
@@ -33,12 +35,15 @@ private fun Any.isBaseType() : Boolean{
 /**
  * 扩展：将string转成任意类型的对象
  */
+@Throws(JsonSyntaxException::class)
 inline fun <reified T> String.fromJson() : T? {
-    if (this.isNotEmpty()) {
-        //return gson.fromJson(strJson, TypeToken<List<T>>() {}.getType());
-        //改为下面的方法，clazz传入实际想要解析出来的类
-        //return BaseGlobalConst.gson.fromJson(json, object : TypeToken<List<T>>() {}.type)
+    //return gson.fromJson(strJson, TypeToken<List<T>>() {}.getType());
+    //改为下面的方法，clazz传入实际想要解析出来的类
+    //return BaseGlobalConst.gson.fromJson(json, object : TypeToken<List<T>>() {}.type)
+    try {
         return gson.fromJson(this, TypeToken.get(T::class.java))
+    } catch (e:JsonSyntaxException) {
+        e.printStackTrace()
     }
     return null
 }
@@ -46,22 +51,24 @@ inline fun <reified T> String.fromJson() : T? {
 /**
  * 扩展：将string转成任意类型List的对象
  */
-inline fun <reified E> String.fromJsonList() : List<E>? {
+inline fun <reified E> String.fromJsonList() : List<E> {
     return fromJsonList(E::class.java)
 }
 
 /**
  * 扩展：将string转成任意类型List的对象
  */
-fun <E> String.fromJsonList(elementClass:Class<E>) : List<E>? {
-    if (this.isNotEmpty()) {
-        //return gson.fromJson(strJson, TypeToken<List<T>>() {}.getType());
-        //改为下面的方法，clazz传入实际想要解析出来的类
-        //return BaseGlobalConst.gson.fromJson(json, object : TypeToken<List<T>>() {}.type)
+fun <E> String.fromJsonList(elementClass:Class<E>) : List<E> {
+    //return gson.fromJson(strJson, TypeToken<List<T>>() {}.getType());
+    //改为下面的方法，clazz传入实际想要解析出来的类
+    //return BaseGlobalConst.gson.fromJson(json, object : TypeToken<List<T>>() {}.type)
+    try {
         val listType : Type = TypeToken.getParameterized(ArrayList::class.java, elementClass).type
         return gson.fromJson(this, listType)
+    } catch (e:JsonSyntaxException) {
+        e.printStackTrace()
     }
-    return null
+    return emptyList()
 }
 
 private fun formatJsonBeautifulJsonStr(str:String) : String {

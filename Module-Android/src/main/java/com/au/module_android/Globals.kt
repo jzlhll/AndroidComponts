@@ -9,10 +9,14 @@ import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import com.au.module_android.okhttp.AbsCookieJar
+import com.au.module_android.okhttp.OkhttpClients
 import com.au.module_android.utils.secondLastOrNull
+import com.au.module_android.utils.unsafeLazy
 import com.google.gson.Gson
-import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.MainScope
+import okhttp3.OkHttpClient
+import java.io.File
 
 object Globals {
     /**
@@ -38,6 +42,16 @@ object Globals {
     val gson: Gson by lazy { Gson() }
 
     /**
+     * 选择合适的cacheDir
+     */
+    val cacheDir : File by unsafeLazy { app.externalCacheDir ?: app.cacheDir }
+
+    /**
+     * 选择合适的filesDir
+     */
+    val filesDir : File by unsafeLazy { app.getExternalFilesDir(null) ?: app.filesDir }
+
+    /**
      * 全局application
      */
     val app: Application get() = internalApp
@@ -50,11 +64,6 @@ object Globals {
 
     val secondTopActivity:Activity?
         get() = activityList.secondLastOrNull()
-
-    /**
-     * 腾讯的数据存储库
-     */
-    val mmkv by lazy { MMKV.initialize(app);MMKV.defaultMMKV() }
 
     //内部参数
     lateinit var internalApp: Application
@@ -92,6 +101,44 @@ object Globals {
      */
     fun getString(@ColorRes resId:Int) : String {
         return ContextCompat.getString(DarkModeUtil.themedContext ?: app, resId)
+    }
+
+    ///////////////okhttp
+    private val okhttpClients by lazy { OkhttpClients() }
+    /**
+     * 是否信任所有证书,默认不信任，为了传输安全
+     * okhttp（必须在创建之前使用）
+     */
+    var okHttpEnableTrustAllCertificates = false
+
+    /**
+     * 自定义cookie管理
+     * okhttp（必须在创建之前使用）
+     */
+    var okHttpCookieJar: AbsCookieJar? = null
+
+    /**
+     * 设置okhttp缓存，如果大于0，开启缓存
+     */
+    var okHttpCacheSize = 0L
+
+    /**
+     * 额外的okhttp builder设置
+     */
+    var okhttpExtraBuilder : ((OkHttpClient.Builder)->Unit)? = null
+
+    /**
+     * 获取okhttpClient对象
+     * @param timeOutMode 0 使用常规15秒的。默认。
+     *                    1 使用快速5秒的quick版。
+     *                    2 使用45秒的mid版。
+     *                    3 使用5分钟的long版。
+     */
+    fun okHttpClient(timeOutMode: Int = 0) = when (timeOutMode) {
+        1 -> okhttpClients.quickOkHttpClient
+        2 -> okhttpClients.midTimeoutOkHttpClient()
+        3 -> okhttpClients.longTimeoutOkHttpClient()
+        else -> okhttpClients.okHttpClient
     }
 }
 

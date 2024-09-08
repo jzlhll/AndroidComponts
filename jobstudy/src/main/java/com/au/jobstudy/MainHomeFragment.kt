@@ -2,8 +2,10 @@ package com.au.jobstudy
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.nested.decoration.PaddingItemDecoration
+import com.au.jobstudy.api.Api
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.checkwith.CheckWithFragment
@@ -20,9 +22,12 @@ import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.module.cached.AppDataStoreMemCache
 import com.au.module_android.click.onClick
+import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -38,6 +43,13 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.title.onClick {
+            lifecycleScope.launchOnThread {
+                val jobBean = Api.requestJobData(202409, 8)
+                logd { "jobBean ${jobBean?.toJsonString()}" }
+            }
+        }
 
         binding.lookWeeklyText.onClick {
             FragmentRootActivity.start(requireContext(), CompletedBeforeFragment::class.java)
