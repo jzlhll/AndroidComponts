@@ -188,7 +188,7 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
     }
 }
 
-class RecordWebV2Fragment : BridgeWebViewExFragment() {
+class RecordWebV2Fragment : MyBridgeFragment() {
     var onCreatedCallback:()->Unit = {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -132,7 +132,7 @@ class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBindi
     }
 }
 
-class RecordWebFragment : BridgeWebViewExFragment() {
+class RecordWebFragment : MyBridgeFragment() {
     var onCreatedCallback:()->Unit = {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

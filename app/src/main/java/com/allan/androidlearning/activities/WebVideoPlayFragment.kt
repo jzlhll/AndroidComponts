@@ -13,7 +13,7 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewExFragment
 import kotlinx.coroutines.launch
 
 @EntroFrgName
-class WebVideoPlayFragment : BridgeWebViewExFragment() {
+class WebVideoPlayFragment : MyBridgeFragment() {
     override fun bridgeWebViewLayoutId(): Int {
         logd { "aaa" }
         return R.layout.bridge_web_view_play
