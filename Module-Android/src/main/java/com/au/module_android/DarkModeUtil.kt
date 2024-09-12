@@ -26,6 +26,8 @@ class DarkModeUtil {
         @SuppressLint("StaticFieldLeak")
         internal var themedContext: Context? = null
 
+        private var currentThemedContextMode :Int? = null
+
         fun configurationUiModeToStr(context: Context) : String{
             val uiMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             when (uiMode) {
@@ -62,6 +64,33 @@ class DarkModeUtil {
             val mode = cxt.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             return mode == Configuration.UI_MODE_NIGHT_YES
         }
+
+        /**
+         * 当语言环境切换的时候，也要切换
+         */
+        fun whenLanguageChanged() {
+            if (themedContext == null) {
+                return //初始化自有别的逻辑。
+            }
+
+            currentThemedContextMode?.let {
+                themedContext = createContext(it)
+            }
+        }
+
+        private fun createContext(uiMode:Int) : Context {
+            currentThemedContextMode = uiMode
+            val filter = uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()
+
+            val configuration = Configuration(Globals.app.resources.configuration)
+            val nightMode = AppCompatDelegate.getDefaultNightMode()
+            configuration.uiMode = when (nightMode) {
+                AppCompatDelegate.MODE_NIGHT_NO -> Configuration.UI_MODE_NIGHT_NO or filter
+                AppCompatDelegate.MODE_NIGHT_YES -> Configuration.UI_MODE_NIGHT_YES or filter
+                else -> uiMode
+            }
+            return Globals.app.createConfigurationContext(configuration)
+        }
     }
 
     fun changeDarkMode(@DarkModeInt mode:Int, saveSp:Boolean = true) {
@@ -90,19 +119,6 @@ class DarkModeUtil {
         }
 
         themedContext = createContext(mode) //重建
-    }
-
-    private fun createContext(uiMode:Int) : Context {
-        val filter = uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()
-
-        val configuration = Configuration(Globals.app.resources.configuration)
-        val nightMode = AppCompatDelegate.getDefaultNightMode()
-        configuration.uiMode = when (nightMode) {
-            AppCompatDelegate.MODE_NIGHT_NO -> Configuration.UI_MODE_NIGHT_NO or filter
-            AppCompatDelegate.MODE_NIGHT_YES -> Configuration.UI_MODE_NIGHT_YES or filter
-            else -> uiMode
-        }
-        return Globals.app.createConfigurationContext(configuration)
     }
 
     /**

@@ -11,7 +11,7 @@ import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.hideImeNew
 import okhttp3.internal.toHexString
 
-@EntroFrgName
+@EntroFrgName(priority = 10)
 class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.rgbBtn.onClick {

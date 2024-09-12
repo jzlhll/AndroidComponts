@@ -24,4 +24,9 @@ interface IFullWindow {
      *    ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
      */
     fun isPaddingNavBar() = BuildConfig.ENABLE_EDGE_TO_EDGE
+
+    /**
+     * android15已经默认要求设置了。这里就强制处理。
+     */
+    fun fullWindowSetEdgeToEdge() = true
 }

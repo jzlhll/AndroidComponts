@@ -16,14 +16,7 @@ import com.au.module_android.utils.ignoreError
 
 @Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
 open class AbsActivity : AppCompatActivity(), IFullWindow {
-    companion object {
-        const val KEY_INTENT_AUTO_HIDE_IME = "intent_auto_hide_ime"
-    }
-
     protected open val isNotCacheFragment = true //不进行自动保存Fragment用于恢复。
-
-    var isAutoHideIme:Boolean = false
-        private set
 
     /**
      * 给出额外信息的空间1
@@ -42,7 +35,6 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
     override fun onCreate(savedInstanceState: Bundle?) {
         ToutiaoScreenAdapter.attach(this)
         super.onCreate(savedInstanceState)
-        isAutoHideIme = intent.getBooleanExtra(KEY_INTENT_AUTO_HIDE_IME, false)
     }
 
     override fun setContentView(view: View?) {
@@ -77,7 +69,7 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         //判断是否是输入法范围
-        if (isAutoHideIme && ev?.action == MotionEvent.ACTION_DOWN) {
+        if (isAutoHideIme() && ev?.action == MotionEvent.ACTION_DOWN) {
             val focusView = currentFocus
             if (focusView != null && isShouldHideInput(focusView, ev)) {
                 hideImeNew(window, focusView)
@@ -121,4 +113,5 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
         }
     }
 
+    open fun isAutoHideIme() = false
 }

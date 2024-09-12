@@ -44,7 +44,8 @@ open class CustomTextInputLayout : TextInputLayout {
         /**
          * 邮箱检测函数。
          */
-        fun matcherEmail(email: String): Boolean {
+        fun matcherEmail(origEmail: String): Boolean {
+            val email = origEmail.trim()
             try {
                 if (TextUtils.isEmpty(email)) {
                     return false

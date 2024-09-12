@@ -14,7 +14,7 @@ import com.au.module_android.utils.unsafeLazy
  * @date :2024/8/19 15:15
  * @description:
  */
-@EntroFrgName
+@EntroFrgName(priority = 11)
 class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
     override fun hasToolbar(): Boolean {
         return true

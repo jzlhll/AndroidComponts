@@ -399,69 +399,6 @@
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
 
-        <com.au.module_android.widget.CustomFontText
-            android:layout_marginStart="@dimen/ui_padding_edge"
-            style="@style/StyleFontSecondTitleText"
-            android:text="radio | check button"
-            android:layout_marginTop="36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/ui_padding_edge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <RadioButton
-                android:layout_width="28dp"
-                android:layout_height="28dp"/>
-
-            <RadioButton
-                android:checked="true"
-                android:layout_marginStart="8dp"
-                android:layout_width="28dp"
-                android:layout_height="28dp"/>
-
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:layout_marginStart="8dp"
-                android:layout_width="28dp"
-                android:layout_height="28dp"/>
-
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:checked="true"
-                android:layout_marginStart="8dp"
-                android:layout_width="28dp"
-                android:layout_height="28dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/ui_padding_edge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <CheckBox
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
-
-            <CheckBox
-                android:checked="true"
-                android:layout_marginStart="8dp"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
-
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:layout_marginStart="8dp"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
-
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:checked="true"
-                android:layout_marginStart="8dp"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
-        </LinearLayout>
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="32dp"/>

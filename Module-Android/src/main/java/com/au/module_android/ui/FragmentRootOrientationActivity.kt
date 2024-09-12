@@ -26,10 +26,8 @@ class FragmentRootOrientationActivity : FragmentRootActivity() {
                             fragmentClass:Class<out Fragment>,
                             activityResult:ActivityForResult? = null,
                             arguments: Bundle? = null,
-                            optionsCompat: ActivityOptionsCompat? = null,
-                            hasWebView:Boolean = false,
-                            autoHideIme:Boolean = false)  {
-            start(context, FragmentRootOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme)
+                            optionsCompat: ActivityOptionsCompat? = null)  {
+            start(context, FragmentRootOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat)
         }
     }
 }

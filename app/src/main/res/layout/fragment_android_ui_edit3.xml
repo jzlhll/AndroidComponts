@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        tools:context="com.allan.androidlearning.androidui.AndroidUi3Fragment"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <com.au.module_android.widget.CustomFontText
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                style="@style/StyleFontSecondTitleText"
+                android:text="edit input"
+                android:layout_marginTop="36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.au.module_android.widget.CustomFontText
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:id="@+id/infoText"
+                style="@style/StyleFontText"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    android:background="@drawable/edit_board_bg"
+                    android:layout_width="300dp"
+                    android:layout_height="52dp">
+                    <com.au.module_android.widget.CustomFontText
+                        style="@style/StyleFontText"
+                        android:layout_marginStart="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Fake text by edit_board_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
+
+                <com.au.module_androidui.widget.CustomTextInputLayout
+                    android:id="@+id/inputLayout2"
+                    android:layout_marginTop="24dp"
+                    style="@style/StyleInputLayout"
+                    android:layout_height="52dp"
+                    android:layout_width="300dp">
+
+                    <com.au.module_android.widget.CustomEditText
+                        android:id="@+id/editText"
+                        style="@style/StyleEditInInputLayout"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:cursorVisible="false"
+                        android:focusableInTouchMode="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:paddingVertical="5dp"
+                        android:inputType="text"
+                        android:maxLength="32"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:paddingStart="53dp"
+                        android:text="only click like fake edit"
+                        android:paddingEnd="16dp" />
+                </com.au.module_androidui.widget.CustomTextInputLayout>
+
+                <com.au.module_androidui.widget.CustomTextInputLayout
+                    android:id="@+id/inputLayout3"
+                    android:layout_marginTop="24dp"
+                    style="@style/StyleInputLayout"
+                    android:layout_height="52dp"
+                    android:layout_width="300dp">
+
+                    <com.au.module_android.widget.CustomEditText
+                        android:id="@+id/editText3"
+                        style="@style/StyleEditInInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:paddingVertical="5dp"
+                        android:inputType="text"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:hint="Normal edit with bg change"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+                </com.au.module_androidui.widget.CustomTextInputLayout>
+
+                <com.au.module_androidui.widget.CustomTextInputLayout
+                    android:id="@+id/inputLayoutEmail"
+                    style="@style/StyleInputLayout"
+                    android:layout_marginTop="24dp"
+                    android:layout_height="52dp"
+                    android:layout_width="300dp">
+
+                    <com.au.module_android.widget.CustomEditText
+                        android:id="@+id/editText1"
+                        style="@style/StyleEditInInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:paddingVertical="5dp"
+                        android:ellipsize="end"
+                        android:inputType="textEmailAddress"
+                        android:lines="1"
+                        android:hint="Email address"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+                </com.au.module_androidui.widget.CustomTextInputLayout>
+
+                <com.au.module_androidui.widget.CustomTextInputLayout
+                    android:id="@+id/inputLayoutPassword"
+                    android:layout_marginTop="24dp"
+                    style="@style/StyleInputLayout"
+                    android:layout_width="300dp"
+                    android:layout_height="52dp"
+                    app:endIconDrawable="@drawable/icon_eye"
+                    app:endIconMode="password_toggle">
+
+                    <com.au.module_android.widget.CustomEditText
+                        android:id="@+id/editText4"
+                        style="@style/StyleEditInInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:paddingVertical="5dp"
+                        android:inputType="textPassword"
+                        android:hint="Password"
+                        android:lines="1"
+                        android:paddingStart="53dp"
+                        android:paddingEnd="16dp" />
+
+                </com.au.module_androidui.widget.CustomTextInputLayout>
+
+                <com.au.module_android.widget.CustomEditText
+                    style="@style/StyleBlankEditText"
+                    android:layout_marginTop="24dp"
+                    android:paddingStart="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:hint="Blank edit no change background"
+                    android:layout_width="300dp"
+                    android:layout_height="120dp"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

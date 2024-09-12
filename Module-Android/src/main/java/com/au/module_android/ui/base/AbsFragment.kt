@@ -58,4 +58,6 @@ open class AbsFragment : Fragment(), IFullWindow {
     open fun setTitle(text: Int) {
         activity?.setTitle(text)
     }
+
+    open fun isAutoHideIme() = false
 }

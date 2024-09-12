@@ -65,7 +65,7 @@ fun IFullWindow.fullPaddingEdgeToEdge(activity: ComponentActivity, window: Windo
     val isPaddingNav = isPaddingNavBar()
     val isPaddingStatusBar = isPaddingStatusBar()
 
-    activity.enableEdgeToEdge()
+    if(fullWindowSetEdgeToEdge()) activity.enableEdgeToEdge()
 
     if (isPaddingNav || isPaddingStatusBar) {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->

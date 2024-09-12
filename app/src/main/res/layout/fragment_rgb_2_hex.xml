@@ -38,6 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingHorizontal="8dp"
         android:layout_marginTop="4dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -56,12 +57,12 @@
             android:layout_height="wrap_content">
             <RadioButton
                 android:id="@+id/textColorWhiteCheck"
-                android:text="#ffffff"
+                android:text="白"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <RadioButton
                 android:id="@+id/textColorBlackCheck"
-                android:text="#000000"
+                android:text="黑"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <RadioButton
@@ -73,6 +74,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingHorizontal="8dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -95,12 +97,12 @@
                 android:layout_height="wrap_content"/>
             <RadioButton
                 android:id="@+id/backFFFBtn"
-                android:text="#ffffff"
+                android:text="白"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <RadioButton
                 android:id="@+id/back000Btn"
-                android:text="#000000"
+                android:text="黑"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <RadioButton
@@ -117,7 +119,14 @@
         android:background="#f0f0f0"
         android:layout_height="1dp"/>
 
+    <TextView
+        android:paddingHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:text="A 可以设置数值；也可以设置百分比以%结尾"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <LinearLayout
+        android:paddingHorizontal="8dp"
         android:layout_marginTop="12dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -125,7 +134,7 @@
         <TextView
             android:gravity="center"
             android:text="A"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -133,7 +142,7 @@
         <TextView
             android:gravity="center"
             android:text="R"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -141,7 +150,7 @@
         <TextView
             android:gravity="center"
             android:text="G"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -149,7 +158,7 @@
         <TextView
             android:gravity="center"
             android:text="B"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -160,6 +169,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingHorizontal="8dp"
         android:layout_marginTop="4dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -167,7 +177,7 @@
         <EditText
             android:gravity="center"
             android:id="@+id/editA"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:text="255"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -176,7 +186,7 @@
         <EditText
             android:gravity="center"
             android:id="@+id/editR"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -186,7 +196,7 @@
             android:gravity="center"
             android:id="@+id/editG"
             android:inputType="number"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -194,7 +204,7 @@
         <EditText
             android:id="@+id/editB"
             android:gravity="center"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -202,7 +212,7 @@
 
         <Button
             android:id="@+id/rgbBtn"
-            android:text="Start"
+            android:text="Run"
             android:layout_width="80dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -214,38 +224,34 @@
         android:layout_height="1dp"/>
 
     <LinearLayout
+        android:paddingHorizontal="8dp"
         android:layout_marginTop="12dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:gravity="center"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="22dp"
             android:text="Hex"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <EditText
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="22dp"
             android:gravity="center"
             android:id="@+id/editHex"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="22dp"
             android:id="@+id/hexStartBtn"
-            android:text="Start"
+            android:text="Run"
             android:layout_width="80dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_marginTop="12dp"
-        android:text="A 可以设置数值；也可以设置百分比以%机尾"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

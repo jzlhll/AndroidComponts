@@ -49,7 +49,20 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
             else {
                 if (symbol is KSClassDeclaration && symbol.classKind == ClassKind.CLASS) {
                     val qualifiedClassName = symbol.qualifiedName?.asString()
-                    allEntroFragmentNamesTemplate.insert(qualifiedClassName!!)
+                    //解析priority
+                    var priority = 0
+                    symbol.annotations.forEach { an->
+                        if (an.shortName.getShortName() == "EntroFrgName") {
+                            an.arguments.forEach { arg->
+                                if (arg.name?.asString() == "priority") {
+                                    val value = arg.value
+                                    priority = arg.value.toString().toInt()
+                                    environment.logger.warn("ksp process $qualifiedClassName priority $value")
+                                }
+                            }
+                        }
+                    }
+                    allEntroFragmentNamesTemplate.insert(qualifiedClassName!!, priority)
 //                    symbol.accept(TestKspVisitor(environment), Unit)//处理符号
                 } else {
                     ret.add(symbol)

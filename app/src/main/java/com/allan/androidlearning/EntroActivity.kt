@@ -35,11 +35,11 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
 
         logd { "goto $goto" }
 
-        EntroList().getEntroList().sortedBy { it.simpleName }.forEach { fragmentClass ->
+        EntroList().getEntroList().forEach { fragmentClassPair ->
             val btn = MaterialButton(this)
-            btn.text = fragmentClass.simpleName.replace("Fragment", "")
+            btn.text = fragmentClassPair.first.simpleName.replace("Fragment", "")
             btn.onClick {
-                FragmentRootActivity.start(this, fragmentClass)
+                FragmentRootActivity.start(this, fragmentClassPair.first)
             }
             binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }

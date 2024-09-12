@@ -110,15 +110,15 @@
                     backgroundColor: '#fff'
                 });
 
-                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartImage:" + base64Image);
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartImage:" + base64Image); ///// 222
             }, 16);
 
             setTimeout(function() {
                 console.log("delay to notify native");
-                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartRunOver");
+                window.WebViewJavascriptBridge.callHandler("webCallNative", "echartRunOver"); //////1111
                 isTimeDisplaying = false;
                 clearInterval(intervalId);
-            }, 4500);
+            }, 4500); ////完成
         }
     }
 
@@ -128,14 +128,7 @@
                 console.log("normal handlerName " + handlerName);
                 callback("aaa");
             });
-            window.WebViewJavascriptBridge.registerHandler("nativeCallWeb", function(data, callback) {
-                console.log("nativeCallWeb " + data);
-                if (data == "echartStartRecord") {
-                    startRecord();
-                }
-            });
-
-            window.WebViewJavascriptBridge.callHandler("webCallNative", "echartInitOver");
+            window.WebViewJavascriptBridge.callHandler("webCallNative", "echartInitOver"); //11111 得到数据开始调用
         }
     );
 

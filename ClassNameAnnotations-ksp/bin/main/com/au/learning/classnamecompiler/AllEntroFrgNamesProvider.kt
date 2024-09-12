@@ -25,7 +25,6 @@ class AllEntroFrgNamesProvider : SymbolProcessorProvider{
 }
 
 /**
- * creator: lt  2022/10/20  lt.dygzs@qq.com
  * effect : ksp处理程序
  * warning:
  */
@@ -49,6 +48,7 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
             else {
                 if (symbol is KSClassDeclaration && symbol.classKind == ClassKind.CLASS) {
                     val qualifiedClassName = symbol.qualifiedName?.asString()
+                    // 访问注解的参数
                     allEntroFragmentNamesTemplate.insert(qualifiedClassName!!)
 //                    symbol.accept(TestKspVisitor(environment), Unit)//处理符号
                 } else {

@@ -1,7 +1,6 @@
 [versions]
 
 appcompat = "1.7.0"
-autoService = "1.1.1"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
@@ -12,10 +11,10 @@ gson = "2.11.0"
 jsbridgev2 = "1.0.11"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-lifecycleLivedataKtx = "2.8.3"
+lifecycleLivedataKtx = "2.8.5"
 material = "1.12.0"
 mmkvStatic = "1.3.7"
-navigationFragmentKtx = "2.7.7"
+navigationFragmentKtx = "2.8.0"
 okhttpBom = "4.11.0"
 recyclerview = "1.3.2"
 roomRuntime = "2.6.1"
@@ -23,7 +22,7 @@ startupRuntime = "1.1.1"
 swiperefreshlayout = "1.1.0"
 symbolProcessingApi = "1.9.24-1.0.20"
 window = "1.3.0"
-lifecycleProcess = "2.8.3"
+lifecycleProcess = "2.8.5"
 
 
 [libraries]

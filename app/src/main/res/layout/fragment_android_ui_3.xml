@@ -69,138 +69,98 @@
         <com.au.module_android.widget.CustomFontText
             android:layout_marginStart="@dimen/ui_padding_edge"
             style="@style/StyleFontSecondTitleText"
-            android:text="edit input"
+            android:text="radio | check button"
             android:layout_marginTop="36dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_marginTop="12dp"
-            android:orientation="vertical"
             android:layout_marginStart="@dimen/ui_padding_edge"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
 
-            <FrameLayout
-                android:background="@drawable/edit_board_bg"
-                android:layout_width="300dp"
-                android:layout_height="52dp">
-                <com.au.module_android.widget.CustomFontText
-                    style="@style/StyleFontText"
-                    android:layout_marginStart="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:text="Fake text by edit_board_bg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
+            <RadioButton
+                android:checked="true"
+                android:layout_marginStart="8dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
 
-            <com.au.module_androidui.widget.CustomTextInputLayout
-                android:id="@+id/inputLayout2"
-                android:layout_marginTop="12dp"
-                style="@style/StyleInputLayout"
-                android:layout_height="52dp"
-                android:layout_width="300dp">
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:layout_marginStart="8dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
 
-                <com.au.module_android.widget.CustomEditText
-                    android:id="@+id/editText"
-                    style="@style/StyleEditInInputLayout"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:cursorVisible="false"
-                    android:focusableInTouchMode="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@null"
-                    android:paddingVertical="5dp"
-                    android:inputType="text"
-                    android:maxLength="32"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:paddingStart="53dp"
-                    android:text="only click like fake edit"
-                    android:paddingEnd="16dp" />
-            </com.au.module_androidui.widget.CustomTextInputLayout>
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:checked="true"
+                android:layout_marginStart="8dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
 
-            <com.au.module_androidui.widget.CustomTextInputLayout
-                android:id="@+id/inputLayout3"
-                android:layout_marginTop="12dp"
-                style="@style/StyleInputLayout"
-                android:layout_height="52dp"
-                android:layout_width="300dp">
-
-                <com.au.module_android.widget.CustomEditText
-                    android:id="@+id/editText3"
-                    style="@style/StyleEditInInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@null"
-                    android:paddingVertical="5dp"
-                    android:inputType="text"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:hint="Normal edit with bg change"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
-            </com.au.module_androidui.widget.CustomTextInputLayout>
-
-            <com.au.module_androidui.widget.CustomTextInputLayout
-                android:id="@+id/inputLayoutEmail"
-                style="@style/StyleInputLayout"
-                android:layout_marginTop="12dp"
-                android:layout_height="52dp"
-                android:layout_width="300dp">
-
-                <com.au.module_android.widget.CustomEditText
-                    android:id="@+id/editText1"
-                    style="@style/StyleEditInInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@null"
-                    android:paddingVertical="5dp"
-                    android:ellipsize="end"
-                    android:inputType="textEmailAddress"
-                    android:lines="1"
-                    android:hint="Email address"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
-            </com.au.module_androidui.widget.CustomTextInputLayout>
-
-            <com.au.module_androidui.widget.CustomTextInputLayout
-                android:id="@+id/inputLayoutPassword"
-                android:layout_marginTop="12dp"
-                style="@style/StyleInputLayout"
-                android:layout_width="300dp"
-                android:layout_height="52dp"
-                app:endIconDrawable="@drawable/icon_eye"
-                app:endIconMode="password_toggle">
-
-                <com.au.module_android.widget.CustomEditText
-                    android:id="@+id/editText4"
-                    style="@style/StyleEditInInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:paddingVertical="5dp"
-                    android:inputType="textPassword"
-                    android:hint="Password"
-                    android:lines="1"
-                    android:paddingStart="53dp"
-                    android:paddingEnd="16dp" />
-
-            </com.au.module_androidui.widget.CustomTextInputLayout>
-
-            <com.au.module_android.widget.CustomEditText
-                style="@style/StyleBlankEditText"
-                android:paddingStart="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_gravity="center_vertical"
-                android:hint="Blank edit no change background"
-                android:layout_width="300dp"
-                android:layout_height="120dp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+
+            <CheckBox
+                android:checked="true"
+                android:layout_marginStart="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_marginStart="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:checked="true"
+                android:layout_marginStart="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+        </LinearLayout>
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:text="edit input"
+            android:layout_marginTop="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/gotoEditBtn"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:text="goto edit page"
+            android:layout_width="200dp"
+            android:layout_height="50dp"/>
+
+        <Button
+            android:id="@+id/gotoEdit2Btn"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:text="goto edit page2"
+            android:layout_width="200dp"
+            android:layout_height="50dp"/>
+
+        <Button
+            android:id="@+id/gotoEdit3Btn"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:text="goto edit page3"
+            android:layout_width="200dp"
+            android:layout_height="50dp"/>
 
         <Space
             android:layout_width="match_parent"

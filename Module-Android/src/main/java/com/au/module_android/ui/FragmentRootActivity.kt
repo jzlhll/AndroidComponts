@@ -15,8 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module.android.BuildConfig
 import com.au.module_android.permissions.activity.ActivityForResult
+import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IFullWindow
 import com.au.module_android.ui.views.ViewActivity
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 
@@ -29,7 +31,6 @@ open class FragmentRootActivity : ViewActivity() {
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"
-        const val KEY_HAS_WEB_VIEW = "FragmentRootActivity_key_has_web_view"
 
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
@@ -45,10 +46,8 @@ open class FragmentRootActivity : ViewActivity() {
                             activityResult:ActivityForResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
-                            hasWebView:Boolean = false,
-                            autoHideIme: Boolean = false,
                             activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
-            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, hasWebView, autoHideIme, activityResultCallback)
+            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, activityResultCallback)
         }
 
         internal fun start(context: Context,
@@ -57,13 +56,9 @@ open class FragmentRootActivity : ViewActivity() {
                            activityResult:ActivityForResult?,
                            arguments: Bundle?,
                            optionsCompat: ActivityOptionsCompat?,
-                           hasWebView:Boolean,
-                           autoHideIme:Boolean,
                            activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
             val intent = Intent(context, showActivityClass)
             intent.putExtra(KEY_FRAGMENT_CLASS, fragmentClass)
-            intent.putExtra(KEY_INTENT_AUTO_HIDE_IME, autoHideIme)
-            if(hasWebView) intent.putExtra(KEY_HAS_WEB_VIEW, hasWebView)
             if (arguments != null) intent.putExtra(KEY_FRAGMENT_ARGUMENTS, arguments)
 
             if (activityResult != null) {
@@ -85,8 +80,11 @@ open class FragmentRootActivity : ViewActivity() {
         v.id = View.generateViewId()
         val instance = fragmentClass.getDeclaredConstructor().newInstance()
         instance.arguments = intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS)
+
+        mIsAutoHideIme = instance.asOrNull<AbsFragment>()?.isAutoHideIme() ?: false
+
         if (BuildConfig.DEBUG) {
-            Log.d("AU_APP", "FragmentRootActivity: ${fragmentClass.name} autoHideIme: $isAutoHideIme")
+            Log.d("AU_APP", "FragmentRootActivity: ${fragmentClass.name}")
         }
 
         if (BuildConfig.ENABLE_EDGE_TO_EDGE) {
@@ -103,13 +101,19 @@ open class FragmentRootActivity : ViewActivity() {
         return v
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidBug5497Workaround.assistActivity(this)
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        AndroidBug5497Workaround.assistActivity(this)
+//    }
 
-    override fun setEdge(contentView: View?) {
+    final override fun setEdge(contentView: View?) {
         //empty 因为我们其实要判断Fragment中的padding函数。
         //放在（instance is IFullWindow）去做。
+    }
+
+    private var mIsAutoHideIme = false
+
+    final override fun isAutoHideIme(): Boolean {
+        return mIsAutoHideIme
     }
 }
