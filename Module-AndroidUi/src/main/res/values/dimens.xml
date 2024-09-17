@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="au_seekbar_thumb_size">18dp</dimen>
+    <dimen name="au_seekbar_thumb_size_half">9dp</dimen>
+    <dimen name="au_seekbar_bg_height">6dp</dimen>
+    <dimen name="au_seekbar_bg_corner">4dp</dimen>
+</resources>

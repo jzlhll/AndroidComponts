@@ -36,12 +36,11 @@ fun DialogMode.toGravity():Int {
  * 有的时候，我们把fragment显示到了XXXDialog中，通过该方法来找到对应的dialog。
  * 这样就可继而调用dismiss等函数。
  * @return 找到的dialog
- * @param contentFragment 显示的contentFragment
  */
-fun findDialogByContentFragment(contentFragment: Fragment?): DialogFragment? {
-    contentFragment ?: return null
-    if (contentFragment is DialogFragment) {
-        return contentFragment
-    }
-    return findDialogByContentFragment(contentFragment.parentFragment)
+fun AbsFragment.findDialogByContentFragment(): DialogFragment? {
+    return this.parentFragment?.findDialogByFragment()
+}
+
+private fun Fragment.findDialogByFragment(): DialogFragment? {
+    return this.parentFragment?.findDialogByFragment()
 }

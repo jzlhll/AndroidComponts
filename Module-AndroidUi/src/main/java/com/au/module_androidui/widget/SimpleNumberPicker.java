@@ -1,4 +1,4 @@
-package com.au.module_android.widget;
+package com.au.module_androidui.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
 import android.icu.text.DecimalFormatSymbols;
 import android.os.Build;
@@ -29,9 +30,10 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
+import androidx.annotation.Keep;
 import androidx.annotation.Px;
 
-import com.au.module.android.R;
+import com.au.module_androidui.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -43,6 +45,7 @@ import java.util.Locale;
  * 2. 要求必须提供internalMaxWidth和internalMinWidth，方便使用限定。
  * 2. 添加最上和最下的textSize变小4/5;除了中间其他都是灰色（secondColor可以定制）。
  */
+@Keep
 public class SimpleNumberPicker extends LinearLayout {
     /**
      * The number of items show in the selector wheel.
@@ -101,13 +104,22 @@ public class SimpleNumberPicker extends LinearLayout {
      */
     private boolean mWrapSelectorWheelPreferred = true;
 
+    private float mDrawXOffsetDp = 0f;
+
+    /**
+     * 左右偏移的距离。正数就是往右边偏移绘制；负数就是往左边偏移绘制。 最大为6/10的偏移量
+     */
+    public void setDrawXOffsetDp(float dp) {
+        mDrawXOffsetDp = dp;
+    }
+
     /**
      * Use a custom NumberPicker formatting callback to use two-digit minutes
      * strings like "01". Keeping a static formatter etc. is the most efficient
      * way to do this; it avoids creating temporary objects on every call to
      * format().
      */
-    private static class TwoDigitFormatter implements Formatter {
+    private static class TwoDigitFormatter implements android.widget.NumberPicker.Formatter {
         final StringBuilder mBuilder = new StringBuilder();
 
         char mZeroDigit;
@@ -174,12 +186,20 @@ public class SimpleNumberPicker extends LinearLayout {
     /**
      * The max width of this widget.
      */
-    private final int mMinWidth;
+    private int mMinWidth;
+    public void setInternalMinWidth(int w) {
+        mMinWidth = w;
+        invalidate();
+    }
 
     /**
      * The max width of this widget.
      */
     private int mMaxWidth;
+    public void setInternalMaxWidth(int w) {
+        mMaxWidth = w;
+        invalidate();
+    }
 
     /**
      * The height of the text.
@@ -224,7 +244,7 @@ public class SimpleNumberPicker extends LinearLayout {
     /**
      * Formatter for for displaying the current value.
      */
-    private Formatter mFormatter;
+    private android.widget.NumberPicker.Formatter mFormatter;
 
     /**
      * The speed for updating the value form long press.
@@ -466,20 +486,6 @@ public class SimpleNumberPicker extends LinearLayout {
     }
 
     /**
-     * Interface used to format current value into a string for presentation.
-     */
-    public interface Formatter {
-
-        /**
-         * Formats a string representation of the current value.
-         *
-         * @param value The currently selected value.
-         * @return A formatted string representation.
-         */
-        public String format(int value);
-    }
-
-    /**
      * Create a new number picker.
      *
      * @param context The application environment.
@@ -495,7 +501,7 @@ public class SimpleNumberPicker extends LinearLayout {
      * @param attrs A collection of attributes.
      */
     public SimpleNumberPicker(Context context, AttributeSet attrs) {
-        this(context, attrs, R.style.SimpleNumberPickerStyle);
+        this(context, attrs, R.style.StyleSimpleNumberPicker);
     }
 
     /**
@@ -530,6 +536,10 @@ public class SimpleNumberPicker extends LinearLayout {
         // process style attributes
         final TypedArray attributesArray = context.obtainStyledAttributes(
                 attrs, R.styleable.SimpleNumberPicker, defStyleAttr, defStyleRes);
+//        final int layoutResId = attributesArray.getResourceId(
+//                R.styleable.SimpleNumberPicker_internalLayout, DEFAULT_LAYOUT_RESOURCE_ID);
+//
+//        mHasSelectorWheel = (layoutResId != DEFAULT_LAYOUT_RESOURCE_ID);
 
         mHideWheelUntilFocused = attributesArray.getBoolean(
                 R.styleable.SimpleNumberPicker_hideWheelUntilFocused, false);
@@ -581,10 +591,6 @@ public class SimpleNumberPicker extends LinearLayout {
             throw new IllegalArgumentException("internalMinWidth > internalMaxWidth");
         }
 
-        if (mMinWidth <= 0 || mMaxWidth <= 0) { //必须设定internal maxWidth和minWidth
-            throw new IllegalArgumentException("internalMinWidth or internalMaxWidth is not exist");
-        }
-
         attributesArray.recycle();
 
         mPressedStateHelper = new PressedStateHelper();
@@ -599,6 +605,7 @@ public class SimpleNumberPicker extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.simple_number_picker, this, true);
+
 
         // input text
         mInputText = findViewById(R.id.numberpicker_input);
@@ -617,7 +624,7 @@ public class SimpleNumberPicker extends LinearLayout {
         // create the selector wheel paint
         Paint paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextAlign(Align.CENTER);
         paint.setTextSize(mTextSizes[SELECTOR_MIDDLE_ITEM_INDEX]);
         paint.setTypeface(mInputText.getTypeface());
         ColorStateList colors = mInputText.getTextColors();
@@ -1011,7 +1018,7 @@ public class SimpleNumberPicker extends LinearLayout {
      *            {@link String#valueOf(int)} will be used.
      *@see #setDisplayedValues(String[])
      */
-    public void setFormatter(Formatter formatter) {
+    public void setFormatter(android.widget.NumberPicker.Formatter formatter) {
         if (formatter == mFormatter) {
             return;
         }
@@ -1299,7 +1306,7 @@ public class SimpleNumberPicker extends LinearLayout {
             return;
         }
         final boolean showSelectorWheel = mHideWheelUntilFocused ? hasFocus() : true;
-        float x = (getRight() - getLeft()) / 2;
+        float x = (getRight() - getLeft()) / 2f + mDrawXOffsetDp;
         float y = mCurrentScrollOffset;
 
         // draw the selector wheel

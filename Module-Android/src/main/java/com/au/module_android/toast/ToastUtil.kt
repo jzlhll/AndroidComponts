@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.Globals
 import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
 import com.au.module_android.utils.asOrNull
@@ -196,8 +197,8 @@ abstract class AbsToastBuilder {
         return this
     }
 
-    fun setOnDialogFragment(fragment: Fragment) : AbsToastBuilder {
-        decorView = findDialogByContentFragment(fragment).asOrNull<IBaseDialog>()?.findToastViewGroup()
+    fun setOnFragmentDialog(contentFragment: AbsFragment) : AbsToastBuilder {
+        decorView = contentFragment.findDialogByContentFragment().asOrNull<IBaseDialog>()?.findToastViewGroup()
         return this
     }
 

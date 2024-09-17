@@ -7,18 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.au.module_android.click.onClick
-import com.au.module_android.utils.ViewBackgroundBuilder
-import com.au.module_androidui.databinding.SwitchButtonsLayoutBinding
+import com.au.module_android.utils.visible
+import com.au.module_androidui.R
+import com.au.module_androidui.databinding.LayoutSwitchButtonsBinding
 
 /**
- * 自定义SwitchView 全新设计。todo 通过merge减少嵌套。
+ * 自定义SwitchView 全新设计。 滑块。
  * 请注意：width必须设置为wrap_content。代码内部会让2个文字一样宽，与preview不同。请注意。
  */
 class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     FrameLayout(
         context, attrs, defStyleAttr
     ) {
-    private var mViewBinding: SwitchButtonsLayoutBinding
+    private var mViewBinding: LayoutSwitchButtonsBinding
     var isLeft = true
         private set
 
@@ -34,38 +35,36 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
     private val textColor:Int
     private val textSelectColor:Int
 
+    private var isDisabled = false
+
+    fun setDisable() {
+        isDisabled = true
+        mViewBinding.root.alpha = 0.5f
+        mViewBinding.disableCover.visible()
+    }
+
     init {
-        val res = context.resources
-        val typedArray = context.obtainStyledAttributes(attrs, com.au.module_androidui.R.styleable.SwitchLayoutButton)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwitchLayoutButton)
 
-        val bgColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_bg_color,
-            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_bg))
-        val selectColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_color,
-            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_sel_bg))
+        textColor = typedArray.getColor(R.styleable.SwitchLayoutButton_text_color,
+            context.getColor(com.au.module_androidcolor.R.color.color_text_normal))
+        textSelectColor = typedArray.getColor(R.styleable.SwitchLayoutButton_select_text_color,
+            context.getColor(com.au.module_androidcolor.R.color.color_text_normal))
 
-        textColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_text_color,
-            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text))
-        textSelectColor = typedArray.getColor(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_text_color,
-            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text_sel))
+        val leftStr = typedArray.getString(R.styleable.SwitchLayoutButton_first_str)
+        val rightStr = typedArray.getString(R.styleable.SwitchLayoutButton_second_str)
 
-        val bgCorner = typedArray.getDimension(com.au.module_androidui.R.styleable.SwitchLayoutButton_bg_corner,
-            res.getDimension(com.au.module_androidcolor.R.dimen.switch_layout_default_corner))
-        val selectCorner = typedArray.getDimension(com.au.module_androidui.R.styleable.SwitchLayoutButton_select_corner,
-            res.getDimension(com.au.module_androidcolor.R.dimen.switch_layout_default_sel_corner))
-        val leftStr = typedArray.getString(com.au.module_androidui.R.styleable.SwitchLayoutButton_first_str)
-        val rightStr = typedArray.getString(com.au.module_androidui.R.styleable.SwitchLayoutButton_second_str)
-
-        val paddingInner = typedArray.getDimension(com.au.module_androidui.R.styleable.SwitchLayoutButton_padding_inner, -1f).toInt()
+        val paddingInner = typedArray.getDimension(R.styleable.SwitchLayoutButton_padding_inner, -1f).toInt()
 
         typedArray.recycle()
-        mViewBinding = SwitchButtonsLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+        mViewBinding = LayoutSwitchButtonsBinding.inflate(LayoutInflater.from(context), this, true)
 
         mViewBinding.leftTv.text = leftStr
         mViewBinding.rightTv.text = rightStr
-        mViewBinding.root.background = ViewBackgroundBuilder().setBackground(bgColor).setCornerRadius(bgCorner).build()
-        mViewBinding.selectBgView.background = ViewBackgroundBuilder().setBackground(selectColor).setCornerRadius(selectCorner).build()
 
         mViewBinding.root.onClick {
+            if(isDisabled) return@onClick
+
             val newIsLeft = !isLeft
             setValue(newIsLeft)
             valueCallback?.invoke(newIsLeft)
@@ -120,7 +119,6 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
             mViewBinding.rightTv.text = leftRightStrs.second
         }
 
-        isInit = true
         if (!isLeft) { //我们默认true。初始化为false。则需要特殊处理移动下block。
             this.isLeft = false
             post { //直接delay处理，初始化为非左边即可。

@@ -118,7 +118,7 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
             if (!isInitDialogOnce) {
                 isInitDialogOnce = true
-                findDialogByContentFragment(this)?.asOrNull<IBaseDialog>()?.apply {
+                this.findDialogByContentFragment()?.asOrNull<IBaseDialog>()?.apply {
                     onDismissBlock = { dialog->
                         dialog.window?.let {
                             logd{"hide ime before dismiss"}
@@ -128,12 +128,12 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
                 }
 
                 binding.closeBtn.onClick {
-                    findDialogByContentFragment(this)?.dismissAllowingStateLoss()
+                    findDialogByContentFragment()?.dismissAllowingStateLoss()
                 }
             }
 
             // 弹出键盘；需要验证是否比较流畅
-            findDialogByContentFragment(this)?.asOrNull<IBaseDialog>()?.let {
+            findDialogByContentFragment()?.asOrNull<IBaseDialog>()?.let {
                 it.window?.let {window->
                     showImeNew(window, binding.etText)
                 }

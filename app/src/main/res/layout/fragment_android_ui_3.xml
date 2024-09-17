@@ -51,20 +51,39 @@
         </com.au.module_android.widget.FlowLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:progress="60"
-            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
             android:layout_height="12dp"
             android:layout_marginTop="12dp"
             app:trackThickness="4dp" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:indeterminate="true"
-            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
             android:layout_height="12dp"
             android:layout_marginTop="24dp"
             app:trackThickness="4dp" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:text="SeekBar"
+            android:layout_marginTop="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/progressBar"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            tools:progress="30"
+            android:maxHeight="6dp"
+            android:minHeight="6dp"
+            style="@style/StyleSeekBar"
+            android:layout_marginTop="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.au.module_android.widget.CustomFontText
             android:layout_marginStart="@dimen/ui_padding_edge"
@@ -129,6 +148,146 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"/>
         </LinearLayout>
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            style="@style/StyleFontSecondTitleText"
+            android:text="seekBar | numberPicker"
+            android:layout_marginTop="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:id="@+id/pickersHost"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="142dp">
+
+            <!-- todo darkMode-->
+            <com.au.module_android.widget.BgBuildView
+                app:backgroundNormal="#F0F0F0"
+                app:cornerRadius="4dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <com.au.module_android.widget.CustomFontText
+                        android:id="@+id/hourUnit"
+                        style="@style/StyleFontText"
+                        android:textColor="@color/color_text_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        app:layout_constraintStart_toStartOf="@id/hourPicker"
+                        android:layout_marginStart="85dp"
+                        android:gravity="center_vertical"
+                        android:text="时"/>
+
+                    <com.au.module_android.widget.CustomFontText
+                        android:id="@+id/minuteUnit"
+                        style="@style/StyleFontText"
+                        android:layout_marginStart="85dp"
+                        app:layout_constraintStart_toStartOf="@id/minutePicker"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_text_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        android:text="分"/>
+
+                    <com.au.module_android.widget.ViewStubPro
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/pickerSpace"
+                        android:paddingHorizontal="19dp"
+                        tools:visibility="visible"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        android:id="@+id/hourPicker"
+                        android:layout_width="120dp"
+                        android:contentDescription="时"
+                        android:layout_height="match_parent" />
+
+                    <Space
+                        app:layout_constraintStart_toEndOf="@id/hourPicker"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintEnd_toStartOf="@id/minutePicker"
+                        android:id="@+id/pickerSpace"
+                        tools:visibility="visible"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"/>
+
+                    <com.au.module_android.widget.ViewStubPro
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toEndOf="@id/pickerSpace"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:paddingHorizontal="19dp"
+                        tools:visibility="visible"
+                        android:id="@+id/minutePicker"
+                        app:internalMaxWidth="120dp"
+                        app:internalMinWidth="120dp"
+                        android:layout_width="120dp"
+                        android:contentDescription="分"
+                        android:layout_height="match_parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.au.module_android.widget.CustomButton
+                android:id="@+id/btnCancel"
+                style="@style/StyleButtonSecondary"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:text="取消"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSure"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/color_text_normal"
+                android:layout_marginEnd="6dp"
+                app:cornerRadius="8dp"
+                android:textSize="16sp"
+                app:strokeWidth="1.5dp"/>
+
+            <com.au.module_android.widget.CustomButton
+                android:id="@+id/btnSure"
+                style="@style/StyleButtonPrimary"
+                android:layout_marginBottom="0dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnCancel"
+                app:layout_constraintTop_toTopOf="@id/btnCancel"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="6dp"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:text="设置"
+                app:cornerRadius="8dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.au.module_android.widget.CustomFontText
             android:layout_marginStart="@dimen/ui_padding_edge"

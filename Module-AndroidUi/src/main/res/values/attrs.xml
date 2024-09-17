@@ -12,4 +12,26 @@
         <attr name="select_corner" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="SimpleNumberPicker">
+        <!-- Color for the solid color background if such for optimized rendering. -->
+        <attr name="solidColor" format="color|reference" />
+        <attr name="mainColor" format="color|reference" />
+        <attr name="secondColor" format="color|reference" />
+        <!-- The divider for making the selection area. -->
+        <attr name="selectionDivider" format="reference" />
+        <!-- The height of the selection divider. -->
+        <attr name="selectionDividerHeight" format="dimension" />
+        <!-- The distance between the two selection dividers. -->
+        <attr name="selectionDividersDistance" format="dimension" />
+        <!-- The min height of the NumberPicker. -->
+        <attr name="internalMinHeight" format="dimension" />
+        <!-- The max height of the NumberPicker. -->
+        <attr name="internalMaxHeight" format="dimension" />
+        <!-- The min width of the NumberPicker. -->
+        <attr name="internalMinWidth" format="dimension" />
+        <!-- The max width of the NumberPicker. -->
+        <attr name="internalMaxWidth" format="dimension" />
+        <!-- If true then the selector wheel is hidden until the picker has focus. -->
+        <attr name="hideWheelUntilFocused" format="boolean"/>
+    </declare-styleable>
 </resources>
