@@ -3,10 +3,12 @@ package com.au.module_android.utils
 import android.graphics.Outline
 import android.graphics.Rect
 import android.text.InputFilter
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.EditText
+import androidx.annotation.Keep
 import androidx.core.view.forEach
 
 fun View.visible() {
@@ -99,4 +101,11 @@ fun EditText?.addFilters(vararg filter: InputFilter) {
     val old = this.filters
     val new = arrayOf<InputFilter>(*old, *filter)
     this.filters = new
+}
+
+/**
+ * block: 1表示单击。2表示按压中，会自动每隔20ms回调一次直到结束。
+ */
+fun View.setOnContinuousTouchEvent(block:(Int)->Unit) {
+    this.setOnTouchListener(ContinuousTouchListener(this, block))
 }

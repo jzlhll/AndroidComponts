@@ -48,16 +48,20 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
 
         fun start(context: Context, dataItem: WorkEntity) {
             this.sDataItem = dataItem
-            FragmentRootActivity.start(context, CheckWithFragment::class.java, autoHideIme = true)
+            FragmentRootActivity.start(context, CheckWithFragment::class.java)
         }
 
         fun start(context: Context, forResult: ActivityForResult, dataItem: WorkEntity, completedEntity: CompletedEntity?,
                   activityResultCallback: ActivityResultCallback<ActivityResult>?) {
             this.sDataItem = dataItem
             sCompletedItem = completedEntity
-            FragmentRootActivity.start(context, CheckWithFragment::class.java, autoHideIme = true,
+            FragmentRootActivity.start(context, CheckWithFragment::class.java,
                 activityResult = forResult, activityResultCallback = activityResultCallback)
         }
+    }
+
+    override fun isAutoHideIme(): Boolean {
+        return true
     }
 
     private val dataItem = sDataItem!!
