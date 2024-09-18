@@ -3,6 +3,7 @@ package com.allan.androidlearning.androidui
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.accessibility.AccessibilityManager
 import com.allan.androidlearning.databinding.FragmentAndroidUi3Binding
 import com.au.module_android.click.onClick
@@ -102,17 +103,9 @@ class AndroidUi3Fragment : BindingFragment<FragmentAndroidUi3Binding>() {
             hideHour()
         }
 
-        binding.btnSure.onClick {
-            if (isPostingReset) {
-                return@onClick
-            }
-
-            //todo
-            findDialogByContentFragment()?.dismissAllowingStateLoss()
-        }
-        binding.btnCancel.onClick {
-            findDialogByContentFragment()?.dismissAllowingStateLoss()
-        }
+        binding.seekBarHost.setOnTouchListener(View.OnTouchListener {_, e->
+            binding.seekBar.onTouchEvent(e)
+        })
     }
 
 

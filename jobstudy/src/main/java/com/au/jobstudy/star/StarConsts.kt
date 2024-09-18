@@ -25,8 +25,7 @@ object StarConsts {
         NameList.NAMES_JIANG_TJ to true,
         NameList.BEST_STUDENT_1 to true,
         NameList.BEST_STUDENT_2 to true,
-        NameList.BEST_STUDENT_3 to true,
-        NameList.BEST_STUDENT_4 to true)
+        NameList.BEST_STUDENT_3 to true)
     private val goodStudents = mapOf(
         NameList.GOOD_STUDENT_1 to true,
         NameList.GOOD_STUDENT_2 to true,

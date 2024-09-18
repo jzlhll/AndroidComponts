@@ -7,8 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
 
-    <androidx.cardview.widget.CardView
-        app:cardElevation="8dp"
+    <FrameLayout
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:background="@drawable/ic_shadow_bg"
         android:id="@+id/recordModeHost"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,10 +25,11 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="录制方案"/>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
-    <androidx.cardview.widget.CardView
-        app:cardElevation="8dp"
+    <FrameLayout
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:background="@drawable/ic_shadow_bg"
         android:id="@+id/autoClickHost"
         app:layout_constraintTop_toBottomOf="@id/recordModeHost"
         android:layout_marginTop="32dp"
@@ -43,10 +45,11 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="自动点击"/>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
-    <androidx.cardview.widget.CardView
-        app:cardElevation="8dp"
+    <FrameLayout
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:background="@drawable/ic_shadow_bg"
         android:id="@+id/nongyaoHost"
         app:layout_constraintTop_toBottomOf="@id/autoClickHost"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,10 +65,11 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="AutoWorkTg"/>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
-    <androidx.cardview.widget.CardView
-        app:cardElevation="8dp"
+    <FrameLayout
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:background="@drawable/ic_shadow_bg"
         android:id="@+id/debugHost"
         app:layout_constraintTop_toBottomOf="@id/nongyaoHost"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +85,6 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="Debug"/>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

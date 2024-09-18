@@ -22,8 +22,8 @@ class NameList {
         val BEST_STUDENT_2 = "5rGf5bCP54S2".nameFromBase64()
         @JvmField
         val BEST_STUDENT_3 = "546L5LiA6K+6".nameFromBase64()
-        @JvmField
-        val BEST_STUDENT_4 = "5ZC05Lic5Z+O".nameFromBase64()
+        //@JvmField
+        //val BEST_STUDENT_4 = "5ZC05Lic5Z+O".nameFromBase64()
         @JvmField
         val GOOD_STUDENT_1 = "5Yip6Iq35aaC".nameFromBase64()
         @JvmField

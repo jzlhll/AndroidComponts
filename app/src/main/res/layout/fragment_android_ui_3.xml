@@ -67,25 +67,6 @@
             app:trackThickness="4dp" />
 
         <com.au.module_android.widget.CustomFontText
-            android:layout_marginHorizontal="@dimen/ui_padding_edge"
-            style="@style/StyleFontSecondTitleText"
-            android:text="SeekBar"
-            android:layout_marginTop="36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/progressBar"
-            android:layout_marginHorizontal="@dimen/ui_padding_edge"
-            tools:progress="30"
-            android:maxHeight="6dp"
-            android:minHeight="6dp"
-            style="@style/StyleSeekBar"
-            android:layout_marginTop="22dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.au.module_android.widget.CustomFontText
             android:layout_marginStart="@dimen/ui_padding_edge"
             style="@style/StyleFontSecondTitleText"
             android:text="radio | check button"
@@ -214,7 +195,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/pickerSpace"
                         android:paddingHorizontal="19dp"
-                        tools:visibility="visible"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         android:id="@+id/hourPicker"
                         android:layout_width="120dp"
@@ -223,8 +203,8 @@
 
                     <Space
                         app:layout_constraintStart_toEndOf="@id/hourPicker"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintEnd_toStartOf="@id/minutePicker"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         android:id="@+id/pickerSpace"
                         tools:visibility="visible"
                         android:layout_width="2dp"
@@ -235,7 +215,6 @@
                         app:layout_constraintStart_toEndOf="@id/pickerSpace"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:paddingHorizontal="19dp"
-                        tools:visibility="visible"
                         android:id="@+id/minutePicker"
                         app:internalMaxWidth="120dp"
                         app:internalMinWidth="120dp"
@@ -251,43 +230,22 @@
             </LinearLayout>
         </FrameLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_marginTop="8dp"
+        <FrameLayout
+            android:id="@+id/seekBarHost"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            android:paddingVertical="8dp"
+            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <com.au.module_android.widget.CustomButton
-                android:id="@+id/btnCancel"
-                style="@style/StyleButtonSecondary"
-                android:layout_width="0dp"
-                android:layout_height="46dp"
-                android:text="取消"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btnSure"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                android:layout_marginStart="20dp"
-                android:textColor="@color/color_text_normal"
-                android:layout_marginEnd="6dp"
-                app:cornerRadius="8dp"
-                android:textSize="16sp"
-                app:strokeWidth="1.5dp"/>
-
-            <com.au.module_android.widget.CustomButton
-                android:id="@+id/btnSure"
-                style="@style/StyleButtonPrimary"
-                android:layout_marginBottom="0dp"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnCancel"
-                app:layout_constraintTop_toTopOf="@id/btnCancel"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="6dp"
-                android:layout_width="0dp"
-                android:layout_height="46dp"
-                android:text="设置"
-                app:cornerRadius="8dp"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekBar"
+                tools:progress="30"
+                android:maxHeight="6dp"
+                android:minHeight="6dp"
+                style="@style/StyleSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
 
         <com.au.module_android.widget.CustomFontText
             android:layout_marginStart="@dimen/ui_padding_edge"
