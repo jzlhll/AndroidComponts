@@ -1,0 +1,52 @@
+apply plugin: 'maven-publish'
+
+Properties properties = new Properties()
+try {
+    InputStream inputStream = file('../local.properties').newDataInputStream()
+    properties.load(inputStream)
+} catch (Throwable ignored) {
+    ignored.printStackTrace()
+}
+
+def moduleGroupId = findProperty('MAVEN_GROUP_ID')
+def mavenName = findProperty('MAVEN_NAME')
+def mavenUploadUrl = findProperty('MAVEN_UPLOAD_URL')
+def mavenUploadUsername = properties.getProperty('MAVEN_USERNAME')
+def mavenUploadPassword = properties.getProperty('MAVEN_PASSWORD')
+def moduleArtifactId = name
+
+System.out.println("au_publish: module= ${moduleArtifactId}, version= ${moduleVersion}")
+
+android {
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = moduleGroupId
+                artifactId = moduleArtifactId
+                version = moduleVersion
+            }
+        }
+
+        repositories {
+            maven {
+                name = mavenName
+                url = mavenUploadUrl
+                credentials {
+                    username = mavenUploadUsername
+                    password = mavenUploadPassword
+                }
+            }
+        }
+    }
+}
