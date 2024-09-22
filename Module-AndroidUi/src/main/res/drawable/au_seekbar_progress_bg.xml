@@ -4,28 +4,28 @@
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="@dimen/au_seekbar_bg_corner"/>
-<!--            <size android:height="6dp" />-->
-            <solid android:color="@color/color_line"/>
+            <!--            <size android:height="6dp" />-->
+            <solid android:color="@color/color_normal_block2"/>
         </shape>
     </item>
 
-<!--    &lt;!&ndash;缓冲进度&ndash;&gt;-->
-<!--    <item android:id="@android:id/secondaryProgress" >-->
-<!--        <clip>-->
-<!--            <shape>-->
-<!--                <corners android:radius="5dp"/>-->
-<!--                <size android:height="3dp" />-->
-<!--                <solid android:color="#858585"/>-->
-<!--            </shape>-->
-<!--        </clip>-->
-<!--    </item>-->
+    <!--    &lt;!&ndash;缓冲进度&ndash;&gt;-->
+    <!--    <item android:id="@android:id/secondaryProgress" >-->
+    <!--        <clip>-->
+    <!--            <shape>-->
+    <!--                <corners android:radius="5dp"/>-->
+    <!--                <size android:height="3dp" />-->
+    <!--                <solid android:color="#858585"/>-->
+    <!--            </shape>-->
+    <!--        </clip>-->
+    <!--    </item>-->
 
     <!-- 进度背景 -->
     <item android:id="@android:id/progress" >
         <clip>
             <shape>
                 <corners android:radius="@dimen/au_seekbar_bg_corner"/>
-<!--                <size android:height="6dp" />-->
+                <!--                <size android:height="6dp" />-->
                 <solid android:color="@color/colorPrimary"/>
             </shape>
         </clip>

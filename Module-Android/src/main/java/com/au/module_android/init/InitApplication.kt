@@ -1,6 +1,8 @@
 package com.au.module_android.init
 
 import android.app.Application
+import android.content.res.Configuration
+import com.au.module_android.DarkModeConst
 
 /**
  * @author au
@@ -11,5 +13,10 @@ open class InitApplication : Application() {
     override fun onCreate() {
         FirstInitial.init(this)
         super.onCreate()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        DarkModeConst.onConfigurationChanged(this, newConfig.uiMode)
     }
 }

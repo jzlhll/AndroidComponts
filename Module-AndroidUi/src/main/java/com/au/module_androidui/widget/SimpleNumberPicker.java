@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.icu.text.DecimalFormatSymbols;
 import android.os.Build;
@@ -357,8 +358,14 @@ public class SimpleNumberPicker extends LinearLayout {
      * The back ground color used to optimize scroller fading.
      */
     private final int mSolidColor;
-    private final int mMainColor;
-    private final int mSecondColor;
+    private int mMainColor;
+    public void setMainColor(@ColorInt int color) {
+        mMainColor = color;
+    }
+    private int mSecondColor;
+    public void setSecondColor(@ColorInt int color) {
+        mSecondColor = color;
+    }
 
     /**
      * Flag whether this widget has a selector wheel.
@@ -537,7 +544,7 @@ public class SimpleNumberPicker extends LinearLayout {
         final TypedArray attributesArray = context.obtainStyledAttributes(
                 attrs, R.styleable.SimpleNumberPicker, defStyleAttr, defStyleRes);
 //        final int layoutResId = attributesArray.getResourceId(
-//                R.styleable.SimpleNumberPicker_internalLayout, DEFAULT_LAYOUT_RESOURCE_ID);
+//                R.styleable.NumberPicker_internalLayout, DEFAULT_LAYOUT_RESOURCE_ID);
 //
 //        mHasSelectorWheel = (layoutResId != DEFAULT_LAYOUT_RESOURCE_ID);
 
@@ -605,7 +612,6 @@ public class SimpleNumberPicker extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.simple_number_picker, this, true);
-
 
         // input text
         mInputText = findViewById(R.id.numberpicker_input);
@@ -1362,6 +1368,10 @@ public class SimpleNumberPicker extends LinearLayout {
     @ColorInt
     public int getTextColor() {
         return mSelectorWheelPaint.getColor();
+    }
+
+    public void setTypeFace(Typeface typeface) {
+        mSelectorWheelPaint.setTypeface(typeface);
     }
 
     /**

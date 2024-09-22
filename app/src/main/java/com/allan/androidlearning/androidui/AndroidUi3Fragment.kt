@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import com.allan.androidlearning.databinding.FragmentAndroidUi3Binding
+import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.fontutil.FONT_NUMBER_PATH
+import com.au.module_android.fontutil.getOrCreateFontFace
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.findDialogByContentFragment
 import com.au.module_android.ui.bindings.BindingFragment
@@ -127,10 +130,12 @@ class AndroidUi3Fragment : BindingFragment<FragmentAndroidUi3Binding>() {
         picker.setMaxValue(max)
         picker.setMinValue(min)
         if(changeToDef) picker.setValue(def)
+        getOrCreateFontFace(Globals.app, FONT_NUMBER_PATH)?.let { picker.setTypeFace(it) }
+        picker.setTextColor(requireContext().getColor(com.au.module_androidcolor.R.color.color_text_normal))
+        picker.setSecondTextColor(requireContext().getColor(com.au.module_androidcolor.R.color.color_text_desc))
+        picker.setTextSize(20f.dp) //文字大小，这里最好使用px转dp
 
         if (picker is SimpleNumberPickerCompat) {
-            picker.setTextColor(Color.BLACK) //设置所有的文本都是红色
-            picker.setTextSize(20f.dp) //文字大小，这里最好使用px转dp
             picker.setSelectionDividerHeight(0) //两道分割线的高度
         }
 

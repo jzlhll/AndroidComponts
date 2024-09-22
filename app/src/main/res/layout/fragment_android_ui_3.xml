@@ -147,7 +147,7 @@
 
             <!-- todo darkMode-->
             <com.au.module_android.widget.BgBuildView
-                app:backgroundNormal="#F0F0F0"
+                app:backgroundNormal="@color/color_line"
                 app:cornerRadius="4dp"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"

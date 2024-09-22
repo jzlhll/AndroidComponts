@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:layout_width="160dp"
-    app:backgroundNormal="@color/color_normal_block2"
+    app:backgroundNormal="@color/color_switch_block_bg"
     app:cornerRadius="8dp"
     android:padding="2dp"
     tools:layout_height="32dp">
@@ -14,12 +13,22 @@
         app:layout_constraintStart_toStartOf="@id/left_tv"
         app:layout_constraintEnd_toEndOf="@id/left_tv"
         android:id="@+id/select_bg_view"
-        app:backgroundNormal="@color/color_text_reverse"
+        app:backgroundNormal="@android:color/white"
         app:cornerRadius="7dp"
         android:layout_height="match_parent"
         android:layout_width="0dp"/>
 
-    <com.au.module_android.widget.BgBuildCustomFontText
+    <com.au.module_android.widget.BgBuildView
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/left_tv"
+        app:layout_constraintEnd_toEndOf="@id/left_tv"
+        android:id="@+id/select_bg_view_disable"
+        app:backgroundNormal="@color/color_switch_block_sel_dis_bg"
+        app:cornerRadius="7dp"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"/>
+
+    <com.au.module_android.widget.CustomFontText
         android:id="@+id/left_tv"
         android:paddingHorizontal="12dp"
         style="@style/StyleFontText"
@@ -30,7 +39,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/padding"
-        android:textColor="@color/color_text_normal"
         android:textSize="14sp"
         tools:text="first" />
 
@@ -47,7 +55,6 @@
         android:layout_width="wrap_content"
         android:paddingHorizontal="12dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_text_normal"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/padding"
@@ -55,11 +62,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="second" />
-
-    <View
-        android:visibility="gone"
-        android:id="@+id/disableCover"
-        android:background="#20999999"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 </com.au.module_android.widget.BgBuildConstraintLayout>

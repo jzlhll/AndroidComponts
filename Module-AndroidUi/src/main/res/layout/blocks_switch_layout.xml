@@ -8,13 +8,15 @@
     android:minWidth="52dp"
     tools:layout_height="28dp"
     android:padding="@dimen/switch_block_padding"
-    android:background="@drawable/corner_4dp_block_switch">
+    app:backgroundNormal="@color/color_switch_block_bg"
+    app:cornerRadius="2dp">
 
     <com.au.module_android.widget.BgBuildView
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/select_bg_view"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.5"
-        android:layout_height="match_parent"
-        android:background="@drawable/corner_2dp_block_switch_sel" />
+        app:backgroundNormal="@color/color_switch_block_text"
+        app:cornerRadius="2dp"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

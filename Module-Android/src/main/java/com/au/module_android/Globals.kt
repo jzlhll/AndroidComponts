@@ -82,7 +82,7 @@ object Globals {
      */
     @ColorInt
     fun getColor(@ColorRes resId:Int) : Int {
-        return ContextCompat.getColor(DarkModeUtil.themedContext ?: app, resId)
+        return ContextCompat.getColor(DarkModeConst.themedContext ?: app, resId)
     }
 
     /**
@@ -91,7 +91,7 @@ object Globals {
      * 需要使用构建的themedContext。
      */
     fun getDrawable(@ColorRes resId:Int) : Drawable? {
-        return ContextCompat.getDrawable(DarkModeUtil.themedContext ?: app, resId)
+        return ContextCompat.getDrawable(DarkModeConst.themedContext ?: app, resId)
     }
 
     /**
@@ -100,7 +100,7 @@ object Globals {
      * 需要使用构建的themedContext。
      */
     fun getString(@ColorRes resId:Int) : String {
-        return ContextCompat.getString(DarkModeUtil.themedContext ?: app, resId)
+        return ContextCompat.getString(DarkModeConst.themedContext ?: app, resId)
     }
 
     ///////////////okhttp

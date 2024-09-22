@@ -16,7 +16,7 @@ public class AndroidBug5497Workaround {
     private int usableHeightPrevious;
     private int frameLayoutHeight = 0;
 
-    private AndroidBug5497Workaround(Activity activity) {
+    public AndroidBug5497Workaround(Activity activity) {
         FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
         mChildOfContent = content.getChildAt(0);
         mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(this::possiblyResizeChildOfContent);

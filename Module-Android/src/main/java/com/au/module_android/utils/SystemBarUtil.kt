@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.DialogFragment
 import androidx.window.layout.WindowMetricsCalculator
-import com.au.module_android.DarkModeUtil
+import com.au.module_android.DarkModeConst
 
 //参考资料
 //https://developer.android.google.cn/develop/ui/views/layout/edge-to-edge?hl=zh-cn
@@ -84,7 +84,7 @@ fun Activity.transparentStatusBar(insetsBlock: (
 
         //isAppearanceLightXXX true就表示文字就是黑色的。false就表示文字就是白色的。所以要传入正确的值。
         WindowInsetsControllerCompat(this, decorView).also {
-            val detectIsDark = DarkModeUtil.detectDarkMode(context)
+            val detectIsDark = DarkModeConst.detectDarkMode(context)
             //当前就是暗黑模式，则无效
             it.isAppearanceLightStatusBars = !detectIsDark
             it.isAppearanceLightNavigationBars = !detectIsDark

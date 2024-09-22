@@ -66,9 +66,10 @@ fun ImageView.setImageAny(
 
 fun ImageView.setImageUrlWithGrayDefault(
     load: String?,
-    @ColorInt colorGray:Int
+    @ColorInt colorGray:Int? = null
 ) {
-    val resInt = ColorDrawable(colorGray)
+    val c = colorGray ?: Globals.getColor(com.au.module_androidcolor.R.color.color_glide_gray_default)
+    val resInt = ColorDrawable(c)
     if (load == null) {
         setImageDrawable(resInt)
         return
@@ -81,9 +82,10 @@ fun ImageView.setImageUrlWithGrayDefault(
 
 fun ImageView.setImageUrlWithGrayError(
     load: String?,
-    @ColorInt colorGray:Int
+    @ColorInt colorGray:Int? = null
 ) {
-    val resInt = ColorDrawable(colorGray)
+    val c = colorGray ?: Globals.getColor(com.au.module_androidcolor.R.color.color_glide_gray_default)
+    val resInt = ColorDrawable(c)
     if (load == null) {
         setImageDrawable(resInt)
         return

@@ -21,6 +21,7 @@ class SwitchBlockButton @JvmOverloads constructor(context: Context, attrs: Attri
         private set
 
     private var isInit = false
+    fun isInited() = isInit
 
     /**
      * 点击切换的回调函数

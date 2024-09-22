@@ -23,14 +23,14 @@
 
         <activity
             android:name="com.au.module_android.ui.FragmentRootActivity"
-            android:configChanges="screenSize|keyboard|orientation|keyboardHidden|fontScale|locale|screenLayout|navigation"
+            android:configChanges="screenSize|keyboard|orientation|keyboardHidden|fontScale|locale|screenLayout|navigation|uiMode"
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.au.module_android.ui.FragmentRootOrientationActivity"
-            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|screenLayout|navigation"
+            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|screenLayout|navigation|uiMode"
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 

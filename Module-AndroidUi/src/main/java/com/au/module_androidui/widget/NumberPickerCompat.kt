@@ -1,5 +1,6 @@
 package com.au.module_androidui.widget
 
+import android.graphics.Typeface
 import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
@@ -31,6 +32,7 @@ abstract class NumberPickerCompat {
     abstract fun setSelectionDividerHeight(height: Int)
     abstract fun setTextSize(@FloatRange(from = 0.0, fromInclusive = false) size: Float)
     abstract fun setTextColor(@ColorInt color: Int)
+    abstract fun setSecondTextColor(@ColorInt color: Int)
     abstract fun setFormatter(formatter:android.widget.NumberPicker.Formatter)
     abstract fun setWrapSelectorWheel(wrapSelectorWheel: Boolean)
     abstract fun setMaxValue(max:Int)
@@ -39,6 +41,7 @@ abstract class NumberPickerCompat {
     abstract fun setValue(v:Int)
     abstract fun setOnValueChangedListener(onValueChangedListener:OnValueChangeListener)
     abstract fun setOnScrollEnd(onScrollEndListener:OnScrollEndListener)
+    abstract fun setTypeFace(typeface: Typeface);
 }
 
 class SimpleNumberPickerCompat(val numberPicker: SimpleNumberPicker) : NumberPickerCompat() {
@@ -64,6 +67,10 @@ class SimpleNumberPickerCompat(val numberPicker: SimpleNumberPicker) : NumberPic
         numberPicker.minValue = min
     }
 
+    override fun setTypeFace(typeface: Typeface) {
+        numberPicker.setTypeFace(typeface)
+    }
+
     override fun setWrapSelectorWheel(wrapSelectorWheel: Boolean) {
         numberPicker.wrapSelectorWheel = wrapSelectorWheel
     }
@@ -78,6 +85,11 @@ class SimpleNumberPickerCompat(val numberPicker: SimpleNumberPicker) : NumberPic
 
     override fun setTextColor(color: Int) {
         numberPicker.textColor = color
+        numberPicker.setMainColor(color)
+    }
+
+    override fun setSecondTextColor(color: Int) {
+        numberPicker.setSecondColor(color)
     }
 
     override fun setFormatter(formatter: android.widget.NumberPicker.Formatter) {
@@ -116,6 +128,9 @@ class OrigNumberPickerCompat(private val numberPicker: android.widget.NumberPick
          numberPicker.minValue = min
     }
 
+    override fun setTypeFace(typeface: Typeface) {
+    }
+
     override fun setWrapSelectorWheel(wrapSelectorWheel: Boolean) {
         numberPicker.wrapSelectorWheel = wrapSelectorWheel
     }
@@ -140,6 +155,9 @@ class OrigNumberPickerCompat(private val numberPicker: android.widget.NumberPick
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             numberPicker.textColor = color
         }
+    }
+
+    override fun setSecondTextColor(color: Int) {
     }
 
     override fun setFormatter(formatter: android.widget.NumberPicker.Formatter) {

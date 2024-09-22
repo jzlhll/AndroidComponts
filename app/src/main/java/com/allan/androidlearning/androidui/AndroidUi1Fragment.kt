@@ -22,7 +22,7 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     fun blocks() {
         binding.androidUiSwitchBlock1.initValue(true)
         binding.androidUiSwitchBlock2.initValue(false)
-        binding.androidUiSwitchLayout.initValue(false)
+        binding.androidUiSwitchLayout.initValue(false, false)
         binding.androidUiSwitchBtnLayout.initValue(false)
     }
 }

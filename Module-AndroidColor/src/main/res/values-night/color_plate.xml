@@ -3,12 +3,12 @@
     <!-- app 主题背景色 -->
     <color name="windowBackground">#000000</color>
     <!-- app dialog的背景色 -->
-    <color name="windowDialogBackground">#212123</color>
+    <color name="windowDialogBackground">#212121</color>
 
     <!-- 背景色 ：文字图标，或者一片框框-->
     <color name="color_normal_block0">#19191a</color>
-    <color name="color_normal_block">#212123</color>
-    <color name="color_normal_block2">#343437</color>
+    <color name="color_normal_block">#212121</color>
+    <color name="color_normal_block2">#343434</color>
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
     <color name="colorPrimary">#2A7ACE</color>
@@ -20,8 +20,8 @@
     <color name="color_text_reverse">#212121</color>
     <color name="color_text_reverse_press">#cc212121</color>
 
-    <color name="color_text_desc">#707073</color>
-    <color name="color_hint_text">#46464a</color>
+    <color name="color_text_desc">#707070</color>
+    <color name="color_hint_text">#464646</color>
 
     <!-- button: main button色 -->
     <color name="color_main_btn_bg">#db4f4f</color>
@@ -30,14 +30,14 @@
     <color name="color_main_btn_text_press">#ccffffff</color>
 
     <!-- button: secondary button色 -->
-    <color name="color_second_btn_bg">#343437</color>
+    <color name="color_second_btn_bg">#343434</color>
     <color name="color_second_btn_bg_press">#cc343437</color>
     <color name="color_second_btn_text">#ffffff</color>
     <color name="color_second_btn_text_press">#ccffffff</color>
 
     <!-- button: disable -->
-    <color name="color_disable_btn_bg">#343437</color>
-    <color name="color_disable_btn_text">#707073</color>
+    <color name="color_disable_btn_bg">#343434</color>
+    <color name="color_disable_btn_text">#707070</color>
 
     <!-- button: warning button色 -->
     <color name="color_warn_btn_bg">#fa3939</color>
@@ -45,34 +45,37 @@
     <color name="color_warn_btn_text">#ffffff</color>
 
     <!-- edit: 相关一切颜色 -->
-    <color name="color_edit_text_hint">#46464a</color>
+    <color name="color_edit_text_hint">#464646</color>
 
     <color name="color_edit_background">#19191a</color>
     <color name="color_edit_background_error">#19191a</color>
 
     <color name="color_edit_board_select">#ffffff</color>
-    <color name="color_edit_board_normal">#46464a</color>
+    <color name="color_edit_board_normal">#464646</color>
     <color name="color_edit_board_error">#fa3939</color>
 
     <!-- tabLayout: 相关一切颜色。由于tabLayout有不同的样式。这里只提供一个常规的。 -->
-    <color name="color_tab_text_no_select">#46464a</color>
+    <color name="color_tab_text_no_select">#464646</color>
     <color name="color_tab_text_select">#ffffff</color>
 
     <!-- 分割线的颜色 -->
-    <color name="color_line">#343437</color>
-    <color name="color_line_on_dialog">#46464a</color>
-    <color name="color_line_on_block">#46464a</color>
+    <color name="color_line">#343434</color>
+    <color name="color_line_on_dialog">#464646</color>
+    <color name="color_line_on_block">#464646</color>
 
     <!-- switch控件的颜色 -->
-    <color name="color_switch_block_bg">#343437</color>
-    <color name="color_switch_block_sel_bg">#ffffff</color>
+    <color name="color_switch_block_bg">#343434</color>
+    <color name="color_switch_block_sel_dis_bg">#464646</color>
     <color name="color_switch_block_text">#ffffff</color>
+    <color name="color_switch_block_text_dis">#464646</color>
     <color name="color_switch_block_text_sel">#212121</color>
+    <color name="color_switch_block_text_sel_dis">#707070</color>
 
     <!-- toolBar相关 -->
     <color name="color_toolbar_text">#ffffff</color>
     <color name="color_toolbar_background">#000000</color>
 
     <!-- glide 的基础颜色 -->
-    <color name="color_glide_gray_default">#707073</color>
+    <color name="color_glide_gray_default">#212121</color>
+    <color name="color_glide_gray_default2">#343434</color>
 </resources>

@@ -65,4 +65,8 @@ public class SharedPrefUtil {
         // name存储文件名称
         return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getInt(key, defValue);
     }
+
+    public static boolean containsKey(Context ctx, String key) {
+        return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).contains(key);
+    }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.au.module_android.click.onClick
+import com.au.module_android.utils.invisible
 import com.au.module_android.utils.visible
 import com.au.module_androidui.R
 import com.au.module_androidui.databinding.LayoutSwitchButtonsBinding
@@ -24,6 +25,7 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
         private set
 
     private var isInit = false
+    fun isInited() = isInit
 
     /**
      * 点击切换的回调函数
@@ -34,14 +36,10 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
 
     private val textColor:Int
     private val textSelectColor:Int
+    private val textColorDisable:Int
+    private val textSelectColorDisable:Int
 
     private var isDisabled = false
-
-    fun setDisable() {
-        isDisabled = true
-        mViewBinding.root.alpha = 0.5f
-        mViewBinding.disableCover.visible()
-    }
 
     init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwitchLayoutButton)
@@ -50,6 +48,11 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
             context.getColor(com.au.module_androidcolor.R.color.color_text_normal))
         textSelectColor = typedArray.getColor(R.styleable.SwitchLayoutButton_select_text_color,
             context.getColor(com.au.module_androidcolor.R.color.color_text_normal))
+
+        textColorDisable = typedArray.getColor(R.styleable.SwitchLayoutButton_text_color_disable,
+            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text_dis))
+        textSelectColorDisable = typedArray.getColor(R.styleable.SwitchLayoutButton_select_text_color_disable,
+            context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text_sel_dis))
 
         val leftStr = typedArray.getString(R.styleable.SwitchLayoutButton_first_str)
         val rightStr = typedArray.getString(R.styleable.SwitchLayoutButton_second_str)
@@ -91,8 +94,9 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
                 }
             }
             if (!isLeft) { //如果initValue比我们post要早。在这里初始化。
-                mViewBinding.padding.post { //需要2层post。第一次post设置后，第二post才能得到selectBgView的变化
+                mViewBinding.padding.post { //需要2层post才能确定位置。第一次post设置后，第二post才能得到selectBgView的变化
                     mViewBinding.selectBgView.translationX = (mViewBinding.selectBgView.width + mViewBinding.padding.width).toFloat()
+                    mViewBinding.selectBgViewDisable.translationX = (mViewBinding.selectBgView.width + mViewBinding.padding.width).toFloat()
                     isPost = true
                 }
             } else {
@@ -103,35 +107,53 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     private fun changeTextColor() {
-        if (isLeft) {
-            mViewBinding.leftTv.setTextColor(textSelectColor)
-            mViewBinding.rightTv.setTextColor(textColor)
+        if (isDisabled) {
+            if(isLeft) {
+                mViewBinding.leftTv.setTextColor(textSelectColorDisable)
+                mViewBinding.rightTv.setTextColor(textColorDisable)
+            } else {
+                mViewBinding.rightTv.setTextColor(textSelectColorDisable)
+                mViewBinding.leftTv.setTextColor(textColorDisable)
+            }
         } else {
-            mViewBinding.leftTv.setTextColor(textColor)
-            mViewBinding.rightTv.setTextColor(textSelectColor)
+            if (isLeft) {
+                mViewBinding.leftTv.setTextColor(textSelectColor)
+                mViewBinding.rightTv.setTextColor(textColor)
+            } else {
+                mViewBinding.leftTv.setTextColor(textColor)
+                mViewBinding.rightTv.setTextColor(textSelectColor)
+            }
+        }
+
+        if (isDisabled) {
+            mViewBinding.selectBgViewDisable.visible()
+            mViewBinding.selectBgView.invisible()
         }
     }
 
-    fun initValue(isLeft:Boolean, leftRightStrs:Pair<String, String>? = null) {
+    fun initValue(isLeft:Boolean, disable:Boolean, leftRightStrs:Pair<String, String>? = null) {
         isInit = true
+        this.isLeft = isLeft
+
+        isDisabled = disable
+
         if (leftRightStrs != null) {
             mViewBinding.leftTv.text = leftRightStrs.first
             mViewBinding.rightTv.text = leftRightStrs.second
         }
 
-        if (!isLeft) { //我们默认true。初始化为false。则需要特殊处理移动下block。
-            this.isLeft = false
-            post { //直接delay处理，初始化为非左边即可。
-                if (isPost) { //如果这个post比init函数的post早就不干活。
-                    mViewBinding.selectBgView.translationX = (mViewBinding.selectBgView.width + mViewBinding.padding.width).toFloat()
-                    changeTextColor()
-                }
+        if (isPost) {
+            if (!isLeft) { //我们默认true。初始化为false。则需要特殊处理移动下block向右。
+                mViewBinding.selectBgView.translationX = (mViewBinding.selectBgView.width + mViewBinding.padding.width).toFloat()
+                mViewBinding.selectBgViewDisable.translationX = (mViewBinding.selectBgView.width + mViewBinding.padding.width).toFloat()
             }
+            changeTextColor()
         }
     }
 
     fun setValue(isLeft: Boolean) {
         if (!isInit) throw RuntimeException()
+        if (isDisabled) return
         //后续也可能后台改动，进而触发notifyItemChange bindData，则动画
         this.isLeft = isLeft
         handleAnimal()

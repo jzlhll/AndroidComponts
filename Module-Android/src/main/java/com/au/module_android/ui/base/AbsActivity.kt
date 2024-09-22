@@ -1,5 +1,6 @@
 package com.au.module_android.ui.base
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MotionEvent
@@ -9,10 +10,12 @@ import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module.android.BuildConfig
+import com.au.module_android.DarkModeConst
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.fullPaddingEdgeToEdge
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
+import com.au.module_android.utils.logd
 
 @Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
 open class AbsActivity : AppCompatActivity(), IFullWindow {
@@ -31,10 +34,15 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
      */
     var object3:Any? = null
 
+    //记录Activity resources configuration的uiMode
+    private var mCurrentUiMode : Int = Int.MIN_VALUE
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         ToutiaoScreenAdapter.attach(this)
         super.onCreate(savedInstanceState)
+
+        mCurrentUiMode = resources.configuration.uiMode
     }
 
     override fun setContentView(view: View?) {
@@ -109,6 +117,36 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
             outState.getBundle("androidx.lifecycle.BundlableSavedStateRegistry.key")?.let {
                 it.remove("android:support:fragments")
                 it.remove("android:fragments")
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if (DarkModeConst.isEnabled) {
+            //dark mode
+            //不论是系统切换，还是app设置中强制切换都会触发Activity configurationChange
+            if (DarkModeConst.isFollowSystem()) {
+                //1. 如果是跟随系统，有切换了，判断重建
+                if (mCurrentUiMode != newConfig.uiMode) {
+                    mCurrentUiMode = newConfig.uiMode
+                    logd(canHasFileLog = false) { "onConfigurationChanged system in activity newUIMode $mCurrentUiMode " }
+                    recreate()
+                }
+            } else {
+                //2. 如果不跟系统，这里得到的newConfig是不准的，可能是系统触发而来(应该抛弃)，也可能是自己设置而来（接受）
+                //这个应该被抛弃，以DarkModeObj里面为准，即AppCompatDelegate.getDefaultNightMode()
+                //val uiMode = newConfig.uiMode
+                //val wishToDark = (uiMode and Configuration.UI_MODE_NIGHT_YES) != 0
+                val appIsForceDark = DarkModeConst.isForceDark()
+                val curIsDark = (mCurrentUiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                if (curIsDark != appIsForceDark) {
+                    logd(canHasFileLog = false) { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark recreate!" }
+                    recreate()
+                } else {
+                    logd(canHasFileLog = false) { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark do nothing!" }
+                }
             }
         }
     }

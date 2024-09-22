@@ -24,11 +24,11 @@ inline fun logw(block:()->String) {
     }
 }
 
-inline fun logd(block:()->String) {
+inline fun logd(canHasFileLog:Boolean = true, block:()->String) {
     if (BuildConfig.DEBUG) {
         val str = block()
         Log.d(TAG, str)
-        if (hasFileLog) {
+        if (hasFileLog && canHasFileLog) {
             FileLog.write("D $TAG: $str")
         }
     }

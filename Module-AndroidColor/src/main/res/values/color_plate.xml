@@ -65,9 +65,11 @@
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg">#f0f0f0</color>
-    <color name="color_switch_block_sel_bg">#ffffff</color>
+    <color name="color_switch_block_sel_dis_bg">#f6f6f6</color>
     <color name="color_switch_block_text">#212121</color>
+    <color name="color_switch_block_text_dis">#cccccc</color>
     <color name="color_switch_block_text_sel">#212121</color>
+    <color name="color_switch_block_text_sel_dis">#999999</color>
 
     <!-- toolBar相关 -->
     <color name="color_toolbar_text">#212121</color>
@@ -75,4 +77,5 @@
 
     <!-- glide 的基础颜色 -->
     <color name="color_glide_gray_default">#f0f0f0</color>
+    <color name="color_glide_gray_default2">#f0f0f0</color>
 </resources>

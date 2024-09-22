@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.au.module_android.DarkModeConst
 import com.au.module_android.Globals
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
-import com.au.module_android.DarkModeUtil
 
 /**
  * 自动初始化
@@ -33,7 +33,7 @@ object FirstInitial {
 
         firstInitialOnCreateData.postValue(Unit)
 
-        DarkModeUtil().initAppDarkMode(app)
+        DarkModeConst.initAppDarkMode(app)
         return app
     }
 }
