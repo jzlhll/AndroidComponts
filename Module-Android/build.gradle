@@ -57,7 +57,6 @@ dependencies {
     api libs.material
     api libs.androidx.startup.runtime
 
-    api libs.mmkv.static
     api libs.gson
 
     api libs.androidx.recyclerview

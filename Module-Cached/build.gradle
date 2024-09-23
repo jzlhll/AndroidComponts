@@ -35,7 +35,9 @@ dependencies {
 
     implementation project(':Module-Android')
 
-    implementation libs.mmkv.static
+    //implementation libs.mmkv.static
+    implementation files('libs/mmkv.aar')
+
     implementation libs.gson
     implementation libs.androidx.datastore.preferences
 }
