@@ -30,7 +30,7 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/left_tv"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="6dp"
         style="@style/StyleFontText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         android:id="@+id/right_tv"
         style="@style/StyleFontText"
         android:layout_width="wrap_content"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="6dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"

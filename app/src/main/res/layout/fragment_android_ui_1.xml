@@ -171,8 +171,8 @@
                 android:layout_marginStart="12dp"
                 android:id="@+id/android_ui_switch_layout"
                 app:layout_constraintStart_toEndOf="@id/android_ui_switch_layout_title"
-                app:first_str="first on"
-                app:second_str="second is long"
+                app:first_str="first"
+                app:second_str="second"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"/>
 
