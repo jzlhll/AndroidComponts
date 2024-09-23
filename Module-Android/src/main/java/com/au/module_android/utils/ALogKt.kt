@@ -6,49 +6,49 @@ import com.au.module.android.BuildConfig
 import java.util.Locale
 
 const val TAG:String = "au_log"
-val hasFileLog = false
 
-inline fun loge(block:()->String) {
+inline fun loge(tag:String = TAG, block:()->String) {
     val str = block()
-    Log.e(TAG, str)
-    if (hasFileLog) {
-        FileLog.write("E $TAG: $str", true)
+    Log.e(tag, str)
+    if (BuildConfig.ENABLE_FILE_LOG) {
+        FileLog.write("E $tag: $str", true)
     }
 }
 
-inline fun logw(block:()->String) {
+inline fun logw(tag:String = TAG, block:()->String) {
     val str = block()
-    Log.w(TAG, block())
-    if (hasFileLog) {
-        FileLog.write("W $TAG: $str")
+    Log.w(tag, str)
+    if (BuildConfig.ENABLE_FILE_LOG) {
+        FileLog.write("W $tag: $str")
     }
 }
 
-inline fun logd(canHasFileLog:Boolean = true, block:()->String) {
+inline fun logd(tag:String = TAG, canHasFileLog:Boolean = true, block:()->String) {
     if (BuildConfig.DEBUG) {
         val str = block()
-        Log.d(TAG, str)
-        if (hasFileLog && canHasFileLog) {
-            FileLog.write("D $TAG: $str")
+        Log.d(tag, str)
+        if (BuildConfig.ENABLE_FILE_LOG && canHasFileLog) {
+            FileLog.write("D $tag: $str")
         }
     }
 }
 
-inline fun logt(block:()->String) {
+inline fun logt(tag:String = TAG, block:()->String) {
     if(BuildConfig.DEBUG) {
         val isMainThread = (Thread.currentThread().id == Looper.getMainLooper().thread.id)
+        val str = block()
         val log = if (isMainThread) {
-            "MainThread: " + block()
+            "MainThread: $str"
         } else {
-            String.format(Locale.ROOT, "Thread[%02d]: %s", Thread.currentThread().id, block())
+            String.format(Locale.ROOT, "SubThread[%02d]: %s", Thread.currentThread().id, str)
         }
-        Log.d(TAG, log)
+        Log.d(tag, log)
     }
 }
 
-fun logStace(s: String) {
-    Log.d(TAG, "$s...start...")
+fun logStace(tag:String = TAG, s: String) {
+    Log.d(tag, "$s...start...")
     val ex = Exception()
     ex.printStackTrace()
-    Log.d(TAG, "$s...end!")
+    Log.d(tag, "$s...end!")
 }
