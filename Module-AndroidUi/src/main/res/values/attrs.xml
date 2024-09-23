@@ -12,6 +12,7 @@
         <attr name="select_corner" format="dimension"/>
         <attr name="text_color_disable" format="color"/>
         <attr name="select_text_color_disable" format="color"/>
+        <attr name="text_padding_horz" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="SimpleNumberPicker">

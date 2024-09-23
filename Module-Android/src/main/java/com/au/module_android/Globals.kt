@@ -9,8 +9,10 @@ import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import com.au.module_android.okhttp.AbsCookieJar
 import com.au.module_android.okhttp.OkhttpClients
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.secondLastOrNull
 import com.au.module_android.utils.unsafeLazy
 import com.google.gson.Gson
@@ -55,6 +57,11 @@ object Globals {
      * 全局application
      */
     val app: Application get() = internalApp
+
+    /**
+     * application初始化完成的通知。时机就是我们把基础的app全局给设置好。避免有的地方无法调用到。
+     */
+    val firstInitialOnCreateData = NoStickLiveData<Any>()
 
     val activityList: ArrayList<Activity>
         get() = internalActivityList

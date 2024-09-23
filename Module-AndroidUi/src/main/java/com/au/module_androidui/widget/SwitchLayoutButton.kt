@@ -54,14 +54,18 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
         textSelectColorDisable = typedArray.getColor(R.styleable.SwitchLayoutButton_select_text_color_disable,
             context.getColor(com.au.module_androidcolor.R.color.color_switch_block_text_sel_dis))
 
+        val textPaddingHorz = typedArray.getDimension(R.styleable.SwitchLayoutButton_text_padding_horz, -1f).toInt()
+
         val leftStr = typedArray.getString(R.styleable.SwitchLayoutButton_first_str)
         val rightStr = typedArray.getString(R.styleable.SwitchLayoutButton_second_str)
 
         val paddingInner = typedArray.getDimension(R.styleable.SwitchLayoutButton_padding_inner, -1f).toInt()
 
         typedArray.recycle()
-        mViewBinding = LayoutSwitchButtonsBinding.inflate(LayoutInflater.from(context), this, true)
 
+        mViewBinding = LayoutSwitchButtonsBinding.inflate(LayoutInflater.from(context), this, true)
+        mViewBinding.leftTv.setPadding(textPaddingHorz, 0, textPaddingHorz, 0)
+        mViewBinding.rightTv.setPadding(textPaddingHorz, 0, textPaddingHorz, 0)
         mViewBinding.leftTv.text = leftStr
         mViewBinding.rightTv.text = rightStr
 

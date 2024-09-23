@@ -2,7 +2,7 @@ package com.allan.autoclickfloat
 
 import android.util.Log
 import com.allan.autoclickfloat.consts.Const
-import com.au.module_android.init.InitApplication
+import com.au.module_android.InitApplication
 
 /**
  * @author allan

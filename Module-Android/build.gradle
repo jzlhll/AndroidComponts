@@ -8,6 +8,7 @@ android {
     namespace 'com.au.module.android'
     compileSdk gradle.ext.compileSdk
 
+    def enableFileLog = Boolean.parseBoolean(findProperty("app.enable_filelog"))
     def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
 
     defaultConfig {
@@ -16,6 +17,7 @@ android {
 
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
+        buildConfigField("boolean", "ENABLE_FILE_LOG", "" + enableFileLog)
     }
 
     buildTypes {

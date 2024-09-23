@@ -40,10 +40,10 @@ object ToutiaoScreenAdapter {
 
     private lateinit var application:Application
 
-    private val enable = false
+    private var enable = false
 
     fun init(app:Application, expectWidthPx:Int=DEFAULT_UE_SIZE) {
-        if(!enable) return
+        enable = true
         this.application = app
         this.ueExceptWidthPx = expectWidthPx
 

@@ -5,7 +5,7 @@ import com.au.jobstudy.star.StarConsts
 import com.au.module.cached.AppDataStore
 import com.au.module_android.Globals
 import com.au.module_android.init.GlobalBackgroundCallback
-import com.au.module_android.init.InitApplication
+import com.au.module_android.InitApplication
 import com.au.module_android.okhttp.AbsCookieJar
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
