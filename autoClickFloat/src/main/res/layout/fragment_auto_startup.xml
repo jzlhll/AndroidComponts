@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent">
+    <com.au.module_android.widget.CustomFontText
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:id="@+id/currentTimeTv"
+        style="@style/StyleFontText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <FrameLayout
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        app:layout_constraintTop_toBottomOf="@id/currentTimeTv"
+        android:id="@+id/pickersHost"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="142dp">
+
+        <com.au.module_android.widget.BgBuildView
+            app:backgroundNormal="@color/color_line"
+            app:cornerRadius="4dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/hourUnit"
+                    style="@style/StyleFontText"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@id/hourPicker"
+                    android:layout_marginStart="85dp"
+                    android:gravity="center_vertical"
+                    android:text="时"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/minuteUnit"
+                    style="@style/StyleFontText"
+                    android:includeFontPadding="false"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="85dp"
+                    app:layout_constraintStart_toStartOf="@id/minutePicker"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16dp"
+                    android:text="分"/>
+
+                <com.au.module_android.widget.ViewStubPro
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/pickerSpace"
+                    android:paddingHorizontal="19dp"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    android:id="@+id/hourPicker"
+                    android:layout_width="120dp"
+                    android:contentDescription="时"
+                    android:layout_height="match_parent" />
+
+                <Space
+                    app:layout_constraintStart_toEndOf="@id/hourPicker"
+                    app:layout_constraintEnd_toStartOf="@id/minutePicker"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    android:id="@+id/pickerSpace"
+                    tools:visibility="visible"
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"/>
+
+                <com.au.module_android.widget.ViewStubPro
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@id/pickerSpace"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingHorizontal="19dp"
+                    android:id="@+id/minutePicker"
+                    app:internalMaxWidth="120dp"
+                    app:internalMinWidth="120dp"
+                    android:layout_width="120dp"
+                    android:contentDescription="分"
+                    android:layout_height="match_parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/startTimerBtn"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="24dp"
+        android:text="start timer"
+        android:paddingVertical="8dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/stopTimerBtn"
+        android:visibility="gone"
+        style="@style/StyleButtonWarn"
+        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="24dp"
+        android:text="stop  timer"
+        android:paddingVertical="8dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.BgBuildView
+        android:background="#f6f6f6"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <com.au.module_android.widget.BgBuildView
+        android:background="#f6f6f6"
+        android:id="@+id/fakeView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/fakeText"
+        android:textSize="20dp"
+        android:visibility="gone"
+        style="@style/StyleFontText"
+        android:textColor="#0000ff"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_horizontal"
+        android:text="测试中，请勿按电源键关闭屏幕\n如果关闭，请按开，保持在这个界面！"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</androidx.constraintlayout.widget.ConstraintLayout>

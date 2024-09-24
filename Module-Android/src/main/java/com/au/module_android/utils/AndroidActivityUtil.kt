@@ -27,11 +27,20 @@ fun Context.startActivityFix(intent: Intent, opts:Bundle? = null) {
 }
 
 fun Fragment.startActivityFix(intent: Intent, opts:Bundle? = null) {
-    ActivityCompat.startActivity(requireContext(), intent, opts)
+    requireContext().startActivityFix(intent, opts)
 }
 
-fun Fragment.startActivityFixSafe(intent: Intent, opts:Bundle? = null) {
-    context?.let {
-        ActivityCompat.startActivity(it, intent, opts)
+fun Context.startOutActivity(intent: Intent, opts:Bundle? = null) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        // Android 10 或更高版本
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    } else {
+        // Android 10 以下版本
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    }
+    try {
+        ActivityCompat.startActivity(this, intent, opts)
+    } catch (e:Exception) {
+        e.printStackTrace()
     }
 }

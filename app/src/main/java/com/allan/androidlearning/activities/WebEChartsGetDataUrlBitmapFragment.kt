@@ -133,7 +133,7 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
                             val imageData = data.substring(customBase64PrefixLength)
 //                            if (BuildConfig.DEBUG && imagePrintCount++ % 60 == 0) {
 //                                logd { ">>>web CallNative $data hasCallback:" }
-//                                saveBitmapToFile(base64ToBitmap(imageData), "pic_" + millisToTime() + ".png",
+//                                saveBitmapToFile(base64ToBitmap(imageData), "pic_" + currentTime() + ".png",
 //                                    requireActivity().cacheDir.absolutePath)
 //                            }
                             lastBase64Image = imageData

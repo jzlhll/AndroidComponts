@@ -57,7 +57,7 @@ class ContinuousBitmapRecorderManager {
             r.prepare()
             r.start()
         } catch (e: IOException) {
-            logStace("startRecord failed")
+            logStace(s="startRecord failed")
             return false
         }
 

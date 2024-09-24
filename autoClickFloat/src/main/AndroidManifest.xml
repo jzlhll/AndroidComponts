@@ -4,6 +4,7 @@
         <package android:name="com.tencent.tgclub" />
         <package android:name="com.tencent.mm" />
         <package android:name="com.tencent.gamehelper.smoba" />
+        <package android:name="com.ss.android.lark" />
     </queries>
 
 <!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />-->
