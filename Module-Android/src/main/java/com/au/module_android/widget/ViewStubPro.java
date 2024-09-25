@@ -16,7 +16,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.au.module.android.R;
+import com.au.module_android.R;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;

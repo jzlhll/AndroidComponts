@@ -12,6 +12,7 @@
 
     <!-- 品牌主题色 | 超链接文字颜色 -->
     <color name="colorPrimary">#248067</color>
+    <color name="colorPrimary_disable">#85B79E</color>
     <color name="colorPrimary_press">#5f9483</color>
 
     <!-- 文字颜色 -->

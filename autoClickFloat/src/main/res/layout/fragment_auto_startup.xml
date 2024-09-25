@@ -126,6 +126,20 @@
 
     <com.au.module_android.widget.CustomButton
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/gotoSettingWriteBtn"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/startTimerBtn"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="24dp"
+        android:text="goto setting write"
+        android:paddingVertical="8dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/stopTimerBtn"
         android:visibility="gone"
@@ -163,4 +177,22 @@
         android:text="测试中，请勿按电源键关闭屏幕\n如果关闭，请按开，保持在这个界面！"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <FrameLayout
+        app:layout_constraintBottom_toTopOf="@id/fakeView"
+        android:id="@+id/seekBarHost"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/brightnessSeekbar"
+            tools:progress="30"
+            android:maxHeight="6dp"
+            android:minHeight="6dp"
+            style="@style/StyleSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

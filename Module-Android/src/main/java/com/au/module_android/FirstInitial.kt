@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.init.GlobalActivityCallback
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.optimizeSpTask

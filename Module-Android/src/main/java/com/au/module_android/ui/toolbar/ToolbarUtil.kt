@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.au.module.android.R
+import com.au.module_android.R
 import com.au.module_android.click.PaddingClickListener
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp

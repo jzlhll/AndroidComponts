@@ -8,7 +8,7 @@ import com.allan.autoclickfloat.accessibility.AbsAccessServiceObserver
 import com.allan.autoclickfloat.accessibility.AutoClickFloatAccessService
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.floats.WindowMgr
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.Globals
 import com.au.module_android.utils.TAG
 import kotlinx.coroutines.launch

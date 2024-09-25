@@ -19,7 +19,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.Locale
-import com.au.module.android.R;
+import com.au.module_android.R;
 import com.au.module_android.Globals
 import kotlin.system.exitProcess
 

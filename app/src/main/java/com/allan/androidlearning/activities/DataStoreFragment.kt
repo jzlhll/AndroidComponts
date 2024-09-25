@@ -25,29 +25,29 @@ class DataStoreFragment : BindingFragment<FragmentDatastoreBinding>() {
         viewBinding.clearBtn.onClick {
             lifecycleScope.launch(Dispatchers.Default) {
                 logt { "clear...." }
-                com.au.module.cached.AppDataStore.clear()
+                com.au.module_cached.AppDataStore.clear()
             }
         }
 
         viewBinding.saveBtn.onClick {
-            com.au.module.cached.AppDataStore.save("info", "abbcbdke")
+            com.au.module_cached.AppDataStore.save("info", "abbcbdke")
         }
 
         viewBinding.readBtn.onClick {
             lifecycleScope.launch {
-                val data = com.au.module.cached.AppDataStore.read<String>("info", "default_info")
+                val data = com.au.module_cached.AppDataStore.read<String>("info", "default_info")
             }
         }
 
         viewBinding.containsBtn.onClick {
             lifecycleScope.launch {
-                val isContains = com.au.module.cached.AppDataStore.containsKey<String>("info")
+                val isContains = com.au.module_cached.AppDataStore.containsKey<String>("info")
             }
         }
 
         viewBinding.removeKeyBtn.onClick {
             lifecycleScope.launch {
-                val r = com.au.module.cached.AppDataStore.removeSuspend<String>("info")
+                val r = com.au.module_cached.AppDataStore.removeSuspend<String>("info")
             }
         }
     }

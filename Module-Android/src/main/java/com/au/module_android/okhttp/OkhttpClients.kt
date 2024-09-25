@@ -1,7 +1,7 @@
 package com.au.module_android.okhttp
 
 import android.util.Log
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.Globals
 import okhttp3.Cache
 import okhttp3.FormBody

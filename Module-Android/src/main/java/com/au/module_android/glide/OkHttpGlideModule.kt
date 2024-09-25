@@ -2,7 +2,7 @@ package com.au.module_android.glide
 
 import android.content.Context
 import android.util.Log
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.okhttp.OkhttpClients
 import com.au.module_android.okhttp.TrustAllCertsManager
 import com.bumptech.glide.Glide

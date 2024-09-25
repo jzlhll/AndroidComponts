@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
-import com.au.module.android.R;
+import com.au.module_android.R;
 
 
 /**

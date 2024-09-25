@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module.cached'
+    namespace 'com.au.module_cached'
     compileSdk gradle.ext.compileSdk
 
     defaultConfig {

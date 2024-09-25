@@ -3,7 +3,7 @@ package com.au.module_android.ui.base
 import android.view.Gravity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.au.module.android.R
+import com.au.module_android.R
 
 /**
  * @author au

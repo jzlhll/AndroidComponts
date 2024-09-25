@@ -8,7 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.au.module.android.R;
+import com.au.module_android.R;
 
 import java.util.ArrayList;
 import java.util.List;

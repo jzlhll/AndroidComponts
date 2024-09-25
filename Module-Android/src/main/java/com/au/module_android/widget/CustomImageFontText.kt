@@ -3,7 +3,7 @@ package com.au.module_android.widget
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import com.au.module.android.R
+import com.au.module_android.R
 
 open class CustomImageFontText : CustomFontText {
     private var mStartWidth: Int = 0

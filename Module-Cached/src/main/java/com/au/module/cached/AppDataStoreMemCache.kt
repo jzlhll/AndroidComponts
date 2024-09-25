@@ -1,4 +1,4 @@
-package com.au.module.cached
+package com.au.module_cached
 
 /**
  * @author au

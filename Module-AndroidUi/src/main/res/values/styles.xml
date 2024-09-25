@@ -17,4 +17,13 @@
         <item name="android:progressDrawable">@drawable/au_seekbar_progress_bg</item>
         <item name="android:duplicateParentState">true</item> <!-- true不要material按压效果-->
     </style>
+
+    <style name="StyleDisabledSeekBar">
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/au_seekbar_thumb_disable</item>
+        <item name="android:paddingStart">@dimen/au_seekbar_thumb_size_half</item>
+        <item name="android:paddingEnd">@dimen/au_seekbar_thumb_size_half</item>
+        <item name="android:progressDrawable">@drawable/au_seekbar_progress_bg_disable</item>
+        <item name="android:duplicateParentState">true</item> <!-- true不要material按压效果-->
+    </style>
 </resources>

@@ -9,7 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.au.module.android.R
+import com.au.module_android.R
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.widget.CustomFontText

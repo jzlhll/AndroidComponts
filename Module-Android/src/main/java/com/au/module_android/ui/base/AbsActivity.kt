@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.DarkModeConst
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.fullPaddingEdgeToEdge

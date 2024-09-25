@@ -13,7 +13,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IFullWindow

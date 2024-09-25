@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
+import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupBinding
 import com.au.module_android.Globals
@@ -35,7 +36,18 @@ import java.util.Calendar
  * @date :2024/9/24 11:25
  * @description:
  */
-class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>() {
+class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>(), IAutoStartPermission {
+    private val permission = Permission(this)
+    override fun showGotoWriteSettingButton() {
+        if(!isFaking) binding.gotoSettingWriteBtn.visible()
+    }
+
+    override fun hideGotoWriteSettingButton() {
+        if(!isFaking) binding.gotoSettingWriteBtn.gone()
+    }
+
+    override fun seekBar() = binding.brightnessSeekbar
+
     @SuppressLint("SimpleDateFormat")
     private val sdf = SimpleDateFormat("HH:mm:ss")
 
@@ -60,7 +72,6 @@ class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>() {
     private var isFaking = false
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-
         launchNumberPickerWrap(binding.hourPicker, true)
         launchNumberPickerWrap(binding.minutePicker, false)
 
@@ -70,12 +81,17 @@ class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>() {
 
         binding.stopTimerBtn.tag = false
 
+        binding.gotoSettingWriteBtn.onClick {
+            permission.goToManageSetting()
+        }
+
         binding.fakeView.onClick {
             mFakeClickCount++
             if (mFakeClickCount == 12) {
                 isFaking = true
                 binding.pickersHost.invisible()
                 binding.startTimerBtn.invisible()
+                binding.gotoSettingWriteBtn.invisible()
                 if(binding.stopTimerBtn.tag as Boolean) binding.stopTimerBtn.gone()
                 binding.fakeText.visible()
             }
@@ -83,6 +99,7 @@ class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>() {
                 mFakeClickCount = 0
                 isFaking = false
                 binding.pickersHost.visible()
+                if(!permission.canWrite()) binding.gotoSettingWriteBtn.visible()
                 if(binding.stopTimerBtn.tag as Boolean) {
                     binding.stopTimerBtn.visible()
                     binding.startTimerBtn.gone()

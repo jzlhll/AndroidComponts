@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.TextView
-import com.au.module.android.R
+import com.au.module_android.R
 import com.au.module_android.widget.FontMode
 import com.au.module_android.widget.TextViewCheckMode
 

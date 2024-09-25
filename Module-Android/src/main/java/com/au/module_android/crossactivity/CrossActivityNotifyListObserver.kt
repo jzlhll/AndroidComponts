@@ -4,7 +4,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.isMainThread
 

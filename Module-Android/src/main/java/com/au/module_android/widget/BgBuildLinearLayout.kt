@@ -3,7 +3,7 @@ package com.au.module_android.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.au.module.android.R
+import com.au.module_android.R
 import com.au.module_android.utils.viewBackgroundBuild
 
 /**

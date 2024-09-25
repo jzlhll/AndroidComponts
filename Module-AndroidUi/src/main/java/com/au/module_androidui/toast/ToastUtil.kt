@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.au.module.android.R
+import com.au.module_android.R
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.visible

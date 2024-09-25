@@ -1,6 +1,6 @@
 package com.au.module_android.ui.base
 
-import com.au.module.android.BuildConfig
+import com.au.module_android.BuildConfig
 
 /**
  * @author allan

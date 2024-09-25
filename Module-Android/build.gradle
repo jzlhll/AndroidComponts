@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module.android'
+    namespace 'com.au.module_android'
     compileSdk gradle.ext.compileSdk
 
     def enableFileLog = Boolean.parseBoolean(findProperty("app.enable_filelog"))

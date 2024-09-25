@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <size
+        android:width="@dimen/au_seekbar_thumb_size"
+        android:height="@dimen/au_seekbar_thumb_size"
+        />
+    <stroke android:width="1dp" android:color="@color/color_line_on_dialog"/>
+    <solid android:color="@color/color_line"/>
+</shape>

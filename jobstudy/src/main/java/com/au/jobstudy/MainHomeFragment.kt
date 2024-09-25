@@ -20,7 +20,7 @@ import com.au.jobstudy.home.HomeRcvTitleBean
 import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
-import com.au.module.cached.AppDataStoreMemCache
+import com.au.module_cached.AppDataStoreMemCache
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.FragmentRootActivity
