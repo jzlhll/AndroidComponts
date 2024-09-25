@@ -8,7 +8,8 @@ import android.os.Build
  * @description:
  */
 class AndroidSdkMapping {
-    val map = hashMapOf(34 to "Android 14.0(UpsideDownCake)",
+    val map = hashMapOf(35 to "Android 15",
+                        34 to "Android 14(UpsideDownCake)",
                         33 to "Android 13 (Android Tiramisu)",
                         32 to "Android 12L (Android Sv2)",
                         31 to "Android 12 (Android S)",
