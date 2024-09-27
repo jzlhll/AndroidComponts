@@ -50,50 +50,57 @@ object DarkModeConst {
      */
     fun isFollowSystem() = !(isForceLight() || isForceDark())
 
-    private fun createContext(uiMode: Int) : Context {
+    private fun createContext(newUiMode: Int?) : Context {
+        val uiMode = newUiMode ?: Globals.app.resources.configuration.uiMode
+
         val filter = uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()
 
         val configuration = Configuration(Globals.app.resources.configuration)
         val nightMode = AppCompatDelegate.getDefaultNightMode()
-        configuration.uiMode = when (nightMode) {
+        val targetUiMode = when (nightMode) {
             AppCompatDelegate.MODE_NIGHT_NO -> Configuration.UI_MODE_NIGHT_NO or filter
             AppCompatDelegate.MODE_NIGHT_YES -> Configuration.UI_MODE_NIGHT_YES or filter
             else -> uiMode
         }
-        logd(canHasFileLog = false) { "darkModeeObj createeContext uiMode=$uiMode applicationUiMode=${Globals.app.resources.configuration.uiMode} " }
+        configuration.uiMode = targetUiMode
+        configuration.setLocales(Globals.app.resources.configuration.locales)
+        logd(canHasFileLog = false) { "createeContext uiMode=$uiMode targetUiMode $targetUiMode applicationUiMode=${Globals.app.resources.configuration.uiMode} " }
         return Globals.app.createConfigurationContext(configuration)
     }
 
-    /**
-     * 可能是别的事件，所以需要自行判断uiMode是否发生变化。
-     */
     fun onConfigurationChanged(app:Application, uiMode:Int) {
-        val oldApplicationUiMode = app.resources.configuration.uiMode
-        app.resources.configuration.uiMode = uiMode //不论如何，都将系统的uiMode给赋值好。便于恢复。
+        app.resources.configuration.uiMode = uiMode
 
         if (!isEnabled) {
             return
         }
 
         if (!isFollowSystem()) {
-            logd(canHasFileLog = false) { "application onConfigurationChanged uiMode not accept not follow system $uiMode" }
+            logd(canHasFileLog = false) { "onConfigurationChanged uiMode not accept not follow system ${app.resources.configuration.uiMode}" }
             return
         }
 
-        //如果系统有变化；并且当前不是强制情况下才处理
-        if (uiMode != oldApplicationUiMode) {
-            logd(canHasFileLog = false) { "application onConfigurationChanged uiMode accept $uiMode" }
-            onUiModeChanged(uiMode)
-        } else {
-            logd(canHasFileLog = false) { "application onConfigurationChanged uiMode same not accept $uiMode" }
+        //如果系统有变化；并且当前不是强制情况下才处理;
+        //new 0926：有问题。每次都重建好了。
+        onUiModeChanged(uiMode)
+    }
+
+    /**
+     * 可能是别的事件，所以需要自行判断uiMode是否发生变化。
+     */
+    fun onLocaleChanged(newLanguage :String) {
+        if (!isEnabled) {
+            return
         }
+        logd(canHasFileLog = false) { "onLocaleChanged $newLanguage" }
+        onUiModeChanged(null)
     }
 
     /**
      * 不仅仅要接受系统的Application的onConfigurationChanged
      * 还要在自己切换的时候重建
      */
-    private fun onUiModeChanged(uiMode: Int) {
+    private fun onUiModeChanged(uiMode: Int?) {
         if (!isEnabled) {
             return
         }
@@ -146,25 +153,24 @@ object DarkModeConst {
          * MODE_NIGHT_AUTO_BATTERY 系统进入省电模式时，开启暗黑模式。不一定有用。
          * MODE_NIGHT_UNSPECIFIED 未指定，默认值
          */
-        val ctx = Globals.app
         when (mode) {
             DarkMode.DARK -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                if(saveSp) SharedPrefUtil.putInt(ctx, "app_dark_mode", 2)
+                if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 2)
             }
             DarkMode.LIGHT -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                if(saveSp) SharedPrefUtil.putInt(ctx, "app_dark_mode", 1)
+                if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 1)
             }
             DarkMode.FOLLOW_SYSTEM -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                if(saveSp) SharedPrefUtil.putInt(ctx, "app_dark_mode", 0)
+                if(saveSp) SharedPrefUtil.putInt(Globals.app, "app_dark_mode", 0)
             }
         }
 
         val uiMode = when(mode) {
-            DarkMode.DARK -> Configuration.UI_MODE_NIGHT_YES
-            DarkMode.FOLLOW_SYSTEM -> Configuration.UI_MODE_TYPE_UNDEFINED
+            DarkMode.DARK-> Configuration.UI_MODE_NIGHT_YES
+            DarkMode.FOLLOW_SYSTEM -> null
             DarkMode.LIGHT -> Configuration.UI_MODE_NIGHT_NO
         }
 

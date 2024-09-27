@@ -11,8 +11,12 @@ class AllEntroFragmentNamesTemplate : AbsCodeTemplate() {
     /**
      * com.allan.androidlearning.activities.LiveDataFragment::class.java
      */
-    fun insert(javaClass:String, priority: Int) {
-        list.add("list.add($javaClass::class.java to $priority)" to priority)
+    fun insert(javaClass:String, priority: Int, customName:String?) {
+        if (customName.isNullOrEmpty()) {
+            list.add("list.add(Triple($javaClass::class.java, $priority, null))" to priority)
+        } else {
+            list.add("list.add(Triple($javaClass::class.java, $priority, \"$customName\"))" to priority)
+        }
     }
 
     fun end() : String {
@@ -30,8 +34,8 @@ package com.allan.androidlearning
 import androidx.fragment.app.Fragment
 
 class EntroList {
-    fun getEntroList(): List<Pair<Class<out Fragment>, Int>> {
-        val list = ArrayList<Pair<Class<out Fragment>, Int>>()
+    fun getEntroList(): List<Triple<Class<out Fragment>, Int, String?>> {
+        val list = ArrayList<Triple<Class<out Fragment>, Int, String?>>()
         //insert001
         return list
     }

@@ -92,7 +92,7 @@
             android:id="@+id/bottomView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cancelButton"
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="20dp"/>
     </com.au.module_android.widget.BgBuildConstraintLayout>
 </LinearLayout>

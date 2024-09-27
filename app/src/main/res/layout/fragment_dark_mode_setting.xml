@@ -4,64 +4,21 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
-
-     <LinearLayout
-         android:orientation="horizontal"
-         android:layout_width="match_parent"
-         android:layout_marginStart="@dimen/ui_padding_edge"
-         android:layout_marginEnd="@dimen/ui_padding_edge"
-         android:layout_height="wrap_content">
-         <LinearLayout
-             android:orientation="vertical"
-             android:layout_width="0dp"
-             android:layout_weight="1"
-             android:layout_height="wrap_content">
-             <com.au.module_android.widget.CustomFontText
-                 style="@style/StyleFontText"
-                 android:textSize="16sp"
-                 android:text="跟随系统"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"/>
-             <com.au.module_android.widget.CustomFontText
-                 style="@style/StyleFontText"
-                 android:textSize="13sp"
-                 android:textColor="@color/color_text_desc"
-                 android:text="开启后，将跟随系统打开或关闭深色模式"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"/>
-         </LinearLayout>
-
-         <com.au.module_androidui.widget.SwitchButton
-             android:layout_gravity="center_vertical"
-             android:layout_marginStart="20dp"
-             android:id="@+id/switchBtn"
-             android:layout_width="50dp"
-             android:layout_height="26dp"/>
-     </LinearLayout>
-
-    <View
-        android:layout_marginTop="12dp"
-        android:background="@color/color_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+    <com.au.module_android.widget.CustomFontText
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        style="@style/StyleFontBText"
+        android:textSize="20sp"
+        android:text="语言"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/hideLayout"
+        android:layout_marginTop="12dp"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
-        <com.au.module_android.widget.CustomFontText
-            style="@style/StyleFontText"
-            android:textSize="13sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="@dimen/ui_padding_edge"
-            android:textColor="@color/color_text_desc"
-            android:text="手动选择"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
         <LinearLayout
-            android:id="@+id/lightHost"
+            android:id="@+id/localesFollowSystemHost"
             android:orientation="horizontal"
             android:layout_marginStart="@dimen/ui_padding_edge"
             android:layout_marginEnd="@dimen/ui_padding_edge"
@@ -72,8 +29,9 @@
             <com.au.module_android.widget.CustomFontText
                 style="@style/StyleFontText"
                 android:layout_gravity="center_vertical"
+                android:id="@+id/followSystemTitle"
                 android:textSize="16sp"
-                android:text="普通模式"
+                android:text="跟随系统"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -88,7 +46,41 @@
                 android:visibility="invisible"
                 tools:visibility="visible"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/lightModeCheck"
+                android:id="@+id/localesFollowSystemCheck"
+                android:src="@drawable/ic_correct"
+                android:layout_height="24dp"/>
+        </LinearLayout>
+        <View
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginEnd="@dimen/ui_padding_edge"
+            android:paddingTop="21dp"
+            android:paddingBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.au.module_android.widget.CustomFontText
+                style="@style/StyleFontText"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:text="简体中文"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:tint="@color/colorPrimary"
+                android:visibility="invisible"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/localesCNCheck"
                 android:src="@drawable/ic_correct"
                 android:layout_height="24dp"/>
         </LinearLayout>
@@ -96,7 +88,7 @@
         <View
             android:background="@color/color_line"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="0.5dp"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -104,14 +96,13 @@
             android:layout_marginEnd="@dimen/ui_padding_edge"
             android:paddingTop="21dp"
             android:paddingBottom="16dp"
-            android:id="@+id/darkHost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.au.module_android.widget.CustomFontText
                 style="@style/StyleFontText"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
-                android:text="深色模式"
+                android:text="繁體中文"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -124,7 +115,7 @@
                 android:visibility="invisible"
                 android:layout_width="24dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/darkModeCheck"
+                android:id="@+id/localesTWCheck"
                 android:src="@drawable/ic_correct"
                 android:tint="@color/colorPrimary"
                 android:layout_height="24dp"/>
@@ -133,7 +124,190 @@
         <View
             android:background="@color/color_line"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="0.5dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginEnd="@dimen/ui_padding_edge"
+            android:paddingTop="21dp"
+            android:paddingBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.au.module_android.widget.CustomFontText
+                style="@style/StyleFontText"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:text="English"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:visibility="invisible"
+                android:layout_width="24dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/localesENCheck"
+                android:src="@drawable/ic_correct"
+                android:tint="@color/colorPrimary"
+                android:layout_height="24dp"/>
+        </LinearLayout>
+
+        <View
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
     </LinearLayout>
 
+    <com.au.module_android.widget.CustomFontText
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginTop="24dp"
+        style="@style/StyleFontBText"
+        android:textSize="20sp"
+        android:text="深色模式"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/ui_padding_edge"
+            android:layout_marginEnd="@dimen/ui_padding_edge"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <com.au.module_android.widget.CustomFontText
+                    style="@style/StyleFontText"
+                    android:textSize="16sp"
+                    android:text="跟随系统"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <com.au.module_android.widget.CustomFontText
+                    style="@style/StyleFontText"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_text_desc"
+                    android:text="开启后，将跟随系统打开或关闭深色模式"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <com.au.module_androidui.widget.SwitchButton
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:id="@+id/switchBtn"
+                android:layout_width="50dp"
+                android:layout_height="26dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="12dp"
+            android:background="@color/color_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/hideLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.au.module_android.widget.CustomFontText
+                style="@style/StyleFontText"
+                android:textSize="13sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:textColor="@color/color_text_desc"
+                android:text="手动选择"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/lightHost"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:layout_marginEnd="@dimen/ui_padding_edge"
+                android:paddingTop="21dp"
+                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.au.module_android.widget.CustomFontText
+                    style="@style/StyleFontText"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:text="普通模式"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:tint="@color/colorPrimary"
+                    android:visibility="invisible"
+                    tools:visibility="visible"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/lightModeCheck"
+                    android:src="@drawable/ic_correct"
+                    android:layout_height="24dp"/>
+            </LinearLayout>
+
+            <View
+                android:background="@color/color_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:layout_marginEnd="@dimen/ui_padding_edge"
+                android:paddingTop="21dp"
+                android:paddingBottom="16dp"
+                android:id="@+id/darkHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.au.module_android.widget.CustomFontText
+                    style="@style/StyleFontText"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:text="深色模式"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:visibility="invisible"
+                    android:layout_width="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/darkModeCheck"
+                    android:src="@drawable/ic_correct"
+                    android:tint="@color/colorPrimary"
+                    android:layout_height="24dp"/>
+            </LinearLayout>
+
+            <View
+                android:background="@color/color_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

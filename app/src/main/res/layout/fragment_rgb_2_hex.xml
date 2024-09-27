@@ -117,7 +117,7 @@
         android:layout_marginTop="18dp"
         android:layout_width="match_parent"
         android:background="#f0f0f0"
-        android:layout_height="1dp"/>
+        android:layout_height="0.5dp"/>
 
     <TextView
         android:paddingHorizontal="24dp"
@@ -165,7 +165,7 @@
 
         <View
             android:layout_width="80dp"
-            android:layout_height="1dp"/>
+            android:layout_height="0.5dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -221,7 +221,7 @@
         android:layout_marginTop="18dp"
         android:layout_width="match_parent"
         android:background="#f0f0f0"
-        android:layout_height="1dp"/>
+        android:layout_height="0.5dp"/>
 
     <LinearLayout
         android:paddingHorizontal="8dp"

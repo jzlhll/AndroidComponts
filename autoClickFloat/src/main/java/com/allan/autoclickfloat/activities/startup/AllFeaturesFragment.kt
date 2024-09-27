@@ -3,6 +3,7 @@ package com.allan.autoclickfloat.activities.startup
 import android.os.Bundle
 import android.view.View
 import com.allan.autoclickfloat.activities.autofs.AutoStartFragment
+import com.allan.autoclickfloat.activities.autofs.AutoStartWorkerFragment
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
 import com.allan.autoclickfloat.activities.nongyao.NongyaoFragment
 import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragment
@@ -14,6 +15,7 @@ import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.FragmentRootOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.openApp
+import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
@@ -45,7 +47,12 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.autoFsBtn.onClick {
-            FragmentRootActivity.start(requireContext(), AutoStartFragment::class.java)
+            ConfirmCenterDialog.show(childFragmentManager, "请确认", "是走新的还是传统的？", "新的", "传统的",
+                cancelBlock = {
+                    FragmentRootActivity.start(requireContext(), AutoStartFragment::class.java)
+            }, sureClick = {
+                    FragmentRootActivity.start(requireContext(), AutoStartWorkerFragment::class.java)
+            })
         }
     }
 }

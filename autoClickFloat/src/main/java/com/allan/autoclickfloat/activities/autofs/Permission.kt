@@ -52,12 +52,12 @@ class Permission(val f:Fragment) {
             override fun onStart(owner: LifecycleOwner) {
                 super.onStart(owner)
                 val seekBar = iAutoFs.seekBar()
+                seekBar?.let {
                 if (!isInitSeekBar) {
                     isInitSeekBar = true
-                    seekBar.let {
-                        it.min = 0
-                        it.max = 255
-                        it.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+                    it.min = 0
+                    it.max = 255
+                    it.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                                 mNeedChangeBrightnessValue = progress
                                 val cur = System.currentTimeMillis()
@@ -76,17 +76,17 @@ class Permission(val f:Fragment) {
                             }
                         })
                     }
-                }
 
-                seekBar.progress = getCurrentScreenBrightness()
-                if (canWrite()) {
-                    logd { "Can write setting. allan." }
-                    seekBar.enableAndStyle()
-                    iAutoFs.hideGotoWriteSettingButton()
-                } else {
-                    logd { "Cannot write setting. allan." }
-                    seekBar.disableAndStyle()
-                    iAutoFs.showGotoWriteSettingButton()
+                    it.progress = getCurrentScreenBrightness()
+                    if (canWrite()) {
+                        logd { "Can write setting. allan." }
+                        it.enableAndStyle()
+                        iAutoFs.hideGotoWriteSettingButton()
+                    } else {
+                        logd { "Cannot write setting. allan." }
+                        it.disableAndStyle()
+                        iAutoFs.showGotoWriteSettingButton()
+                    }
                 }
             }
         })

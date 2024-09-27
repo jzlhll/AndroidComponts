@@ -160,8 +160,10 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
         if (isDisabled) return
         //后续也可能后台改动，进而触发notifyItemChange bindData，则动画
         this.isLeft = isLeft
-        handleAnimal()
-        changeTextColor()
+        if (isPost) {
+            handleAnimal()
+            changeTextColor()
+        }
     }
 
     private fun handleAnimal() {

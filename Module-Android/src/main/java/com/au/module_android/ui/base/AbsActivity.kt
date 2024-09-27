@@ -1,5 +1,6 @@
 package com.au.module_android.ui.base
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -11,6 +12,7 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.BuildConfig
 import com.au.module_android.DarkModeConst
+import com.au.module_android.LocalesConst
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.fullPaddingEdgeToEdge
 import com.au.module_android.utils.hideImeNew
@@ -136,7 +138,7 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
                 }
             } else {
                 //2. 如果不跟系统，这里得到的newConfig是不准的，可能是系统触发而来(应该抛弃)，也可能是自己设置而来（接受）
-                //这个应该被抛弃，以DarkModeObj里面为准，即AppCompatDelegate.getDefaultNightMode()
+                //这个应该被抛弃，以DarkModeUtil里面为准，即AppCompatDelegate.getDefaultNightMode()
                 //val uiMode = newConfig.uiMode
                 //val wishToDark = (uiMode and Configuration.UI_MODE_NIGHT_YES) != 0
                 val appIsForceDark = DarkModeConst.isForceDark()
@@ -152,4 +154,8 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
     }
 
     open fun isAutoHideIme() = false
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocalesConst.activityAttachBaseContext(newBase))
+    }
 }
