@@ -38,9 +38,9 @@ object DarkModeAndLocalesConst {
     fun applicationOnConfigurationChanged(app:Application, newConfig: Configuration) {
         val isDarkModeFollow = isDarkModeFollowSystem()
         val isLocaleFollow = isLocalesFollowSystem(app)
-        logdNoFile(tag = logTag) { "onConfigurationChanged isDarkModeFollow:$isDarkModeFollow isLocaleFollow:$isLocaleFollow" }
-        logdNoFile(tag = logTag) { "onConfigurationChanged uiMode:${newConfig.uiMode} appUiMode:${app.resources.configuration.uiMode}" }
-        logdNoFile(tag = logTag) { "onConfigurationChanged locales:${newConfig.locales.get(0)} appLocales:${app.resources.configuration.locales.get(0)}" }
+        logdNoFile(tag = logTag) { "application onConfigurationChanged isDarkModeFollow:$isDarkModeFollow isLocaleFollow:$isLocaleFollow" }
+        logdNoFile(tag = logTag) { "application onConfigurationChanged uiMode:${newConfig.uiMode} appUiMode:${app.resources.configuration.uiMode}" }
+        logdNoFile(tag = logTag) { "application onConfigurationChanged locales:${newConfig.locales.get(0)} appLocales:${app.resources.configuration.locales.get(0)}" }
     }
 
     /**
@@ -64,7 +64,10 @@ object DarkModeAndLocalesConst {
         } else {
             null
         }
-
+        logdNoFile(tag = logTag) { "attachBase Context --->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
+        if (uiMode == null && locale == null) {
+            return newBase
+        }
         return createConfigurationContext(cxt, locale, uiMode)
     }
 

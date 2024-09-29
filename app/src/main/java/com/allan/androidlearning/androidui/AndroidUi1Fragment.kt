@@ -36,7 +36,7 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     }
 
     @SuppressLint("DefaultLocale")
-    private fun Color.toRgbStr() :String{
+    private fun Color.toRgbStr() :String {
         val r = String.format("%d", (red() * 255).toInt())
         val g = String.format("%d", (green() * 255).toInt())
         val b = String.format("%d", (blue() * 255).toInt())
