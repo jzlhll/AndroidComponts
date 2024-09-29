@@ -3,6 +3,8 @@ package com.au.module_android
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import androidx.annotation.EmptySuper
+import java.util.Locale
 
 /**
  * @author au
@@ -13,14 +15,19 @@ open class InitApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         FirstInitial().init(this)
+        DarkModeAndLocalesConst.applicationOnCreated(this)
     }
 
     override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(LocalesConst.applicationAttachBaseContext(base))
+        doBeforeAttachBaseContext()
+        super.attachBaseContext(DarkModeAndLocalesConst.applicationAttachContext(base))
     }
+
+    @EmptySuper
+    open fun doBeforeAttachBaseContext() {}
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        LocalesConst.applicationConfigurationChanged(this, newConfig)
+        DarkModeAndLocalesConst.applicationOnConfigurationChanged(this, newConfig)
     }
 }

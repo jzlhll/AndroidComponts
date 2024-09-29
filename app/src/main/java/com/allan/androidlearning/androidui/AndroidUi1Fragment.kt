@@ -3,14 +3,18 @@ package com.allan.androidlearning.androidui
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
+import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentAndroidUi1Binding
+import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.toAndroidResStr
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.logd
 
 class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        logd { "DarkModeLocales ${DarkModeAndLocalesConst.data.systemLocal.toAndroidResStr()}" }
         buttons()
         blocks()
         darkModeAndLocalesTest()
@@ -33,37 +37,34 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
 
     @SuppressLint("DefaultLocale")
     private fun Color.toRgbStr() :String{
-        val r = String.format("%.1f", red() * 255)
-        val g = String.format("%.1f", green() * 255)
-        val b = String.format("%.1f", blue() * 255)
-        return "r $r,g $g,b $b"
+        val r = String.format("%d", (red() * 255).toInt())
+        val g = String.format("%d", (green() * 255).toInt())
+        val b = String.format("%d", (blue() * 255).toInt())
+        return "($r, $g, $b)"
     }
 
     fun darkModeAndLocalesTest() {
-        val str1 = getStringCompat(R.string.string_test_locale)
-        val str2 = Globals.getString(R.string.string_test_locale)
-        val str3 = getString(R.string.string_test_locale)
+        val str1 = getString(R.string.app_name)
+        val str2 = Globals.app.getString(R.string.app_name)
+        val str3 = DarkModeAndLocalesConst.themedContext?.getString(R.string.app_name)
 
-        val color1 = getColor(com.tyiot.module.base.R.color.color_text_normal)
-        val color2 = getColorCompat(com.tyiot.module.base.R.color.color_text_normal)
+        val color1 = resources.getColor(com.au.module_androidcolor.R.color.color_text_normal)
+        val color2 = Globals.app.getColor(com.au.module_androidcolor.R.color.color_text_normal)
+        val color3 = DarkModeAndLocalesConst.themedContext!!.getColor(com.au.module_androidcolor.R.color.color_text_normal)
 
-        val drawable1 = getDrawable(R.drawable.icon_servings)
-        val drawable2 = getDrawableCompat(R.drawable.icon_servings)
+        val drawable1 = resources.getDrawable(R.drawable.test_night_image, null)
+        val drawable2 = Globals.app.getDrawable(R.drawable.test_night_image)
+        val drawable3 = DarkModeAndLocalesConst.themedContext?.getDrawable(R.drawable.test_night_image)
 
-        binding.text.textFromSpanBean("switchEnvironmentBindData",
-            listOf(
-                SpanBean(data.text + "\n", textColor = getColor(com.tyiot.module.base.R.color.color_text_normal), textSize = 15),
-                SpanBean(data.hint, textColor = getColor(com.tyiot.module.base.R.color.color_text_desc), textSize = 13)
-            )
-        )
-        binding.image1.setImageDrawable(data.drawable1)
-        binding.image1.visibility = if(data.drawable1 == null) View.GONE else View.VISIBLE
-        binding.image2.setImageDrawable(data.drawable2)
-        binding.image2.visibility = if(data.drawable2 == null) View.GONE else View.VISIBLE
+        binding.text.text = "$str1, $str2, $str3" + "\n" +
+                            "${Color.valueOf(color1).toRgbStr()}, ${Color.valueOf(color2).toRgbStr()}, ${Color.valueOf(color3).toRgbStr()}"
 
-        data.color1?.let { mBinding.testColor1.setTextColor(it) }
-        data.color2?.let { mBinding.testColor2.setTextColor(it) }
-        binding.testColor1.visibility = if (data.color1 == null) View.GONE else View.VISIBLE
-        binding.testColor2.visibility = if (data.color2 == null) View.GONE else View.VISIBLE
+        binding.image1.setImageDrawable(drawable1)
+        binding.image2.setImageDrawable(drawable2)
+        binding.image3.setImageDrawable(drawable3)
+
+        binding.testColor1.setTextColor(color1)
+        binding.testColor2.setTextColor(color2)
+        binding.testColor3.setTextColor(color3)
     }
 }

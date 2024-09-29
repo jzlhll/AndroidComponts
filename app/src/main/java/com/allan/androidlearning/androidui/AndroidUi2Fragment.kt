@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.R
 import com.allan.androidlearning.activities.CoroutineFragment
 import com.allan.androidlearning.databinding.FragmentAndroidUi2Binding
 import com.allan.androidlearning.databinding.FragmentDialogEditBinding
-import com.au.module_android.DarkMode
-import com.au.module_android.DarkModeConst
+import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.IBaseDialog
@@ -32,7 +30,6 @@ import com.au.module_androidui.dialogs.ConfirmCenterImgDialog
 import com.au.module_androidui.dialogs.ConfirmImgBottomDialog
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_androidui.toast.ToastBuilder
-import kotlinx.coroutines.launch
 
 class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -150,7 +147,7 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
     val getDarkStrFunc = {
         val mode = requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val isDark = DarkModeConst.detectDarkMode(requireContext())
+        val isDark = DarkModeAndLocalesConst.detectDarkMode(requireContext())
         val s2 = when (mode) {
             Configuration.UI_MODE_NIGHT_YES -> "UI_MODE_NIGHT_YES"
             Configuration.UI_MODE_NIGHT_UNDEFINED -> "UI_MODE_NIGHT_UNDEFINED"
@@ -179,24 +176,6 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
         binding.androidUiDarkmode1.onClick {
             ToastBuilder().setOnTop().setMessage(getDarkStrFunc()).setIcon("info").toast()
-        }
-        binding.androidUiDarkmodeDark.onClick {
-            DarkModeConst.changeDarkMode(DarkMode.DARK)
-            lifecycleScope.launch {
-                binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
-            }
-        }
-        binding.androidUiDarkmodeLight.onClick {
-            DarkModeConst.changeDarkMode(DarkMode.LIGHT)
-            lifecycleScope.launch {
-                binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
-            }
-        }
-        binding.androidUiDarkmodeFollowSystem.onClick {
-            DarkModeConst.changeDarkMode(DarkMode.FOLLOW_SYSTEM)
-            lifecycleScope.launch {
-                binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
-            }
         }
     }
 }

@@ -8,8 +8,8 @@ import android.os.HandlerThread
 import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
 import com.au.module_android.okhttp.AbsCookieJar
 import com.au.module_android.okhttp.OkhttpClients
 import com.au.module_android.simplelivedata.NoStickLiveData
@@ -89,7 +89,7 @@ object Globals {
      */
     @ColorInt
     fun getColor(@ColorRes resId:Int) : Int {
-        return ContextCompat.getColor(DarkModeConst.themedContext ?: app, resId)
+        return ContextCompat.getColor(DarkModeAndLocalesConst.themedContext ?: app, resId)
     }
 
     /**
@@ -98,7 +98,7 @@ object Globals {
      * 需要使用构建的themedContext。
      */
     fun getDrawable(@ColorRes resId:Int) : Drawable? {
-        return ContextCompat.getDrawable(DarkModeConst.themedContext ?: app, resId)
+        return ContextCompat.getDrawable(DarkModeAndLocalesConst.themedContext ?: app, resId)
     }
 
     /**
@@ -106,8 +106,8 @@ object Globals {
      * Application不具备识别night资源的能力。
      * 需要使用构建的themedContext。
      */
-    fun getString(@ColorRes resId:Int) : String {
-        return ContextCompat.getString(DarkModeConst.themedContext ?: app, resId)
+    fun getString(@StringRes resId:Int) : String {
+        return ContextCompat.getString(DarkModeAndLocalesConst.themedContext ?: app, resId)
     }
 
     ///////////////okhttp

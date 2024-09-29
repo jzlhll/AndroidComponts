@@ -21,22 +21,19 @@ class FirstInitial {
         val isEnableToutiaoScreenAdapter:Boolean = false,
         )
 
-    fun init(context: Context, initCfg:FirstInitialConfig? = null): Application {
-        val app = context as Application
-        Globals.internalApp = app
+    fun init(context: Application, initCfg:FirstInitialConfig? = null): Application {
+        Globals.internalApp = context
 
         CrashActivity.initUncaughtExceptionHandler()
 
         val initConfig = initCfg ?: FirstInitialConfig()
-        if(initConfig.isEnableToutiaoScreenAdapter) { ToutiaoScreenAdapter.init(app) }
+        if(initConfig.isEnableToutiaoScreenAdapter) { ToutiaoScreenAdapter.init(context) }
         if (initConfig.isInitSharedPrefHook) { optimizeSpTask() }
 
-        app.registerActivityLifecycleCallbacks(GlobalActivityCallback())
+        context.registerActivityLifecycleCallbacks(GlobalActivityCallback())
         ProcessLifecycleOwner.get().lifecycle.addObserver(GlobalBackgroundCallback)
 
-        DarkModeConst.initAppDarkMode(app)
-
         Globals.firstInitialOnCreateData.setValueSafe(Unit)
-        return app
+        return context
     }
 }

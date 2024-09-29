@@ -10,12 +10,11 @@ import com.allan.androidlearning.EntroActivity
 import com.allan.androidlearning.databinding.FragmentDarkModeSettingBinding
 import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.DarkMode
-import com.au.module_android.DarkModeConst
-import com.au.module_android.DarkModeConst.spCurrentAppDarkMode
+import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
-import com.au.module_android.LocalesConst
 import com.au.module_android.click.onClick
 import com.au.module_android.postToMainHandler
+import com.au.module_android.toAndroidResStr
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.HtmlPart
 import com.au.module_android.utils.asOrNull
@@ -23,10 +22,9 @@ import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.startActivityFix
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.useSimpleHtmlText
 import com.au.module_android.utils.visible
-import kotlin.system.exitProcess
+import java.util.Locale
 
 @EntroFrgName(priority = 10, customName = "通用设置")
 class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBinding>() {
@@ -43,7 +41,7 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
 
     private inner class LocalesPart {
         fun initLocales() {
-            val pair = LocalesConst.getLanguageSP(requireContext())
+            val pair = DarkModeAndLocalesConst.data.spCurrentLocale(requireContext())
             val isFollowSystem = !pair.second
             val locales = pair.first
             if (isFollowSystem) {
@@ -53,59 +51,60 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
                 binding.localesENCheck.invisible()
             } else {
                 binding.localesFollowSystemCheck.invisible()
-                if (locales == LocalesConst.LANGUAGE_CN) {
+                val localesResStr = locales.toAndroidResStr()
+                if (localesResStr == Locale.CHINA.toAndroidResStr()) {
                     binding.localesCNCheck.visible()
                 } else {
                     binding.localesCNCheck.invisible()
                 }
-                if (locales == LocalesConst.LANGUAGE_EN) {
+                if (localesResStr == Locale.US.toAndroidResStr()) {
                     binding.localesENCheck.visible()
                 } else {
                     binding.localesENCheck.invisible()
                 }
-                if (locales == LocalesConst.LANGUAGE_TW) {
+                if (localesResStr == Locale.TAIWAN.toAndroidResStr()) {
                     binding.localesTWCheck.visible()
                 } else {
                     binding.localesTWCheck.invisible()
                 }
             }
-            binding.followSystemTitle.useSimpleHtmlText(HtmlPart("跟随系统 "), HtmlPart("(" + LocalesConst.systemLocal.displayName + ")", "#999999"))
+            binding.followSystemTitle.useSimpleHtmlText(HtmlPart("跟随系统 "), HtmlPart("(" + DarkModeAndLocalesConst.data.systemLocal.displayName + ")", "#999999"))
             binding.localesFollowSystemCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                LocalesConst.switchLanguage("")
+                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, null)
             }
             binding.localesCNCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                LocalesConst.switchLanguage(LocalesConst.LANGUAGE_CN)
+                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.CHINA)
                 afterChange()
             }
             binding.localesTWCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                LocalesConst.switchLanguage(LocalesConst.LANGUAGE_TW)
+                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.TAIWAN)
                 afterChange()
             }
             binding.localesENCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                LocalesConst.switchLanguage(LocalesConst.LANGUAGE_EN)
+                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.US)
                 afterChange()
             }
         }
 
         private fun afterChange() {
-            requireActivity().window.decorView.asOrNull<FrameLayout>()?.addView(ProgressBar(requireContext()).also {
-                it.layoutParams = FrameLayout.LayoutParams(24.dp, 24.dp).also { it.gravity = Gravity.CENTER }
-            })
+//            postToMainHandler {
+//                System.exit(0)
+//                Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java)) //todo 优化好看一点
+//            }
 
-            postToMainHandler {
-                System.exit(0)
-                Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java)) //todo 优化好看一点
+            Globals.activityList.forEach {
+                it.finish()
             }
+            Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java))
         }
     }
 
     private inner class DarkModePart {
         //进入本界面加载的sp信息
-        val enterSavedPair by unsafeLazy { requireContext().spCurrentAppDarkMode() }
 
         fun initDarkMode() {
-            enterSavedPair.let {
-                when (it.first) {
+            DarkModeAndLocalesConst.data.spCurrentAppDarkMode(Globals.app).let {
+                when (it) {
                     DarkMode.DARK -> {
                         setAsDarkMode(true)
                     }
@@ -120,27 +119,27 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
 
             binding.lightHost.onClick {
                 setAsLightMode(false)
-                DarkModeConst.changeDarkMode(DarkMode.LIGHT)
+                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.LIGHT)
             }
 
             binding.darkHost.onClick {
                 setAsDarkMode(false)
-                DarkModeConst.changeDarkMode(DarkMode.DARK)
+                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.DARK)
             }
 
             binding.switchBtn.valueCallback = { isClosed->
                 //由于默认是跟随系统。第一次关闭需要特殊处理，设置为当前系统的状态。
                 if (isClosed) {
-                    val curDark = DarkModeConst.detectDarkMode(requireContext())
+                    val curDark = DarkModeAndLocalesConst.detectDarkMode(requireContext())
                     if (curDark) {
                         setAsDarkMode(false)
                     } else {
                         setAsLightMode(false)
                     }
-                    DarkModeConst.changeDarkMode(if(curDark) DarkMode.DARK else DarkMode.LIGHT)
+                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, if(curDark) DarkMode.DARK else DarkMode.LIGHT)
                 } else {
                     setAsAutomatic(false)
-                    DarkModeConst.changeDarkMode(DarkMode.FOLLOW_SYSTEM)
+                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.FOLLOW_SYSTEM)
                 }
             }
         }
@@ -148,7 +147,7 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
         private fun setAsAutomatic(isInit:Boolean) {
             binding.hideLayout.gone()
             if(isInit) binding.switchBtn.initValue(false) else binding.switchBtn.setValue(false)
-            val curDark = DarkModeConst.detectDarkMode(requireContext())
+            val curDark = DarkModeAndLocalesConst.detectDarkMode(requireContext())
             if (curDark) {
                 binding.darkModeCheck.visible()
                 binding.lightModeCheck.invisible()

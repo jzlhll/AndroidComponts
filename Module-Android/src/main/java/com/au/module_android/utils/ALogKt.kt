@@ -23,13 +23,25 @@ inline fun logw(tag:String = TAG, block:()->String) {
     }
 }
 
-inline fun logd(tag:String = TAG, canHasFileLog:Boolean = true, block:()->String) {
+inline fun logwNoFile(tag:String = TAG, block:()->String) {
+    val str = block()
+    Log.w(tag, str)
+}
+
+inline fun logd(tag:String = TAG, block:()->String) {
     if (BuildConfig.DEBUG) {
         val str = block()
         Log.d(tag, str)
-        if (BuildConfig.ENABLE_FILE_LOG && canHasFileLog) {
+        if (BuildConfig.ENABLE_FILE_LOG) {
             FileLog.write("D $tag: $str")
         }
+    }
+}
+
+inline fun logdNoFile(tag:String = TAG, block:()->String) {
+    if (BuildConfig.DEBUG) {
+        val str = block()
+        Log.d(tag, str)
     }
 }
 

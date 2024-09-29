@@ -11,6 +11,7 @@ android {
     def enableFileLog = Boolean.parseBoolean(findProperty("app.enable_filelog"))
     def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
     def supportLocales = Boolean.parseBoolean(findProperty("app.supportLocales"))
+    def supportDarkMode = Boolean.parseBoolean(findProperty("app.supportDarkMode"))
 
     defaultConfig {
         minSdk gradle.ext.minSdk
@@ -19,7 +20,6 @@ android {
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
         buildConfigField("boolean", "ENABLE_FILE_LOG", "" + enableFileLog)
-        buildConfigField("boolean", "SUPPORT_LOCALES", "" + supportLocales)
     }
 
     buildTypes {

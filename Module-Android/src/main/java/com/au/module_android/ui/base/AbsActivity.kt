@@ -11,13 +11,12 @@ import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.BuildConfig
-import com.au.module_android.DarkModeConst
-import com.au.module_android.LocalesConst
+import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.fullPaddingEdgeToEdge
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.ignoreError
-import com.au.module_android.utils.logd
+import com.au.module_android.utils.logdNoFile
 
 @Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
 open class AbsActivity : AppCompatActivity(), IFullWindow {
@@ -125,15 +124,14 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-
-        if (DarkModeConst.isEnabled) {
+        if (DarkModeAndLocalesConst.supportDarkModeFeature) {
             //dark mode
             //不论是系统切换，还是app设置中强制切换都会触发Activity configurationChange
-            if (DarkModeConst.isFollowSystem()) {
+            if (DarkModeAndLocalesConst.isDarkModeFollowSystem()) {
                 //1. 如果是跟随系统，有切换了，判断重建
                 if (mCurrentUiMode != newConfig.uiMode) {
                     mCurrentUiMode = newConfig.uiMode
-                    logd(canHasFileLog = false) { "onConfigurationChanged system in activity newUIMode $mCurrentUiMode " }
+                    logdNoFile { "onConfigurationChanged system in activity newUIMode $mCurrentUiMode " }
                     recreate()
                 }
             } else {
@@ -141,21 +139,24 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
                 //这个应该被抛弃，以DarkModeUtil里面为准，即AppCompatDelegate.getDefaultNightMode()
                 //val uiMode = newConfig.uiMode
                 //val wishToDark = (uiMode and Configuration.UI_MODE_NIGHT_YES) != 0
-                val appIsForceDark = DarkModeConst.isForceDark()
+                val appIsForceDark = DarkModeAndLocalesConst.isForceDark()
                 val curIsDark = (mCurrentUiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 if (curIsDark != appIsForceDark) {
-                    logd(canHasFileLog = false) { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark recreate!" }
+                    logdNoFile { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark recreate!" }
                     recreate()
                 } else {
-                    logd(canHasFileLog = false) { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark do nothing!" }
+                    logdNoFile { "onConfigurationChanged force in activity curUiMode $mCurrentUiMode curIsDark=$curIsDark, app=$appIsForceDark do nothing!" }
                 }
             }
+        }
+        if (DarkModeAndLocalesConst.supportLocaleFeature) {
+            logdNoFile { "onConfigurationChanged locale in activity" }
         }
     }
 
     open fun isAutoHideIme() = false
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(LocalesConst.activityAttachBaseContext(newBase))
+        super.attachBaseContext(DarkModeAndLocalesConst.attachBaseContext(newBase))
     }
 }
