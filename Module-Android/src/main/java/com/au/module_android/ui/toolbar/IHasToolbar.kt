@@ -1,6 +1,7 @@
 package com.au.module_android.ui.toolbar
 
 import android.widget.LinearLayout
+import com.au.module_android.ui.ToolbarManager
 import com.google.android.material.appbar.MaterialToolbar
 
 /**
@@ -10,6 +11,8 @@ import com.google.android.material.appbar.MaterialToolbar
  */
 interface IHasToolbar {
     fun hasToolbar():Boolean = false
+
+    fun hasToolbarManager() : ToolbarManager.MenuBean? = null
 
     /**
      * 如果hasToolbar()=true，则会从基类创建LinearLayout。
@@ -21,4 +24,9 @@ interface IHasToolbar {
      * hasToolbar() = true 才会有。
      */
     val toolbar : MaterialToolbar?
+
+    /**
+     * hasToolbarManager()!=null 才会有。
+     */
+    val toolbarManager:ToolbarManager?
 }

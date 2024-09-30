@@ -11,7 +11,10 @@ import java.util.Locale
  */
 class App : InitApplication() {
     override fun doBeforeAttachBaseContext() {
-        DarkModeAndLocalesConst.supportLanguage = listOf(Locale.CHINESE, Locale.TAIWAN, Locale.US)
+        DarkModeAndLocalesConst.supportLanguage = listOf(
+            Locales.LOCALE_JIANTI_CN,
+            Locales.LOCALE_FANTI_CN,
+            Locales.LOCALE_US)
         DarkModeAndLocalesConst.supportLocaleFeature = true
         DarkModeAndLocalesConst.supportDarkModeFeature = true
     }

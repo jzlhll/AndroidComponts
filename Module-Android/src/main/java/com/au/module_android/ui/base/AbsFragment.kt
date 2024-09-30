@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 
 /**
@@ -55,7 +56,7 @@ open class AbsFragment : Fragment(), IFullWindow {
     /**
      * 设置title
      */
-    open fun setTitle(text: Int) {
+    open fun setTitle(@StringRes text: Int) {
         activity?.setTitle(text)
     }
 

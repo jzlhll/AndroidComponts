@@ -8,7 +8,7 @@
         android:layout_marginStart="@dimen/ui_padding_edge"
         style="@style/StyleFontBText"
         android:textSize="20sp"
-        android:text="语言"
+        android:text="@string/language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -31,7 +31,7 @@
                 android:layout_gravity="center_vertical"
                 android:id="@+id/followSystemTitle"
                 android:textSize="16sp"
-                android:text="跟随系统"
+                android:text="@string/follow_system"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -66,7 +66,7 @@
                 style="@style/StyleFontText"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
-                android:text="简体中文"
+                android:text="@string/language_cn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -102,7 +102,7 @@
                 style="@style/StyleFontText"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
-                android:text="繁體中文"
+                android:text="@string/language_tw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -138,7 +138,7 @@
                 style="@style/StyleFontText"
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
-                android:text="English"
+                android:text="@string/language_en"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -163,12 +163,18 @@
             android:layout_height="0.5dp"/>
     </LinearLayout>
 
+    <View
+        android:layout_marginTop="12dp"
+        android:background="@color/color_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
     <com.au.module_android.widget.CustomFontText
         android:layout_marginStart="@dimen/ui_padding_edge"
         android:layout_marginTop="24dp"
         style="@style/StyleFontBText"
         android:textSize="20sp"
-        android:text="深色模式"
+        android:text="@string/dark_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -192,14 +198,14 @@
                 <com.au.module_android.widget.CustomFontText
                     style="@style/StyleFontText"
                     android:textSize="16sp"
-                    android:text="跟随系统"
+                    android:text="@string/follow_system"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <com.au.module_android.widget.CustomFontText
                     style="@style/StyleFontText"
                     android:textSize="13sp"
                     android:textColor="@color/color_text_desc"
-                    android:text="开启后，将跟随系统打开或关闭深色模式"
+                    android:text="@string/automatic_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -223,15 +229,16 @@
             android:id="@+id/hideLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.au.module_android.widget.CustomFontText
                 style="@style/StyleFontText"
-                android:textSize="13sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="@dimen/ui_padding_edge"
-                android:textColor="@color/color_text_desc"
-                android:text="手动选择"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/ui_padding_edge"
+                android:layout_marginTop="20dp"
+                android:text="@string/select_manually"
+                android:textColor="@color/color_text_desc"
+                android:textSize="13sp" />
 
             <LinearLayout
                 android:id="@+id/lightHost"
@@ -246,7 +253,7 @@
                     style="@style/StyleFontText"
                     android:layout_gravity="center_vertical"
                     android:textSize="16sp"
-                    android:text="普通模式"
+                    android:text="@string/light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -284,7 +291,7 @@
                     style="@style/StyleFontText"
                     android:layout_gravity="center_vertical"
                     android:textSize="16sp"
-                    android:text="深色模式"
+                    android:text="@string/dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

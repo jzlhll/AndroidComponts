@@ -149,9 +149,6 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
                 }
             }
         }
-        if (DarkModeAndLocalesConst.supportLocaleFeature) {
-            logdNoFile { "onConfigurationChanged locale in activity" }
-        }
     }
 
     open fun isAutoHideIme() = false

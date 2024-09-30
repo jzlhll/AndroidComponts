@@ -35,11 +35,12 @@ class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
         binding.tabLayout.initAttachToViewPage2AsCustomFontText(binding.viewPager, pages)
     }
 
-    private val toolbarMgr by unsafeLazy { ToolbarManager(this, com.allan.androidlearning.R.menu.skip_menu) }
+    override fun hasToolbarManager(): ToolbarManager.MenuBean {
+        return ToolbarManager.MenuBean(com.allan.androidlearning.R.menu.skip_menu, true) {}
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarMgr.showMenu()
-        toolbarMgr.setTitleAlign(false)
+        toolbarManager?.setTitleAlign(false)
     }
 }

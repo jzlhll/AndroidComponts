@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Android学习</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="settings">设置</string>
+    <string name="dark_mode">深色模式</string>
+    <string name="light">浅色</string>
+    <string name="dark">深色</string>
+    <string name="select_manually">手动选择</string>
+    <string name="automatic_desc">开启后，app将会跟随系统自动切换浅色或者深色模式。</string>
+    <string name="language">语言</string>
 </resources>

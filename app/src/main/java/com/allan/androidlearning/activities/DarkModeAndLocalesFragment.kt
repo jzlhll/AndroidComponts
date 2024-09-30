@@ -2,48 +2,58 @@ package com.allan.androidlearning.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ProgressBar
 import com.allan.androidlearning.EntroActivity
+import com.allan.androidlearning.Locales
+import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentDarkModeSettingBinding
 import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.DarkMode
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.postToMainHandler
 import com.au.module_android.toAndroidResStr
+import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.HtmlPart
 import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.startActivityFix
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.useSimpleHtmlText
 import com.au.module_android.utils.visible
 import java.util.Locale
 
 @EntroFrgName(priority = 10, customName = "通用设置")
 class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBinding>() {
+    private val localePart = LocalesPart()
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        setTitle("设置")
+        setTitle(R.string.settings)
         DarkModePart().initDarkMode()
-        LocalesPart().initLocales()
+        localePart.initLocales()
     }
 
-    override fun hasToolbar(): Boolean {
-        return true
+    override fun hasToolbarManager(): ToolbarManager.MenuBean {
+        return ToolbarManager.MenuBean(com.au.module_android.R.menu.right_menu_save, false) {
+            if (it.itemId == com.au.module_android.R.id.menuOk) {
+                localePart.afterChange()
+            }
+        }
     }
 
     private inner class LocalesPart {
-        fun initLocales() {
-            val pair = DarkModeAndLocalesConst.data.spCurrentLocale(requireContext())
-            val isFollowSystem = !pair.second
-            val locales = pair.first
+        private val strMap by unsafeLazy { mapOf(
+            Locales.LOCALE_JIANTI_CN to getString(R.string.language_cn),
+            Locales.LOCALE_FANTI_CN to getString(R.string.language_tw),
+            Locales.LOCALE_US to getString(R.string.language_en))  }
+
+        private var enterLocale:Locale? = null
+        private var tempLocale:Locale? = null
+
+        fun changeUi(isFollowSystem:Boolean, curLocale:Locale?, isChanged:Boolean = true) {
+            tempLocale = curLocale
             if (isFollowSystem) {
                 binding.localesFollowSystemCheck.visible()
                 binding.localesCNCheck.invisible()
@@ -51,50 +61,70 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
                 binding.localesENCheck.invisible()
             } else {
                 binding.localesFollowSystemCheck.invisible()
-                val localesResStr = locales.toAndroidResStr()
-                if (localesResStr == Locale.CHINA.toAndroidResStr()) {
+                val localesResStr = curLocale!!.toAndroidResStr()
+                if (localesResStr == Locales.LOCALE_JIANTI_CN.toAndroidResStr()) {
                     binding.localesCNCheck.visible()
                 } else {
                     binding.localesCNCheck.invisible()
                 }
-                if (localesResStr == Locale.US.toAndroidResStr()) {
+                if (localesResStr == Locales.LOCALE_US.toAndroidResStr()) {
                     binding.localesENCheck.visible()
                 } else {
                     binding.localesENCheck.invisible()
                 }
-                if (localesResStr == Locale.TAIWAN.toAndroidResStr()) {
+                if (localesResStr == Locales.LOCALE_FANTI_CN.toAndroidResStr()) {
                     binding.localesTWCheck.visible()
                 } else {
                     binding.localesTWCheck.invisible()
                 }
             }
-            binding.followSystemTitle.useSimpleHtmlText(HtmlPart("跟随系统 "), HtmlPart("(" + DarkModeAndLocalesConst.data.systemLocal.displayName + ")", "#999999"))
-            binding.localesFollowSystemCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, null)
-            }
-            binding.localesCNCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.CHINA)
-                afterChange()
-            }
-            binding.localesTWCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.TAIWAN)
-                afterChange()
-            }
-            binding.localesENCheck.parent.asOrNull<ViewGroup>()?.onClick {
-                DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, Locale.US)
-                afterChange()
+
+            toolbarManager?.hideMenu()
+            if (isChanged && tempLocale != enterLocale) {
+                toolbarManager?.showMenu()
             }
         }
 
-        private fun afterChange() {
-//            postToMainHandler {
-//                System.exit(0)
-//                Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java)) //todo 优化好看一点
-//            }
+        fun initLocales() {
+            val pair = DarkModeAndLocalesConst.data.spCurrentLocale(requireContext()) ?: return //later: 如果能进来就肯定已经设置好了。
+            val isFollowSystem = !pair.second
+            enterLocale = if(!isFollowSystem) pair.first else null
+            changeUi(isFollowSystem, enterLocale, false)
 
-            Globals.activityList.forEach {
-                it.finish()
+            val systemLocal = DarkModeAndLocalesConst.data.systemLocal
+
+            binding.followSystemTitle.useSimpleHtmlText(
+                HtmlPart(getString(R.string.follow_system) + " "),
+                HtmlPart("(" + (strMap[systemLocal] ?: systemLocal.displayName) + ")", "#999999"))
+            binding.localesFollowSystemCheck.parent.asOrNull<ViewGroup>()?.onClick {
+                changeUi(true, null)
             }
+            binding.localesCNCheck.parent.asOrNull<ViewGroup>()?.onClick {
+                changeUi(false, Locales.LOCALE_JIANTI_CN)
+            }
+            binding.localesTWCheck.parent.asOrNull<ViewGroup>()?.onClick {
+                changeUi(false, Locales.LOCALE_FANTI_CN)
+            }
+            binding.localesENCheck.parent.asOrNull<ViewGroup>()?.onClick {
+                changeUi(false, Locales.LOCALE_US)
+            }
+        }
+
+        fun afterChange() {
+            if (tempLocale == enterLocale) {
+                return
+            }
+
+            DarkModeAndLocalesConst.settingChangeLanguage(Globals.app, tempLocale)
+
+            if (true) {
+                Globals.activityList.forEach {
+                    it.finish()
+                }
+            } else {
+                System.exit(0)
+            }
+
             Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java))
         }
     }
