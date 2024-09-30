@@ -8,7 +8,6 @@ import android.content.res.Resources
 import android.os.LocaleList
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatDelegate
-import com.au.module_android.sp.SharedPrefUtil
 import com.au.module_android.utils.logdNoFile
 import java.util.Locale
 
@@ -64,10 +63,11 @@ object DarkModeAndLocalesConst {
         } else {
             null
         }
-        logdNoFile(tag = logTag) { "attachBase Context --->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
         if (uiMode == null && locale == null) {
+            logdNoFile(tag = logTag) { "attachBase Context all null--->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
             return newBase
         }
+        logdNoFile(tag = logTag) { "attachBase Context uiMode $uiMode locale ${locale?.toAndroidResStr()}--->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
         return createConfigurationContext(cxt, locale, uiMode)
     }
 
@@ -268,7 +268,8 @@ object DarkModeAndLocalesConst {
         fun spCurrentAppDarkMode(cxt: Context) : DarkMode {
             val m = _spCurrentAppDarkMode
             if (m == null) {
-                val mode = SharedPrefUtil.getInt(cxt, KEY_DARK_MODE, 0)
+                val sp = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
+                val mode = sp.getInt(KEY_DARK_MODE, 0)
                 return when (mode) {
                     0 -> {
                         DarkMode.FOLLOW_SYSTEM
@@ -308,7 +309,7 @@ object DarkModeAndLocalesConst {
                     edit.putInt(KEY_DARK_MODE, 0)
                 }
             }
-            edit.apply()
+            edit.commit()
             _spCurrentAppDarkMode = mode
         }
     }
