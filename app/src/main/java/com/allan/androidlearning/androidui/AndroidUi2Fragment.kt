@@ -1,6 +1,7 @@
 package com.allan.androidlearning.androidui
 
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.allan.androidlearning.databinding.FragmentAndroidUi2Binding
 import com.allan.androidlearning.databinding.FragmentDialogEditBinding
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.click.onClick
+import com.au.module_android.toAndroidResStr
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
@@ -40,13 +42,6 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
     }
 
     fun dialog() {
-        binding.androidUiDarkmodeTempingForceLight.onClick {
-            requireActivity().transparentStatusBar(false, false)
-        }
-
-        binding.androidUiDarkmodeTempingForceDark.onClick {
-            requireActivity().transparentStatusBar(true, true)
-        }
 
         binding.androidUiDialog1.onClick {
             ConfirmBottomDialog.show(childFragmentManager, "Title", "This is the content desc for title.",
@@ -174,8 +169,24 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
     fun darkMode() {
         binding.androidUiDarkmodeTitle.text = getDarkStrFunc()
 
+        binding.androidUiDarkmodeTempingForceLight.onClick {
+            requireActivity().transparentStatusBar(false, false)
+        }
+
+        binding.androidUiDarkmodeTempingForceDark.onClick {
+            requireActivity().transparentStatusBar(true, true)
+        }
+
         binding.androidUiDarkmode1.onClick {
             ToastBuilder().setOnTop().setMessage(getDarkStrFunc()).setIcon("info").toast()
+        }
+        binding.androidUiSysLocale.onClick {
+            val locale = Resources.getSystem().configuration.locales.get(0)
+            ToastBuilder().setOnTop().setMessage("locale: " + locale.toAndroidResStr()).toast()
+        }
+        binding.androidUiSysUimode.onClick {
+            val uiMode = Resources.getSystem().configuration.uiMode
+            ToastBuilder().setOnTop().setMessage("uiMode: $uiMode").toast()
         }
     }
 }

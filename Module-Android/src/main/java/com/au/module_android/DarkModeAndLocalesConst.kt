@@ -6,42 +6,29 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.LocaleList
-import androidx.annotation.Keep
+import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatDelegate
 import com.au.module_android.utils.logdNoFile
 import java.util.Locale
 
-@Keep
-enum class DarkMode {
-    FOLLOW_SYSTEM,
-    LIGHT,
-    DARK,
-}
+@IntDef(*[Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_YES])
+@Retention(AnnotationRetention.SOURCE)
+annotation class DarkMode
 
 @SuppressLint("StaticFieldLeak")
 object DarkModeAndLocalesConst {
     var supportLocaleFeature = false
     var supportDarkModeFeature = false
-    var supportLanguage = listOf(Locale.US)
+
+    /**
+     * 请按照Locale("zh", "CN")的方式创建Locale。不要使用Locale.US, Locale.CHINESE
+     */
+    var supportLocales = listOf(Locale("en", "US"))
 
     var themedContext:Context? = null
         private set
 
-    private val logTag = "DarkModeLocales"
-    val data = Data()
-    private val defaultLocales:Locale
-        get() {
-            return supportLanguage[0]
-        }
-
-    fun applicationOnConfigurationChanged(app:Application, newConfig: Configuration) {
-        val isDarkModeFollow = isDarkModeFollowSystem()
-        val isLocaleFollow = isLocalesFollowSystem(app)
-        logdNoFile(tag = logTag) { "application onConfigurationChanged " +
-                "isDarkModeFollow:$isDarkModeFollow isLocaleFollow:$isLocaleFollow " +
-                "newConfigUiMode:${newConfig.uiMode} appUiMode:${app.resources.configuration.uiMode} " +
-                "newConfigLocale:${newConfig.locales.get(0)} appLocale:${app.resources.configuration.locales.get(0)}" }
-    }
+    private const val TAG = "DarkModeLocales"
 
     /**
      * activity | application都对接进来。
@@ -49,39 +36,50 @@ object DarkModeAndLocalesConst {
      *
      * 在调用之前，请初始好2个support变量。
      */
-    fun attachBaseContext(newBase: Context?) : Context? {
-        val cxt = newBase ?: return null
+    fun activityAttachBaseContext(newBase: Context?, fromTag: String = "activity") : Context? {
         if (!supportLocaleFeature && !supportDarkModeFeature) return newBase
+        val cxt = newBase ?: return null
 
-        val uiMode = darkMode2ConfigurationInt(data.spCurrentAppDarkMode(cxt))
-
-        val curLocalePair = data.spCurrentLocale(cxt)
-        val locale = if(curLocalePair != null) {
-            if (!curLocalePair.second) { //跟随系统
-                null
-            } else {
-                curLocalePair.first
-            }
-        } else {
-            null
-        }
-
-        if (uiMode == null && locale == null) {
-            logdNoFile(tag = logTag) { "attachBase Context all null--->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
+        if (isDarkModeFollowSystem() && isLocalesFollowSystem(newBase)) {
+            logdNoFile(tag = TAG) { "attachBase Context all null--->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
             return newBase
         }
-        logdNoFile(tag = logTag) { "attachBase Context uiMode $uiMode locale ${locale?.toAndroidResStr()}--->newBase locales ${newBase.resources.configuration.locales.get(0)} uiMode ${newBase.resources.configuration.uiMode}" }
-        return createConfigContext(cxt, locale, uiMode)
+        return createConfigContext(cxt, isDarkModeFollowSystem(), isLocalesFollowSystem(newBase), fromTag)
     }
 
-    fun applicationAttachContext(base:Context?) : Context?{
-        val createdContext = attachBaseContext(base)
-        themedContext = createdContext //那么，不论如何都有一份themedContext了。
-        return createdContext
+    fun appAttachBaseContext(base:Context?) : Context?{
+        themedContext = activityAttachBaseContext(base, fromTag = "application")
+        return themedContext
     }
 
-    fun applicationOnCreated(app:Application) {
-        setToMode(data.spCurrentAppDarkMode(app))
+    fun appOnCreated(app:Application) {
+        setToMode(spCurrentAppDarkMode(app))
+    }
+
+    fun appOnConfigurationChanged(app:Application, newConfig: Configuration) {
+        if (!supportLocaleFeature && !supportDarkModeFeature) return
+
+        val isDarkModeFollow = isDarkModeFollowSystem()
+        val isLocaleFollow = isLocalesFollowSystem(app)
+        logdNoFile(tag = TAG) {
+                "application onConfigurationChanged: " +
+                "darkModeFollow:$isDarkModeFollow localeFollow:$isLocaleFollow " +
+                "newUiMode:${newConfig.uiMode} appUiMode:${app.resources.configuration.uiMode} " +
+                "newLocale:${newConfig.locales.get(0).toAndroidResStr()} appLocale:${app.resources.configuration.locales.get(0).toAndroidResStr()}" }
+
+        logdNoFile(tag = TAG) { "application onConfigurationChanged: sys:" + systemLocal.toAndroidResStr() + " " + Resources.getSystem().configuration.uiMode }
+
+        var hasChanged = false
+        if (isDarkModeFollow) {
+            hasChanged = true
+        }
+        if (isLocaleFollow) {
+            hasChanged = true
+        }
+
+        if (hasChanged) {
+            themedContext = createConfigContext(app, isDarkModeFollow, isLocaleFollow, "application onConfigurationChanged")
+        }
     }
 
     /**
@@ -103,8 +101,8 @@ object DarkModeAndLocalesConst {
     fun isDarkModeFollowSystem() = !(isForceLight() || isForceDark())
 
     fun isLocalesFollowSystem(cxt: Context) : Boolean{
-        val d = data.spCurrentLocale(cxt) ?: return true
-        return !d.second
+        spCurrentLocale(cxt) ?: return true
+        return false
     }
 
     /**
@@ -123,210 +121,135 @@ object DarkModeAndLocalesConst {
     }
 
     /**
+     * 如果传入了就使用；否则就使用存储的。
+     */
+    private fun createConfigContext(context: Context?, uiModeFollowSys:Boolean, localFollowSys:Boolean, fromTag:String = "") : Context? {
+        context ?: return null
+        val configuration = Configuration(Resources.getSystem().configuration) //一定要拷贝一份，避免污染getSystem
+        logdNoFile(tag = TAG) { "----$fromTag----create Config Context: " +
+                "cloned: ${configuration.uiMode} ${configuration.locales.get(0).toAndroidResStr()} " +
+                "sys: " + Resources.getSystem().configuration.uiMode + " " + Resources.getSystem().configuration.locales.get(0).toAndroidResStr()
+        }
+
+        if (!localFollowSys) {
+            val locale = spCurrentLocale(context)
+            if (locale != null) {
+                configuration.setLocales(LocaleList(locale))
+                configuration.setLayoutDirection(locale)
+            }
+        }
+
+        if (!uiModeFollowSys) {
+            val uiMode = spCurrentAppDarkMode(context)
+            if (uiMode == Configuration.UI_MODE_NIGHT_YES || uiMode == Configuration.UI_MODE_NIGHT_NO) {
+                val filter = (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv())
+                configuration.uiMode = uiMode or filter
+            }
+        }
+
+        logdNoFile(tag = TAG) { "---created Config Context: new is: ${configuration.uiMode} ${configuration.locales.get(0).toAndroidResStr()}" }
+        return context.createConfigurationContext(configuration)
+    }
+
+    fun settingChangeDarkMode(app:Application, @DarkMode uiMode: Int?, saveToSp:Boolean = true) {
+        if(saveToSp) saveAppDarkMode(Globals.app, uiMode)
+        setToMode(uiMode)
+        logdNoFile(tag = TAG) { "setting ChangeDarkMode $uiMode -->$uiMode ?:(${Resources.getSystem().configuration.uiMode})" }
+
+        themedContext = createConfigContext(app, isDarkModeFollowSystem(), isLocalesFollowSystem(app))
+    }
+
+    /**
      * 从设置：切换语言，携带传递数据。
      * 跟随系统请传入newLocale = null
      */
     fun settingChangeLanguage(app: Application, newLocale: Locale?) {
-        data.saveCurrentLocale(app, newLocale)
-        logdNoFile(tag = logTag) { "setting ChangeLanguage $newLocale----> ${newLocale?.toAndroidResStr()} ?:(${Resources.getSystem().configuration.locales})" }
-        themedContext = createConfigContext(app, newLocale, darkMode2ConfigurationInt(data.spCurrentAppDarkMode(app)))
-
-        app.resources.apply {
-            if (newLocale != null) {
-                configuration.setLocales(LocaleList(newLocale))
-                configuration.setLayoutDirection(newLocale)
-            } else {
-                configuration.setLocales(Resources.getSystem().configuration.locales)
-                configuration.setLayoutDirection(Resources.getSystem().configuration.locales.get(0))
-            }
-            updateConfiguration(configuration, displayMetrics)
-        }
+        saveCurrentLocale(app, newLocale)
+        logdNoFile(tag = TAG) { "setting ChangeLanguage----> ${newLocale?.toAndroidResStr()} ?:(${Resources.getSystem().configuration.locales})" }
+        themedContext = createConfigContext(app, isDarkModeFollowSystem(), isLocalesFollowSystem(app))
     }
 
-    fun settingChangeDarkMode(app:Context, mode: DarkMode, saveToSp:Boolean = true) {
-        if(saveToSp) data.saveAppDarkMode(Globals.app, mode)
-        setToMode(mode)
-        val savedLocale = data.spCurrentLocale(app)
-        val locale = if (savedLocale == null || !savedLocale.second) null else savedLocale.first
-
-        val uiMode = darkMode2ConfigurationInt(mode)
-        logdNoFile(tag = logTag) { "setting ChangeDarkMode $mode -->$uiMode ?:(${Resources.getSystem().configuration.uiMode})" }
-
-        app.resources.apply {
-            if (uiMode != null) {
-                configuration.uiMode = uiMode
-            } else {
-                configuration.uiMode = Resources.getSystem().configuration.uiMode
-            }
-            updateConfiguration(configuration, displayMetrics)
-        }
-        themedContext = createConfigContext(app, locale, uiMode)
-    }
-
-    /**
-     * 传入null，表示跟随系统。
-     */
-    private fun createConfigContext(context: Context?, locale: Locale?, uiMode: Int?): Context? {
-        context ?: return null
-        val configuration = Configuration(Resources.getSystem().configuration) //一定要拷贝一份，避免污染getSystem
-
-        var elseLocale :Locale? = null
-        if (locale != null) {
-            configuration.setLocales(LocaleList(locale))
-            configuration.setLayoutDirection(locale)
-        } else {
-            configuration.setLocales(Resources.getSystem().configuration.locales)
-            elseLocale = Resources.getSystem().configuration.locales.get(0)
-            configuration.setLayoutDirection(elseLocale)
-        }
-
-        val fixUiMode = uiMode ?: Resources.getSystem().configuration.uiMode
-        configuration.uiMode = fixUiMode
-
-        logdNoFile(tag = logTag) {
-            "create ConfigurationContext params: ${locale?.toAndroidResStr()} ?:(${elseLocale?.toAndroidResStr()}) $uiMode ?:($fixUiMode)"
-        }
-        return context.createConfigurationContext(configuration)
-    }
-
-    private fun setToMode(mode: DarkMode) {
-        /**
-         * MODE_NIGHT_FOLLOW_SYSTEM 跟随系统设置
-         * MODE_NIGHT_NO 关闭暗黑模式
-         * MODE_NIGHT_YES 开启暗黑模式
-         * MODE_NIGHT_AUTO_BATTERY 系统进入省电模式时，开启暗黑模式。不一定有用。
-         * MODE_NIGHT_UNSPECIFIED 未指定，默认值
-         */
+    private fun setToMode(@DarkMode mode: Int?) {
         when (mode) {
-            DarkMode.DARK -> {
+            Configuration.UI_MODE_NIGHT_YES -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
 
-            DarkMode.LIGHT -> {
+            Configuration.UI_MODE_NIGHT_NO -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
 
-            DarkMode.FOLLOW_SYSTEM -> {
+            else -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
     }
 
-    private fun darkMode2ConfigurationInt(mode: DarkMode) : Int?{
-        if (!supportDarkModeFeature) {
+    private const val XML_NAME = "ResConfiguration"
+    private const val KEY_CUR_LANGUAGE = "currentLanguage"
+    private const val KEY_DARK_MODE = "appDarkMode"
+
+    private var curLanguageAndroidStr:String? = null
+    /**
+     * 返回null就是跟随系统
+     */
+    fun spCurrentLocale(context: Context) : Locale? {
+        if (!supportLocaleFeature) {
             return null
         }
 
-        return when(mode) {
-            DarkMode.DARK -> Configuration.UI_MODE_NIGHT_YES
-            DarkMode.FOLLOW_SYSTEM -> null
-            DarkMode.LIGHT -> Configuration.UI_MODE_NIGHT_NO
+        val cur = curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
+            .getString(KEY_CUR_LANGUAGE, "")
+            .also { curLanguageAndroidStr = it }
+        if (cur.isNullOrEmpty()) {
+            return null
+        }
+        return supportLocales.find { it.toAndroidResStr() == cur } //这里肯定是找到了。因为我们保存的就是我们设定的。
+    }
+
+    /**
+     * 切换跟随系统的时候，清空。
+     */
+    private fun saveCurrentLocale(context: Context, locale: Locale?) {
+        curLanguageAndroidStr = locale?.toAndroidResStr() ?: ""
+        val edit = context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
+        if (locale == null) {
+            edit.remove(KEY_CUR_LANGUAGE).commit() //就是要立刻保存
+        } else {
+            edit.putString(KEY_CUR_LANGUAGE, locale.toAndroidResStr()).commit() //就是要立刻保存
         }
     }
 
-    class Data {
-        private val XML_NAME = "ResConfiguration"
-        private val KEY_CUR_LANGUAGE = "currentLanguage"
-        private val KEY_DARK_MODE = "appDarkMode"
+    val systemLocal: Locale
+        get() =
+            Resources.getSystem().configuration.getLocales().get(0)
 
-        private var curLanguageSp:String? = null
-        /**
-         * 返回值的第二个参数：false表示我们不需要处理多语言，跟随系统走。true则是自定义语言。
-         */
-        fun spCurrentLocale(context: Context) : Pair<Locale, Boolean>? {
-            if (!supportLocaleFeature) {
-                return null
-            }
+    private var _spCurrentAppDarkMode: Int? = null
 
-            val cur = curLanguageSp ?: context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_CUR_LANGUAGE, "")
-                .also { curLanguageSp = it }
-            if (cur.isNullOrEmpty()) {
-                return getSystemLocalElseDefault() to false
-            }
-            val foundCur = supportLanguage.find { it.toAndroidResStr() == cur }
-            if (foundCur != null) {
-                return foundCur to true
-            }
-            return getSystemLocalElseDefault() to false
-        }
-
-        /**
-         * 切换跟随系统的时候，清空。
-         */
-        fun saveCurrentLocale(context: Context, locale: Locale?) {
-            curLanguageSp = locale?.toAndroidResStr() ?: ""
-            val edit = context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
-            if (locale == null) {
-                edit.remove(KEY_CUR_LANGUAGE).commit() //就是要立刻保存
-            } else {
-                edit.putString(KEY_CUR_LANGUAGE, locale.toAndroidResStr()).commit() //就是要立刻保存
-            }
-        }
-
-        val systemLocal: Locale
-            get() =
-                Resources.getSystem().configuration.getLocales().get(0)
-
-        private fun getSystemLocalElseDefault(): Locale {
-            supportLanguage.forEach {
-                if (it.toAndroidResStr() == systemLocal.toAndroidResStr())
-                    return it
-            }
-            return defaultLocales
-        }
-
-        private var _spCurrentAppDarkMode: DarkMode? = null
-        /**
-         * 当前sp中保存的标记. boolean表示是否已经设置过了。
-         */
-        fun spCurrentAppDarkMode(cxt: Context) : DarkMode {
-            val m = _spCurrentAppDarkMode
-            if (m == null) {
-                val sp = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
-                val mode = sp.getInt(KEY_DARK_MODE, 0)
-                return when (mode) {
-                    0 -> {
-                        DarkMode.FOLLOW_SYSTEM
-                    }
-                    1 -> {
-                        DarkMode.LIGHT
-                    }
-                    else -> {
-                        DarkMode.DARK
-                    }
-                }.also {
-                    _spCurrentAppDarkMode = it
-                }
-            }
-
-            return m
-        }
-
-        fun saveAppDarkMode(cxt: Context, mode: DarkMode) {
-            /**
-             * MODE_NIGHT_FOLLOW_SYSTEM 跟随系统设置
-             * MODE_NIGHT_NO 关闭暗黑模式
-             * MODE_NIGHT_YES 开启暗黑模式
-             * MODE_NIGHT_AUTO_BATTERY 系统进入省电模式时，开启暗黑模式。不一定有用。
-             * MODE_NIGHT_UNSPECIFIED 未指定，默认值
-             */
-
-            val edit = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
-            when (mode) {
-                DarkMode.DARK -> {
-                    edit.putInt(KEY_DARK_MODE, 2)
-                }
-                DarkMode.LIGHT -> {
-                    edit.putInt(KEY_DARK_MODE, 1)
-                }
-                DarkMode.FOLLOW_SYSTEM -> {
-                    edit.putInt(KEY_DARK_MODE, 0)
-                }
-            }
-            edit.commit()
+    @DarkMode
+    fun spCurrentAppDarkMode(cxt: Context) : Int? {
+        val m = _spCurrentAppDarkMode
+        if (m == null) {
+            val sp = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
+            val mode = sp.getInt(KEY_DARK_MODE, -999)
             _spCurrentAppDarkMode = mode
+            return mode
         }
+
+        if (m == -999) {
+            return null
+        }
+        return m
+    }
+
+    private fun saveAppDarkMode(cxt: Context, @DarkMode mode: Int?) {
+        val edit = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
+        if (mode == null) {
+            edit.remove(KEY_DARK_MODE).commit()
+        } else {
+            edit.putInt(KEY_DARK_MODE, mode).commit()
+        }
+        _spCurrentAppDarkMode = mode
     }
 }
 

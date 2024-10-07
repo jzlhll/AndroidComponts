@@ -31,19 +31,31 @@
 
             <Button
                 android:id="@+id/android_ui_darkmodeTempingForceLight"
-                android:text="临时 force light"
+                android:text="force light"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"/>
 
             <Button
                 android:id="@+id/android_ui_darkmodeTempingForceDark"
-                android:text="临时 force dark"
+                android:text="force dark"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"/>
 
             <Button
                 android:id="@+id/android_ui_darkmode1"
                 android:text="current"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_sys_locale"
+                android:text="sysLocale"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
+
+            <Button
+                android:id="@+id/android_ui_sys_uimode"
+                android:text="sysUiMode"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"/>
         </com.au.module_android.widget.FlowLayout>

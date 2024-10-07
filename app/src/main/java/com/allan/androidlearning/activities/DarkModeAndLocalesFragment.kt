@@ -1,6 +1,7 @@
 package com.allan.androidlearning.activities
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
 import com.allan.androidlearning.EntroActivity
@@ -86,12 +87,11 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
         }
 
         fun initLocales() {
-            val pair = DarkModeAndLocalesConst.data.spCurrentLocale(requireContext()) ?: return //later: 如果能进来就肯定已经设置好了。
-            val isFollowSystem = !pair.second
-            enterLocale = if(!isFollowSystem) pair.first else null
-            changeUi(isFollowSystem, enterLocale, false)
+            val locale = DarkModeAndLocalesConst.spCurrentLocale(requireContext())
+            enterLocale = locale
+            changeUi(locale == null, enterLocale, false)
 
-            val systemLocal = DarkModeAndLocalesConst.data.systemLocal
+            val systemLocal = DarkModeAndLocalesConst.systemLocal
 
             binding.followSystemTitle.useSimpleHtmlText(
                 HtmlPart(getString(R.string.follow_system) + " "),
@@ -133,15 +133,15 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
         //进入本界面加载的sp信息
 
         fun initDarkMode() {
-            DarkModeAndLocalesConst.data.spCurrentAppDarkMode(Globals.app).let {
+            DarkModeAndLocalesConst.spCurrentAppDarkMode(Globals.app).let {
                 when (it) {
-                    DarkMode.DARK -> {
+                    Configuration.UI_MODE_NIGHT_YES -> {
                         setAsDarkMode(true)
                     }
-                    DarkMode.LIGHT -> {
+                    Configuration.UI_MODE_NIGHT_NO -> {
                         setAsLightMode(true)
                     }
-                    DarkMode.FOLLOW_SYSTEM -> {
+                    else -> {
                         setAsAutomatic(true)
                     }
                 }
@@ -149,12 +149,12 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
 
             binding.lightHost.onClick {
                 setAsLightMode(false)
-                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.LIGHT)
+                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, Configuration.UI_MODE_NIGHT_NO)
             }
 
             binding.darkHost.onClick {
                 setAsDarkMode(false)
-                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.DARK)
+                DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, Configuration.UI_MODE_NIGHT_YES)
             }
 
             binding.switchBtn.valueCallback = { isClosed->
@@ -166,10 +166,10 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
                     } else {
                         setAsLightMode(false)
                     }
-                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, if(curDark) DarkMode.DARK else DarkMode.LIGHT)
+                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, if(curDark) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO)
                 } else {
                     setAsAutomatic(false)
-                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, DarkMode.FOLLOW_SYSTEM)
+                    DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, null)
                 }
             }
         }

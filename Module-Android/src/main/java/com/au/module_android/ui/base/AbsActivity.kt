@@ -124,21 +124,24 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        //这里的不准。系统是先走Application的onConfigChanged，然后走这里。
+        // 那么，我们会先更新themedContext，以themedContext优先。
+        // 如果我们不更新application的uiMode就会有问题，而它已经deprecated。
+
         if (DarkModeAndLocalesConst.supportDarkModeFeature) {
+            val newUiMode = DarkModeAndLocalesConst.themedContext?.resources?.configuration?.uiMode ?: newConfig.uiMode //todo
             //dark mode
             //不论是系统切换，还是app设置中强制切换都会触发Activity configurationChange
             if (DarkModeAndLocalesConst.isDarkModeFollowSystem()) {
                 //1. 如果是跟随系统，有切换了，判断重建
-                if (mCurrentUiMode != newConfig.uiMode) {
-                    mCurrentUiMode = newConfig.uiMode
+                if (mCurrentUiMode != newUiMode) {
+                    mCurrentUiMode = newUiMode
                     logdNoFile { "onConfigurationChanged system in activity newUIMode $mCurrentUiMode " }
                     recreate()
                 }
             } else {
                 //2. 如果不跟系统，这里得到的newConfig是不准的，可能是系统触发而来(应该抛弃)，也可能是自己设置而来（接受）
                 //这个应该被抛弃，以DarkModeUtil里面为准，即AppCompatDelegate.getDefaultNightMode()
-                //val uiMode = newConfig.uiMode
-                //val wishToDark = (uiMode and Configuration.UI_MODE_NIGHT_YES) != 0
                 val appIsForceDark = DarkModeAndLocalesConst.isForceDark()
                 val curIsDark = (mCurrentUiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 if (curIsDark != appIsForceDark) {
@@ -154,6 +157,6 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
     open fun isAutoHideIme() = false
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(DarkModeAndLocalesConst.attachBaseContext(newBase))
+        super.attachBaseContext(DarkModeAndLocalesConst.activityAttachBaseContext(newBase))
     }
 }

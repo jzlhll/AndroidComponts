@@ -14,7 +14,7 @@ import com.au.module_android.utils.logd
 
 class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        logd { "DarkModeLocales ${DarkModeAndLocalesConst.data.systemLocal.toAndroidResStr()}" }
+        logd { "DarkModeLocales ${DarkModeAndLocalesConst.systemLocal.toAndroidResStr()}" }
         buttons()
         blocks()
         darkModeAndLocalesTest()
@@ -45,7 +45,7 @@ class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
 
     fun darkModeAndLocalesTest() {
         val str1 = getString(R.string.app_name)
-        val str2 = Globals.app.getString(R.string.app_name)
+        val str2 = Globals.app.getString(R.string.app_name, )
         val str3 = DarkModeAndLocalesConst.themedContext?.getString(R.string.app_name)
 
         val color1 = resources.getColor(com.au.module_androidcolor.R.color.color_text_normal)
