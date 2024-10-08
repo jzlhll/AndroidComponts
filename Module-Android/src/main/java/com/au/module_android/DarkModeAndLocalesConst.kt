@@ -18,9 +18,9 @@ annotation class DarkMode
 @SuppressLint("StaticFieldLeak")
 object DarkModeAndLocalesConst {
     /**
-     * 请按照Locale("zh", "CN")的方式创建Locale。不要使用Locale.US, Locale.CHINESE
+     * 左值并非标准的构建Locales的参数，仅仅用于sp存储标记。右侧Locales也可以不带country。
      */
-    var supportLocales = listOf(Locale("en", "US"))
+    var supportLocales = mapOf("en_US" to Locale("en", "US"))
 
     var themedContext:Context? = null
         private set
@@ -62,9 +62,9 @@ object DarkModeAndLocalesConst {
                 "application onConfigurationChanged: " +
                 "darkModeFollow:$isDarkModeFollow localeFollow:$isLocaleFollow " +
                 "newUiMode:${newConfig.uiMode} appUiMode:${app.resources.configuration.uiMode} " +
-                "newLocale:${newConfig.locales.get(0).toAndroidResStr()} appLocale:${app.resources.configuration.locales.get(0).toAndroidResStr()}" }
+                "newLocale:${newConfig.locales.get(0)} appLocale:${app.resources.configuration.locales.get(0)}" }
 
-        logdNoFile(tag = TAG) { "application onConfigurationChanged: sys:" + systemLocal.toAndroidResStr() + " " + Resources.getSystem().configuration.uiMode }
+        logdNoFile(tag = TAG) { "application onConfigurationChanged: sys:" + systemLocal + " " + Resources.getSystem().configuration.uiMode }
 
         var hasChanged = false
         if (isDarkModeFollow) {
@@ -103,7 +103,7 @@ object DarkModeAndLocalesConst {
         if (!BuildConfig.SUPPORT_LOCALES) {
             return true
         }
-        spCurrentLocale(cxt) ?: return true
+        spCurrentLocaleKey(cxt) ?: return true
         return false
     }
 
@@ -129,13 +129,14 @@ object DarkModeAndLocalesConst {
         context ?: return null
         val configuration = Configuration(Resources.getSystem().configuration) //一定要拷贝一份，避免污染getSystem
         logdNoFile(tag = TAG) { "----$fromTag----create Config Context: " +
-                "cloned: ${configuration.uiMode} ${configuration.locales.get(0).toAndroidResStr()} " +
-                "sys: " + Resources.getSystem().configuration.uiMode + " " + Resources.getSystem().configuration.locales.get(0).toAndroidResStr()
+                "cloned: ${configuration.uiMode} ${configuration.locales.get(0)} " +
+                "sys: " + Resources.getSystem().configuration.uiMode + " " + Resources.getSystem().configuration.locales.get(0)
         }
 
         if (!localFollowSys) {
-            val locale = spCurrentLocale(context)
-            if (locale != null) {
+            val localeKey = spCurrentLocaleKey(context)
+            if (!localeKey.isNullOrEmpty()) {
+                val locale = supportLocales[localeKey]
                 configuration.setLocales(LocaleList(locale))
                 configuration.setLayoutDirection(locale)
             }
@@ -149,7 +150,7 @@ object DarkModeAndLocalesConst {
             }
         }
 
-        logdNoFile(tag = TAG) { "---created Config Context: new is: ${configuration.uiMode} ${configuration.locales.get(0).toAndroidResStr()}" }
+        logdNoFile(tag = TAG) { "---created Config Context: new is: ${configuration.uiMode} ${configuration.locales.get(0)}" }
         return context.createConfigurationContext(configuration)
     }
 
@@ -165,9 +166,9 @@ object DarkModeAndLocalesConst {
      * 从设置：切换语言，携带传递数据。
      * 跟随系统请传入newLocale = null
      */
-    fun settingChangeLanguage(app: Application, newLocale: Locale?) {
+    fun settingChangeLanguage(app: Application, newLocale: String?) {
         saveCurrentLocale(app, newLocale)
-        logdNoFile(tag = TAG) { "setting ChangeLanguage----> ${newLocale?.toAndroidResStr()} ?:(${Resources.getSystem().configuration.locales})" }
+        logdNoFile(tag = TAG) { "setting ChangeLanguage----> $newLocale ?:(${Resources.getSystem().configuration.locales})" }
         themedContext = createConfigContext(app, isDarkModeFollowSystem(), isLocalesFollowSystem(app))
     }
 
@@ -194,28 +195,25 @@ object DarkModeAndLocalesConst {
 
     private var curLanguageAndroidStr:String? = null
     /**
-     * 返回null就是跟随系统
+     * 返回的是supportLocales的key。
+     * 返回null就是跟随系统。
      */
-    fun spCurrentLocale(context: Context) : Locale? {
-        val cur = curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE)
+    fun spCurrentLocaleKey(context: Context) : String? {
+        return curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE)
             .getString(KEY_CUR_LANGUAGE, "")
             .also { curLanguageAndroidStr = it }
-        if (cur.isNullOrEmpty()) {
-            return null
-        }
-        return supportLocales.find { it.toAndroidResStr() == cur } //这里肯定是找到了。因为我们保存的就是我们设定的。
     }
 
     /**
      * 切换跟随系统的时候，清空。
      */
-    private fun saveCurrentLocale(context: Context, locale: Locale?) {
-        curLanguageAndroidStr = locale?.toAndroidResStr() ?: ""
+    private fun saveCurrentLocale(context: Context, localeKey: String?) {
+        curLanguageAndroidStr = localeKey ?: ""
         val edit = context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE).edit()
-        if (locale == null) {
+        if (localeKey.isNullOrEmpty()) {
             edit.remove(KEY_CUR_LANGUAGE).commit() //就是要立刻保存
         } else {
-            edit.putString(KEY_CUR_LANGUAGE, locale.toAndroidResStr()).commit() //就是要立刻保存
+            edit.putString(KEY_CUR_LANGUAGE, localeKey).commit() //就是要立刻保存
         }
     }
 
@@ -250,8 +248,4 @@ object DarkModeAndLocalesConst {
         }
         _spCurrentAppDarkMode = mode
     }
-}
-
-fun Locale.toAndroidResStr() : String {
-    return language + "_" + country
 }

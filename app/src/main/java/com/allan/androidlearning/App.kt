@@ -2,6 +2,7 @@ package com.allan.androidlearning
 
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.InitApplication
+import java.util.Locale
 
 /**
  * @author allan
@@ -10,9 +11,10 @@ import com.au.module_android.InitApplication
  */
 class App : InitApplication() {
     override fun initBeforeAttachBaseContext() {
-        DarkModeAndLocalesConst.supportLocales = listOf(
-            Locales.LOCALE_JIANTI_CN,
-            Locales.LOCALE_FANTI_CN,
-            Locales.LOCALE_US)
+        DarkModeAndLocalesConst.supportLocales = mapOf(
+            Locales.LOCALE_JIANTI_CN_KEY to Locale.SIMPLIFIED_CHINESE,
+            Locales.LOCALE_FANTI_CN_KEY to Locale.TRADITIONAL_CHINESE,
+            Locales.LOCALE_US_KEY to Locale.ENGLISH,
+        )
     }
 }

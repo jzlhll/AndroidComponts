@@ -14,7 +14,6 @@ import com.allan.androidlearning.databinding.FragmentAndroidUi2Binding
 import com.allan.androidlearning.databinding.FragmentDialogEditBinding
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.click.onClick
-import com.au.module_android.toAndroidResStr
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
@@ -182,7 +181,7 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
         }
         binding.androidUiSysLocale.onClick {
             val locale = Resources.getSystem().configuration.locales.get(0)
-            ToastBuilder().setOnTop().setMessage("locale: " + locale.toAndroidResStr()).toast()
+            ToastBuilder().setOnTop().setMessage("locale: " + locale).toast()
         }
         binding.androidUiSysUimode.onClick {
             val uiMode = Resources.getSystem().configuration.uiMode

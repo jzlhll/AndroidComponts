@@ -8,13 +8,10 @@ import com.allan.androidlearning.databinding.FragmentAndroidUi1Binding
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.toAndroidResStr
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.logd
 
 class AndroidUi1Fragment : BindingFragment<FragmentAndroidUi1Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        logd { "DarkModeLocales ${DarkModeAndLocalesConst.systemLocal.toAndroidResStr()}" }
         buttons()
         blocks()
         darkModeAndLocalesTest()

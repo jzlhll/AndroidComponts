@@ -9,8 +9,8 @@ import java.util.Locale
  */
 class Locales {
     companion object {
-        val LOCALE_JIANTI_CN = Locale("zh", "CN")
-        val LOCALE_FANTI_CN = Locale("zh", "TW")
-        val LOCALE_US = Locale("en", "US")
+        val LOCALE_JIANTI_CN_KEY = "zh_CN"
+        val LOCALE_FANTI_CN_KEY = "zh_TW"
+        val LOCALE_US_KEY = "en_US"
     }
 }
