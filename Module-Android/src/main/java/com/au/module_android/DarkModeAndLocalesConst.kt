@@ -50,7 +50,7 @@ object DarkModeAndLocalesConst {
     }
 
     fun appOnCreated(app:Application) {
-        setToMode(spCurrentAppDarkMode(app))
+        if(BuildConfig.SUPPORT_DARKMODE) setToMode(spCurrentAppDarkMode(app))
     }
 
     fun appOnConfigurationChanged(app:Application, newConfig: Configuration) {
@@ -83,6 +83,7 @@ object DarkModeAndLocalesConst {
      * 是否设置成了强制单边 强制dark，不跟随系统
      */
     fun isForceDark() : Boolean {
+        if (!BuildConfig.SUPPORT_DARKMODE) return false
         val m = AppCompatDelegate.getDefaultNightMode()
         return m == AppCompatDelegate.MODE_NIGHT_YES
     }
@@ -91,13 +92,17 @@ object DarkModeAndLocalesConst {
      * 是否设置成了强制单边，强制light，不跟随系统
      */
     fun isForceLight() : Boolean {
+        if (!BuildConfig.SUPPORT_DARKMODE) return false
         val m = AppCompatDelegate.getDefaultNightMode()
         return m == AppCompatDelegate.MODE_NIGHT_NO
     }
 
-    fun isDarkModeFollowSystem() = !(isForceLight() || isForceDark())
+    fun isDarkModeFollowSystem() = if(BuildConfig.SUPPORT_DARKMODE) !(isForceLight() || isForceDark()) else true
 
     fun isLocalesFollowSystem(cxt: Context) : Boolean{
+        if (!BuildConfig.SUPPORT_LOCALES) {
+            return true
+        }
         spCurrentLocale(cxt) ?: return true
         return false
     }
