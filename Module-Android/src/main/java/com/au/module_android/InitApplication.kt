@@ -18,7 +18,7 @@ open class InitApplication : Application() {
         DarkModeAndLocalesConst.appOnCreated(this)
     }
 
-    override fun attachBaseContext(base: Context?) {
+    final override fun attachBaseContext(base: Context?) {
         initBeforeAttachBaseContext()
         super.attachBaseContext(DarkModeAndLocalesConst.appAttachBaseContext(base))
     }
@@ -31,8 +31,9 @@ open class InitApplication : Application() {
         DarkModeAndLocalesConst.appOnConfigurationChanged(this, newConfig)
     }
 
-    override fun getResources(): Resources {
+    override fun getResources() : Resources {
         if (BuildConfig.SUPPORT_LOCALES || BuildConfig.SUPPORT_DARKMODE) {
+            //会影响Activity的获取。必须将处理后的resource替换掉。
             return DarkModeAndLocalesConst.themedContext?.resources ?: return super.getResources()
         }
         return super.getResources()

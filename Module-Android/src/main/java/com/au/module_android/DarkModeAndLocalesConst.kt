@@ -22,6 +22,7 @@ object DarkModeAndLocalesConst {
      */
     var supportLocales = mapOf("en_US" to Locale("en", "US"))
 
+    @Volatile
     var themedContext:Context? = null
         private set
 
