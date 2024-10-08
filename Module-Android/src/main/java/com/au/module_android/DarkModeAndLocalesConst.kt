@@ -187,7 +187,8 @@ object DarkModeAndLocalesConst {
         }
     }
 
-    private const val XML_NAME = "ResConfiguration"
+    private const val XML_NAME_LOCALES = "ResConfiguration"
+    private const val XML_NAME_DARKMODE = "ResConfiguration"
     private const val KEY_CUR_LANGUAGE = "currentLanguage"
     private const val KEY_DARK_MODE = "appDarkMode"
 
@@ -196,7 +197,7 @@ object DarkModeAndLocalesConst {
      * 返回null就是跟随系统
      */
     fun spCurrentLocale(context: Context) : Locale? {
-        val cur = curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
+        val cur = curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE)
             .getString(KEY_CUR_LANGUAGE, "")
             .also { curLanguageAndroidStr = it }
         if (cur.isNullOrEmpty()) {
@@ -210,7 +211,7 @@ object DarkModeAndLocalesConst {
      */
     private fun saveCurrentLocale(context: Context, locale: Locale?) {
         curLanguageAndroidStr = locale?.toAndroidResStr() ?: ""
-        val edit = context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
+        val edit = context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE).edit()
         if (locale == null) {
             edit.remove(KEY_CUR_LANGUAGE).commit() //就是要立刻保存
         } else {
@@ -228,7 +229,7 @@ object DarkModeAndLocalesConst {
     fun spCurrentAppDarkMode(cxt: Context) : Int? {
         val m = _spCurrentAppDarkMode
         if (m == null) {
-            val sp = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
+            val sp = cxt.getSharedPreferences(XML_NAME_DARKMODE, Context.MODE_PRIVATE)
             val mode = sp.getInt(KEY_DARK_MODE, -999)
             _spCurrentAppDarkMode = mode
             return mode
@@ -241,7 +242,7 @@ object DarkModeAndLocalesConst {
     }
 
     private fun saveAppDarkMode(cxt: Context, @DarkMode mode: Int?) {
-        val edit = cxt.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE).edit()
+        val edit = cxt.getSharedPreferences(XML_NAME_DARKMODE, Context.MODE_PRIVATE).edit()
         if (mode == null) {
             edit.remove(KEY_DARK_MODE).commit()
         } else {
