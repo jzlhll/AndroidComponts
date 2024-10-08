@@ -20,6 +20,8 @@ android {
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
         buildConfigField("boolean", "ENABLE_FILE_LOG", "" + enableFileLog)
+        buildConfigField("boolean", "SUPPORT_LOCALES", "" + supportLocales)
+        buildConfigField("boolean", "SUPPORT_DARKMODE", "" + supportDarkMode)
     }
 
     buildTypes {

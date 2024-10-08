@@ -32,7 +32,7 @@ open class InitApplication : Application() {
     }
 
     override fun getResources(): Resources {
-        if (DarkModeAndLocalesConst.supportDarkModeFeature || DarkModeAndLocalesConst.supportLocaleFeature) {
+        if (BuildConfig.SUPPORT_LOCALES || BuildConfig.SUPPORT_DARKMODE) {
             return DarkModeAndLocalesConst.themedContext?.resources ?: return super.getResources()
         }
         return super.getResources()

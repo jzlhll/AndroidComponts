@@ -128,7 +128,7 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
         // 那么，我们会先更新themedContext，以themedContext优先。
         // 如果我们不更新application的uiMode就会有问题，而它已经deprecated。
 
-        if (DarkModeAndLocalesConst.supportDarkModeFeature) {
+        if (BuildConfig.SUPPORT_DARKMODE) {
             val newUiMode = DarkModeAndLocalesConst.themedContext?.resources?.configuration?.uiMode ?: newConfig.uiMode //todo
             //dark mode
             //不论是系统切换，还是app设置中强制切换都会触发Activity configurationChange

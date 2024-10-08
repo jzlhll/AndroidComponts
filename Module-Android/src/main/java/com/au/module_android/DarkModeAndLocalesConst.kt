@@ -17,9 +17,6 @@ annotation class DarkMode
 
 @SuppressLint("StaticFieldLeak")
 object DarkModeAndLocalesConst {
-    var supportLocaleFeature = false
-    var supportDarkModeFeature = false
-
     /**
      * 请按照Locale("zh", "CN")的方式创建Locale。不要使用Locale.US, Locale.CHINESE
      */
@@ -37,7 +34,7 @@ object DarkModeAndLocalesConst {
      * 在调用之前，请初始好2个support变量。
      */
     fun activityAttachBaseContext(newBase: Context?, fromTag: String = "activity") : Context? {
-        if (!supportLocaleFeature && !supportDarkModeFeature) return newBase
+        if (!BuildConfig.SUPPORT_LOCALES && !BuildConfig.SUPPORT_DARKMODE) return newBase
         val cxt = newBase ?: return null
 
         if (isDarkModeFollowSystem() && isLocalesFollowSystem(newBase)) {
@@ -57,7 +54,7 @@ object DarkModeAndLocalesConst {
     }
 
     fun appOnConfigurationChanged(app:Application, newConfig: Configuration) {
-        if (!supportLocaleFeature && !supportDarkModeFeature) return
+        if (!BuildConfig.SUPPORT_LOCALES && !BuildConfig.SUPPORT_DARKMODE) return
 
         val isDarkModeFollow = isDarkModeFollowSystem()
         val isLocaleFollow = isLocalesFollowSystem(app)
@@ -194,10 +191,6 @@ object DarkModeAndLocalesConst {
      * 返回null就是跟随系统
      */
     fun spCurrentLocale(context: Context) : Locale? {
-        if (!supportLocaleFeature) {
-            return null
-        }
-
         val cur = curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)
             .getString(KEY_CUR_LANGUAGE, "")
             .also { curLanguageAndroidStr = it }
