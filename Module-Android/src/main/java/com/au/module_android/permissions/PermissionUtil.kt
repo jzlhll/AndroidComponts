@@ -58,6 +58,7 @@ fun LifecycleOwner.createPermissionForResult(permission:String) : IOnePermission
  * activity 跳转，返回拿结果。
  */
 fun LifecycleOwner.createActivityForResult() : ActivityForResult = ActivityForResult(this)
+
 /**
  * 跳转到辅助服务
  */

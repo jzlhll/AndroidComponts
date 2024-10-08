@@ -2,11 +2,12 @@ package com.au.module_android.permissions.permission
 
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
+import com.au.module_android.permissions.IContractResult
 
 abstract class IOnePermissionResult(val permission:String,
                                     cxt: Any,
                                     contract: ActivityResultContract<String, Boolean>)
-    : IPermissionResult<String, Boolean>(cxt, contract) {
+    : IContractResult<String, Boolean>(cxt, contract) {
     /**
      * 使用
      * createMultiPermissionForResult(permissions)

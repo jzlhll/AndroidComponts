@@ -2,11 +2,12 @@ package com.au.module_android.permissions.permission
 
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
+import com.au.module_android.permissions.IContractResult
 
 abstract class IMultiPermissionsResult(val permissions:Array<String>,
                                        cxt: Any,
                                        contract: ActivityResultContract<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>) :
-    IPermissionResult<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>(cxt, contract) {
+    IContractResult<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>(cxt, contract) {
     /**
      * 使用
      * createMultiPermissionForResult(permissions)
