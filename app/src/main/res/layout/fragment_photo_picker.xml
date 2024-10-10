@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="40dp"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/singlePic"
+        android:text="单选图片"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/singleVideo"
+        android:text="单选视频"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/singlePicAndVideo"
+        android:text="图片&amp;视频"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_marginTop="24dp"
+        android:id="@+id/multiPic4"
+        android:text="多选图片4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/multiVideo3"
+        android:text="多选视频3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/multiPicAndVideo5"
+        android:text="多选图片&amp;视频5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

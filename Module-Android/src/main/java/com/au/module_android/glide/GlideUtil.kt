@@ -1,6 +1,5 @@
 package com.au.module_android.glide
 
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever

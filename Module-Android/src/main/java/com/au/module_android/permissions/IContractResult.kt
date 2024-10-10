@@ -1,5 +1,7 @@
 package com.au.module_android.permissions
 
+import android.app.Activity
+import android.content.Context
 import android.view.View
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -41,5 +43,15 @@ abstract class IContractResult<I, O> (cxt:Any, resultContract:ActivityResultCont
      */
     protected fun setResultCallback(callback: ActivityResultCallback<O>) {
         onResultCallback = callback
+    }
+
+    internal fun Any.toContext():Context {
+        if (this is Fragment) {
+            return requireContext()
+        }
+        if (this is Activity) {
+            return this
+        }
+        throw RuntimeException()
     }
 }
