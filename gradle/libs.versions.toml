@@ -1,6 +1,7 @@
 [versions]
 
 appcompat = "1.7.0"
+compress = "v3.11.3"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
@@ -48,6 +49,7 @@ androidx-startup-runtime = { module = "androidx.startup:startup-runtime", versio
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntimeKtx" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+compress = { module = "io.github.lucksiege:compress", version.ref = "compress" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jsbridgev2 = { module = "com.github.jzlhll:jsbridgeV2", version.ref = "jsbridgev2" }

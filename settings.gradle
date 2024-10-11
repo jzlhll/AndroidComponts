@@ -47,6 +47,7 @@ include ':jobstudy'
 //include ':AuLiteSqlKt'
 //include ':MultiMedia'
 include ':autoClickFloat'
+include ':Module-ImageCompressed'
 
 //include ':appcontentprovider'
 //include ':appcontentresolver'

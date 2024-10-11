@@ -1,0 +1,26 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.au.module_imagecompressed'
+    compileSdk gradle.ext.compileSdk
+
+    defaultConfig {
+        minSdk gradle.ext.minSdk
+    }
+
+    compileOptions {
+        sourceCompatibility gradle.ext.sourceCompatibility
+        targetCompatibility gradle.ext.targetCompatibility
+    }
+    kotlinOptions {
+        jvmTarget = gradle.ext.jvmTarget
+    }
+}
+
+dependencies {
+    implementation libs.material
+    implementation libs.compress
+}
