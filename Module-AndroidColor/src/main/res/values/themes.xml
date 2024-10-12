@@ -9,6 +9,7 @@
         <item name="colorSecondaryContainer">@color/color_second_btn_bg</item>
         <item name="android:colorControlNormal">@color/color_text_normal</item>
         <item name="android:textColorPrimary">@color/color_text_normal</item>
+        <!-- 影响progressBar的基础轨道颜色-->
         <item name="colorPrimaryVariant">@color/color_text_normal</item>
 
         <item name="colorOnPrimary">@color/color_text_reverse</item>

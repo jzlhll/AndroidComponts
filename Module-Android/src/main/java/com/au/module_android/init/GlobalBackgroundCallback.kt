@@ -20,7 +20,7 @@ object GlobalBackgroundCallback : DefaultLifecycleObserver {
         get() = isInBackground
 
     //是否后台运行
-    private var isInBackground = false
+    private var isInBackground = false //如果有推送拉起的application，并没有拉起应用也会触发onStop变成true。所以这里默认无所谓。
 
     private val listeners by lazy {
         CopyOnWriteArrayList<(Boolean)->Unit>()
