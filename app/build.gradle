@@ -65,6 +65,7 @@ dependencies {
     implementation project(":Module-Cached")
     implementation project(':Module-AndroidUi')
     implementation project(":Module-Nested")
+    implementation project(":Module-ImageCompressed")
     //my apt
     implementation project(':ClassNameAnnotations')
     ksp project(':ClassNameAnnotations-ksp')

@@ -6,17 +6,20 @@ import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Locale
 
-class LubanCompress {
-    interface OnKeyValueResultCallbackListener {
-        /**
-         * @param srcPath
-         * @param resultPath
-         */
-        fun onCallback(srcPath: String?, resultPath: String?)
-    }
+class LubanCompress(private val ignoreSizeKb:Int = 250) {
+    /**
+     * 结果的回调
+     */
+    var resultCallback: ((srcPath: String?, resultPath: String?)->Unit)? = null
 
-    fun isUrlHasImage(url: String): Boolean {
+    /**
+     * loadSourceBlock 只需要做一个步骤，就是load(Uri，File，String, List<X>)函数
+     */
+    var loadSourceBlock:((Luban.Builder)->Unit)? = null
+
+    private fun isUrlHasImage(url: String): Boolean {
         val lowUrl = url.lowercase()
         return (lowUrl.endsWith(".jpg")
                 || lowUrl.endsWith(".jpeg")
@@ -24,18 +27,16 @@ class LubanCompress {
                 || lowUrl.endsWith(".heic"))
     }
 
-    fun isHasHttp(path: String): Boolean {
+    private fun isHasHttp(path: String): Boolean {
         if (TextUtils.isEmpty(path)) {
             return false
         }
         return path.startsWith("http") || path.startsWith("https")
     }
 
-    private val SF = SimpleDateFormat("yyyyMMddHHmmssSSS")
-
-    fun getCreateFileName(prefix: String): String {
+    private fun getCreateFileName(prefix: String): String {
         val millis = System.currentTimeMillis()
-        return prefix + SF.format(millis)
+        return prefix + SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US).format(millis)
     }
 
     fun clearCache(cxt:Context) {
@@ -52,19 +53,13 @@ class LubanCompress {
         }
     }
 
-    /**
-     * loadSourceBlock 只需要做一个步骤，就是load()函数
-     * 支持Uri，File，String以及他们的List
-     */
-    fun compress(context:Context,
-                 loadSourceBlock:(Luban.Builder)->Unit,
-                 call: OnKeyValueResultCallbackListener) {
+    fun compress(context:Context) {
         // 1、调用Luban压缩
         val builder = Luban.with(context)
-        loadSourceBlock(builder)
+        loadSourceBlock?.invoke(builder)
 
         builder
-            .ignoreBy(250) //250kb不做压缩
+            .ignoreBy(ignoreSizeKb) //250kb不做压缩
             .filter { path -> //过滤掉http图片；能支持的图片。
                 isUrlHasImage(path) && !isHasHttp(path)
             }
@@ -77,12 +72,12 @@ class LubanCompress {
                 override fun onStart() {}
                 override fun onSuccess(source: String?, compressFile: File?) {
                     if (compressFile != null) {
-                        call.onCallback(source, compressFile.absolutePath)
+                        resultCallback?.invoke(source, compressFile.absolutePath)
                     }
                 }
 
                 override fun onError(source: String?, e: Throwable?) {
-                    call.onCallback(source, null)
+                    resultCallback?.invoke(source, null)
                 }
             }).launch()
     }

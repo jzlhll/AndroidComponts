@@ -72,9 +72,4 @@
         <attr name="strokeColor" />
         <attr name="strokeWidth" />
     </declare-styleable>
-
-    <declare-styleable name="FakeToolbar">
-        <attr name="fakeToolbarBackImage" />
-        <attr name="fakeToolbarTitle" />
-    </declare-styleable>
 </resources>

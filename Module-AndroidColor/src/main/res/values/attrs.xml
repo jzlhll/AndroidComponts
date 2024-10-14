@@ -7,7 +7,4 @@
     <attr name="backgroundNormal" format="color" />
     <attr name="backgroundPressed" format="color" />
     <attr name="backgroundDisabled" format="color" />
-
-    <attr name="fakeToolbarBackImage" format="reference" />
-    <attr name="fakeToolbarTitle" format="string" />
 </resources>

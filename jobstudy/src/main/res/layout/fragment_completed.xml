@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <com.au.module_androidui.widget.FakeToolbar
-        android:id="@+id/fakeToolbar"
+    <com.au.module_android.widget.CustomToolbar
+        app:titleCentered="true"
+        android:id="@+id/toolbar"
         app:layout_constraintTop_toTopOf="parent"
-        app:fakeToolbarTitle="任务列表"
+        app:title="任务列表"
         android:layout_width="match_parent"
         android:layout_height="48dp"/>
 
@@ -18,7 +18,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:layout_marginTop="4dp"
-        android:layout_below="@id/fakeToolbar"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

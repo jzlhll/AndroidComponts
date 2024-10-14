@@ -11,10 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.au.module_androidui.widget.FakeToolbar
-            android:id="@+id/fakeToolbar"
+        <com.au.module_android.widget.CustomToolbar
+            android:id="@+id/toolbar"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/icon_back"
+            app:title="开始打卡"
             app:layout_constraintTop_toTopOf="parent"
-            app:fakeToolbarTitle="开始打卡"
             android:layout_width="match_parent"
             android:layout_height="48dp"/>
 
@@ -28,7 +30,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fakeToolbar">
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

@@ -80,7 +80,7 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
             }
         } }
 
-        binding.toolBar.fakeToolbarTitle.text = "Demo View Record by Echarts Images"
+        this.toolbar?.title = "Demo View Record by Echarts Images"
 
         val h5 = RecordWebV2Fragment()
         parentFragmentManager.beginTransaction()
