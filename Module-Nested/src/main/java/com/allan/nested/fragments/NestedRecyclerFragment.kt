@@ -1,6 +1,5 @@
 package com.allan.nested.fragments
 
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.allan.nested.decoration.LinearLineItemDecoration
 import com.allan.nested.layout.NestedRecyclerViewLayout
-import com.au.module_android.utils.dp
-import com.au.module_android.utils.unsafeLazy
 import com.allan.nested.recyclerview.BaseAdapter
 import com.au.module_android.ui.views.ViewFragment
+import com.au.module_android.utils.dp
+import com.au.module_android.utils.unsafeLazy
 
 /**
  * @author au

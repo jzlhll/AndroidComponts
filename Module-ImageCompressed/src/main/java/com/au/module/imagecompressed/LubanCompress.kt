@@ -1,6 +1,7 @@
 package com.au.module.imagecompressed
 
 import android.content.Context
+import android.net.Uri
 import android.text.TextUtils
 import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener
@@ -13,11 +14,6 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
      * 结果的回调
      */
     var resultCallback: ((srcPath: String?, resultPath: String?)->Unit)? = null
-
-    /**
-     * loadSourceBlock 只需要做一个步骤，就是load(Uri，File，String, List<X>)函数
-     */
-    var loadSourceBlock:((Luban.Builder)->Unit)? = null
 
     private fun isUrlHasImage(url: String): Boolean {
         val lowUrl = url.lowercase()
@@ -53,10 +49,34 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         }
     }
 
-    fun compress(context:Context) {
+    /**
+     * 参考Luban.load(xxx)的类型
+     * 包括String, Uri, File， List<String>, List<Uri>, List<File>
+     */
+    fun compress(context:Context, source:Any?) {
         // 1、调用Luban压缩
         val builder = Luban.with(context)
-        loadSourceBlock?.invoke(builder)
+        when (source) {
+            is String -> {
+                builder.load(source)
+            }
+
+            is Uri -> {
+                builder.load(source)
+            }
+
+            is File -> {
+                builder.load(source)
+            }
+            is List<*> -> {
+                val componentType = source::class.java.componentType!!
+                if (String::class.java.isAssignableFrom(componentType)
+                    || Uri::class.java.isAssignableFrom(componentType)
+                    || File::class.java.isAssignableFrom(componentType)) {
+                    builder.load(source) //later: 这里没有做更好的判断。
+                }
+            }
+        }
 
         builder
             .ignoreBy(ignoreSizeKb) //250kb不做压缩

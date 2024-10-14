@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.au.module_android.ui.toolbar.IHasToolbar
+import com.au.module_android.ui.toolbar.MenuBean
 import com.au.module_android.utils.asOrNull
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -31,7 +32,7 @@ import com.google.android.material.appbar.MaterialToolbar
 open class ToolbarManager{
     private val fragmentOrActivity: LifecycleOwner
     private val activity: ComponentActivity
-    private val menuBean:MenuBean?
+    private val menuBean: MenuBean?
 
     constructor(activity: ComponentActivity,
                 menuBean:MenuBean? = null) {
@@ -47,7 +48,6 @@ open class ToolbarManager{
         this.activity = fragment.requireActivity()
     }
 
-    data class MenuBean(val menuXml: Int, val showWhenOnCreate:Boolean, val onMenuItemBlock:((MenuItem)->Unit))
 
     private var menuProvider: MenuProvider? = null
 

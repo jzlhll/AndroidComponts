@@ -27,6 +27,7 @@ import com.au.module_android.json.toJsonString
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread
@@ -62,6 +63,10 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
 
     override fun isAutoHideIme(): Boolean {
         return true
+    }
+
+    override fun toolbarInfo(): ToolbarInfo {
+        return ToolbarInfo("开始打卡")
     }
 
     private val dataItem = sDataItem!!

@@ -29,10 +29,7 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
                     it.resultCallback = { srcPath, resultPath ->
                         logd { "srcPath: $srcPath, resultPath $resultPath" }
                     }
-                    it.loadSourceBlock = { builder ->
-                        builder.load(uri)
-                    }
-                }.compress(requireContext())
+                }.compress(requireContext(), uri)
             }
         }
         binding.singleVideo.onClick {
@@ -47,10 +44,7 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
                     it.resultCallback = { srcPath, resultPath ->
                         logd { "srcPath: $srcPath, resultPath $resultPath" }
                     }
-                    it.loadSourceBlock = { builder ->
-                        builder.load(uri)
-                    }
-                }.compress(requireContext())
+                }.compress(requireContext(), uri)
             }
         }
 
@@ -58,15 +52,12 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
             multiPicResult.request {
                 it.forEachIndexed { index, uri ->
                     logd { "$index, uri: $uri" }
-                    LubanCompress().also { lc->
-                        lc.resultCallback = { srcPath, resultPath ->
-                            logd { "srcPath: $srcPath, resultPath $resultPath" }
-                        }
-                        lc.loadSourceBlock = { builder ->
-                            builder.load(uri)
-                        }
-                    }.compress(requireContext())
                 }
+                LubanCompress().also { lc->
+                    lc.resultCallback = { srcPath, resultPath ->
+                        logd { "srcPath: $srcPath, resultPath $resultPath" }
+                    }
+                }.compress(requireContext(), it)
             }
         }
         binding.multiVideo3.onClick {
@@ -80,15 +71,12 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
             multiPicAndVideoResult.request {
                 it.forEachIndexed { index, uri ->
                     logd { "$index, uri: $uri" }
-                    LubanCompress().also { lc->
-                        lc.resultCallback = { srcPath, resultPath ->
-                            logd { "srcPath: $srcPath, resultPath $resultPath" }
-                        }
-                        lc.loadSourceBlock = { builder ->
-                            builder.load(uri)
-                        }
-                    }.compress(requireContext())
                 }
+                LubanCompress().also { lc->
+                    lc.resultCallback = { srcPath, resultPath ->
+                        logd { "srcPath: $srcPath, resultPath $resultPath" }
+                    }
+                }.compress(requireContext(), it)
             }
         }
     }

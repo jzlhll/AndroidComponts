@@ -8,12 +8,15 @@ import com.allan.androidlearning.databinding.FragmentRgb2HexBinding
 import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.hideImeNew
 import okhttp3.internal.toHexString
 
 @EntroFrgName(priority = 10)
 class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        requireActivity().title = "RGB to Hex"
+
         binding.rgbBtn.onClick {
             hideImeNew(requireActivity().window, binding.hexStartBtn)
             val c = getArgb(binding.editA.text.toString(),
@@ -75,6 +78,10 @@ class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
                 }
             }
         }
+    }
+
+    override fun toolbarInfo(): ToolbarInfo? {
+        return ToolbarInfo()
     }
 
     @ColorInt

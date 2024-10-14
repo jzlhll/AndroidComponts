@@ -7,6 +7,7 @@ import com.allan.androidlearning.databinding.FragmentAndroidUiEditBinding
 import com.au.module_android.postToMainHandler
 import com.au.module_android.toast.ToastUtil
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_androidui.toast.ToastBuilder
 import com.au.module_androidui.widget.CustomTextInputLayout
@@ -57,8 +58,8 @@ class AndroidUiEditFragment : BindingFragment<FragmentAndroidUiEditBinding>() {
         return enableEdge == 1
     }
 
-    override fun hasToolbar(): Boolean {
-        return true
+    override fun toolbarInfo(): ToolbarInfo {
+        return ToolbarInfo()
     }
 
     override fun isAutoHideIme(): Boolean {

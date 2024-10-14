@@ -63,7 +63,7 @@ class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBindi
             }
         } }
 
-        binding.toolBar.fakeToolbarTitle.text = "Demo View Record"
+        requireActivity().title = "Demo View Record"
 
         val h5 = RecordWebFragment()
         parentFragmentManager.beginTransaction()

@@ -2,7 +2,6 @@ package com.au.jobstudy.completed
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.bean.CompletedEntity
@@ -13,8 +12,7 @@ import com.au.module_android.Globals
 import com.au.module_android.json.fromJson
 import com.au.module_android.permissions.createActivityForResult
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.launchOnThread
-import com.au.module_android.utils.logd
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.unsafeLazy
 
 class CompletedFragment : BindingFragment<FragmentCompletedBinding>() {
@@ -29,6 +27,8 @@ class CompletedFragment : BindingFragment<FragmentCompletedBinding>() {
     private val isWeek by unsafeLazy { arguments?.getBoolean("isWeek") ?: false }
 
     val activityLauncher = createActivityForResult()
+
+    override fun toolbarInfo() = ToolbarInfo("任务列表")
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.rcv.layoutManager = LinearLayoutManager(requireContext())

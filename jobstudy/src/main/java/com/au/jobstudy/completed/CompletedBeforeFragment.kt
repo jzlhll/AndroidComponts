@@ -5,6 +5,7 @@ import com.au.jobstudy.databinding.FragmentCompletedBeforeBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.ToolbarInfo
 
 class CompletedBeforeFragment : BindingFragment<FragmentCompletedBeforeBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -17,4 +18,5 @@ class CompletedBeforeFragment : BindingFragment<FragmentCompletedBeforeBinding>(
         }
     }
 
+    override fun toolbarInfo() = ToolbarInfo()
 }

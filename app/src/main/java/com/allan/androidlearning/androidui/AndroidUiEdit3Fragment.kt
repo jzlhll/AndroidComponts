@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import com.allan.androidlearning.databinding.FragmentAndroidUiEdit3Binding
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_androidui.widget.CustomTextInputLayout
 
@@ -53,7 +54,7 @@ class AndroidUiEdit3Fragment : BindingFragment<FragmentAndroidUiEdit3Binding>() 
         return enableEdge == 1
     }
 
-    override fun hasToolbar(): Boolean {
-        return true
+    override fun toolbarInfo(): ToolbarInfo? {
+        return ToolbarInfo()
     }
 }

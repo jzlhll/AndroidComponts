@@ -14,6 +14,8 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.MenuBean
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.HtmlPart
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
@@ -28,17 +30,16 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
     private val localePart = LocalesPart()
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        setTitle(R.string.settings)
         DarkModePart().initDarkMode()
         localePart.initLocales()
     }
 
-    override fun hasToolbarManager(): ToolbarManager.MenuBean {
-        return ToolbarManager.MenuBean(com.au.module_android.R.menu.right_menu_save, false) {
+    override fun toolbarInfo(): ToolbarInfo {
+        return ToolbarInfo(getString(R.string.settings), menuBean = MenuBean(com.au.module_android.R.menu.right_menu_save, false) {
             if (it.itemId == com.au.module_android.R.id.menuOk) {
                 localePart.afterChange()
             }
-        }
+        })
     }
 
     private inner class LocalesPart {

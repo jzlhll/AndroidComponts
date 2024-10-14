@@ -2,7 +2,7 @@ package com.au.module_android.ui.views
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.base.AbsActivity
@@ -19,11 +19,11 @@ import com.au.module_android.ui.toolbar.createToolbarLayout
 abstract class ViewToolbarActivity : AbsActivity(), IUi, IHasToolbar {
     lateinit var root: View
 
-    private var _realRoot: LinearLayout? = null
+    private var _realRoot: ViewGroup? = null
     private var _toolbar: CustomToolbar? = null
     private var _toolbarMgr: ToolbarManager? = null
 
-    final override val realRoot: LinearLayout?
+    final override val realRoot: ViewGroup?
         get() = _realRoot
 
     final override val toolbar: CustomToolbar?
@@ -38,16 +38,18 @@ abstract class ViewToolbarActivity : AbsActivity(), IUi, IHasToolbar {
         val v = onUiCreateView(layoutInflater, null, savedInstanceState)
         root = v
 
-        val mgrBean = hasToolbarManager()
-        if (hasToolbar() || mgrBean != null) {
-            val toolbarToLL = createToolbarLayout(layoutInflater.context, v)
+        val info = toolbarInfo()
+        if (info != null) {
+            if(info.title != null) this.title = info.title //before create toolbar
+
+            val toolbarToLL = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon)
 
             _realRoot = toolbarToLL.second
             _toolbar = toolbarToLL.first
 
-            if (mgrBean != null) {
-                _toolbarMgr = ToolbarManager(this, mgrBean).also {
-                    if(mgrBean.showWhenOnCreate) it.showMenu()
+            if (info.menuBean != null) {
+                _toolbarMgr = ToolbarManager(this, info.menuBean).also {
+                    if(info.menuBean.showWhenOnCreate) it.showMenu()
                 }
             }
 

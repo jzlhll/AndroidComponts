@@ -11,15 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.au.module_android.widget.CustomToolbar
-            android:id="@+id/toolbar"
-            app:titleCentered="true"
-            app:navigationIcon="@drawable/icon_back"
-            app:title="开始打卡"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"/>
-
         <androidx.cardview.widget.CardView
             android:id="@+id/descTextHost"
             android:layout_width="match_parent"

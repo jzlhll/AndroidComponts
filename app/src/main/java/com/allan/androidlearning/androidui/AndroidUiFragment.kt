@@ -2,11 +2,14 @@ package com.allan.androidlearning.androidui
 
 import android.os.Bundle
 import android.view.View
+import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
 import com.allan.classnameanno.EntroFrgName
 import com.allan.nested.viewpager2.simplePagerAdapter
 import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.toolbar.MenuBean
+import com.au.module_android.ui.toolbar.ToolbarInfo
 import com.au.module_android.utils.unsafeLazy
 
 /**
@@ -16,8 +19,8 @@ import com.au.module_android.utils.unsafeLazy
  */
 @EntroFrgName(priority = 11)
 class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
-    override fun hasToolbar(): Boolean {
-        return true
+    override fun toolbarInfo(): ToolbarInfo {
+        return ToolbarInfo(menuBean = MenuBean(R.menu.skip_menu, true) {})
     }
 
     private val pages = listOf(
@@ -33,10 +36,6 @@ class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
         }
 
         binding.tabLayout.initAttachToViewPage2AsCustomFontText(binding.viewPager, pages)
-    }
-
-    override fun hasToolbarManager(): ToolbarManager.MenuBean {
-        return ToolbarManager.MenuBean(com.allan.androidlearning.R.menu.skip_menu, true) {}
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
