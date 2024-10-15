@@ -22,28 +22,17 @@ private fun Bundle.putAny(key:String, value:Any, isThrowException: Boolean = tru
 
         // Reference arrays
         is Array<*> -> {
-            val componentType = value::class.java.componentType!!
-            @Suppress("UNCHECKED_CAST") // Checked by reflection.
-            when {
-                String::class.java.isAssignableFrom(componentType) -> putStringArray(key, value as Array<String>)
-                CharSequence::class.java.isAssignableFrom(componentType) -> putCharSequenceArray(key, value as Array<CharSequence>)
-                else -> {
-                    val valueType = componentType.canonicalName
-                    if (isThrowException) {
-                        throw IllegalArgumentException(
-                            "Illegal value array type $valueType"
-                        )
-                    } else {
-                        Log.e("tag", "Illegal value array type $valueType")
-                    }
-                }
+            if (isThrowException) {
+                throw IllegalArgumentException("Illegal value type Array<*> please use Gson to cvt it.")
+            } else {
+                Log.e("tag", "Illegal value type List please use Gson to cvt it.")
             }
         }
         is List<*> -> {
             if (isThrowException) {
-                throw IllegalArgumentException("Illegal value type List please use Array.")
+                throw IllegalArgumentException("Illegal value type List please use use Gson to cvt it.")
             } else {
-                Log.e("tag", "Illegal value type List please use Array.")
+                Log.e("tag", "Illegal value type List please use Gson to cvt it.")
             }
         }
         // Last resort. Also we must check this after Array<*> as all arrays are serializable.

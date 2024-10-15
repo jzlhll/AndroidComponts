@@ -12,7 +12,7 @@ import com.au.jobstudy.databinding.HolderPartialPictureBinding
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.glide.setImageAny
+import com.au.module_android.glide.glideSetAny
 import com.au.module_android.permissions.systemTakePictureForResult
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.visible
@@ -49,7 +49,7 @@ class CheckParentPicSelector(private val f:CheckPicturePartialFragment) {
     val launcher = f.systemTakePictureForResult()
 
     fun clickOnAdd(addIconPosition:Int) {
-        val picture = File(Globals.cacheDir.path + "/pictures/" + CheckConsts.currentDay())
+        val picture = File(Globals.goodCacheDir.path + "/pictures/" + CheckConsts.currentDay())
         picture.mkdirs()
         val file = File(picture, "pic_" + WeekDateUtil.currentHHmmssSSS() + ".png")
         val uri = FileProvider.getUriForFile(
@@ -108,7 +108,7 @@ class FeedBackPicHolder(binding: HolderPartialPictureBinding, itemClick:(bean:Be
             binding.ivDelete.invisible()
         } else {
             binding.ivPic.scaleType = ImageView.ScaleType.CENTER_CROP
-            binding.ivPic.setImageAny(bean.file)
+            binding.ivPic.glideSetAny(bean.file)
             binding.ivDelete.visible()
         }
     }

@@ -55,7 +55,7 @@ class CheckVideoPartialFragment : FirstResumeBindingFragment<PartialVideoBinding
     }
 
     fun startTake() {
-        val picture = File(Globals.cacheDir.absolutePath + "/videos/" + CheckConsts.currentDay())
+        val picture = File(Globals.goodCacheDir.absolutePath + "/videos/" + CheckConsts.currentDay())
         picture.mkdirs()
         val file = File(picture, "vid_" + WeekDateUtil.currentHHmmssSSS() + ".mp4")
         val uri = FileProvider.getUriForFile(

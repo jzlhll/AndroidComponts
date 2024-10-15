@@ -23,7 +23,7 @@ class WebEChartsHtmlRtcRecordFragment : MyBridgeFragment() {
     }
 
     private val unzipHelper = UnzipHelper()
-    private val echartsCacheDir = Globals.app.cacheDir.path + "/echarts_record"
+    private val echartsCacheDir = Globals.goodCacheDir.path + "/echarts_record"
 
     private fun findIndexHtml() : String {
         val path = "$echartsCacheDir/index.html"
@@ -65,7 +65,7 @@ class WebEChartsHtmlRtcRecordFragment : MyBridgeFragment() {
         val videoBytes: ByteArray = Base64.decode(fixStr, Base64.DEFAULT)
 
         // 写入MP4文件到设备存储
-        val videoFile = File(Globals.app.cacheDir, "video_${millisToTime()}.mp4")
+        val videoFile = File(Globals.goodCacheDir, "video_${millisToTime()}.mp4")
         try {
             FileOutputStream(videoFile).use { fos ->
                 fos.write(videoBytes)

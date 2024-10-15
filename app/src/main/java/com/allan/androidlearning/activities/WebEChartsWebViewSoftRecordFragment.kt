@@ -31,7 +31,7 @@ class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBindi
     }
 
     private val unzipHelper = UnzipHelper()
-    private val echartsCacheDir = Globals.app.cacheDir.path + "/echarts"
+    private val echartsCacheDir = Globals.goodCacheDir.path + "/echarts"
 
     private fun findIndexHtml() : String {
         val path = "$echartsCacheDir/showEcharts.html"
@@ -57,7 +57,7 @@ class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ignoreError {
-        Globals.app.cacheDir.listFiles()?.forEach {
+        Globals.goodCacheDir.listFiles()?.forEach {
             if (it.isFile && it.name.startsWith("video_")) {
                 it.delete()
             }
@@ -82,7 +82,7 @@ class WebEChartsWebViewSoftRecordFragment : BindingFragment<ActivityEchartsBindi
                 logt { ">>>webCallNative $data hasCallback:" + (func != null) }
                 when (data) {
                     "initOver" -> {
-                        val name = File(Globals.app.cacheDir, "video_${millisToTime()}.mp4").absolutePath
+                        val name = File(Globals.goodCacheDir, "video_${millisToTime()}.mp4").absolutePath
                         val suc = viewRecorder.setup(name, h5Fragment.webView)
                         binding.desc2Text.text = "generating $name ..."
                         logt { "setup $name $suc" }

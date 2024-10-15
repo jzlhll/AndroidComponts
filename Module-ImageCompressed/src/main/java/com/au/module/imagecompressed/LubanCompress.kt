@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
 import com.au.module.imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
+import com.au.module_android.Globals
 import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener
 import java.io.File
@@ -36,9 +37,9 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         return prefix + SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US).format(millis)
     }
 
-    fun clearCache(cxt:Context, clearLubanCompress:Boolean = true, clearUCrop:Boolean = true) {
+    fun clearCache() {
         try {
-            val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/luban_disk_cache")
+            val cmpImagesPath = File(Globals.goodCacheDir.absolutePath + "/luban_disk_cache")
             cmpImagesPath.listFiles()?.forEach {
                 it.delete()
             }
@@ -47,25 +48,7 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         }
 
         try {
-            val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/$DIR_CROP")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-
-        try {
-            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/luban_disk_cache")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-
-        try {
-            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/$DIR_CROP")
+            val cmpImagesPath = File(Globals.goodCacheDir.absolutePath + "/$DIR_CROP")
             cmpImagesPath.listFiles()?.forEach {
                 it.delete()
             }
@@ -94,11 +77,11 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
                 builder.load(source)
             }
             is List<*> -> {
-                val componentType = source::class.java.componentType!!
-                if (String::class.java.isAssignableFrom(componentType)
-                    || Uri::class.java.isAssignableFrom(componentType)
-                    || File::class.java.isAssignableFrom(componentType)) {
-                    builder.load(source) //later: 这里没有做更好的判断。
+                if (source.isNotEmpty()) {
+                    val item = source[0]
+                    if (item is String || item is Uri || item is File) {
+                        builder.load(source)
+                    }
                 }
             }
         }

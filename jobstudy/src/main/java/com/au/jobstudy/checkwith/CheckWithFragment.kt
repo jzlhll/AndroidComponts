@@ -56,7 +56,7 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
                   activityResultCallback: ActivityResultCallback<ActivityResult>?) {
             this.sDataItem = dataItem
             sCompletedItem = completedEntity
-            FragmentRootActivity.start(context, CheckWithFragment::class.java,
+            FragmentRootActivity.startForResult(context, CheckWithFragment::class.java,
                 activityResult = forResult, activityResultCallback = activityResultCallback)
         }
     }

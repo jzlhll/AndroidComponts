@@ -9,7 +9,7 @@ import android.widget.VideoView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.au.module_android.glide.setImageAny
+import com.au.module_android.glide.glideSetAny
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.dp
@@ -51,7 +51,7 @@ class SeeFileFragment : ViewFragment() {
                 })
             } else if (mimeType.contains("image")) {
                 it.addView(AppCompatImageView(inflater.context).also {
-                    it.setImageAny(file)
+                    it.glideSetAny(file)
                 })
             } else if (mimeType.contains("audio")) {
                 //todo

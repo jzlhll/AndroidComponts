@@ -46,12 +46,12 @@ object Globals {
     /**
      * 选择合适的cacheDir
      */
-    val cacheDir : File by unsafeLazy { app.externalCacheDir ?: app.cacheDir }
+    val goodCacheDir : File by unsafeLazy { app.externalCacheDir ?: app.cacheDir }
 
     /**
      * 选择合适的filesDir
      */
-    val filesDir : File by unsafeLazy { app.getExternalFilesDir(null) ?: app.filesDir }
+    val goodFilesDir : File by unsafeLazy { app.getExternalFilesDir(null) ?: app.filesDir }
 
     /**
      * 全局application

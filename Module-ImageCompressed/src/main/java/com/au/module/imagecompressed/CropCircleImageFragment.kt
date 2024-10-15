@@ -86,11 +86,11 @@ class CropCircleImageFragment : BindingFragment<CropCircleLayoutBinding>(), UCro
     }
 
     private fun replaceUcropFragment() {
-        val dir = File(Globals.cacheDir.absolutePath + "/ucrop")
+        val dir = File(Globals.goodCacheDir.absolutePath + "/ucrop")
         if (!dir.exists()) {
             dir.mkdir()
         }
-        val destFile = File(Globals.cacheDir.absolutePath + "/ucrop", "tmp" + System.currentTimeMillis() + ".png")
+        val destFile = File(Globals.goodCacheDir.absolutePath + "/ucrop", "tmp" + System.currentTimeMillis() + ".png")
         if (!destFile.exists()) {
             destFile.createNewFile()
         }

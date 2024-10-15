@@ -23,7 +23,7 @@ object Api {
             "$day"
         }
         val url = "https://gitee.com/allan001/JobStudyDispatcher/blob/master/jobs/$yearMonth/job$dayStr.txt"
-        return Globals.okHttpClient().downloadFile(url, Globals.cacheDir.absolutePath, "job" + System.currentTimeMillis() + ".txt")
+        return Globals.okHttpClient().downloadFile(url, Globals.goodCacheDir.absolutePath, "job" + System.currentTimeMillis() + ".txt")
     }
 
     private val parseStartText = """

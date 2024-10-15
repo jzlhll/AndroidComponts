@@ -12,23 +12,6 @@ import java.lang.Exception
  */
 fun hasExternal() = Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
 
-fun cacheDir(context:Context) = if(hasExternal()) context.externalCacheDir else context.cacheDir
-
-fun filesDir(context: Context, type:String? = null) : File? {
-    if (hasExternal()) {
-        return context.getExternalFilesDir(type)
-    }
-    val dir = if (type.isNullOrEmpty()) {
-        context.filesDir
-    } else {
-        val abPath = context.filesDir.absolutePath
-        val subTypePath = abPath + (if (!abPath.endsWith("/")) "/$type" else "$type")
-        File(subTypePath)
-    }
-    dir.mkdirs()
-    return dir
-}
-
 /**
  * 创建一个图片的临时的uri。存在的话，就会删除再新建给出。
  * dir就是目录；fileName就是文件名；extension后缀名（记得自行带点，比如.png）
