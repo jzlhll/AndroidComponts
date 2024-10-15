@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Space
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
-import com.allan.androidlearning.databinding.ActivityEntroBinding
+import com.allan.androidlearning.databinding.ActivityEntryBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentRootActivity
@@ -18,7 +18,7 @@ import com.au.module_android.utils.logd
 import com.au.module_androidui.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 
-class EntroActivity : BindingActivity<ActivityEntroBinding>() {
+class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
@@ -35,7 +35,7 @@ class EntroActivity : BindingActivity<ActivityEntroBinding>() {
 
         logd { "goto $goto" }
 
-        EntroList().getEntroList().forEach { fragmentClassTriple ->
+        EntryList().getEntryList().forEach { fragmentClassTriple ->
             val btn = MaterialButton(this)
             btn.text = if(fragmentClassTriple.third != null) fragmentClassTriple.third else fragmentClassTriple.first.simpleName.replace("Fragment", "")
             btn.onClick {

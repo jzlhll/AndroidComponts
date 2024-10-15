@@ -13,9 +13,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import com.allan.androidlearning.EntroActivity
+import com.allan.androidlearning.EntryActivity
 import com.allan.androidlearning.R
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.views.ViewFragment
@@ -27,7 +27,7 @@ import com.au.module_android.utils.dp
  * @date :2024/7/18 11:01
  * @description:
  */
-@EntroFrgName
+@EntryFrgName
 class NotifyFragment : ViewFragment() {
     companion object {
         val CHANNEL_ID = "test_notify_chan_id"
@@ -66,11 +66,11 @@ class NotifyFragment : ViewFragment() {
         notificationLayout.setTextViewText(R.id.notification_desc, "This a long long long long long long long long long long long long desc.")
         val notificationLayoutExpanded = RemoteViews(requireActivity().packageName, R.layout.notify_big)
 
-        val intent1 = Intent(Globals.app, EntroActivity::class.java).also { it.putExtra("goto", "LiveData") }
+        val intent1 = Intent(Globals.app, EntryActivity::class.java).also { it.putExtra("goto", "LiveData") }
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val clickIntent1 = PendingIntent.getActivity(Globals.app,1, intent1, PendingIntent.FLAG_IMMUTABLE)
 
-        val intent2 = Intent(Globals.app, EntroActivity::class.java).also { it.putExtra("goto", "FontTest") }
+        val intent2 = Intent(Globals.app, EntryActivity::class.java).also { it.putExtra("goto", "FontTest") }
         intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val clickIntent2 = PendingIntent.getActivity(Globals.app,2, intent2, PendingIntent.FLAG_IMMUTABLE)
 
@@ -78,7 +78,7 @@ class NotifyFragment : ViewFragment() {
         notificationLayoutExpanded.setOnClickPendingIntent(R.id.ic_failure, clickIntent1)
 
         notificationLayoutExpanded.setTextViewText(R.id.notification_title, "new title")
-        val intent = Intent(Globals.app, EntroActivity::class.java)
+        val intent = Intent(Globals.app, EntryActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val pendingIntent = PendingIntent.getActivity(Globals.app,0, intent, PendingIntent.FLAG_IMMUTABLE) //所有的intent，requstCode必须不同。
 

@@ -51,7 +51,7 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testColorful() {
-        Globals.topActivity.asOrNull<EntroActivity>()?.apply {
+        Globals.topActivity.asOrNull<EntryActivity>()?.apply {
 
         }
     }

@@ -3,7 +3,7 @@ package com.allan.androidlearning.activities
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.selectlist.SelectListFragment
 import com.au.module_android.selectlist.SelectListItem
@@ -20,7 +20,7 @@ import kotlinx.coroutines.supervisorScope
  * @date :2024/7/29 10:50
  * @description:
  */
-@EntroFrgName
+@EntryFrgName
 class CoroutineFragment(override val title: String = "Coroutine",
                               override val items: List<KotlinCoroutineSelectListItem> =
                                   listOf(KotlinCoroutineSelectListItem("Dispatchers"),

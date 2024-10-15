@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.allan.nested.viewpager2.simplePagerAdapter
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.MenuBean
@@ -15,7 +15,7 @@ import com.au.module_android.ui.views.ToolbarInfo
  * @date :2024/8/19 15:15
  * @description:
  */
-@EntroFrgName(priority = 11)
+@EntryFrgName(priority = 11)
 class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
     override fun toolbarInfo(): ToolbarInfo {
         return ToolbarInfo(menuBean = MenuBean(R.menu.skip_menu, true) {})

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_gravity="top|start"
+        android:id="@+id/ivBack"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:tint="@color/color_text_normal"
+        android:src="@drawable/icon_back"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:layout_gravity="bottom"
+        android:id="@+id/saveBtn"
+        style="@style/StyleButtonPrimary"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="36dp"
+        android:text="save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

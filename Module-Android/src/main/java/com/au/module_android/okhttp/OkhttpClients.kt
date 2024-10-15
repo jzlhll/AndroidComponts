@@ -55,7 +55,7 @@ class OkhttpClients {
         }
         if (cacheSize > 0) {
             //如果缓存的长度大于0，设置缓存
-            builder.cache(Cache(File(Globals.app.externalCacheDir, "okhttpcache"), cacheSize))
+            builder.cache(Cache(File(Globals.app.externalCacheDir ?: Globals.app.cacheDir, "okhttpcache"), cacheSize))
         }
         Globals.okHttpCookieJar?.let { builder.cookieJar(it) }
         return builder

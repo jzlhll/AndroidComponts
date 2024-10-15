@@ -3,7 +3,7 @@ package com.allan.androidlearning.activities
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.allan.androidlearning.databinding.FragmentPhotoPickerBinding
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module.imagecompressed.LubanCompress
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.multiPhotoPickerForResult
@@ -11,7 +11,7 @@ import com.au.module_android.permissions.photoPickerForResult
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
 
-@EntroFrgName
+@EntryFrgName
 class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
     val singlePicResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.ImageOnly)
     val singleVideoResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.VideoOnly)

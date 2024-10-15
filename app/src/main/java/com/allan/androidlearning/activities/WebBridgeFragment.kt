@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.allan.androidlearning.databinding.ActivityJsHtmlBinding
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
@@ -22,7 +22,7 @@ import com.google.gson.Gson
  * @description:
  */
 
-@EntroFrgName
+@EntryFrgName
 class WebBridgeFragment : BindingFragment<ActivityJsHtmlBinding>() {
     data class Info(val name:String, val age:Int, val desc:String?, val index:Int, val other:String? = null)
     var mIndex = 1

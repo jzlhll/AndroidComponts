@@ -1,6 +1,6 @@
 package com.au.learning.classnamecompiler
 
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter
  * @date :2024/7/5 15:00
  * @description:
  */
-class AllEntroFrgNamesProvider : SymbolProcessorProvider{
+class AllEntryFrgNamesProvider : SymbolProcessorProvider{
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return TestKspSymbolProcessor(environment)
     }
@@ -31,12 +31,12 @@ class AllEntroFrgNamesProvider : SymbolProcessorProvider{
 class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment) : SymbolProcessor {
     // 使用一个集合来跟踪已经处理过的符号
     private val processedSymbols = mutableSetOf<KSDeclaration>()
-    val allEntroFragmentNamesTemplate = AllEntroFragmentNamesTemplate()
+    val allEntryFragmentNamesTemplate = AllEntryFragmentNamesTemplate()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         environment.logger.warn("$this ksp process start....")
 
-        val symbols = resolver.getSymbolsWithAnnotation(EntroFrgName::class.java.canonicalName)
+        val symbols = resolver.getSymbolsWithAnnotation(EntryFrgName::class.java.canonicalName)
         environment.logger.warn("ksp process symbol Size ${symbols.count()}")
         val ret = mutableListOf<KSAnnotated>()
 
@@ -49,7 +49,7 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
                 if (symbol is KSClassDeclaration && symbol.classKind == ClassKind.CLASS) {
                     val qualifiedClassName = symbol.qualifiedName?.asString()
                     // 访问注解的参数
-                    allEntroFragmentNamesTemplate.insert(qualifiedClassName!!)
+                    allEntryFragmentNamesTemplate.insert(qualifiedClassName!!)
 //                    symbol.accept(TestKspVisitor(environment), Unit)//处理符号
                 } else {
                     ret.add(symbol)
@@ -62,13 +62,13 @@ class TestKspSymbolProcessor(private val environment: SymbolProcessorEnvironment
     }
 
     override fun finish() {
-        val code = allEntroFragmentNamesTemplate.end()
+        val code = allEntryFragmentNamesTemplate.end()
 
         // 生成文件
         val file = environment.codeGenerator.createNewFile(
             dependencies = Dependencies.ALL_FILES,
             packageName = "com.allan.androidlearning",
-            fileName = "EntroList"
+            fileName = "EntryList"
         )
 
         // 写入文件内容

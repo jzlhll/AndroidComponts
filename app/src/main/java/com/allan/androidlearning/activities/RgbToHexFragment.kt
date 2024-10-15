@@ -5,14 +5,14 @@ import android.os.Bundle
 import androidx.annotation.ColorInt
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentRgb2HexBinding
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.hideImeNew
 import okhttp3.internal.toHexString
 
-@EntroFrgName(priority = 10)
+@EntryFrgName(priority = 10)
 class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().title = "RGB to Hex"

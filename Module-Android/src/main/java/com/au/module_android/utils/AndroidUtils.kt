@@ -106,9 +106,9 @@ val Int.dpFloat:Float
  */
 suspend fun getAppCacheSize(): String {
     return withIoThread {
-        val cacheDir = Globals.app.cacheDir.getDirSize()
-        val externalCacheDir = Globals.app.externalCacheDir.getDirSize()
-        (cacheDir + externalCacheDir).formatLength()
+        val cacheDirSz = app.cacheDir.getDirSize()
+        val externalCacheDirSz = app.externalCacheDir.getDirSize()
+        (cacheDirSz + externalCacheDirSz).formatLength()
     }
 }
 

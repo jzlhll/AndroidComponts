@@ -37,8 +37,8 @@ fun clearImageDiskCache() {
 suspend fun clearAppCacheSize() {
     withIoThread {
         clearImageDiskCache()
-        Globals.app.cacheDir.deleteAll()
-        Globals.app.externalCacheDir.deleteAll()
+        Globals.app.cacheDir?.deleteAll()
+        Globals.app.externalCacheDir?.deleteAll()
     }
 }
 

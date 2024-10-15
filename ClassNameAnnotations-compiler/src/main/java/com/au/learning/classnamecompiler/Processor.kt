@@ -1,6 +1,6 @@
 package com.au.learning.classnamecompiler
 
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import java.io.IOException
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
@@ -24,7 +24,7 @@ class Processor : AbstractProcessor() {
      * 所支持的注解合集
      */
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(EntroFrgName::class.java.canonicalName)
+        return mutableSetOf(EntryFrgName::class.java.canonicalName)
     }
 
     private fun isElementInAnnotations(target:Element, annotations: Set<TypeElement>) : Boolean {
@@ -69,7 +69,7 @@ class Processor : AbstractProcessor() {
             }
         }
 
-        val names = AllEntroFragmentNamesTemplate()
+        val names = AllEntryFragmentNamesTemplate()
         if (!elements.isNullOrEmpty()) {
             for (e in elements) {
                 names.insert(e.qualifiedName.toString())
@@ -79,7 +79,7 @@ class Processor : AbstractProcessor() {
             processingEnv.filer?.let {
                 try {
                     // 创建一个JavaFileObject来表示要生成的文件
-                    val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntroList", null)
+                    val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntryList", null)
                     sourceFile.openWriter().use { writer ->
                         // 写入Java（或Kotlin）代码
                         writer.write(code)

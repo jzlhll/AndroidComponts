@@ -5,7 +5,7 @@ package com.au.learning.classnamecompiler
  * @date :2024/7/3 14:11
  * @description:
  */
-class AllEntroFragmentNamesTemplate : AbsCodeTemplate() {
+class AllEntryFragmentNamesTemplate : AbsCodeTemplate() {
     private val insertCode = StringBuilder()
 
     /**
@@ -27,8 +27,8 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntroList {
-    public List<Class<? extends Fragment>> getEntroList() {
+public class EntryList {
+    public List<Class<? extends Fragment>> getEntryList() {
         List<Class<? extends Fragment>> list = new ArrayList<>();
         //insert001
         return list;

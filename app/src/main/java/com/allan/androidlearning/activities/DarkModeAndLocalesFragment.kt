@@ -4,11 +4,11 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
-import com.allan.androidlearning.EntroActivity
+import com.allan.androidlearning.EntryActivity
 import com.allan.androidlearning.Locales
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentDarkModeSettingBinding
-import com.allan.classnameanno.EntroFrgName
+import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -24,7 +24,7 @@ import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.useSimpleHtmlText
 import com.au.module_android.utils.visible
 
-@EntroFrgName(priority = 10, customName = "通用设置")
+@EntryFrgName(priority = 10, customName = "通用设置")
 class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBinding>() {
     private val localePart = LocalesPart()
 
@@ -116,7 +116,7 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
                 System.exit(0)
             }
 
-            Globals.app.startActivityFix(Intent(Globals.app, EntroActivity::class.java))
+            Globals.app.startActivityFix(Intent(Globals.app, EntryActivity::class.java))
         }
     }
 

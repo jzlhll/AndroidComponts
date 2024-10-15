@@ -25,8 +25,7 @@ const val BUNDLE_KEY9 = "bundle_key_9"
  * @date :2023/10/30 16:15
  * @description: 工具类。用来序列化和反序列化为文字。
  */
-fun parcelableSave(context: Context, parcelable: Parcelable?, fileName: String) {
-    val file = File(context.externalCacheDir!!.absolutePath + File.separator + fileName)
+fun parcelableSave(context: Context, parcelable: Parcelable?, file: File) {
     try {
         FileOutputStream(file).use { out ->
             BufferedOutputStream(out).use { bos ->

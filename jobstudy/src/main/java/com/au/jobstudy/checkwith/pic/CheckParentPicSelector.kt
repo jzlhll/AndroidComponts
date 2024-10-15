@@ -49,7 +49,7 @@ class CheckParentPicSelector(private val f:CheckPicturePartialFragment) {
     val launcher = f.systemTakePictureForResult()
 
     fun clickOnAdd(addIconPosition:Int) {
-        val picture = File(Globals.app.externalCacheDir?.path + "/pictures/" + CheckConsts.currentDay())
+        val picture = File(Globals.cacheDir.path + "/pictures/" + CheckConsts.currentDay())
         picture.mkdirs()
         val file = File(picture, "pic_" + WeekDateUtil.currentHHmmssSSS() + ".png")
         val uri = FileProvider.getUriForFile(

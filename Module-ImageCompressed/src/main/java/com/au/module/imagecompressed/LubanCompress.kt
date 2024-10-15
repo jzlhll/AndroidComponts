@@ -35,15 +35,39 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         return prefix + SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US).format(millis)
     }
 
-    fun clearCache(cxt:Context) {
+    fun clearCache(cxt:Context, clearLubanCompress:Boolean = true, clearUCrop:Boolean = true) {
         try {
             val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/luban_disk_cache")
             cmpImagesPath.listFiles()?.forEach {
-                if (it.name.startsWith("CMP_")) {
-                    it.delete()
-                }
+                it.delete()
             }
+        } catch (e:Exception) {
+            e.printStackTrace()
+        }
 
+        try {
+            val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/ucrop")
+            cmpImagesPath.listFiles()?.forEach {
+                it.delete()
+            }
+        } catch (e:Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/luban_disk_cache")
+            cmpImagesPath.listFiles()?.forEach {
+                it.delete()
+            }
+        } catch (e:Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/ucrop")
+            cmpImagesPath.listFiles()?.forEach {
+                it.delete()
+            }
         } catch (e:Exception) {
             e.printStackTrace()
         }

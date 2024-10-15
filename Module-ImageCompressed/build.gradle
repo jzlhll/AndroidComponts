@@ -18,9 +18,15 @@ android {
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-    implementation libs.material
-    implementation libs.compress
+    implementation project(":Module-AndroidColor")
+    implementation project(":Module-AndroidUi")
+    implementation project(":Module-Android")
+    implementation libs.lubanCompress
+    implementation libs.ucrop
 }
