@@ -3,6 +3,7 @@ package com.au.module.imagecompressed
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
+import com.au.module.imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
 import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener
 import java.io.File
@@ -46,7 +47,7 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         }
 
         try {
-            val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/ucrop")
+            val cmpImagesPath = File(cxt.externalCacheDir?.absolutePath + "/$DIR_CROP")
             cmpImagesPath.listFiles()?.forEach {
                 it.delete()
             }
@@ -64,7 +65,7 @@ class LubanCompress(private val ignoreSizeKb:Int = 250) {
         }
 
         try {
-            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/ucrop")
+            val cmpImagesPath = File(cxt.cacheDir?.absolutePath + "/$DIR_CROP")
             cmpImagesPath.listFiles()?.forEach {
                 it.delete()
             }

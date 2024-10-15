@@ -9,6 +9,7 @@ android {
 
     defaultConfig {
         minSdk gradle.ext.minSdk
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -28,5 +29,5 @@ dependencies {
     implementation project(":Module-AndroidUi")
     implementation project(":Module-Android")
     implementation libs.lubanCompress
-    implementation libs.ucrop
+    implementation libs.yalantis.ucrop
 }

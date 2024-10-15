@@ -27,7 +27,7 @@ fun ImageView.clearByGlide() {
 /**
  * 清除磁盘缓存
  */
-fun clearImageDiskCache() {
+fun clearGlideImageDiskCache() {
     Glide.get(Globals.app).clearDiskCache()
 }
 
@@ -36,12 +36,11 @@ fun clearImageDiskCache() {
  */
 suspend fun clearAppCacheSize() {
     withIoThread {
-        clearImageDiskCache()
+        clearGlideImageDiskCache()
         Globals.app.cacheDir?.deleteAll()
         Globals.app.externalCacheDir?.deleteAll()
     }
 }
-
 
 /**
  * 第二个参数，可以对现有RequestOptions进行二次处理。
@@ -49,7 +48,7 @@ suspend fun clearAppCacheSize() {
  *
  * 内部使用
  */
-fun ImageView.setImageAny(
+fun ImageView.glideSetAny(
     load: Any?,
     optionsTransform: ((RequestOptions)-> RequestOptions)? = null
 ) {
@@ -63,7 +62,7 @@ fun ImageView.setImageAny(
     manager.load(convertLoad).apply(options).into(this)
 }
 
-fun ImageView.setImageUrlWithGrayDefault(
+fun ImageView.glideSetAnyWithDefault(
     load: String?,
     @ColorInt colorGray:Int? = null
 ) {
@@ -74,28 +73,12 @@ fun ImageView.setImageUrlWithGrayDefault(
         return
     }
 
-    setImageAny(load) {
+    glideSetAny(load) {
         it.error(resInt).placeholder(resInt)
     }
 }
 
-fun ImageView.setImageUrlWithGrayError(
-    load: String?,
-    @ColorInt colorGray:Int? = null
-) {
-    val c = colorGray ?: Globals.getColor(com.au.module_androidcolor.R.color.color_glide_gray_default)
-    val resInt = ColorDrawable(c)
-    if (load == null) {
-        setImageDrawable(resInt)
-        return
-    }
-
-    setImageAny(load) {
-        it.error(resInt)
-    }
-}
-
-fun ImageView.setImageUrlWithResDefault(
+fun ImageView.glideSetAnyWithResDefault(
     load: String?,
     resId: Int,
 ) {
@@ -103,7 +86,7 @@ fun ImageView.setImageUrlWithResDefault(
         setImageResource(resId)
         return
     }
-    setImageAny(load) {
+    glideSetAny(load) {
         it.error(resId).placeholder(resId)
     }
 }
@@ -111,7 +94,7 @@ fun ImageView.setImageUrlWithResDefault(
 /**
  * 设置圆形图片
  */
-fun ImageView.setImageCircleCropByGlide(load: Any?) {
+fun ImageView.glideSetAnyAsCircleCrop(load: Any?) {
     val manager = Glide.with(this)
     if (load == null || (load is String && load.isBlank())) {
         manager.clear(this)
@@ -124,7 +107,7 @@ fun ImageView.setImageCircleCropByGlide(load: Any?) {
 /**
  * 设置圆角图片
  */
-fun ImageView.setImageRoundedCornersByGlide(
+fun ImageView.glideSetAnyAsRoundedCorners(
     load: Any?,
     roundingRadius: Int,
 ) {
@@ -145,7 +128,7 @@ fun ImageView.setImageRoundedCornersByGlide(
 /**
  * 加载视频第一帧
  */
-fun ImageView.loadVideoFirstFrame(url: Any, sizeCall: Function3<Drawable, Int, Int, Unit>? = null) {
+fun ImageView.glideLoadVideoFirstFrame(url: Any, sizeCall: Function3<Drawable, Int, Int, Unit>? = null) {
     val options = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         //获得第1帧图片 这里的第一个参数 以微秒为单位

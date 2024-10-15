@@ -37,20 +37,36 @@ open class FragmentRootActivity : ViewActivity() {
          *
          * @param context Context
          * @param fragmentClass 需要显示的fragment的类
-         * @param activityResult 如果传入了非空对象，则会通过它启动，会携带返回；否则就是默认启动。
          * @param arguments 用来透传给Fragment
          * @param optionsCompat 是startActivity的参数
          */
         fun start(context: Context,
                             fragmentClass:Class<out Fragment>,
-                            activityResult:ActivityForResult? = null,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null,
                             activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
-            start(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, activityResultCallback)
+            startRoot(context, FragmentRootActivity::class.java, fragmentClass, null, arguments, optionsCompat, activityResultCallback)
         }
 
-        internal fun start(context: Context,
+        /**
+         * 把一个Fragment放到本Activity当做唯一的界面。
+         *
+         * @param context Context
+         * @param fragmentClass 需要显示的fragment的类
+         * @param activityResult 如果传入了非空对象，则会通过它启动，会携带返回；否则就是默认启动。
+         * @param arguments 用来透传给Fragment
+         * @param optionsCompat 是startActivity的参数
+         */
+        fun startForResult(context: Context,
+                  fragmentClass:Class<out Fragment>,
+                  activityResult:ActivityForResult,
+                  arguments: Bundle? = null,
+                  optionsCompat: ActivityOptionsCompat? = null,
+                  activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
+            startRoot(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, activityResultCallback)
+        }
+
+        internal fun startRoot(context: Context,
                            showActivityClass:Class<out Activity>,
                            fragmentClass:Class<out Fragment>,
                            activityResult:ActivityForResult?,

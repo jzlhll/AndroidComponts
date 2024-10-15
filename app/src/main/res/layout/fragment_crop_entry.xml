@@ -20,7 +20,7 @@
     <com.au.module_android.widget.CustomButton
         android:id="@+id/button"
         style="@style/StyleButtonPrimary"
-        android:text="start"
+        android:text="select photo &amp; crop"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="24dp"
         android:layout_marginHorizontal="@dimen/ui_padding_edge"

@@ -1,100 +1,114 @@
 package com.au.module.imagecompressed
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.RelativeLayout
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import com.au.module_android.Globals
 import com.au.module_android.Globals.getColor
 import com.au.module_android.click.onClick
+import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.visible
 import com.au.module_imagecompressed.databinding.CropCircleLayoutBinding
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCrop.EXTRA_OUTPUT_URI
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
-import com.yalantis.ucrop.UCropImageEngine
+import java.io.File
 
 class CropCircleImageFragment : BindingFragment<CropCircleLayoutBinding>(), UCropFragmentCallback {
     companion object {
-        fun startCrop(
+        const val DIR_CROP = "ucrop"
+        const val RESULT_KEY_CROPPED_IMAGE = EXTRA_OUTPUT_URI
+
+        const val RESULT_OK = 0
+        const val RESULT_ERROR = -1
+
+        fun startCropForResult(
             context: Context,
+            activityResult: ActivityForResult,
             srcUri: Uri,
-            DestUri: Uri,
-            dataSource: java.util.ArrayList<String>,
             activityResultCallback: ActivityResultCallback<ActivityResult>
         ) {
             // 1、构造可用的裁剪数据源
             val inputUri: Uri = srcUri
             val bundle = Bundle().apply {
                 this.putString("inputUri", inputUri.toString())
-                this.putString("destinationUri", DestUri.toString())
-                this.putStringArrayList("dataCropSource", dataSource)
             }
 
-            FragmentRootActivity.start(context,
+            FragmentRootActivity.startForResult(context,
                 CropCircleImageFragment::class.java,
+                activityResult,
                 arguments = bundle,
                 activityResultCallback = activityResultCallback)
         }
     }
 
     private var uCropFragment:UCropFragment? = null
-    private var dataCropSource:ArrayList<String>? = null
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        dataCropSource = requireArguments().getStringArrayList("dataCropSource")
-        if (dataCropSource.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Error resource.", Toast.LENGTH_SHORT).show() //later: String
-            requireActivity().finish()
-            return
+        binding.back.onClick {
+            requireActivity().finishAfterTransition()
         }
-
         binding.saveBtn.onClick {
             uCropFragment?.cropAndSaveImage()
         }
 
+        val screenSize = requireActivity().getScreenFullSize()
+        if (screenSize.second.toFloat() / screenSize.first < 1.5f) {
+            binding.saveBtn.gone()
+            binding.save2Btn.visible()
+        }
+
         binding.fcv.post {
             resizeScreen()
-            //replaceUcropFragment()
+            replaceUcropFragment()
         }
     }
 
     private fun resizeScreen() {
-        val fcv = binding.fcv
-        logd { "rcv ${fcv.width} * ${fcv.height}" }
+        if (binding.fcvHost.width > binding.fcvHost.height) {
+            val oneSideDelta = (binding.fcvHost.width - binding.fcvHost.height) / 2
+            binding.fcvHost.layoutParams = binding.fcvHost.layoutParams.also {
+                it as RelativeLayout.LayoutParams
+                it.marginStart = oneSideDelta
+                it.marginEnd = oneSideDelta
+            }
+        }
     }
 
     private fun replaceUcropFragment() {
-        dataCropSource ?: return
-        val outDir = Globals.cacheDir.absolutePath
+        val dir = File(Globals.cacheDir.absolutePath + "/ucrop")
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+        val destFile = File(Globals.cacheDir.absolutePath + "/ucrop", "tmp" + System.currentTimeMillis() + ".png")
+        if (!destFile.exists()) {
+            destFile.createNewFile()
+        }
+        val destUri = Uri.fromFile(destFile)
         val uCrop = UCrop.of(
             Uri.parse(requireArguments().getString("inputUri")),
-            Uri.parse(requireArguments().getString("destinationUri")),
-            dataCropSource
+            destUri,
         )
-        uCrop.setImageEngine(MyUCropImageEngine())
+        //uCrop.setImageEngine(MyUCropImageEngine())
         uCrop.withOptions(UCrop.Options().also {
+            it.withAspectRatio(1f, 1f)
             it.setCircleDimmedLayer(true)
             it.setHideBottomControls(true)
-            it.setCompressionQuality(80)
-            it.setShowCropFrame(false)
-            it.withAspectRatio(1f, 1f)
+            it.setCompressionQuality(85)
+            it.setShowCropFrame(true)
             //it.setToolbarTitleSize(20)
-            it.setCropOutputPathDir("$outDir/crop/")
-            it.setShowCropGrid(false)
-            it.setRootViewBackgroundColor(getColor(com.au.module_androidcolor.R.color.color_text_normal))
-            it.setStatusBarColor(getColor(com.au.module_androidcolor.R.color.color_text_normal))
-            it.isDarkStatusBarBlack(false)
+            it.setShowCropGrid(true)
+            it.setRootViewBackgroundColor(getColor(com.au.module_androidcolor.R.color.windowBackground))
             //it.setToolbarTitle("Crop") //later: String
         })
         val uCropFragment = uCrop.fragment
@@ -109,38 +123,12 @@ class CropCircleImageFragment : BindingFragment<CropCircleLayoutBinding>(), UCro
     }
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
-        requireActivity().setResult(result.mResultCode, result.mResultData)
+        logd { "on crop finish ${result.mResultCode} ${result.mResultData}" }
+        if (result.mResultCode == UCrop.RESULT_ERROR) {
+            requireActivity().setResult(RESULT_ERROR, Intent())
+        } else {
+            requireActivity().setResult(RESULT_OK, result.mResultData)
+        }
         requireActivity().finishAfterTransition()
-    }
-
-    class MyUCropImageEngine : UCropImageEngine {
-        override fun loadImage(context: Context, url: String?, imageView: ImageView) {
-            Glide.with(context).load(url).into(imageView);
-        }
-
-        override fun loadImage(
-            context: Context,
-            url: Uri?,
-            maxWidth: Int,
-            maxHeight: Int,
-            call: UCropImageEngine.OnCallbackListener<Bitmap>?
-        ) {
-            Glide.with(context).asBitmap().override(android.R.attr.maxWidth, android.R.attr.maxHeight)
-                .load(url).into(object : CustomTarget<Bitmap?>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap?>?
-                    ) {
-                        call?.onCall(resource)
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        call?.onCall(null)
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
-        }
-
     }
 }

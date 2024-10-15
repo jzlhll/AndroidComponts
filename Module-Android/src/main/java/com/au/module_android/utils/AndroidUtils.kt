@@ -15,9 +15,11 @@ import android.content.pm.PackageInfo
 import android.content.pm.ResolveInfo
 import android.os.Build
 import android.os.Build.VERSION
+import android.os.Bundle
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals
@@ -251,5 +253,15 @@ fun Context.registerReceiverFix(receiver: BroadcastReceiver, filter: IntentFilte
         )
     } else {
         registerReceiver(receiver, filter)
+    }
+}
+
+fun Intent.iteratorPrint(tag:String = TAG) {
+    extras?.iteratorPrint(tag)
+}
+
+fun Bundle.iteratorPrint(tag:String = TAG) {
+    keySet()?.forEach {
+        Log.d(tag, "key: " + it + ", value: " + this.get(it))
     }
 }
