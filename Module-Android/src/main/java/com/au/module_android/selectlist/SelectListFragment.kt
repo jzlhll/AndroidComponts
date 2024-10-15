@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import com.au.module_android.ui.FragmentRootActivity
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.ui.views.ViewToolbarFragment
 
 /**

@@ -27,7 +27,7 @@ import com.au.module_android.json.toJsonString
 import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread

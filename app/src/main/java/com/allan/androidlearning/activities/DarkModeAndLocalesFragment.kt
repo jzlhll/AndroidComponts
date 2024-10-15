@@ -12,10 +12,9 @@ import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.MenuBean
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.MenuBean
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.HtmlPart
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone

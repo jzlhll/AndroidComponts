@@ -8,7 +8,7 @@ import com.allan.androidlearning.databinding.FragmentRgb2HexBinding
 import com.allan.classnameanno.EntroFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.hideImeNew
 import okhttp3.internal.toHexString
 

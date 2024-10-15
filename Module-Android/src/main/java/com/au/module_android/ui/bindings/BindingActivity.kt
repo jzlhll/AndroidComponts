@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.base.IUi
 import com.au.module_android.ui.createViewBinding
-import com.au.module_android.ui.toolbar.IHasToolbar
 import com.au.module_android.ui.views.ViewToolbarActivity
 
 /**

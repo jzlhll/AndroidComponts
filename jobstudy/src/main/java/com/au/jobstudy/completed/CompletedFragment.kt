@@ -12,7 +12,7 @@ import com.au.module_android.Globals
 import com.au.module_android.json.fromJson
 import com.au.module_android.permissions.createActivityForResult
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.unsafeLazy
 
 class CompletedFragment : BindingFragment<FragmentCompletedBinding>() {

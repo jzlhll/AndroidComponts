@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.annotation.CallSuper
 import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IUi
-import com.au.module_android.ui.toolbar.IHasToolbar
-import com.au.module_android.ui.toolbar.createToolbarLayout
 import com.au.module_android.widget.CustomToolbar
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
  * @author au
@@ -20,13 +20,12 @@ import com.au.module_android.widget.CustomToolbar
 abstract class ViewToolbarFragment : AbsFragment(), IUi, IHasToolbar {
     lateinit var root: View
 
-    private var _realRoot: ViewGroup? = null
-
+    private var _realRoot: RelativeLayout? = null
     private var _toolbar: CustomToolbar? = null
-
+    private var _indicator:CircularProgressIndicator? = null
     private var _toolbarMgr: ToolbarManager? = null
 
-    final override val realRoot: ViewGroup?
+    final override val realRoot: RelativeLayout?
         get() = _realRoot
 
     final override val toolbar: CustomToolbar?
@@ -34,6 +33,9 @@ abstract class ViewToolbarFragment : AbsFragment(), IUi, IHasToolbar {
 
     final override val toolbarManager: ToolbarManager?
         get() = _toolbarMgr
+
+    final override val indicator: CircularProgressIndicator?
+        get() = _indicator
 
     @CallSuper
     override fun onCreateView(
@@ -50,8 +52,9 @@ abstract class ViewToolbarFragment : AbsFragment(), IUi, IHasToolbar {
 
             val toolbarToLL = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon)
 
-            _realRoot = toolbarToLL.second
+            _realRoot = toolbarToLL.third
             _toolbar = toolbarToLL.first
+            _indicator = toolbarToLL.second
 
             if (info.menuBean != null) {
                 _toolbarMgr = ToolbarManager(this, info.menuBean).also {
@@ -59,7 +62,7 @@ abstract class ViewToolbarFragment : AbsFragment(), IUi, IHasToolbar {
                 }
             }
 
-            return toolbarToLL.second
+            return toolbarToLL.third
         } else {
             return v
         }

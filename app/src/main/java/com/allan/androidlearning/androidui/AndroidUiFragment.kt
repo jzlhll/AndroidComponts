@@ -6,11 +6,9 @@ import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
 import com.allan.classnameanno.EntroFrgName
 import com.allan.nested.viewpager2.simplePagerAdapter
-import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.MenuBean
-import com.au.module_android.ui.toolbar.ToolbarInfo
-import com.au.module_android.utils.unsafeLazy
+import com.au.module_android.ui.views.MenuBean
+import com.au.module_android.ui.views.ToolbarInfo
 
 /**
  * @author allan

@@ -1,6 +1,5 @@
 package com.au.module_android.ui
 
-import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,8 +9,8 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.au.module_android.ui.toolbar.IHasToolbar
-import com.au.module_android.ui.toolbar.MenuBean
+import com.au.module_android.ui.views.IHasToolbar
+import com.au.module_android.ui.views.MenuBean
 import com.au.module_android.utils.asOrNull
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -35,14 +34,14 @@ open class ToolbarManager{
     private val menuBean: MenuBean?
 
     constructor(activity: ComponentActivity,
-                menuBean:MenuBean? = null) {
+                menuBean: MenuBean? = null) {
         fragmentOrActivity = activity
         this.menuBean = menuBean
         this.activity = activity
     }
 
     constructor(fragment: Fragment,
-                menuBean:MenuBean? = null) {
+                menuBean: MenuBean? = null) {
         fragmentOrActivity = fragment
         this.menuBean = menuBean
         this.activity = fragment.requireActivity()

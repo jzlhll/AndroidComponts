@@ -2,14 +2,10 @@ package com.allan.androidlearning.androidui
 
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Toast
 import com.allan.androidlearning.databinding.FragmentAndroidUiEditBinding
-import com.au.module_android.postToMainHandler
-import com.au.module_android.toast.ToastUtil
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.ui.toolbar.ToolbarInfo
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.transparentStatusBar
-import com.au.module_androidui.toast.ToastBuilder
 import com.au.module_androidui.widget.CustomTextInputLayout
 
 /**

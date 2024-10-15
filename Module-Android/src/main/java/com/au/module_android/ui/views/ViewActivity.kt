@@ -17,8 +17,6 @@ abstract class ViewActivity : AbsActivity(), IUi {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val v = onUiCreateView(layoutInflater, null, savedInstanceState)
-        setContentView(v)
-        root = v
+        setContentView(onUiCreateView(layoutInflater, null, savedInstanceState).also { root = it })
     }
 }
