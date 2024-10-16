@@ -72,8 +72,8 @@ fun LifecycleOwner.photoPickerForResult(mediaType: ActivityResultContracts.PickV
 /**
  * android13+的实现。google要求不能再需要权限
  */
-fun LifecycleOwner.multiPhotoPickerForResult(maxItem:Int, mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType)
-        = NewMultiPhotoPickerForResult(this, maxItem, mediaType)
+fun LifecycleOwner.multiPhotoPickerForResult(maxItem:Int, mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType, isDynamicMaxItems:Boolean = false)
+        = NewMultiPhotoPickerForResult(this, maxItem, mediaType, isDynamicMaxItems)
 
 /**
  * 跳转到辅助服务
