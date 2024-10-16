@@ -131,7 +131,7 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
     }
 
     @CallSuper
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+    final override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
         //查看父类也只是透给onBindViewHolder ，这里屏蔽掉，去处理给payloads
         //super.onBindViewHolder(holder, position, payloads)
         if (payloads.isEmpty()) {
