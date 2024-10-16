@@ -1,4 +1,4 @@
-package com.au.module.cached
+package com.au.module_cached
 
 import android.os.Parcelable
 import com.au.module_android.Globals.app

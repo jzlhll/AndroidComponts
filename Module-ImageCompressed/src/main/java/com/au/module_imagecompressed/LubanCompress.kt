@@ -1,9 +1,9 @@
-package com.au.module.imagecompressed
+package com.au.module_imagecompressed
 
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import com.au.module.imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
+import com.au.module_imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
 import com.au.module_android.Globals
 import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener

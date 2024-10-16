@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.allan.androidlearning.databinding.FragmentCropEntryBinding
 import com.allan.classnameanno.EntryFrgName
-import com.au.module.imagecompressed.CropCircleImageFragment
+import com.au.module_imagecompressed.CropCircleImageFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.glide.glideSetAnyAsCircleCrop
 import com.au.module_android.permissions.createActivityForResult

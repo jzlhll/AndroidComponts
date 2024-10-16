@@ -1,4 +1,6 @@
-package com.au.module.cached
+package com.au.module_cached
+
+import com.au.module_cached.AppDataStore
 
 /**
  * @author au

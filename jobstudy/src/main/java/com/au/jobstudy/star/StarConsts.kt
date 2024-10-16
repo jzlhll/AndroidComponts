@@ -4,7 +4,7 @@ import com.au.jobstudy.check.AppDatabase
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.check.bean.StarEntity
-import com.au.module.cached.AppDataStore
+import com.au.module_cached.AppDataStore
 import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.launchOnThread

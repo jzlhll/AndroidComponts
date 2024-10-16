@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.allan.androidlearning.databinding.FragmentPhotoPickerBinding
 import com.allan.classnameanno.EntryFrgName
-import com.au.module.imagecompressed.LubanCompress
+import com.au.module_imagecompressed.LubanCompress
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.multiPhotoPickerForResult
 import com.au.module_android.permissions.photoPickerForResult

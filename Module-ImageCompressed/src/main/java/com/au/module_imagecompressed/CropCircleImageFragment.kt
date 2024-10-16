@@ -1,4 +1,4 @@
-package com.au.module.imagecompressed
+package com.au.module_imagecompressed
 
 import android.content.Context
 import android.content.Intent

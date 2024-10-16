@@ -2,7 +2,7 @@ package com.au.jobstudy
 
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.star.StarConsts
-import com.au.module.cached.AppDataStore
+import com.au.module_cached.AppDataStore
 import com.au.module_android.Globals
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.InitApplication

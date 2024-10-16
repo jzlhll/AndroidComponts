@@ -3,7 +3,7 @@ package com.allan.autoclickfloat.activities.autofs
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.au.module_android.Globals
-import com.au.module.cached.AppDataStore
+import com.au.module_cached.AppDataStore
 import java.util.UUID
 
 /**
