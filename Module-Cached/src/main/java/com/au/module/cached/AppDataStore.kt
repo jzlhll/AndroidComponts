@@ -1,4 +1,4 @@
-package com.au.module_cached
+package com.au.module.cached
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

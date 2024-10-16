@@ -10,7 +10,6 @@ import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList
 import com.au.jobstudy.checkwith.CheckWithFragment
 import com.au.jobstudy.completed.CompletedBeforeFragment
-import com.au.jobstudy.completed.CompletedFragment
 import com.au.jobstudy.databinding.FragmentMainHomeBinding
 import com.au.jobstudy.home.HomeRcvAdapter
 import com.au.jobstudy.home.HomeRcvBean
@@ -20,7 +19,7 @@ import com.au.jobstudy.home.HomeRcvTitleBean
 import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
-import com.au.module_cached.AppDataStoreMemCache
+import com.au.module.cached.AppDataStoreMemCache
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.FragmentRootActivity

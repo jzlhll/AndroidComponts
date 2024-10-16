@@ -8,7 +8,7 @@ import com.au.jobstudy.check.bean.WorkEntity
 import com.au.jobstudy.star.StarConsts
 import com.au.jobstudy.utils.Dayer
 import com.au.jobstudy.utils.WeekDateUtil
-import com.au.module_cached.AppDataStore
+import com.au.module.cached.AppDataStore
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logd
 import kotlinx.coroutines.delay
