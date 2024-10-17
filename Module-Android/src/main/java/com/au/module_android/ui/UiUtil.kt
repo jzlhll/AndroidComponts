@@ -28,10 +28,10 @@ private fun Class<*>?.getParameterizedType(): ParameterizedType? {
     }
 }
 
-private fun <T> findViewBinding(javaClass:Class<*>) : Class<T>? {
+private fun <T> findViewBinding(javaClass:Class<*>, typeIndex:Int = 0) : Class<T>? {
     val parameterizedType = javaClass.getParameterizedType() ?: return null
     val actualTypeArguments = parameterizedType.actualTypeArguments
-    val type = actualTypeArguments[0]
+    val type = actualTypeArguments[typeIndex]
     if ((ViewBinding::class.java).isAssignableFrom(type as Class<*>)) {
         return type as Class<T>
     }
@@ -42,7 +42,7 @@ fun <T : ViewBinding> createViewBinding(self: Class<*>, inflater: LayoutInflater
     var clz: Class<T>? = findViewBinding(self)
     //修正框架，允许往上寻找3层superClass的第一个泛型做为ViewBinding
     if (clz == null) {
-        val superClass = self.javaClass.superclass
+        val superClass = self.superclass
         if (superClass != null) {
             clz = findViewBinding(superClass) ?: superClass.superclass?.let { findViewBinding(it) }
         }
@@ -54,6 +54,14 @@ fun <T : ViewBinding> createViewBinding(self: Class<*>, inflater: LayoutInflater
         ViewGroup::class.java,
         Boolean::class.java
     ).invoke(null, inflater, container, attach) as T
+}
+
+/**
+ * 暂时不继续往父类查找。
+ */
+fun <T : ViewBinding> createViewBindingT2(self: Class<*>, inflater: LayoutInflater): T {
+    val clz: Class<T> = findViewBinding(self, 1) ?: throw IllegalArgumentException("需要一个ViewBinding类型的泛型") //不再向上去找
+    return clz.getMethod("inflate", LayoutInflater::class.java,).invoke(null, inflater) as T
 }
 
 /**

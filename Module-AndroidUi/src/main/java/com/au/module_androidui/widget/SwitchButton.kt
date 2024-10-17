@@ -25,7 +25,12 @@ class SwitchButton @JvmOverloads constructor(context: Context, attrs: AttributeS
     var isClosed = true
         private set
 
-    private var isInit = false
+    var isInit = false
+
+    /**
+     * 是否阻止
+     */
+    var abort = false
 
     private val moveDistance by unsafeLazy {
         val width = width - context.resources.getDimension(com.au.module_androidcolor.R.dimen.switch_button_padding) * 2
@@ -40,9 +45,11 @@ class SwitchButton @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         mViewBinding.root.onClick {
-            val newIsLeft = !isClosed
-            setValue(newIsLeft)
-            valueCallback?.invoke(newIsLeft)
+            if (!abort) {
+                val newIsClosed = !isClosed
+                setValue(newIsClosed)
+                valueCallback?.invoke(newIsClosed)
+            }
         }
     }
 
@@ -59,6 +66,9 @@ class SwitchButton @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     fun setValue(close: Boolean) {
         if (!isInit) throw RuntimeException()
+        if (isClosed == close) {
+            return
+        }
         //后续也可能后台改动，进而触发notifyItemChange bindData，则动画
         this.isClosed = close
         handleAnimal()

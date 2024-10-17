@@ -2,6 +2,7 @@ package com.allan.nested.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.allan.nested.recyclerview.viewholder.BindViewHolder
@@ -152,6 +153,21 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         }
 
         onDataChanged(DataChangeExtraInfoAppend(oldDataSize, newDataSize))
+    }
+
+    @CallSuper
+    final override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+        //查看父类也只是透给onBindViewHolder ，这里屏蔽掉，去处理给payloads
+        //super.onBindViewHolder(holder, position, payloads)
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            holder.payloadsRefresh(datas[position], payloads)
+        }
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        holder.bindData(datas[position])
     }
 
     internal fun submitTraditional(newList: List<DATA>?, shouldOnDatasChange: Boolean = true) {

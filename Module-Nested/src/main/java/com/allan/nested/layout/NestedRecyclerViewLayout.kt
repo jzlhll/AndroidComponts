@@ -69,34 +69,34 @@ class NestedRecyclerViewLayout : NestedConstraintLayout {
     }
 
     private fun initial(hasIndicatorInLayout:Boolean, hasIndicatorInDecorView: Boolean, holdDeltaY:Float) {
-        addRecyclerView()
+        if (!isInEditMode) {
+            addRecyclerView()
 
-        val indicator = if (hasIndicatorInLayout) {
-            createCircularProgressIndicator(context).also {
-                val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-                lp.bottomToTop = PARENT_ID
-                lp.startToStart = PARENT_ID
-                lp.endToEnd = PARENT_ID
-                lp.bottomMargin = 16.dp //这样，就让indicator比top还要高16dp。就会比rcv慢再出现达成目的
-                addView(it, lp)
-            }
-        } else if (hasIndicatorInDecorView) {
-            val decorView = context.asOrNull<Activity>()?.window?.decorView.asOrNull<FrameLayout>()
-            if (decorView != null) {
+            val indicator = if (hasIndicatorInLayout) {
                 createCircularProgressIndicator(context).also {
-                    val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                    val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                    lp.bottomToTop = PARENT_ID
+                    lp.startToStart = PARENT_ID
+                    lp.endToEnd = PARENT_ID
                     lp.bottomMargin = 16.dp //这样，就让indicator比top还要高16dp。就会比rcv慢再出现达成目的
-                    lp.gravity = Gravity.CENTER or Gravity.TOP
-                    decorView.addView(it, lp)
+                    addView(it, lp)
+                }
+            } else if (hasIndicatorInDecorView) {
+                val decorView = context.asOrNull<Activity>()?.window?.decorView.asOrNull<FrameLayout>()
+                if (decorView != null) {
+                    createCircularProgressIndicator(context).also {
+                        val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                        lp.bottomMargin = 16.dp //这样，就让indicator比top还要高16dp。就会比rcv慢再出现达成目的
+                        lp.gravity = Gravity.CENTER or Gravity.TOP
+                        decorView.addView(it, lp)
+                    }
+                } else {
+                    null
                 }
             } else {
                 null
             }
-        } else {
-            null
-        }
 
-        if (!isInEditMode) {
             refresher.initEarlyAsSmooth(recyclerView, indicator, false)
             refresher.setIndicatorDeltaHoldY(holdDeltaY)
         }

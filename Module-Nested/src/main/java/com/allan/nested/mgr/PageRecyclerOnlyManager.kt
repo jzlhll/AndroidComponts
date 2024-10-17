@@ -23,11 +23,6 @@ import com.au.module_android.utils.dp
  * 这样做的好处在于，脱离了Fragment来继承的方式，本类专注于处理PullRefreshAndAutoLoadMoreView的显示和分页加载的逻辑。
  * 这样Fragment可以自由追加额外控件。而不受限于具体某个xml。
  *
- * [initGridAdapterAndRcv] 支持
- * secondary二级页[com.ui.module.second.SecondaryFragment]
- * 和搜索结果页[com.ui.module.search.SearchResultFragment]
- * [initLinearAdapterAndRcv] 支持
- *
  */
 open class PageRecyclerOnlyManager<Bean:Any>(
     private val rcv: RecyclerView,
@@ -126,25 +121,6 @@ open class PageRecyclerOnlyManager<Bean:Any>(
                                      viewLifecycleOwner: LifecycleOwner,
     ) {
         rcv.layoutManager = LinearLayoutManager(rcv.context)
-        initOthers(viewLifecycleOwner)
-    }
-
-    /**
-     * 一种设定方式：Linear 模式
-     */
-    private fun initLinearAdapterAndRcv(savedInstanceState: Bundle?,
-                                        viewLifecycleOwner: LifecycleOwner,
-                                        paddingLeft:Int = 17f.dp.toInt(), paddingRight:Int = 20f.dp.toInt(),
-                                        decoration: RecyclerView.ItemDecoration = PaddingItemDecoration(
-                                         0,
-                                         8f.dp.toInt(),
-                                         true
-                                     )
-    ) {
-        rcv.updatePadding(left = paddingLeft, right = paddingRight)
-        rcv.layoutManager = LinearLayoutManager(rcv.context)
-        rcv.addItemDecoration(decoration)
-
         initOthers(viewLifecycleOwner)
     }
 

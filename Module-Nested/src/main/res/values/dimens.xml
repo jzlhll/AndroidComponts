@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nested_indicator_toolbar_margin_start">0dp</dimen>
+    <dimen name="nested_indicator_toolbar_margin_end">0dp</dimen>
+    <dimen name="nested_indicator_toolbar_margin_top">-12dp</dimen>
+    <dimen name="nested_indicator_toolbar_holdy">-24dp</dimen>
+</resources>

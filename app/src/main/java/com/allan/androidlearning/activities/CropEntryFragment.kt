@@ -6,12 +6,12 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.allan.androidlearning.databinding.FragmentCropEntryBinding
 import com.allan.classnameanno.EntryFrgName
+import com.allan.nested.fragments.AbsNestedIndicatorFragment
 import com.au.module_imagecompressed.CropCircleImageFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.glide.glideSetAnyAsCircleCrop
 import com.au.module_android.permissions.createActivityForResult
 import com.au.module_android.permissions.photoPickerForResult
-import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.iteratorPrint
 import com.au.module_android.utils.logd
 import java.io.File
@@ -22,12 +22,13 @@ import java.io.File
  * @description:
  */
 @EntryFrgName
-class CropEntryFragment : BindingFragment<FragmentCropEntryBinding>() {
+class CropEntryFragment : AbsNestedIndicatorFragment<Void, FragmentCropEntryBinding>() {
     private val gotoUcropResult = createActivityForResult()
     private val photoPickResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.ImageOnly)
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.button.onClick {
+        super.onBindingCreated(savedInstanceState)
+        contentViewBinding.button.onClick {
             photoPickResult.request { uri ->
                 logd { "uri $uri" }
                 if (uri != null) {
@@ -47,8 +48,8 @@ class CropEntryFragment : BindingFragment<FragmentCropEntryBinding>() {
                             croppedUri?.let { cropped ->
                                 val file = File(cropped.toString().replace("file://", ""))
                                 logd { "croppedUri file: " + file + " size: " + file.length()}
-                                binding.avatarImage.setBackgroundDrawable(null)
-                                binding.avatarImage.glideSetAnyAsCircleCrop(file)
+                                contentViewBinding.avatarImage.setBackgroundDrawable(null)
+                                contentViewBinding.avatarImage.glideSetAnyAsCircleCrop(file)
                             }
                         }
                     }

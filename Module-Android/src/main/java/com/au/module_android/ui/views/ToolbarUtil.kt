@@ -23,7 +23,7 @@ internal fun createToolbarLayout(context: Context, contentView:View, hasNavIcon:
     return Triple(toolbar, indicator, rl)
 }
 
-private fun initToolBar(context: Context, toolbar: CustomToolbar, hasNavIcon:Boolean) {
+fun initToolBar(context: Context, toolbar: CustomToolbar, hasNavIcon:Boolean) {
     if (context !is AppCompatActivity) throw RuntimeException()
     toolbar.apply {
         if (context.supportActionBar == null) {
