@@ -183,6 +183,7 @@ private fun isAppForeground(context: Context) : Boolean {
     return false
 }
 
+
 /**
  *
  * 未知activity，打开一个packageName的应用。
@@ -227,6 +228,29 @@ fun openApp(context: Context, packageName: String) : Boolean{
         e.printStackTrace()
         return false
     }
+}
+
+fun openApp2(context: Context, packageName: String) : Boolean{
+    try {
+        val appIntent = getAppIntent(context, packageName) ?: return false
+        val className = appIntent.component?.className ?: return false
+        val cn = ComponentName(packageName, className)
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setComponent(cn)
+        context.startActivityFix(intent)
+        return true
+    } catch (e:Exception) {
+        e.printStackTrace()
+        return false
+    }
+}
+
+/**
+ * 获取打开其他app的intent
+ */
+fun getAppIntent(context:Context, packageName: String): Intent? {
+    return context.packageManager.getLaunchIntentForPackage(packageName)
 }
 
 fun openAppActivity(context: Context, packageName: String, activityName:String) : Boolean{

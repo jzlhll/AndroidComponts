@@ -15,8 +15,8 @@ import com.au.module_android.ui.views.ViewToolbarFragment
  * Date: 2023/7/10
  * Description 基础Fragment的通用
  */
-abstract class BindingFragment<VB: ViewBinding> : ViewToolbarFragment(), IUi {
-    lateinit var binding:VB
+abstract class BindingFragment<VB: ViewBinding> : ViewToolbarFragment() {
+    lateinit var binding:VB private set
 
     final override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val vb = createViewBinding(javaClass, inflater, container, false) as VB

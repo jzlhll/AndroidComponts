@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#f0f0f0"
+    android:background="#ffffff"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -31,6 +31,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="#f8f8f8"
         android:layout_weight="1">
 
         <TextView
@@ -48,8 +49,8 @@
         android:id="@+id/btReStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:layout_marginHorizontal="@dimen/ui_padding_edge"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="24dp"
         android:text="重启"/>
 </LinearLayout>

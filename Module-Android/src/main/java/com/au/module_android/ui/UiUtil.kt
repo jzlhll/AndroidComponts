@@ -59,9 +59,20 @@ fun <T : ViewBinding> createViewBinding(self: Class<*>, inflater: LayoutInflater
 /**
  * 暂时不继续往父类查找。
  */
-fun <T : ViewBinding> createViewBindingT2(self: Class<*>, inflater: LayoutInflater): T {
+fun <T : ViewBinding> createViewBindingT2(self: Class<*>, inflater: LayoutInflater, container:ViewGroup, isContentMergeXml:Boolean): T {
     val clz: Class<T> = findViewBinding(self, 1) ?: throw IllegalArgumentException("需要一个ViewBinding类型的泛型") //不再向上去找
-    return clz.getMethod("inflate", LayoutInflater::class.java,).invoke(null, inflater) as T
+    return if (isContentMergeXml) {
+        clz.getMethod("inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java).invoke(null, inflater, container) as T
+    } else {
+        clz.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        ).invoke(null, inflater, null, false) as T
+    }
 }
 
 /**

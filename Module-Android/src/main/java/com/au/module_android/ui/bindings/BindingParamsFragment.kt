@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * @author au
  * 简化和传入复杂的参数类型。
- * 主要使用场景为做为整个activity的唯一。
+ * 主要使用场景为做为整个activity的唯一。而且不能跨进程。
  */
 abstract class BindingParamsFragment<Binding : ViewBinding> : BindingFragment<Binding>() {
 

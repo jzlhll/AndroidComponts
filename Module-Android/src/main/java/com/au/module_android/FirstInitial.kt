@@ -1,15 +1,12 @@
 package com.au.module_android
 
 import android.app.Application
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.au.module_android.BuildConfig
 import com.au.module_android.init.GlobalActivityCallback
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.optimizeSpTask
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
-import com.au.module_android.ui.CrashActivity
+import com.au.module_android.ui.UncaughtExceptionHandlerObj
 
 /**
  * 自动初始化
@@ -24,7 +21,7 @@ class FirstInitial {
     fun init(context: Application, initCfg:FirstInitialConfig? = null): Application {
         Globals.internalApp = context
 
-        CrashActivity.initUncaughtExceptionHandler()
+        UncaughtExceptionHandlerObj.init()
 
         val initConfig = initCfg ?: FirstInitialConfig()
         if(initConfig.isEnableToutiaoScreenAdapter) { ToutiaoScreenAdapter.init(context) }

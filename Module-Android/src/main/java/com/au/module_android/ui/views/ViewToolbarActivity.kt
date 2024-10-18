@@ -8,7 +8,6 @@ import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.base.AbsActivity
 import com.au.module_android.ui.base.IUi
 import com.au.module_android.widget.CustomToolbar
-import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /**
  * @author au
@@ -21,10 +20,6 @@ abstract class ViewToolbarActivity : AbsActivity(), IUi, IHasToolbar {
     private var _realRoot: RelativeLayout? = null
     private var _toolbar: CustomToolbar? = null
     private var _toolbarMgr: ToolbarManager? = null
-    private var _indicator:CircularProgressIndicator? = null
-
-    final override val indicator: CircularProgressIndicator?
-        get() = _indicator
 
     final override val realRoot: RelativeLayout?
         get() = _realRoot
@@ -45,11 +40,10 @@ abstract class ViewToolbarActivity : AbsActivity(), IUi, IHasToolbar {
         if (info != null) {
             if(info.title != null) this.title = info.title //before create toolbar
 
-            val toolbarToLL = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon)
+            val vb = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon)
 
-            _realRoot = toolbarToLL.third
-            _toolbar = toolbarToLL.first
-            _indicator = toolbarToLL.second
+            _realRoot = vb.root
+            _toolbar = vb.toolbar
 
             if (info.menuBean != null) {
                 _toolbarMgr = ToolbarManager(this, info.menuBean).also {
@@ -57,7 +51,7 @@ abstract class ViewToolbarActivity : AbsActivity(), IUi, IHasToolbar {
                 }
             }
 
-            setContentView(toolbarToLL.third)
+            setContentView(vb.root)
         } else {
             setContentView(v)
         }

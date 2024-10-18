@@ -11,7 +11,7 @@ import com.au.module_android.ui.createViewBinding
 
 open class BindingDialog<VB:ViewBinding>(mode: DialogMode = DialogMode.Center)
         : AbsDialog(mode){
-    lateinit var binding:VB
+    lateinit var binding:VB private set
 
     private var _onBindingInitBlock:((binding: VB) -> Unit)? = null
     /**

@@ -2,8 +2,7 @@ package com.au.module_android.ui.views
 
 import android.widget.RelativeLayout
 import com.au.module_android.ui.ToolbarManager
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.au.module_android.widget.CustomToolbar
 
 /**
  * @author allan
@@ -27,9 +26,7 @@ interface IHasToolbar {
     /**
      * hasToolbar() = true 才会有。
      */
-    val toolbar : MaterialToolbar?
-
-    val indicator:CircularProgressIndicator?
+    val toolbar : CustomToolbar?
 
     /**
      * hasToolbarManager()!=null 才会有。

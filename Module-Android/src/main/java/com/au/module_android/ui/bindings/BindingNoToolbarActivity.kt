@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.createViewBinding
-import com.au.module_android.ui.views.ViewToolbarActivity
+import com.au.module_android.ui.views.ViewActivity
 
 /**
  * @author au
  * Date: 2023/7/4
  * Description 指导基础类模板
  */
-abstract class BindingActivity<VB: ViewBinding> : ViewToolbarActivity() {
+abstract class BindingNoToolbarActivity<VB: ViewBinding> : ViewActivity() {
     lateinit var binding:VB private set
 
     final override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

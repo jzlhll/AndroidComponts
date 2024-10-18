@@ -26,6 +26,10 @@ class CropEntryFragment : AbsNestedIndicatorFragment<Void, FragmentCropEntryBind
     private val gotoUcropResult = createActivityForResult()
     private val photoPickResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.ImageOnly)
 
+    override fun isContentViewMergeXml(): Boolean {
+        return true
+    }
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
         contentViewBinding.button.onClick {

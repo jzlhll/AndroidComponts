@@ -10,7 +10,7 @@ import com.au.module_android.ui.createViewBinding
 
 open class BindingBottomDialog<VB:ViewBinding>(hasEditText:Boolean = false)
         : AbsBottomDialog(hasEditText) {
-    lateinit var binding:VB
+    lateinit var binding:VB private set
     private var _onBindingInitBlock:((binding: VB) -> Unit)? = null
 
     @Deprecated("please call setOnBindingInitBlock")
