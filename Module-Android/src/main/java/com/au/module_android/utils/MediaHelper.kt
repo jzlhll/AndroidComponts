@@ -61,7 +61,7 @@ class MediaHelper {
         }
 
         private fun isVideoFileSimple(extension: String): Boolean {
-            val videoExtensions = listOf("mp4", "mov", "flv", "mkv", "webm", "m4v") //"avi" "wmv", "3gp",
+            val videoExtensions = listOf("mp4", "mov", "flv", "mkv", "webm", "m4v", "avi", "wmv", "3gp",)
             return extension in videoExtensions
         }
 
@@ -76,12 +76,22 @@ class MediaHelper {
         }
     }
 
+    fun getDurationNormally(context: Context, uri: Uri): Long {
+        var duration: Long = 0
+        val retriever = MediaMetadataRetriever()
+        try {
+            retriever.setDataSource(context, uri)
+            val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            duration = time!!.toLong()
+        } catch (ex: java.lang.Exception) {
+            ex.printStackTrace()
+        } finally {
+            retriever.release()
+        }
+        return duration
+    }
 
-    /**
-     * 这个方法不准确，已弃用
-     */
     fun getDurationNormally(path: String?): Long {
-        var time = System.currentTimeMillis()
         var duration: Long = 0
         val retriever = MediaMetadataRetriever()
         try {
@@ -95,8 +105,6 @@ class MediaHelper {
         } finally {
             retriever.release()
         }
-        time = System.currentTimeMillis() - time
-        Log.d("allan", "getDurationNormally: $time")
         return duration
     }
 

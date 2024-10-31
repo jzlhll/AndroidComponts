@@ -14,7 +14,7 @@ import com.au.module_android.utils.asOrNull
  * @author au
  * @date :2023/12/13 10:52
  */
-abstract class IContractResult<I, O> (cxt:Any, resultContract:ActivityResultContract<I, O>) {
+abstract class IContractResult<I, O> (cxt:Any, val resultContract:ActivityResultContract<I, O>) {
     private var onResultCallback: ActivityResultCallback<O>? = null
 
     private val mResultCallback = ActivityResultCallback<O> { result -> onResultCallback?.onActivityResult(result) }
@@ -41,7 +41,7 @@ abstract class IContractResult<I, O> (cxt:Any, resultContract:ActivityResultCont
     /**
      * 要求在launch之前调用
      */
-    protected fun setResultCallback(callback: ActivityResultCallback<O>) {
+    protected open fun setResultCallback(callback: ActivityResultCallback<O>) {
         onResultCallback = callback
     }
 

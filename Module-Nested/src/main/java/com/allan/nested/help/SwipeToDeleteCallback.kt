@@ -8,7 +8,10 @@ import kotlin.math.max
 /**
  * @author allan
  * @date :2024/10/18 16:44
- * @description:
+val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback().also {
+it.setMaxSwipeToLeftX(70.dp)
+})
+itemTouchHelper.attachToRecyclerView(rcv)
  */
 class SwipeToDeleteCallback : ItemTouchHelper.Callback() {
 
