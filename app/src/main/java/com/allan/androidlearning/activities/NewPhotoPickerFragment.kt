@@ -1,82 +1,54 @@
 package com.allan.androidlearning.activities
 
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import com.allan.androidlearning.databinding.FragmentPhotoPickerBinding
 import com.allan.classnameanno.EntryFrgName
-import com.au.module_imagecompressed.LubanCompress
 import com.au.module_android.click.onClick
-import com.au.module_android.permissions.multiPhotoPickerForResult
-import com.au.module_android.permissions.photoPickerForResult
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
+import com.au.module_imagecompressed.MultiPhotoPickerContractResult
+import com.au.module_imagecompressed.compatMultiPhotoPickerForResult
+import com.au.module_imagecompressed.photoPickerForResult
 
 @EntryFrgName
 class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
-    val singlePicResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.ImageOnly)
-    val singleVideoResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.VideoOnly)
-    val singlePicAndVideoResult = photoPickerForResult(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+    val singleResult = photoPickerForResult().also { it.setNeedLubanCompress(100) }
 
-    val multiPicResult = multiPhotoPickerForResult(4, ActivityResultContracts.PickVisualMedia.ImageOnly)
-    val multiVideoResult = multiPhotoPickerForResult(3, ActivityResultContracts.PickVisualMedia.VideoOnly)
-    val multiPicAndVideoResult = multiPhotoPickerForResult(5, ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+    val multiResult = compatMultiPhotoPickerForResult(3)
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.singlePic.onClick {
-            singlePicResult.request { uri->
+            singleResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.IMAGE, null) { uri->
                 logd { "uri: $uri" }
-                LubanCompress().also {
-                    it.resultCallback = { srcPath, resultPath ->
-                        logd { "srcPath: $srcPath, resultPath $resultPath" }
-                    }
-                }.compress(requireContext(), uri)
             }
         }
         binding.singleVideo.onClick {
-            singleVideoResult.request {
+            singleResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.VIDEO, null) {
                 logd { "uri: $it" }
             }
         }
         binding.singlePicAndVideo.onClick {
-            singlePicAndVideoResult.request{ uri->
+            singleResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO, null) { uri->
                 logd { "uri: $uri" }
-                LubanCompress().also {
-                    it.resultCallback = { srcPath, resultPath ->
-                        logd { "srcPath: $srcPath, resultPath $resultPath" }
-                    }
-                }.compress(requireContext(), uri)
             }
         }
 
         binding.multiPic4.onClick {
-            multiPicResult.request {
-                it.forEachIndexed { index, uri ->
-                    logd { "$index, uri: $uri" }
-                }
-                LubanCompress().also { lc->
-                    lc.resultCallback = { srcPath, resultPath ->
-                        logd { "srcPath: $srcPath, resultPath $resultPath" }
-                    }
-                }.compress(requireContext(), it)
+            multiResult.setCurrentMaxItems(6)
+            multiResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.IMAGE, null) {uri->
+                logd { "uri: $uri" }
             }
         }
         binding.multiVideo3.onClick {
-            multiVideoResult.request {
-                it.forEachIndexed { index, uri ->
-                    logd { "$index, uri: $uri" }
-                }
+            multiResult.setCurrentMaxItems(3)
+            multiResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.VIDEO, null) {uri->
+                logd { "uri: $uri" }
             }
         }
         binding.multiPicAndVideo5.onClick {
-            multiPicAndVideoResult.request {
-                it.forEachIndexed { index, uri ->
-                    logd { "$index, uri: $uri" }
-                }
-                LubanCompress().also { lc->
-                    lc.resultCallback = { srcPath, resultPath ->
-                        logd { "srcPath: $srcPath, resultPath $resultPath" }
-                    }
-                }.compress(requireContext(), it)
+            multiResult.setCurrentMaxItems(9)
+            multiResult.launchOneByOne(MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO, null) {uri->
+                logd { "uri: $uri" }
             }
         }
     }

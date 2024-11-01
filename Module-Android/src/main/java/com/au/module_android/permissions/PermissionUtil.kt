@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,8 +17,6 @@ import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.permissions.activity.SystemTakePictureForResult
 import com.au.module_android.permissions.activity.SystemTakeVideoFaceForResult
 import com.au.module_android.permissions.activity.SystemTakeVideoForResult
-import com.au.module_android.permissions.media.NewMultiPhotoPickerForResult
-import com.au.module_android.permissions.media.NewPhotoPickerForResult
 import com.au.module_android.permissions.permission.IMultiPermissionsResult
 import com.au.module_android.permissions.permission.IOnePermissionResult
 import com.au.module_android.permissions.permission.PermissionForResult
@@ -61,19 +58,6 @@ fun LifecycleOwner.createPermissionForResult(permission:String) : IOnePermission
  * activity 跳转，返回拿结果。
  */
 fun LifecycleOwner.createActivityForResult() : ActivityForResult = ActivityForResult(this)
-
-/**
- * android13+的实现。google要求不能再需要权限
- * ActivityResultContracts.PickVisualMedia.ImageOnly等等。
- */
-fun LifecycleOwner.photoPickerForResult(mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType)
-        = NewPhotoPickerForResult(this, mediaType)
-
-/**
- * android13+的实现。google要求不能再需要权限
- */
-fun LifecycleOwner.multiPhotoPickerForResult(maxItem:Int, mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType, isDynamicMaxItems:Boolean = false)
-        = NewMultiPhotoPickerForResult(this, maxItem, mediaType, isDynamicMaxItems)
 
 /**
  * 跳转到辅助服务
