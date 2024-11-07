@@ -16,6 +16,7 @@ import com.allan.nested.layout.NestedRecyclerViewLayout
 import com.allan.nested.recyclerview.BaseAdapter
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.dpInt
 import com.au.module_android.utils.unsafeLazy
 
 /**
@@ -45,7 +46,7 @@ abstract class NestedRecyclerFragment : ViewFragment() {
     @EmptySuper
     open fun initRecyclerView(rcv: RecyclerView) {
         addLinear(rcv,
-            rcv.context.dp(1f).toInt(),
+            0.5f.dpInt,
             defaultSplitLineColor(),
             drawLastDivider = true)
         rcv.itemAnimator = null

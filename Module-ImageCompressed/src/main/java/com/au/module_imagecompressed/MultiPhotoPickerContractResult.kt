@@ -44,7 +44,7 @@ class MultiPhotoPickerContractResult(
         COPY_NOTHING_BUT_CVT_HEIC,
 
         /** 基本上所有都不做拷贝，原始Uri。heic和png等图片能转为jpg都做拷贝。*/
-        COPY_CVT_IMAGE,
+        COPY_CVT_IMAGE_TO_JPG,
     }
 
     enum class PickerType {
@@ -53,7 +53,7 @@ class MultiPhotoPickerContractResult(
         IMAGE_AND_VIDEO,
     }
 
-    private var mCopyMode: CopyMode = CopyMode.COPY_CVT_IMAGE
+    private var mCopyMode: CopyMode = CopyMode.COPY_CVT_IMAGE_TO_JPG
 
     private lateinit var oneByOneCallback:((UriWrap)->Unit)
     private var mLimitImageSize = 50 * 1024 * 1024
@@ -159,7 +159,7 @@ class MultiPhotoPickerContractResult(
                 }
             }
 
-            CopyMode.COPY_CVT_IMAGE -> {
+            CopyMode.COPY_CVT_IMAGE_TO_JPG -> {
                 if (isImage) {
                     val size = longArrayOf(-1L)
                     val copyUri = uri.copyToCacheConvert(cr, URI_COPY_PARAM_ANY_TO_JPG, size)
