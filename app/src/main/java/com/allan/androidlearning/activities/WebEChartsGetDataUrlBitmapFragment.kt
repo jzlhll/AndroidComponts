@@ -102,11 +102,6 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
                         val name = File(Globals.goodCacheDir, "video_${millisToTime()}.mp4").absolutePath
                         val suc = viewRecorder.setup(name, bitmapOffer)
                         binding.desc2Text.text = "generating $name ..."
-                        logt { "setup $name $suc" }
-                        if (suc) {
-                            viewRecorder.startRecord()
-                            h5Fragment.webView.sendEventToH5("nativeCallWeb", "echartStartRecord")
-                        }
                     }
 
                     "echartRunOver" -> {
@@ -137,6 +132,9 @@ class WebEChartsGetDataUrlBitmapFragment : BindingFragment<ActivityEchartsBindin
 //                                    requireActivity().cacheDir.absolutePath)
 //                            }
                             lastBase64Image = imageData
+                            if (viewRecorder.isSetupOk()) {
+                                viewRecorder.startRecord()
+                            }
                         }
                     }
                 }

@@ -11,6 +11,10 @@ class ContinuousBitmapRecorderManager {
     private var mRecording = false
     private var mRecorder:ContinuousBitmapRecorder? = null
 
+    fun isRecording() = mRecording
+
+    fun isSetupOk() = !mRecording && mRecorder != null
+
     var curRecordFile : File? = null
 
     fun setup(outputFileStr: String, bitmapOffer:()-> Bitmap?) : Boolean {
