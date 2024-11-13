@@ -9,6 +9,7 @@ import com.au.module_android.selectlist.SelectListFragment
 import com.au.module_android.selectlist.SelectListItem
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logt
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.coroutineScope
@@ -51,28 +52,11 @@ class CoroutineFragment(override val title: String = "Coroutine",
         when (item.itemName) {
             "Dispatchers" -> {
                 logt { "Run0......" }
-
                 lifecycleScope.launch {
-                    try {
-                        supervisorScope {
-                            launchOnThread {
-                                logt { "Run1......" }
-                                Thread.sleep(2000)
-                                logt { "Run1......end" }
-                            }
-                        }
-                        supervisorScope {
-                            launchOnThread {
-                                logt { "Run2......" }
-                                Thread.sleep(1000)
-                                throw IllegalStateException()
-                            }
-                        }
-                        logt { "Run112233" }
-                    } catch (e:Exception) {
-                        e.printStackTrace()
-                    }
+                    logd { "run it" }
+                    requireActivity().title = "titled.de."
                 }
+                logt { "Run1......" }
             }
 
             "Test"-> {

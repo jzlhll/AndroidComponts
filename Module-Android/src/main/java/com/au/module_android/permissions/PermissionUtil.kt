@@ -27,13 +27,8 @@ import com.au.module_android.utils.startActivityFix
 const val REQUEST_OVERLAY_CODE: Int = 1001
 //todo https://article.juejin.cn/post/7082314521284444173 增加拍照等
 
-/**
- * 无需权限就可以拉起系统拍照。
- */
 fun LifecycleOwner.systemTakePictureForResult() = SystemTakePictureForResult(this)
-/**
- * 无需权限就可以拉起系统录像。
- */
+
 fun LifecycleOwner.systemTakeVideoForResult() = SystemTakeVideoForResult(this)
 
 fun LifecycleOwner.systemTakeVideo2FrontForResult(isFront:Boolean = false,

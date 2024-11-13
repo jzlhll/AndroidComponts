@@ -6,7 +6,14 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/takePic"
+        android:text="takePicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/singlePic"
+        android:layout_marginTop="12dp"
         android:text="单选图片"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

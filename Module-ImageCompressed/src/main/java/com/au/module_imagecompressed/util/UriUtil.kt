@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.core.net.toFile
+import com.au.module_imagecompressed.UriWrap
 
 /**
  * @author allan
@@ -57,4 +58,14 @@ class UriUtil(private val uri: Uri, cr: ContentResolver) {
     fun isUriVideo() = mimeUtil.isUriVideo()
 
     fun isUriImage() = mimeUtil.isUriImage()
+
+    /**
+     * 必须是：
+     * 我的cacheDir或者fileDir下的文件来转成UriWrap。
+     */
+    fun myFileConvertToUriWrap() : UriWrap {
+        assert(isFileScheme())
+        val file = uri.toFile()
+        return UriWrap(uri, 1, file.length(), true, false, true, mimeType, file.name)
+    }
 }
