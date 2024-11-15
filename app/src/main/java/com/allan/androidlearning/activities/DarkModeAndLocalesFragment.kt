@@ -160,6 +160,7 @@ class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBindin
                 } else {
                     setAsAutomatic(false)
                     DarkModeAndLocalesConst.settingChangeDarkMode(Globals.app, null)
+                    requireActivity().recreate() //实测下来，修改为follow System，Activity无法收到onConfigChanged，只能重建
                 }
             }
         }
