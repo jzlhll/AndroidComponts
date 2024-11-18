@@ -74,7 +74,7 @@ object Globals {
 
     //内部参数
     lateinit var internalApp: Application
-    internal val internalActivityList = ArrayList<Activity>(8)
+    private val internalActivityList = ArrayList<Activity>(8)
 
     private fun createBackgroundHandler() : Handler {
         val handlerThread = HandlerThread("app-major-bg-thread")

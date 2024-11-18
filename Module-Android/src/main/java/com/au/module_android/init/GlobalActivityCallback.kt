@@ -4,9 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import com.au.module_android.Globals.activityList
-import com.au.module_android.ui.FragmentRootActivity
-import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.logd
 
 /**
  * @author au
@@ -20,6 +17,11 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityStarted(activity: Activity) {
+        val size = activityList.size
+        if (size > 1 && activityList[size - 2] == activity) {
+            activityList[size - 2] = activityList[size - 1]
+            activityList[size - 1] = activity
+        }
         //logd { "GlobalActivity Callback onActivityStarted $activity ${activity.asOrNull<FragmentRootActivity>()?.fragmentClass?.simpleName}" }
     }
 
