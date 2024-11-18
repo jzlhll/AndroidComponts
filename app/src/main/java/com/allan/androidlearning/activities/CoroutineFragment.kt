@@ -2,8 +2,13 @@ package com.allan.androidlearning.activities
 
 import android.content.Context
 import android.view.View
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
+import com.allan.androidlearning.utils.HardWorkTest
 import com.allan.classnameanno.EntryFrgName
+import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.selectlist.SelectListFragment
 import com.au.module_android.selectlist.SelectListItem
@@ -11,10 +16,33 @@ import com.au.module_android.utils.dp
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logt
+import com.au.module_android.utils.unsafeLazy
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
+import kotlin.coroutines.suspendCoroutine
+
+class CoroutineViewModel : ViewModel() {
+    fun run() {
+        logt { "viewModel: run1" }
+        viewModelScope.launch {
+            logt { "viewModel: run in...." }
+        }
+        logt { "viewModel: run2" }
+    }
+}
 
 /**
  * @author allan
@@ -30,6 +58,13 @@ class CoroutineFragment(override val title: String = "Coroutine",
                                   ),
                               override val initCur: KotlinCoroutineSelectListItem = KotlinCoroutineSelectListItem("Dispatchers"))
         : SelectListFragment<KotlinCoroutineSelectListItem>() {
+
+    private val vm by unsafeLazy { ViewModelProvider(this)[CoroutineViewModel::class.java] }
+
+    private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
+        logd { "${throwable.message}" }
+    })
+
 
     override fun itemHeight(): Int {
         return 48.dp
@@ -51,15 +86,46 @@ class CoroutineFragment(override val title: String = "Coroutine",
         val item = it.tag as KotlinCoroutineSelectListItem
         when (item.itemName) {
             "Dispatchers" -> {
-                logt { "Run0......" }
-                lifecycleScope.launch {
-                    logd { "run it" }
-                    requireActivity().title = "titled.de."
+                subScope.launch {
+                    logt { "Run1......" }
+                    delay(100)
+                    throw RuntimeException("Error Exception") //不论是这种
+//                    launch { ////或者
+//                        throw RuntimeException("Error Exception")
+//                    }
+//                    launch(Dispatchers.Main) { //还是这种
+//                        throw RuntimeException("Error Exception")
+//                    }
                 }
-                logt { "Run1......" }
+                subScope.launch {
+                    logt { "Run2......" }
+                    delay(200)
+                    logt { "Run2......over" }
+                }
+                subScope.launch {
+                    logt { "Run3......" }
+                    delay(300)
+                    logt { "Run3......over" }
+                }
+
             }
 
             "Test"-> {
+                subScope.launch(CoroutineExceptionHandler { coroutineContext, throwable ->
+                    logt { "parent handler: ${throwable.message}" }
+                }) {
+                    launch(CoroutineExceptionHandler { coroutineContext, throwable ->
+                        logt { "child handler: ${throwable.message}" }
+                    }) {
+                        delay(100)
+                        logt { "run 111" }
+                        throw RuntimeException("Run Exception")
+                    }
+                    launch {
+                        delay(200)
+                        logd { "run 2222" }
+                    }
+                }
             }
         }
     }
