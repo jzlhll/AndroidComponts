@@ -52,18 +52,16 @@ class CoroutineViewModel : ViewModel() {
 @EntryFrgName
 class CoroutineFragment(override val title: String = "Coroutine",
                               override val items: List<KotlinCoroutineSelectListItem> =
-                                  listOf(KotlinCoroutineSelectListItem("Dispatchers"),
-                                         KotlinCoroutineSelectListItem("Scope"),
+                                  listOf(KotlinCoroutineSelectListItem("子线程"),
+                                         KotlinCoroutineSelectListItem("主线程"),
                                          KotlinCoroutineSelectListItem("Test"),
                                   ),
-                              override val initCur: KotlinCoroutineSelectListItem = KotlinCoroutineSelectListItem("Dispatchers"))
+                              override val initCur: KotlinCoroutineSelectListItem = KotlinCoroutineSelectListItem("子线程"))
         : SelectListFragment<KotlinCoroutineSelectListItem>() {
 
     private val vm by unsafeLazy { ViewModelProvider(this)[CoroutineViewModel::class.java] }
 
-    private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
-        logd { "${throwable.message}" }
-    })
+    private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 
     override fun itemHeight(): Int {
@@ -85,7 +83,7 @@ class CoroutineFragment(override val title: String = "Coroutine",
     private val onClick:(View)->Unit = {
         val item = it.tag as KotlinCoroutineSelectListItem
         when (item.itemName) {
-            "Dispatchers" -> {
+            "子线程" -> {
                 subScope.launch {
                     logt { "Run1......" }
                     delay(100)
@@ -108,6 +106,11 @@ class CoroutineFragment(override val title: String = "Coroutine",
                     logt { "Run3......over" }
                 }
 
+            }
+
+            "主线程" -> {
+                val a =  10 / 0
+                logt { "a = $a" }
             }
 
             "Test"-> {

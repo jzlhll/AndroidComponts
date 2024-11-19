@@ -13,6 +13,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
@@ -22,10 +23,10 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.au.module_android.Globals
 import com.au.module_android.Globals.app
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.net.URLDecoder
 import kotlin.math.roundToInt
 
 val isMainThread: Boolean
@@ -243,6 +244,19 @@ fun openApp2(context: Context, packageName: String) : Boolean{
     } catch (e:Exception) {
         e.printStackTrace()
         return false
+    }
+}
+
+fun openUrlByBrowser(uri: Uri, context: Context) {
+    val url = uri.getQueryParameter("url")
+    if (!url.isNullOrBlank()) {
+        ignoreError {
+            val intent = Intent()
+            intent.setAction("android.intent.action.VIEW")
+            val cvtUrl = URLDecoder.decode(url, "utf-8")
+            intent.setData(Uri.parse(cvtUrl))
+            context.startActivityFix(intent)
+        }
     }
 }
 

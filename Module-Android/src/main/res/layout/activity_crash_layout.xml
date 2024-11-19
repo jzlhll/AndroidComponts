@@ -45,12 +45,44 @@
             android:textSize="15sp" />
     </androidx.core.widget.NestedScrollView>
 
-    <Button
-        android:id="@+id/btReStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/finishBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            android:text="忽略"/>
+        <Button
+            android:id="@+id/restartBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            android:text="重启应用"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/checkAndUploadBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/ui_padding_edge"
+            android:text="检查并升级"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/feedbackText"
+        android:layout_marginTop="6dp"
         android:layout_marginHorizontal="@dimen/ui_padding_edge"
-        android:layout_marginBottom="24dp"
-        android:text="重启"/>
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
