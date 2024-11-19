@@ -18,8 +18,9 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityStarted(activity: Activity) {
         val size = activityList.size
-        if (size > 1 && activityList[size - 2] == activity) {
-            activityList[size - 2] = activityList[size - 1]
+        val index = activityList.indexOf(activity)
+        if (index >= 0) {
+            activityList[index] = activityList[size - 1]
             activityList[size - 1] = activity
         }
         //logd { "GlobalActivity Callback onActivityStarted $activity ${activity.asOrNull<FragmentRootActivity>()?.fragmentClass?.simpleName}" }
@@ -36,7 +37,7 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityStopped(activity: Activity) {
         //logd { "GlobalActivity Callback onActivityStopped $activity ${activity.asOrNull<FragmentRootActivity>()?.fragmentClass?.simpleName}" }
-        //onConfigChange 会导致混乱
+        //onConfigChange 会导致混乱。某些手机在切换darkMode和lightMode的时候，多层Activity会错乱。
         // 如果在最上面的activity出现了onStop，就证明他主动退让了一层。我们就处理一下
         val size = activityList.size
         if (size > 1 && activityList[size - 1] == activity) {
