@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.annotation.EmptySuper
+import com.au.module_android.crash.UncaughtExceptionHandlerObj
+import com.au.module_android.utils.logdNoFile
 
 /**
  * @author au
@@ -14,11 +16,13 @@ import androidx.annotation.EmptySuper
 open class InitApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        logdNoFile(UncaughtExceptionHandlerObj.TAG) { "init application onCreate" }
         FirstInitial().init(this)
         DarkModeAndLocalesConst.appOnCreated(this)
     }
 
     final override fun attachBaseContext(base: Context?) {
+        logdNoFile(UncaughtExceptionHandlerObj.TAG) { "init application attach BaseContext" }
         initBeforeAttachBaseContext()
         super.attachBaseContext(DarkModeAndLocalesConst.appAttachBaseContext(base))
     }

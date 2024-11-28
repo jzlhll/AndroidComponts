@@ -1,19 +1,19 @@
 package com.allan.androidlearning.activities
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.allan.androidlearning.utils.HardWorkTest
+import com.allan.androidlearning.crashtest.debugOtherActivityCreateCrash
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.selectlist.SelectListFragment
 import com.au.module_android.selectlist.SelectListItem
 import com.au.module_android.utils.dp
-import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logt
 import com.au.module_android.utils.unsafeLazy
@@ -21,18 +21,9 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.coroutineContext
-import kotlin.coroutines.suspendCoroutine
 
 class CoroutineViewModel : ViewModel() {
     fun run() {
@@ -54,15 +45,22 @@ class CoroutineFragment(override val title: String = "Coroutine",
                               override val items: List<KotlinCoroutineSelectListItem> =
                                   listOf(KotlinCoroutineSelectListItem("子线程"),
                                          KotlinCoroutineSelectListItem("主线程"),
-                                         KotlinCoroutineSelectListItem("Test"),
+                                        KotlinCoroutineSelectListItem("主线程2"),
+                                        KotlinCoroutineSelectListItem("主线程3"),
+                                        KotlinCoroutineSelectListItem("主线程4"),
+                                        KotlinCoroutineSelectListItem("Test"),
                                   ),
                               override val initCur: KotlinCoroutineSelectListItem = KotlinCoroutineSelectListItem("子线程"))
         : SelectListFragment<KotlinCoroutineSelectListItem>() {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        debugOtherActivityCreateCrash()
+    }
+
     private val vm by unsafeLazy { ViewModelProvider(this)[CoroutineViewModel::class.java] }
 
     private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
 
     override fun itemHeight(): Int {
         return 48.dp
@@ -111,6 +109,25 @@ class CoroutineFragment(override val title: String = "Coroutine",
             "主线程" -> {
                 val a =  10 / 0
                 logt { "a = $a" }
+            }
+            "主线程2" -> {
+                lifecycleScope.launch {
+                    val a =  10 / 0
+                    logt { "a = $a" }
+                }
+            }
+            "主线程3" -> {
+                Globals.mainScope.launch {
+                    delay(100)
+                    val a =  10 / 0
+                    logt { "a = $a" }
+                }
+            }
+            "主线程4" -> {
+                Globals.mainHandler.postDelayed({
+                    val a =  10 / 0
+                    logt { "a = $a" }
+                }, 100)
             }
 
             "Test"-> {

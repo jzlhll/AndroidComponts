@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="4dp"
-        android:text="Sorry it is crashed!"
+        android:text="Sorry it is crashed!\nYou can screenshot this and feedback!"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:lineSpacingMultiplier="1.2"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
@@ -50,12 +50,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
-            android:id="@+id/finishBtn"
+            android:id="@+id/clearupBtn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/ui_padding_edge"
-            android:text="忽略"/>
+            android:text="清理缓存"/>
+
         <Button
             android:id="@+id/restartBtn"
             android:layout_width="0dp"

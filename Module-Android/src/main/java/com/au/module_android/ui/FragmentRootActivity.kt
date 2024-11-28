@@ -28,6 +28,11 @@ import com.au.module_android.utils.unsafeLazy
  * Description 限制
  */
 open class FragmentRootActivity : ViewActivity() {
+    override fun toString(): String {
+        val superStr = super.toString()
+        return superStr + "fragmentClass: $fragmentClass"
+    }
+
     companion object {
         const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
         const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"

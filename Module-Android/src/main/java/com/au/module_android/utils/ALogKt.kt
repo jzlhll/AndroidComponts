@@ -26,8 +26,7 @@ inline fun logw(tag:String = TAG, block:()->String) {
 }
 
 inline fun logwNoFile(tag:String = TAG, block:()->String) {
-    val str = block()
-    Log.w(tag, str)
+    Log.w(tag, block())
 }
 
 inline fun logd(tag:String = TAG, block:()->String) {
@@ -42,8 +41,7 @@ inline fun logd(tag:String = TAG, block:()->String) {
 
 inline fun logdNoFile(tag:String = TAG, block:()->String) {
     if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        val str = block()
-        Log.d(tag, str)
+        Log.d(tag, block())
     }
 }
 
