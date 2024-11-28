@@ -181,6 +181,7 @@ abstract class AbsToastBuilder {
     var mDuration:Long = 2200 //时长
     var mAlwaysShown = false //一直显示
     var mHasClose = false //是否有关闭xx按钮
+    var mLaterTs = 0L
 
     /**
      * 其一：从Activity中调用
@@ -216,17 +217,10 @@ abstract class AbsToastBuilder {
     }
 
     /**
-     * 其一：从次顶调用
+     * 其一：delay执行
      */
-    fun setOnSecondTop() : AbsToastBuilder {
-        val list = Globals.activityList
-        setOnActivity(list[max(0, list.size - 2)])
-        return this
-    }
-
-    fun setOnThirdTop() : AbsToastBuilder {
-        val list = Globals.activityList
-        setOnActivity(list[max(0, list.size - 3)])
+    fun setOnTopLater(laterTs:Long = 1000) : AbsToastBuilder {
+        mLaterTs = laterTs
         return this
     }
 

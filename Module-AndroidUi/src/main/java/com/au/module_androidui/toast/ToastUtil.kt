@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.au.module_android.Globals
 import com.au.module_android.R
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.gone
@@ -105,6 +106,15 @@ fun toastOnTop(msg:String, desc:String? = null, @IconType icon:String?= null, du
 
 class ToastBuilder : AbsToastBuilder() {
     override fun toastPopup(): View? {
-        return toastPopup(decorView, mDuration, mMsg, mDesc, mIcon, mAlwaysShown, mHasClose)?.root
+        if (mLaterTs == 0L) {
+            return toastPopup(decorView, mDuration, mMsg, mDesc, mIcon, mAlwaysShown, mHasClose)?.root
+        } else {
+            Globals.mainHandler.postDelayed({
+                mLaterTs = 0
+                setOnTop()
+                toastPopup(decorView, mDuration, mMsg, mDesc, mIcon, mAlwaysShown, mHasClose)?.root
+            }, mLaterTs)
+            return null //later to do
+        }
     }
 }

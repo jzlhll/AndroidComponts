@@ -16,52 +16,71 @@ class SwitchBlockButton @JvmOverloads constructor(context: Context, attrs: Attri
     ConstraintLayout(
         context, attrs, defStyleAttr
     ) {
-    private var mViewBinding: BlocksSwitchLayoutBinding = BlocksSwitchLayoutBinding.inflate(LayoutInflater.from(context), this, true)
-    var isLeft = true
-        private set
+    private var mViewBinding = BlocksSwitchLayoutBinding.inflate(LayoutInflater.from(context), this)
 
-    private var isInit = false
-    fun isInited() = isInit
+    private var _isInit = false
+    val isInit: Boolean
+        get() = _isInit
 
     /**
-     * 点击切换的回调函数
+     * 默认就是关闭
      */
-    var valueCallback : ((Boolean)->Unit)? = null
+    private var _isClosed = true
+    val isClosed: Boolean
+        get() = _isClosed
 
-    init {
-        mViewBinding.root.onClick {
-            val newIsLeft = !isLeft
-            setValue(newIsLeft)
-            valueCallback?.invoke(newIsLeft)
-        }
-    }
+    /**
+     * 是否阻止
+     */
+    var abort = false
 
-    fun initValue(isLeft:Boolean) {
-        isInit = true
-        if (!isLeft) { //我们默认true。初始化为false。则需要特殊处理移动下block。
-            this.isLeft = false
+    /**
+     * 点击切换的回调函数。
+     *
+     */
+    var valueCallback : ((isClosed:Boolean)->Unit)? = null
+    fun initValue(close: Boolean) {
+        _isInit = true
+        if (!close) {
+            _isClosed = false
             post { //直接delay处理，初始化为非左边即可。
-                mViewBinding.selectBgView.translationX = (mViewBinding.selectBgView.width).toFloat()
+                mViewBinding.selectBgView.translationX = (width - mViewBinding.selectBgView.width).toFloat()
             }
         }
     }
 
-    fun setValue(isLeft: Boolean) {
-        if (!isInit) throw RuntimeException()
-        //后续也可能后台改动，进而触发notifyItemChange bindData，则动画
-        this.isLeft = isLeft
+    fun setValue(close: Boolean) {
+        if (!_isInit) throw RuntimeException()
+        if (_isClosed == close) {
+            return
+        }
+        this._isClosed = close
         handleAnimal()
+    }
+
+    private fun initView() {
+        mViewBinding.root.onClick {
+            if (!abort) {
+                val newIsClosed = !_isClosed
+                setValue(newIsClosed)
+                valueCallback?.invoke(newIsClosed)
+            }
+        }
+    }
+
+    init {
+        initView()
     }
 
     private fun handleAnimal() {
         val bgAnimator: ObjectAnimator
-        val newIsLeftOn = isLeft
-        bgAnimator = if (newIsLeftOn) {  //从 右边 -> 左边
+        val newIsClosed = _isClosed
+        bgAnimator = if (newIsClosed) {
             ObjectAnimator.ofFloat(mViewBinding.selectBgView, "translationX", 0f)
-        } else { //从 true - false
+        } else {
             ObjectAnimator.ofFloat(
                 mViewBinding.selectBgView, "translationX",
-                0f, (mViewBinding.selectBgView.width).toFloat()
+                0f, (width - mViewBinding.selectBgView.width).toFloat()
             )
         }
         bgAnimator.duration = 160

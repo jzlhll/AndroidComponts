@@ -1,5 +1,6 @@
 package com.au.module_android.init
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.Globals
@@ -33,6 +34,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
         return layout
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         launcherApp(intent)

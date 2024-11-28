@@ -69,9 +69,6 @@ object Globals {
     val topActivity:Activity?
         get() = activityList.lastOrNull()
 
-    val secondTopActivity:Activity?
-        get() = activityList.secondLastOrNull()
-
     //内部参数
     lateinit var internalApp: Application
     private val internalActivityList = ArrayList<Activity>(8)

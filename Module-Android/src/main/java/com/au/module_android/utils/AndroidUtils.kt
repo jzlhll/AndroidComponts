@@ -247,9 +247,8 @@ fun openApp2(context: Context, packageName: String) : Boolean{
     }
 }
 
-fun openUrlByBrowser(uri: Uri, context: Context) {
-    val url = uri.getQueryParameter("url")
-    if (!url.isNullOrBlank()) {
+fun openUrlByBrowser(url: String, context: Context) {
+    if (url.isNotBlank()) {
         ignoreError {
             val intent = Intent()
             intent.setAction("android.intent.action.VIEW")

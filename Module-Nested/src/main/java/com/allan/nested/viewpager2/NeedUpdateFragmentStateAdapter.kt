@@ -1,5 +1,6 @@
 package com.allan.nested.viewpager2
 
+import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Description 用于需要更新Fragment的ViewPager2的Adapter。给你的Fragment实现IFragmentNeedUpdate，
  * 会在生命周期onStart自动回调或者有动态更新的时候通知。因此，不需要编写data和onCreateView的代码。
  */
+@Keep
 class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapter(fragment) {
     private var datas: ArrayList<T> = ArrayList()
     //与datas对应的Id

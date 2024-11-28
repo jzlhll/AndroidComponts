@@ -5,8 +5,10 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.annotation.WorkerThread
 import com.au.module_android.Globals
 import com.au.module_android.utils.deleteAll
+import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.withIoThread
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -28,7 +30,9 @@ fun ImageView.clearByGlide() {
  * 清除磁盘缓存
  */
 fun clearGlideImageDiskCache() {
-    Glide.get(Globals.app).clearDiskCache()
+    ignoreError {
+        Glide.get(Globals.app).clearDiskCache()
+    }
 }
 
 /**
@@ -37,8 +41,26 @@ fun clearGlideImageDiskCache() {
 suspend fun clearAppCacheSize() {
     withIoThread {
         clearGlideImageDiskCache()
+        clearAppCache()
+    }
+}
+
+/**
+ * 清理cache数据
+ */
+@WorkerThread
+fun clearAppCache() {
+    ignoreError {
         Globals.app.cacheDir?.deleteAll()
         Globals.app.externalCacheDir?.deleteAll()
+    }
+}
+
+@WorkerThread
+fun clearAppFileDir() {
+    ignoreError {
+        Globals.app.filesDir?.deleteAll()
+        Globals.app.getExternalFilesDir(null)?.deleteAll()
     }
 }
 
