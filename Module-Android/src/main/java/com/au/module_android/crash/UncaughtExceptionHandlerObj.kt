@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import com.au.module_android.Globals
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.getAppIntent
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logd
@@ -28,7 +27,10 @@ import java.util.Locale
 
 object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
     const val TAG = "UncaughtExpHandObj"
-    private var isEnabled = false
+    private var isInit = false
+
+    private var enableEntryCreate = false
+
     /**
      * 外部可以设置的死在了Entry情况下，只能通过Toast给用户交互 runnable 类对象。
      */
@@ -37,15 +39,27 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
         entryCrashedRunnableClass = clazz
     }
 
-    override fun uncaughtException(t: Thread, e: Throwable) {
-        manualUploadCrashLog("uncaughtException1: " + e.message)
-        crashAction(t, e)
+    private var manualLogUploader:((customLog:String, exception:Throwable)->Unit)? = null
+
+    /**
+     * 设置手动上传日志的接口。
+     */
+    fun setManualLogUploader(manualLogUploader:(customLog:String, exception:Throwable)->Unit) {
+        this.manualLogUploader = manualLogUploader
     }
 
-    fun init() {
-        if (isEnabled) return
-        isEnabled = true
+    override fun uncaughtException(t: Thread, e: Throwable) {
+        manualUploadCrashLog("uncaughtException", e)
+        crashAction(t, e, isThrowableMainThreadAndInOnCreate(Thread.currentThread(), e))
+    }
+
+    fun init(enableEntryCreate:Boolean = false) {
+        if (isInit) return
+        isInit = true
+
+        UncaughtExceptionHandlerObj.enableEntryCreate = enableEntryCreate
         Thread.setDefaultUncaughtExceptionHandler(UncaughtExceptionHandlerObj)
+
         Handler(Looper.getMainLooper()).post {
             while (true) {
                 //主线程异常拦截
@@ -54,12 +68,13 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
                     Looper.loop()
                 } catch (e: Throwable) {
                     logdNoFile(TAG) { "=======>>>" }
-                    logd(TAG) { "uncaughtException2 loop crash: " + e.message + ", isCreateMain: " + isThrowableCreate(Thread.currentThread(), e) }
+                    val isThrowableMainThreadAndInOnCreate = isThrowableMainThreadAndInOnCreate(Thread.currentThread(), e)
+                    logd(TAG) { "uncaughtException2 loop crash: " + e.message + ", isCreateMain: " + isThrowableMainThreadAndInOnCreate }
                     e.printStackTrace()
                     //主线程Activity，Fragment的create函数崩溃，导致界面无法显示。这种情况其实是很少的。
-                    manualUploadCrashLog("main loop: " + e.message)
+                    manualUploadCrashLog("main loop", e)
                     ignoreError {
-                        crashAction(Thread.currentThread(), e)
+                        crashAction(Thread.currentThread(), e, isThrowableMainThreadAndInOnCreate)
                     }
                     logdNoFile(TAG) { "<<<=======" }
                 }
@@ -67,16 +82,16 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
         }
     }
 
-    private fun manualUploadCrashLog(from:String) {
-        //Firebase.crashlytics.log(str)
+    private fun manualUploadCrashLog(customLog:String, ex:Throwable) {
+        //Firebase.crashlytics.log(customLog)
         //Firebase.crashlytics.recordException(ex)
+        manualLogUploader?.invoke(customLog, ex)
     }
 
-    private fun crashAction(t: Thread, e: Throwable) {
-        val isCreate = isThrowableCreate(t, e)
-        val startActivityName = getAppIntent(Globals.app, Globals.app.packageName)?.component?.className
-        logt(TAG) { "entry($startActivityName) crash isActivityCreating($isCreate): ${e.message}"}
-        val isEntry = if (isCreate) {
+    private fun crashAction(t: Thread, e: Throwable, isThrowableMainThreadAndInOnCreate:Boolean) {
+        val isEntryCreateCrash = if (isThrowableMainThreadAndInOnCreate) {
+            val startActivityName = getAppIntent(Globals.app, Globals.app.packageName)?.component?.className
+            logt(TAG) { "crashed in an activity create: ${e.message}"}
             if (startActivityName != null) {
                 e.message?.contains(startActivityName) == true
             } else {
@@ -86,9 +101,12 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
             false
         }
 
-        if (isEntry) {
-            logt(TAG) { "Maybe you entry activity is crashed. Cannot start other activity." }
-            maybeEntryCrashed()
+        if (isEntryCreateCrash) {
+            logt(TAG) { "crashed in entry activity."}
+            if(enableEntryCreate)
+                MaybeEntryCrashedRunnable.create()
+            else
+                Toast.makeText(Globals.app, "Error! You app crash in entry create step", Toast.LENGTH_LONG).show()
             //对于启动activity的创建过程中crash，会出现白屏的可能性。
         } else {
             //非启动activity则没事，finish即可。 其中：create过程报错，不能finish之前的Activity。
@@ -101,10 +119,6 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
 
         logt(TAG) { "startCrashActivity crash activity..." }
         startCrashActivity(Globals.app, t, e)
-    }
-
-    private fun maybeEntryCrashed() {
-        MaybeEntryCrashedRunnable.create()
     }
 
     const val KEY_INFO = "errorInfo"
@@ -184,7 +198,7 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
         return stringBuffer.toString()
     }
 
-    private fun isThrowableCreate(t:Thread, e:Throwable) : Boolean{
+    private fun isThrowableMainThreadAndInOnCreate(t:Thread, e:Throwable) : Boolean{
         if (t != Looper.getMainLooper().thread) {
             return false
         }
