@@ -5,7 +5,7 @@ import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.launchOnUi
 import kotlinx.coroutines.delay
 
-private const val debugIndex = "debugApplicationPostMainThreadCrash"
+private const val debugIndex = ""
 
 fun debugOtherActivityCreateCrash() {
     if (debugIndex == "debugOtherActivityCreateCrash") {

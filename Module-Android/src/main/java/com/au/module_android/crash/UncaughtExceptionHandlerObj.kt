@@ -28,6 +28,7 @@ import java.util.Locale
 
 object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
     const val TAG = "UncaughtExpHandObj"
+    private var isEnabled = false
     /**
      * 外部可以设置的死在了Entry情况下，只能通过Toast给用户交互 runnable 类对象。
      */
@@ -42,6 +43,8 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
     }
 
     fun init() {
+        if (isEnabled) return
+        isEnabled = true
         Thread.setDefaultUncaughtExceptionHandler(UncaughtExceptionHandlerObj)
         Handler(Looper.getMainLooper()).post {
             while (true) {
