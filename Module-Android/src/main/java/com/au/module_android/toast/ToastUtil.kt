@@ -219,7 +219,7 @@ abstract class AbsToastBuilder {
     /**
      * 其一：delay执行
      */
-    fun setOnTopLater(laterTs:Long = 1000) : AbsToastBuilder {
+    fun setOnTopLater(laterTs:Long = 1500) : AbsToastBuilder {
         mLaterTs = laterTs
         return this
     }

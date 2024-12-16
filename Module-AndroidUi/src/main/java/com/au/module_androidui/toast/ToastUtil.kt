@@ -104,6 +104,9 @@ private fun iconStrToId(icon:String?) = when(icon) {
 fun toastOnTop(msg:String, desc:String? = null, @IconType icon:String?= null, duration:Long = 2200)
         = ToastBuilder().setOnTop().setMessage(msg).setDesc(desc).setIcon(icon).setDuration(duration).toast()
 
+fun toastOnLater(msg:String, desc:String? = null, @IconType icon:String?= null, duration:Long = 2200)
+        = ToastBuilder().setOnTopLater().setMessage(msg).setDesc(desc).setIcon(icon).setDuration(duration).toast()
+
 class ToastBuilder : AbsToastBuilder() {
     override fun toastPopup(): View? {
         if (mLaterTs == 0L) {
@@ -114,7 +117,7 @@ class ToastBuilder : AbsToastBuilder() {
                 setOnTop()
                 toastPopup(decorView, mDuration, mMsg, mDesc, mIcon, mAlwaysShown, mHasClose)?.root
             }, mLaterTs)
-            return null //later to do
+            return null
         }
     }
 }

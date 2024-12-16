@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上传图片文件并回显</title>
+</head>
+
+<body>
+　　 <input type="file" id="#file" multiple>
+<div class="show-box"></div>
+<script>
+    var input = document.getElementsByTagName('input')[0];
+    var showBox = document.getElementsByClassName('show-box')[0];
+
+    input.onchange = function () {
+　　　　　　　var len = this.files.length; // 对于input上传的图片，使用dom.files可以获取图片信息
+        for(let i = 0; i < len; i++) {
+            let fileImg = new FileReader();
+            fileImg.readAsDataURL(this.files[i]); // readAsDataURL方法将图片转为base64格式存储于result中
+            fileImg.onload = function() {
+                let oImg = new Image();
+                oImg.src = this.result; // 使用FileReader的result属性获取图片base64信息
+                showBox.appendChild(oImg);
+            }
+　　　　　　　　　　fileImg.onerror = function(e) {
+　　　　　　　　　　　　console.log('error' + e);
+　　　　　　　　　　}
+        }
+    }
+</script>
+</body>
+
+</html>

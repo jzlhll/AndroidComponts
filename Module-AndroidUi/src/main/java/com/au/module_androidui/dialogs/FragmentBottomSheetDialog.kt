@@ -6,10 +6,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import com.au.module_android.utils.BUNDLE_KEY0
-import com.au.module_android.utils.BUNDLE_KEY1
-import com.au.module_android.utils.BUNDLE_KEY2
-import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.dialog.AbsFragmentBottomSheetDialog
 import com.au.module_androidui.R
@@ -27,23 +23,25 @@ class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottom
             fgBundle: Bundle? = null,
             height: Int? = null,
             paddingMode:Boolean = false,
-            hasEditText: Boolean = false
+            hasEditText: Boolean = false,
+            canCancel:Boolean = true,
         ): FragmentBottomSheetDialog {
             val dialog = FragmentBottomSheetDialog(hasEditText)
             dialog.arguments = Bundle().also {
-                it.putSerializable(BUNDLE_KEY0, T::class.java)
-                it.putBoolean(BUNDLE_KEY1, paddingMode)
+                it.putSerializable("fgClass", T::class.java)
+                it.putBoolean("paddingMode", paddingMode)
                 if (fgBundle != null) {
-                    it.putBundle(BUNDLE_KEY2, fgBundle)
+                    it.putBundle("fgBundle", fgBundle)
                 }
-                if(height != null) it.putInt(BUNDLE_KEY3, height)
+                if(height != null) it.putInt("height", height)
+                it.putBoolean("canCancel", canCancel)
             }
             dialog.show(manager, "FragmentContainBottomSheetDialog")
             return dialog
         }
     }
 
-    private val paddingMode by unsafeLazy { arguments?.getBoolean(BUNDLE_KEY1, false) ?: false}
+    private val paddingMode by unsafeLazy { arguments?.getBoolean("paddingMode", false) ?: false}
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): ViewBindingWrap {
         return if (paddingMode) {

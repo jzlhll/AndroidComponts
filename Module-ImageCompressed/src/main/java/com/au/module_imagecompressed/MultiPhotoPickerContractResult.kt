@@ -55,7 +55,9 @@ class MultiPhotoPickerContractResult(
 
     private var mCopyMode: CopyMode = CopyMode.COPY_CVT_IMAGE_TO_JPG
 
-    private lateinit var oneByOneCallback:((UriWrap)->Unit)
+    private var oneByOneCallback:((UriWrap)->Unit)? = null
+    private var allCallback:((Array<UriWrap>)->Unit)? = null
+
     private var mLimitImageSize = 50 * 1024 * 1024
     private var mTargetImageSize = 5 * 1024 * 1024
     private var mLimitVideoSize = 100 * 1024 * 1024L
@@ -97,12 +99,10 @@ class MultiPhotoPickerContractResult(
     }
 
     @WorkerThread
-    private fun lubanCompress(uriWrap: UriWrap) {
-        if (!mNeedLuban || !uriWrap.isImage) {
-            oneByOneCallback(uriWrap)
-            return
-        }
-
+    private fun lubanCompress(uriWrap: UriWrap,
+                              isAllCallback: Boolean,
+                              totalNum: Int,
+                              allResults: MutableList<UriWrap>) {
         LubanCompress()
             .setResultCallback { srcPath, resultPath, isSuc -> //主线程。Luban内部main handler回调回来的
                 val path = resultPath ?: srcPath
@@ -119,7 +119,14 @@ class MultiPhotoPickerContractResult(
                     if(BuildConfig.DEBUG) Log.d(logTag, "3>luban: $uriWrap")
                 }
 
-                oneByOneCallback(uriWrap)
+                if (!isAllCallback) {
+                    oneByOneCallback?.invoke(uriWrap)
+                } else {
+                    allResults.add(uriWrap)
+                    if (allResults.size == totalNum) {
+                        allCallback?.invoke(allResults.toTypedArray())
+                    }
+                }
             }
             .compress(fragment.requireContext(), uriWrap.uri, ignoreSizeKb)
     }
@@ -182,28 +189,45 @@ class MultiPhotoPickerContractResult(
             result
         }
 
-        if (BuildConfig.DEBUG) {
-            cutUriList.forEach {
-                Log.d(logTag, "1>onActivityResult: $it")
+        if (cutUriList.isEmpty()) {
+            if (allCallback != null) {
+                allCallback?.invoke(arrayOf())
             }
-        }
+        } else {
+            if (BuildConfig.DEBUG) {
+                cutUriList.forEach {
+                    Log.d(logTag, "1>onActivityResult: $it")
+                }
+            }
 
-        fragment.lifecycleScope.launchOnThread {
-            val cr = fragment.requireContext().contentResolver
-            val totalNum = cutUriList.size
-            cutUriList.forEach { uri->
-                //2. check if copy
-                val uriWrap = ifCopy(uri, totalNum, cr)
-                if(BuildConfig.DEBUG) Log.d(logTag, "2>ifCopy: $uriWrap")
+            fragment.lifecycleScope.launchOnThread {
+                val cr = fragment.requireContext().contentResolver
+                val totalNum = cutUriList.size
 
-                if (!mNeedLuban) {
-                    //3. 回调
-                    fragment.lifecycleScope.launchOnUi {
-                        oneByOneCallback(uriWrap)
+                val isAllCallback = allCallback != null
+                val allResults = mutableListOf<UriWrap>()
+
+                cutUriList.forEach { uri->
+                    //2. check if copy
+                    val uriWrap = ifCopy(uri, totalNum, cr)
+                    if(BuildConfig.DEBUG) Log.d(logTag, "2>if Copy: $uriWrap")
+
+                    if (!mNeedLuban || !uriWrap.isImage) {
+                        //3. 回调
+                        fragment.lifecycleScope.launchOnUi {
+                            if(!isAllCallback)
+                                oneByOneCallback?.invoke(uriWrap)
+                            else {
+                                allResults.add(uriWrap)
+                                if (allResults.size == totalNum) {
+                                    allCallback?.invoke(allResults.toTypedArray())
+                                }
+                            }
+                        }
+                    } else {
+                        //3. luban压缩和回调
+                        lubanCompress(uriWrap, isAllCallback, totalNum, allResults)
                     }
-                } else {
-                    //3. luban压缩和回调
-                    lubanCompress(uriWrap)
                 }
             }
         }
@@ -214,6 +238,7 @@ class MultiPhotoPickerContractResult(
      */
     fun launchOneByOne(type: PickerType, option: ActivityOptionsCompat?, oneByOneCallback:(UriWrap)->Unit) {
         this.oneByOneCallback = oneByOneCallback
+        this.allCallback = null
 
         setResultCallback{
             resultCallback(it)
@@ -225,6 +250,20 @@ class MultiPhotoPickerContractResult(
             PickerType.VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
         }
 
+        launcher.launch(intent, option)
+    }
+
+    /**
+     * 可以使用。但推荐使用oneByOne。
+     */
+    fun launchByAll(type: PickerType, option: ActivityOptionsCompat?, callback:(Array<UriWrap>)->Unit) {
+        this.allCallback = callback
+        this.oneByOneCallback = null
+        val intent = when (type) {
+            PickerType.IMAGE -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            PickerType.IMAGE_AND_VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+            PickerType.VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
+        }
         launcher.launch(intent, option)
     }
 }

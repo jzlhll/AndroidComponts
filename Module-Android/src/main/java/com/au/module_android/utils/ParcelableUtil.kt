@@ -9,17 +9,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-const val BUNDLE_KEY0 = "bundle_key_0"
-const val BUNDLE_KEY1 = "bundle_key_1"
-const val BUNDLE_KEY2 = "bundle_key_2"
-const val BUNDLE_KEY3 = "bundle_key_3"
-const val BUNDLE_KEY4 = "bundle_key_4"
-const val BUNDLE_KEY5 = "bundle_key_5"
-const val BUNDLE_KEY6 = "bundle_key_6"
-const val BUNDLE_KEY7 = "bundle_key_7"
-const val BUNDLE_KEY8 = "bundle_key_8"
-const val BUNDLE_KEY9 = "bundle_key_9"
-
 /**
  * @author au
  * @date :2023/10/30 16:15

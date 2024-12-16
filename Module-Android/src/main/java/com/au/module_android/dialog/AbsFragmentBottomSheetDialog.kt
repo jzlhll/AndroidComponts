@@ -8,9 +8,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.au.module_android.ui.base.AbsBottomDialog
-import com.au.module_android.utils.BUNDLE_KEY0
-import com.au.module_android.utils.BUNDLE_KEY2
-import com.au.module_android.utils.BUNDLE_KEY3
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.currentStatusBarAndNavBarHeight
 import com.au.module_android.utils.getScreenFullSize
@@ -20,12 +17,13 @@ import kotlin.math.min
 
 abstract class AbsFragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomDialog(hasEditText) {
     private val fgClass by unsafeLazy {
-        arguments?.getSerializable(BUNDLE_KEY0).asOrNull<Class<Fragment>>()
+        arguments?.getSerializable("fgClass").asOrNull<Class<Fragment>>()
     }
-    private val fgBundle by unsafeLazy { arguments?.getBundle(BUNDLE_KEY2) }
-    private val height by unsafeLazy { arguments?.getInt(BUNDLE_KEY3) }
+    private val fgBundle by unsafeLazy { arguments?.getBundle("fgBundle") }
+    private val height by unsafeLazy { arguments?.getInt("height") }
 
     private val fragment by unsafeLazy { fgClass?.newInstance() }
+    private val canCancel by unsafeLazy { arguments?.getBoolean("canCancel") ?: true }
 
     data class ViewBindingWrap(val root:ViewGroup, val fcv:FragmentContainerView)
 
@@ -74,5 +72,12 @@ abstract class AbsFragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBo
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!canCancel) {
+            setCancelable(false)
+        }
     }
 }
