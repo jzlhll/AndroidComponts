@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.utils.asOrNull
@@ -92,6 +93,12 @@ abstract class AbsBottomDialog(private val hasEditText:Boolean)
                     view?.updatePadding(bottom = navigationBarHeight)
                     WindowInsetsCompat.CONSUMED
                 }
+            }
+        } else {
+            dialog?.window?.let { w->
+                val controller = WindowInsetsControllerCompat(w, w.decorView)
+                controller.isAppearanceLightStatusBars = false
+                controller.isAppearanceLightNavigationBars = false
             }
         }
     }
