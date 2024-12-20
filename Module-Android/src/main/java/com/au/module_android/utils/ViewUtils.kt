@@ -109,3 +109,24 @@ fun EditText?.addFilters(vararg filter: InputFilter) {
 fun View.setOnContinuousTouchEvent(block:(Int)->Unit) {
     this.setOnTouchListener(ContinuousTouchListener(this, block))
 }
+
+/**
+ * 在onCreate过程，添加代码。可以让它支持autoFill
+ * @param autoFillHints 可以选如下：
+ *     View.AUTOFILL_HINT_PASSWORD
+ *     View.AUTOFILL_HINT_EMAIL_ADDRESS
+ *     newPassword
+ */
+fun EditText.makeAutoFill(autoFillHints:String) {
+    setAutofillHints(autoFillHints)
+    importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
+    importantForAccessibility = View.IMPORTANT_FOR_AUTOFILL_YES
+}
+
+/**
+ * 在onCreate过程，添加代码。可以让它不要支持autoFill
+ */
+fun EditText.makeNoAutoFill() {
+    importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+    importantForAccessibility = View.IMPORTANT_FOR_AUTOFILL_NO
+}
