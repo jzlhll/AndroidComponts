@@ -7,11 +7,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.au.module_android.utils.ReflectionUtils
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.logd
 import java.lang.Integer.min
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * @author au
+ * @author allan.jiang
  * Date: 2023/6/29
  * Description 用于需要更新Fragment的ViewPager2的Adapter。给你的Fragment实现IFragmentNeedUpdate，
  * 会在生命周期onStart自动回调或者有动态更新的时候通知。因此，不需要编写data和onCreateView的代码。
@@ -39,7 +40,12 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
     }
 
     /**
-     * 数据比较器。如果只要出现需要更新的任意局部数据，都返回true。不需要更新则是false。
+     * 数据比较器。
+     * 由于比较的是Fragment，因此，如果Fragment的主要属性不变化则不得变化。
+     * 然后通过局部更新的方式来更新Fragment里面的内容
+     *
+     * true表示确实是有区别的需要重建fragment;
+     * false则不会重建；会通知到onNeedUpdate函数。
      */
     var differComparator:((d1:T, d2:T)->Boolean)? = null
 
@@ -47,14 +53,14 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
      * Fragment构建器。根据data来创建。
      * 请创建出Fragment，实现IFragmentNeedUpdate。
      */
-    var fragmentCreator:((data:T)->IFragmentNeedUpdate<T>)? = null
+    var fragmentCreator:((data:T)-> IFragmentNeedUpdate<T>)? = null
 
     fun submitData(newDatas:List<T>) {
         if (fragmentCreator == null) {
-            throw RuntimeException("you have not set fragmentCreator.")
+            throw RuntimeException("you have not set fragment Creator.")
         }
         if (differComparator == null) {
-            throw RuntimeException("you have not set differComparator.")
+            throw RuntimeException("you have not set differ Comparator.")
         }
 
         val mFragments = mFragmentsRequire()
@@ -88,10 +94,11 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
         for (i in 0 until minSize) {
             val newData = newDatas[i]
             if (differComparator?.invoke(datas[i], newData) == true) {
+                myIds[i] = nextId //更新id。放到后面，否则提取不匹配。
+            } else {
                 //现在就存在的Fragment，我们需要更新它
                 //先拿到老id进行更新
                 mFragments.get(myIds[i]).asOrNull<IFragmentNeedUpdate<T>>()?.onNeedUpdate(newData)
-                myIds[i] = nextId //更新id。放到后面，否则提取不匹配。
             }
             datas[i] = newData //不论如何都要换新数据的。
         }
@@ -103,6 +110,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
                 datas.removeLast()
                 myIds.removeLast()
             }
+            logd { "allan 111" }
             notifyItemRangeRemoved(minSize, deltaSize)
         } else if (newDatas.size > datas.size) {
             var delta = deltaSize
@@ -111,6 +119,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
                 datas.add(newDatas[min++])
                 myIds.add(nextId)
             }
+            logd { "allan 2222" }
             notifyItemRangeInserted(minSize, deltaSize)
         }
     }
@@ -128,10 +137,12 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
     }
 
     override fun containsItem(itemId: Long): Boolean {
+        logd { "allan containsItem" }
         return myIds.contains(itemId)
     }
 
     override fun getItemId(position: Int): Long {
+        logd { "allan getItemId" }
         return myIds[position]
     }
 
