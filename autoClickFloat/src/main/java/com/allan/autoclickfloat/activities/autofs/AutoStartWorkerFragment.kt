@@ -106,7 +106,6 @@ class AutoStartWorkerFragment : BindingFragment<FragmentAutoStartupNewBinding>()
             binding.stopTimerBtn.visible()
 
             binding.stopTimerBtn.tag = true
- xxx
         } else {
             if(!tryLast) toastOnTop("时间错误！")
             targetTimeMillis = -1
@@ -117,7 +116,6 @@ class AutoStartWorkerFragment : BindingFragment<FragmentAutoStartupNewBinding>()
         binding.stopTimerBtn.gone()
         binding.startTimerBtn.visible()
         binding.stopTimerBtn.tag = false
-xxx
         targetTimeMillis = -1L
     }
 

@@ -142,13 +142,13 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
         // 获取版本信息
         val versionName =
             if (TextUtils.isEmpty(info.versionName)) "未设置版本名称" else info.versionName
-        version[0] = versionName
+        version[0] = versionName ?: ""
         val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             info.longVersionCode.toString() + ""
         } else {
             info.versionCode.toString() + ""
         }
-        mInfo["versionName"] = versionName
+        mInfo["versionName"] = versionName ?: ""
         mInfo["versionCode"] = versionCode
         mInfo["brand"] = Build.BRAND
         mInfo["product"] = Build.PRODUCT

@@ -15,8 +15,8 @@ gradle.ext.selfPassword = properties.getProperty('password')
 gradle.ext.jvmTarget           = "17"
 gradle.ext.sourceCompatibility = JavaVersion.VERSION_17
 gradle.ext.targetCompatibility = JavaVersion.VERSION_17
-gradle.ext.compileSdk          = 34
-gradle.ext.targetSdk           = 34
+gradle.ext.compileSdk          = 35
+gradle.ext.targetSdk           = 35
 gradle.ext.minSdk              = 26
 
 

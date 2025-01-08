@@ -40,11 +40,6 @@ class CompletedAdapter(private val itemClick:(CompletedBean)->Unit) : AutoLoadMo
         else CompletedDateViewHolder(create(parent))
     }
 
-    override fun onBindViewHolder(holder: BindViewHolder<ICompletedBean, *>, position: Int) {
-        super.onBindViewHolder(holder, position)
-        holder.bindData(datas[position])
-    }
-
     override fun getItemViewType(position: Int): Int {
         return if(datas[position] is CompletedDateBean) 0 else 1
     }

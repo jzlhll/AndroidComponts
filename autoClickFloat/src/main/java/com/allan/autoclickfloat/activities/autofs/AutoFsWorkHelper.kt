@@ -54,15 +54,6 @@ class AutoFsWorkHelper {
 
     }
 
-    fun hasOneTimeWork() : Boolean{
-        if (!oneTimeWorkerId.isNullOrEmpty()) {
-            val info = workManager.getWorkInfo(UUID.nameUUIDFromBytes(oneTimeWorkerId!!.toByteArray()))
-            if (info.isDone) {
-
-            }
-        }
-    }
-
     fun enqueueWork() {
         if (isOneTime) {
 //            val constraints = Constraints.Builder()

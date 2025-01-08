@@ -43,13 +43,13 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
 
         val isAddMode = getTempParams<Boolean>("isAddMode") ?: false
         if (isAddMode) {
-            binding.toolBar.title.text = "新建方案"
+           // binding.toolBar.title.text = "新建方案"
             binding.descCenter.visible()
             binding.descBottom.gone()
             binding.addStepCenterBtn.visible()
             binding.deleteStepBtn.gone()
         } else {
-            binding.toolBar.title.text = projectName ?: ""
+         //   binding.toolBar.title.text = projectName ?: ""
             binding.descCenter.gone()
             binding.descBottom.visible()
             binding.addStepCenterBtn.gone()
