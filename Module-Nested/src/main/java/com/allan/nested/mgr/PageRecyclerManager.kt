@@ -40,7 +40,7 @@ open class PageRecyclerManager2<Bean:Any>(
             this.adapter.addDataChanged(object :IOnChangeListener {
                 override fun onChange(info: DataExtraInfo) {
                     if (info is DataChangeExtraInfoInit) {
-                        Log.d("tyiot_app", "onInitDatasFinished")
+                        Log.d("allan", "onInitDatasFinished")
                         refresher.refreshCompleted()
                     }
                 }

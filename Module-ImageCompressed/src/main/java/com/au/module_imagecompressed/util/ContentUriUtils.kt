@@ -282,7 +282,7 @@ fun Uri.length(cr: ContentResolver, schemeForce:String? = null) : Long {
                     ?: throw Exception("Content provider recently crashed")
                 resultLength = fileDescriptor.statSize
             } catch (e: Exception) {
-                Log.d("tyiot_app", e.message ?: e.javaClass.simpleName)
+                Log.d("allan", e.message ?: e.javaClass.simpleName)
                 resultLength = -1L
             } finally {
                 fileDescriptor?.close()
@@ -309,7 +309,7 @@ fun Uri.length(cr: ContentResolver, schemeForce:String? = null) : Long {
                     resultLength = -1L
                 }
             } catch (e: Exception) {
-                Log.d("tyiot_app", e.message ?: e.javaClass.simpleName)
+                Log.d("allan", e.message ?: e.javaClass.simpleName)
                 resultLength = -1L
             } finally {
                 cursor?.close()
@@ -333,7 +333,7 @@ fun Uri.length(cr: ContentResolver, schemeForce:String? = null) : Long {
                     ?: throw Exception("Content provider recently crashed")
                 resultLength = assetFileDescriptor.length
             } catch (e: Exception) {
-                Log.d("tyiot_app", e.message ?: e.javaClass.simpleName)
+                Log.d("allan", e.message ?: e.javaClass.simpleName)
                 resultLength = -1L
             } finally {
                 assetFileDescriptor?.close()
