@@ -3,7 +3,8 @@ package com.allan.autoclickfloat.activities.startup
 import android.os.Bundle
 import android.view.View
 import com.allan.autoclickfloat.activities.autofs.AutoStartFragment
-import com.allan.autoclickfloat.activities.autofs.AutoStartWorkerFragment
+import com.allan.autoclickfloat.activities.autofs.canWrite
+import com.allan.autoclickfloat.activities.autofs.goToManageSetting
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
 import com.allan.autoclickfloat.activities.nongyao.NongyaoFragment
 import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragment
@@ -47,12 +48,16 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.autoFsBtn.onClick {
-            ConfirmCenterDialog.show(childFragmentManager, "请确认", "是走新的还是传统的？", "新的", "传统的",
-                cancelBlock = {
-                    FragmentRootActivity.start(requireContext(), AutoStartFragment::class.java)
-            }, sureClick = {
-                    FragmentRootActivity.start(requireContext(), AutoStartWorkerFragment::class.java)
-            })
+            if (canWrite(requireContext())) {
+                FragmentRootActivity.start(requireContext(), AutoStartFragment::class.java)
+            } else {
+                ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要调节亮度，即将跳转到系统设置，给予系统授权。", "OK", "取消",
+                    cancelBlock = {
+                    }, sureClick = {
+                        goToManageSetting(requireActivity())
+                        it.dismiss()
+                    })
+            }
         }
     }
 }

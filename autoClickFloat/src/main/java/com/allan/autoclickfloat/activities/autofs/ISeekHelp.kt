@@ -7,7 +7,7 @@ import android.widget.SeekBar
  * @date :2024/9/25 14:22
  * @description:
  */
-interface IAutoStartPermission {
+interface ISeekHelp {
     fun seekBar():SeekBar?
     fun showGotoWriteSettingButton()
     fun hideGotoWriteSettingButton()

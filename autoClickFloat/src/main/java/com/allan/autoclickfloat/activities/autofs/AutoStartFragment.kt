@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
-import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupBinding
 import com.au.module_android.Globals
@@ -36,8 +35,9 @@ import java.util.Calendar
  * @date :2024/9/24 11:25
  * @description:
  */
-class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>(), IAutoStartPermission {
-    private val permission = Permission(this)
+class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>(), ISeekHelp {
+    private val permission = SeekHelp(this) //必须保留。
+
     override fun showGotoWriteSettingButton() {
         if(!isFaking) binding.gotoSettingWriteBtn.visible()
     }
@@ -82,7 +82,7 @@ class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>(), IAutoSt
         binding.stopTimerBtn.tag = false
 
         binding.gotoSettingWriteBtn.onClick {
-            permission.goToManageSetting()
+            goToManageSetting(requireContext())
         }
 
         binding.fakeView.onClick {
@@ -99,7 +99,7 @@ class AutoStartFragment : BindingFragment<FragmentAutoStartupBinding>(), IAutoSt
                 mFakeClickCount = 0
                 isFaking = false
                 binding.pickersHost.visible()
-                if(!permission.canWrite()) binding.gotoSettingWriteBtn.visible()
+                if(!canWrite(requireContext())) binding.gotoSettingWriteBtn.visible()
                 if(binding.stopTimerBtn.tag as Boolean) {
                     binding.stopTimerBtn.visible()
                     binding.startTimerBtn.gone()
