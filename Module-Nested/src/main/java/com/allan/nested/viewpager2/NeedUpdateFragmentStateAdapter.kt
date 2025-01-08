@@ -3,11 +3,11 @@ package com.allan.nested.viewpager2
 import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.au.module_android.utils.ReflectionUtils
 import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.logd
 import java.lang.Integer.min
 import java.util.concurrent.atomic.AtomicLong
 
@@ -27,6 +27,11 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
     private val nextId
         get() = idGen.incrementAndGet()
 
+    /**
+     * 参数 新增的Fragment是否是插入到最后。
+     */
+    var insertAtEnd = true
+
     //如果你的是android.util.LongSparseArray自行调整。
     private var mFragmentsParent:androidx.collection.LongSparseArray<Fragment>? = null
     private fun mFragmentsRequire() : androidx.collection.LongSparseArray<Fragment>? {
@@ -44,8 +49,7 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
      * 由于比较的是Fragment，因此，如果Fragment的主要属性不变化则不得变化。
      * 然后通过局部更新的方式来更新Fragment里面的内容
      *
-     * true表示确实是有区别的需要重建fragment;
-     * false则不会重建；会通知到onNeedUpdate函数。
+     * true表示确实是有区别的需要重建fragment, 如果是false则不会重建并会通知到onNeedUpdate函数。
      */
     var differComparator:((d1:T, d2:T)->Boolean)? = null
 
@@ -98,7 +102,9 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
             } else {
                 //现在就存在的Fragment，我们需要更新它
                 //先拿到老id进行更新
-                mFragments.get(myIds[i]).asOrNull<IFragmentNeedUpdate<T>>()?.onNeedUpdate(newData)
+                val ifg = mFragments.get(myIds[i]).asOrNull<IFragmentNeedUpdate<T>>()
+                val fg = ifg.asOrNull<Fragment>()
+                if(ifg != null && fg != null && fg.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) ifg.onNeedUpdate(newData)
             }
             datas[i] = newData //不论如何都要换新数据的。
         }
@@ -107,20 +113,28 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
         if (newDatas.size < datas.size) {
             var delta = deltaSize
             while(delta-- > 0) {
-                datas.removeLast()
-                myIds.removeLast()
+                datas.removeAt(datas.lastIndex)
+                myIds.removeAt(myIds.lastIndex)
             }
-            logd { "allan 111" }
             notifyItemRangeRemoved(minSize, deltaSize)
         } else if (newDatas.size > datas.size) {
-            var delta = deltaSize
-            var min = minSize
-            while (delta-- > 0) {
-                datas.add(newDatas[min++])
-                myIds.add(nextId)
+            if (insertAtEnd) {
+                var delta = deltaSize
+                var min = minSize
+                while (delta-- > 0) {
+                    datas.add(newDatas[min++])
+                    myIds.add(nextId)
+                }
+                notifyItemRangeInserted(minSize, deltaSize)
+            } else {
+                var delta = deltaSize
+                var min = minSize
+                while (delta-- > 0) {
+                    datas.add(0, newDatas[min++])
+                    myIds.add(0, nextId)
+                }
+                notifyItemRangeInserted(0, deltaSize)
             }
-            logd { "allan 2222" }
-            notifyItemRangeInserted(minSize, deltaSize)
         }
     }
 
@@ -137,12 +151,10 @@ class NeedUpdateFragmentStateAdapter<T>(fragment: Fragment) : FragmentStateAdapt
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        logd { "allan containsItem" }
         return myIds.contains(itemId)
     }
 
     override fun getItemId(position: Int): Long {
-        logd { "allan getItemId" }
         return myIds[position]
     }
 

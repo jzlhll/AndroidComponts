@@ -134,14 +134,12 @@ object Globals {
     /**
      * 获取okhttpClient对象
      * @param timeOutMode 0 使用常规15秒的。默认。
-     *                    1 使用快速5秒的quick版。
-     *                    2 使用45秒的mid版。
-     *                    3 使用5分钟的long版。
+     *                    1 使用45秒的mid版。
+     *                    2 使用5分钟的long版。
      */
     fun okHttpClient(timeOutMode: Int = 0) = when (timeOutMode) {
-        1 -> okhttpClients.quickOkHttpClient
-        2 -> okhttpClients.midTimeoutOkHttpClient()
-        3 -> okhttpClients.longTimeoutOkHttpClient()
+        1 -> okhttpClients.midTimeoutOkHttpClient()
+        2 -> okhttpClients.longTimeoutOkHttpClient()
         else -> okhttpClients.okHttpClient
     }
 }

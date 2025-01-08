@@ -1,6 +1,5 @@
 package com.au.module_android.utils
 
-import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
@@ -17,6 +16,13 @@ import java.util.Locale
 
 internal class FileItem(val fileName:String, val log: String, val stace: String?)
 object FileLog {
+    private val logFileCreateType = LogFileCreateType.OneFileEveryDay //必须放在前面
+
+    enum class LogFileCreateType(val nameFmt:String) {
+        OneFileEveryDay("%02d_%02d.log"),
+        OneFileAnHour("%02d_%02d_%02d.log")
+    }
+
     @Volatile
     private var _mHandler:Handler? = null
 
@@ -24,38 +30,21 @@ object FileLog {
         get() {
             if (_mHandler == null) {
                 synchronized(FileLog::class.java) {
-                   if (_mHandler == null) {
-                       val handlerThread = HandlerThread("FileLog_thread")
-                       handlerThread.start()
-                       _mHandler = Handler(handlerThread.getLooper()).also {
-                           it.postDelayed({
-                               //简化逻辑。第一次。20秒后尝试清理一次即可。不做每次写入的时候，判断。
-                               clearLog()
-                           }, 20 * 1000)
-                       }
-                   }
+                    if (_mHandler == null) {
+                        val handlerThread = HandlerThread("FileLog_thread")
+                        handlerThread.start()
+                        _mHandler = Handler(handlerThread.getLooper()).also {
+                            it.postDelayed({
+                                //简化逻辑。第一次。20秒后尝试清理一次即可。不做每次写入的时候，判断。
+                                clearLog()
+                            }, 20 * 1000)
+                        }
+                    }
                 }
             }
 
             return _mHandler!!
         }
-
-    private const val CLEAR_LOG_TIME = 15L * 3600 * 24 * 1000 //N天前的日志删除。
-
-    @SuppressLint("ConstantLocale")
-    private val timeFmt = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    private fun longTimeToStr(time: Long) = timeFmt.format(time).toString()
-
-    private fun logRoot() = Globals.goodCacheDir.absolutePath + File.separator + "Log"
-
-    private val logDir by unsafeLazy { logRoot() + File.separatorChar }
-
-    enum class LogFileCreateType(val nameFmt:String) {
-        OneFileEveryDay("%02d_%02d.log"),
-        OneFileAnHour("%02d_%02d_%02d.log")
-    }
-
-    private val logFileCreateType = LogFileCreateType.OneFileEveryDay //必须放在前面
 
     private fun getCurrentFileName(): String {
         val c = Calendar.getInstance()
@@ -66,6 +55,9 @@ object FileLog {
                 -> String.format(Locale.US, LogFileCreateType.OneFileEveryDay.nameFmt, c[Calendar.MONTH] + 1, c[Calendar.DAY_OF_MONTH], c[Calendar.HOUR])
         }
     }
+
+    private fun getRootPath() = Globals.goodFilesDir.absolutePath + File.separator + "Log"
+    private val logDir by unsafeLazy { getRootPath() + File.separatorChar }
 
     private fun writeToDisk2(item: FileItem) {
         val dirPath = logDir
@@ -109,12 +101,21 @@ object FileLog {
         }
     }
 
+    /**时间戳转日期*/
+    private fun longTimeToStr(time: Long?, pattern: String): String {
+        if (time == null) {
+            return ""
+        }
+        val format = SimpleDateFormat(pattern, Locale.getDefault())
+        return format.format(time).toString()
+    }
+
     fun write(log: String, needStace: Boolean = false, throwable: Throwable? = null) {
-        val logTimeStr = longTimeToStr(System.currentTimeMillis())
+        val logTimeStr = longTimeToStr(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss.ms")
         val writeStr = "$logTimeStr>>$log"
         val stace: String? = if (needStace) {
             var exception = throwable
-            if (exception == null) {
+            if (exception == null){
                 exception = Exception()
             }
             val sb = StringBuilder()
@@ -139,7 +140,7 @@ object FileLog {
     private fun clearLog() {
         var count = 0
         do {
-            val file = File(logRoot())
+            val file = File(getRootPath())
             if (!file.exists()) {
                 break
             }
@@ -148,7 +149,7 @@ object FileLog {
                 if (f.exists()) {
                     try {
                         val time = f.lastModified()
-                        if (System.currentTimeMillis() - time > CLEAR_LOG_TIME) {
+                        if (System.currentTimeMillis() - time > 15L * 3600 * 24 * 1000) { //N天前的日志删除。
                             if (f.delete()) {
                                 count++
                             }
@@ -159,8 +160,6 @@ object FileLog {
                 }
             }
         } while (false)
-        if (count > 0) {
-            Log.e("FileLog", "clear old log file over! $count")
-        }
+        Log.d("FileLog", "clear old log file over! $count")
     }
 }

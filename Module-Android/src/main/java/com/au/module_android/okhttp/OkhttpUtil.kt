@@ -6,17 +6,52 @@ import com.au.module_android.utils.awaitOnIoThread
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.HttpUrl
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.ResponseBody
+import okio.BufferedSink
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import java.net.UnknownHostException
+import java.nio.charset.Charset
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.text.Charsets.UTF_8
+
+/**
+ * 创建RequestBody。重构requestBody。
+ *  fun String.toRequestBody(contentType: MediaType? = null)
+ *  参考而来。
+ */
+fun String.toRequestJsonBody(): ParamsStrRequestBody {
+    var charset: Charset = UTF_8
+    val contentType: MediaType? = "application/json".toMediaTypeOrNull()
+    var finalContentType: MediaType? = contentType
+    if (contentType != null) {
+        val resolvedCharset = contentType.charset()
+        if (resolvedCharset == null) {
+            charset = UTF_8
+            finalContentType = "$contentType; charset=utf-8".toMediaTypeOrNull()
+        } else {
+            charset = resolvedCharset
+        }
+    }
+    val bytes = toByteArray(charset)
+    return object : ParamsStrRequestBody(this@toRequestJsonBody) {
+        override fun contentType() = finalContentType
+
+        override fun contentLength() = bytes.size.toLong()
+
+        override fun writeTo(sink: BufferedSink) {
+            sink.write(bytes, 0, bytes.size)
+        }
+    }
+}
 
 /**
  * 发送请求，并等待Response

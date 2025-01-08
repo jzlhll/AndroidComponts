@@ -1,18 +1,11 @@
 package com.au.module_android.okhttp
 
-import android.util.Log
-import com.au.module_android.BuildConfig
 import com.au.module_android.Globals
 import okhttp3.Cache
-import okhttp3.FormBody
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
-import okhttp3.internal.readBomAsCharset
 import java.io.File
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
-import java.util.zip.GZIPInputStream
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 
@@ -35,7 +28,7 @@ class OkhttpClients {
     /**
      * 添加证书相关设置
      */
-    private fun createCertOkHttpBuilder(): OkHttpClient.Builder {
+    private fun createCertOkHttpBuilder() : OkHttpClient.Builder {
         return createCertOkHttpBuilder(
             Globals.okHttpEnableTrustAllCertificates,
             Globals.okHttpCookieJar,
@@ -57,77 +50,8 @@ class OkhttpClients {
             //如果缓存的长度大于0，设置缓存
             builder.cache(Cache(File(Globals.goodCacheDir, "okhttpcache"), cacheSize))
         }
-        Globals.okHttpCookieJar?.let { builder.cookieJar(it) }
+        enableCookieJar?.let { builder.cookieJar(it) }
         return builder
-    }
-
-    /**
-     * 打印Http请求日志
-     */
-    fun httpRequestLog(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val bodyStr = StringBuilder()
-        val requestParams = when (val body = request.body) {
-            is FormBody -> {
-                repeat(body.size) {
-                    bodyStr.append(body.encodedName(it))
-                    bodyStr.append(":")
-                    bodyStr.append(body.encodedValue(it))
-                    bodyStr.append(",")
-                }
-                bodyStr.toString()
-            }
-
-            else -> {
-                bodyStr.append(body.toString())
-                bodyStr.append("\n不是FormBody，不支持打印请求参数").toString()
-            }
-        }
-        val requestLog =
-            "发送请求：${request.url}\n请求参数：${requestParams}\n请求头:\n${request.headers}"
-        if(BuildConfig.DEBUG) Log.d("OkhttpApi", requestLog)
-        val startTime = System.nanoTime()
-        val response = chain.proceed(request)
-        val endTime = System.nanoTime()
-        val oldSource = response.body?.source() ?: return response
-        oldSource.request(java.lang.Long.MAX_VALUE)
-        val buffer = oldSource.buffer.clone()
-        val charset =
-            buffer.readBomAsCharset(
-                response.body?.contentType()?.charset(Charsets.UTF_8) ?: Charsets.UTF_8
-            )
-        val responseStr = if (
-            response.header("Content-Encoding")?.contains("gzip", true) == true ||
-            response.header("Accept-Encoding")?.contains("gzip", true) == true
-        ) {
-            GZIPInputStream(buffer.inputStream()).bufferedReader(charset).readText()
-        } else {
-            buffer.inputStream().bufferedReader(charset).readText()
-        }
-        val responseLog = "{\'响应链接\':\'${response.request.url}\'," +
-                "\'响应请求头\':\'${response.headers}\'," +
-                "\'响应时间\':\'${(endTime - startTime) / 1e6} ms\'," +
-                "\'响应数据\':${responseStr}}"
-        if(BuildConfig.DEBUG) Log.d("OkhttpApi", responseLog)
-        return response
-    }
-
-    /**
-     * 快速响应的okhttp单例。5秒超时。
-     */
-    val quickOkHttpClient by lazy {
-            createCertOkHttpBuilder()
-            .connectTimeout(3, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
-            .also {
-                Globals.okhttpExtraBuilder?.invoke(it)
-                //最后添加日志打印，保证打印最全
-    //                    doOnlyDebug {
-    //                        it.addNetworkInterceptor(::httpRequestLog)
-    //                    }
-            }
-            .build()
     }
 
     /**
