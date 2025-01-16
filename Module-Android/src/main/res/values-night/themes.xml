@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- ShapeableImageView shapeAppearanceOverlay 圆角-->
-    <style name="shape_round8dp_Style">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-        <!-- app:strokeColor
-app:strokeWidth -->
-    </style>
-
-    <!-- ShapeableImageView shapeAppearanceOverlay 圆形 -->
-    <style name="shape_circle_Style">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-
     <style name="TranslucentActivityTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
         <item name="android:windowFullscreen">false</item>

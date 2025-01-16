@@ -1,7 +1,9 @@
 package com.au.module_android.ui.base
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MotionEvent
@@ -12,6 +14,7 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import com.au.module_android.BuildConfig
 import com.au.module_android.DarkModeAndLocalesConst
+import com.au.module_android.R
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
 import com.au.module_android.ui.fullPaddingEdgeToEdge
 import com.au.module_android.utils.hideImeNew
@@ -19,8 +22,14 @@ import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logdNoFile
 
 @Deprecated("基础框架的一环，请使用BindingActivity或者ViewActivity")
-open class AbsActivity : AppCompatActivity(), IFullWindow {
+open class AbsActivity : AppCompatActivity(), IFullWindow, IAnim {
     protected open val isNotCacheFragment = true //不进行自动保存Fragment用于恢复。
+
+    override val enterAnim: Int?
+        get() = null
+
+    override val exitAnim: Int?
+        get() = null
 
     /**
      * 给出额外信息的空间1
@@ -42,6 +51,11 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
     override fun onCreate(savedInstanceState: Bundle?) {
         ToutiaoScreenAdapter.attach(this)
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            enterAnim?.let { if(it != 0) overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, it, R.anim.activity_stay) }
+            exitAnim?.let { if(it != 0) overrideActivityTransition(Activity.OVERRIDE_TRANSITION_CLOSE, 0, it) }
+        }
 
         mCurrentUiMode = resources.configuration.uiMode
     }
@@ -158,5 +172,13 @@ open class AbsActivity : AppCompatActivity(), IFullWindow {
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(DarkModeAndLocalesConst.activityAttachBaseContext(newBase))
+    }
+
+    override fun finish() {
+        super.finish()
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            exitAnim?.let { if(it != 0) overridePendingTransition(0, it) }
+        }
     }
 }
