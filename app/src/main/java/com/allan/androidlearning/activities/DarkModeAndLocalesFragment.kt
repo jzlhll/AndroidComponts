@@ -24,7 +24,7 @@ import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.useSimpleHtmlText
 import com.au.module_android.utils.visible
 
-@EntryFrgName(priority = 10, customName = "通用设置")
+@EntryFrgName(priority = 10, customName = "GenerateSetting")
 class DarkModeAndLocalesFragment : BindingFragment<FragmentDarkModeSettingBinding>() {
     private val localePart = LocalesPart()
 
