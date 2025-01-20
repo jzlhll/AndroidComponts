@@ -42,6 +42,30 @@ object AppDataStore {
 //    }
     )
 
+    inline fun <reified T> containsKeyBlocked(key:String) : Boolean{
+        val ret = runBlocking {
+            val prefKey = when (T::class.java) {
+                Int::class.java -> intPreferencesKey(key)
+                Long::class.java -> longPreferencesKey(key)
+                Double::class.java -> doublePreferencesKey(key)
+                Float::class.java -> floatPreferencesKey(key)
+                Boolean::class.java -> booleanPreferencesKey(key)
+                String::class.java -> stringPreferencesKey(key)
+                ByteArray::class.java -> byteArrayPreferencesKey(key)
+                else -> {
+                    throw IllegalArgumentException("This type can be removed from DataStore")
+                }
+            }
+            val t = Globals.app.dataStore.data.map {
+                it.contains(prefKey)
+            }.first()
+
+            return@runBlocking t
+        }
+
+        return ret
+    }
+
     suspend inline fun <reified T> containsKey(key:String) : Boolean{
         val prefKey = when (T::class.java) {
             Int::class.java -> intPreferencesKey(key)
@@ -169,9 +193,10 @@ object AppDataStore {
                     setting[stringPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
+
             ByteArray::class -> {
                 Globals.app.dataStore.data.map { setting ->
-                    setting[stringPreferencesKey(key)] ?: defaultValue
+                    setting[byteArrayPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
             else -> {

@@ -71,5 +71,6 @@
 
         <attr name="strokeColor" />
         <attr name="strokeWidth" />
+        <attr name="autoHideIme" />
     </declare-styleable>
 </resources>

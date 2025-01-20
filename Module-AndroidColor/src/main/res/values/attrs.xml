@@ -7,4 +7,6 @@
     <attr name="backgroundNormal" format="color" />
     <attr name="backgroundPressed" format="color" />
     <attr name="backgroundDisabled" format="color" />
+
+    <attr name="autoHideIme" format="boolean" />
 </resources>

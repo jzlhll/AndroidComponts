@@ -19,4 +19,6 @@ class BgBuildFrameLayout @JvmOverloads constructor(
         viewBackgroundBuild(attr)
         attr.recycle()
     }
+
+
 }

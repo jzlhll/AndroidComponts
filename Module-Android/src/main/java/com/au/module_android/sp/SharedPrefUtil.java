@@ -45,6 +45,14 @@ public class SharedPrefUtil {
         return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getBoolean(key, defValue);
     }
 
+    public static float getFloat(Context ctx, String key, float defValue) {
+        return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getFloat(key, defValue);
+    }
+
+    public static void putFloat(Context ctx, String key, float value) {
+        ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).edit().putFloat(key, value).apply();
+    }
+
     public static void putString(Context ctx, String key, String value) {
         // name存储文件名称
         ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).edit().putString(key, value).apply();
