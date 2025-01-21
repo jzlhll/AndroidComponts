@@ -17,18 +17,3 @@ fun AppCompatActivity.replaceFragment(@IdRes fragmentContainerViewId: Int, fragm
 fun Fragment.replaceFragment(@IdRes fragmentContainerViewId: Int, fragment:Fragment) {
     childFragmentManager.beginTransaction().replace(fragmentContainerViewId, fragment).commitAllowingStateLoss()
 }
-
-/**
- * 移除一个Fragment
- */
-fun AppCompatActivity.removeFragment(fragment:Fragment) {
-    supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-}
-
-/**
- * 移除一个Fragment
- */
-fun Fragment.removeFragment(fragment:Fragment) {
-    childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-}
-

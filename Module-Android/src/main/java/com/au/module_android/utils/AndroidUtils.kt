@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals.app
+import java.io.Serializable
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.net.URLDecoder
@@ -35,13 +36,7 @@ val isMainThread: Boolean
 /**
  * 类型转换
  */
-inline fun <reified T> Any?.asOrNull(): T? {
-    return if (this is T) {
-        this
-    } else {
-        null
-    }
-}
+inline fun <reified T> Any?.asOrNull(): T? = this as? T
 
 val View.activity: Activity?
     get() {
@@ -283,7 +278,7 @@ fun openAppActivity(context: Context, packageName: String, activityName:String) 
  */
 fun Context.registerReceiverFix(receiver: BroadcastReceiver, filter: IntentFilter,
                                 receiverSystemOrOtherApp:Boolean = true) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         registerReceiver(
             receiver, filter,
             if (receiverSystemOrOtherApp) Context.RECEIVER_EXPORTED else Context.RECEIVER_NOT_EXPORTED

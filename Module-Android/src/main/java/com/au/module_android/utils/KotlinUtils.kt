@@ -1,5 +1,9 @@
 package com.au.module_android.utils
 
+import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION
+import android.os.Bundle
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -8,8 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-
-fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
+import java.io.Serializable
 
 /**
  * 切换到主线程
@@ -48,6 +51,8 @@ suspend inline fun <T> awaitOnIoThread(crossinline block: (CancellableContinuati
     }
 }
 
+fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
+
 fun CoroutineScope.launchOnThread(
     block: suspend CoroutineScope.() -> Unit
 ): Job {
@@ -58,4 +63,14 @@ fun CoroutineScope.launchOnUi(
     block: suspend CoroutineScope.() -> Unit
 ): Job {
     return launch(Dispatchers.Main.immediate, start = CoroutineStart.DEFAULT, block = block)
+}
+
+inline fun <reified T : Serializable> Bundle.serializableCompat(key: String): T? = when {
+    VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
+    else -> getSerializable(key) as? T
+}
+
+inline fun <reified T : Serializable> Intent.serializableExtraCompat(key: String): T? = when {
+    VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+    else -> getSerializableExtra(key) as? T
 }

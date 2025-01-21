@@ -2,15 +2,27 @@ package com.au.module_androidui.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
+import com.au.module_android.ui.base.AbsBottomDialog
+import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.currentStatusBarAndNavBarHeight
+import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.utils.serializableCompat
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.dialog.AbsFragmentBottomSheetDialog
 import com.au.module_androidui.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlin.math.min
 
-class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottomSheetDialog(hasEditText) {
+/**
+ * FragmentBottomSheetDialog
+ * @param hasEditText 是否有输入框，有输入框，则会安排弹窗的方式有变。
+ */
+class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsBottomDialog(hasEditText) {
     companion object {
         /**
          * manager 基于哪个fragment的childFragmentManger而弹出。
@@ -41,17 +53,63 @@ class FragmentBottomSheetDialog(hasEditText:Boolean = false) : AbsFragmentBottom
         }
     }
 
+    private val fgClass by unsafeLazy {
+        arguments?.serializableCompat<Class<Fragment>>("fgClass")
+    }
+    private val fgBundle by unsafeLazy { arguments?.getBundle("fgBundle") }
+    private val height by unsafeLazy { arguments?.getInt("height") }
+
+    private val fragment by unsafeLazy { fgClass?.getDeclaredConstructor()?.newInstance() }
+    private val canCancel by unsafeLazy { arguments?.getBoolean("canCancel") ?: true }
+
     private val paddingMode by unsafeLazy { arguments?.getBoolean("paddingMode", false) ?: false}
 
-    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): ViewBindingWrap {
-        return if (paddingMode) {
-            val root = inflater.inflate(R.layout.dialog_bottomsheet_padding, container, false)
-            val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)
-            ViewBindingWrap(root as ViewGroup, fcv)
+    override fun onCreatingView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val layoutId = if (paddingMode) { R.layout.dialog_bottomsheet_padding } else { R.layout.dialog_bottomsheet }
+        val root = inflater.inflate(layoutId, container, false)
+        val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)
+
+        val fragment = this.fragment
+        if (fragment != null) {
+            //最大高度限定实现
+            val screenSize = requireActivity().getScreenFullSize()
+            val staAndNavHeight = requireActivity().currentStatusBarAndNavBarHeight() //在dialog中使用。已经渲染好了。这肯定是ok了的。
+            val statusBarHeight = staAndNavHeight?.first ?: 0
+            val navigationBarHeight = staAndNavHeight?.second ?: 0
+
+            val maxHeight:Int = screenSize.second - statusBarHeight
+            val height = this.height ?: 0
+
+            if (height == 0) {
+                dialog.asOrNull<BottomSheetDialog>()?.behavior?.let { behavior->
+                    behavior.maxHeight = maxHeight
+                }
+            } else {
+                //fragment的高度height + 补充navigationbar的高度
+                val targetHeight = height + (if (isPaddingNavigationBarHeight) navigationBarHeight else 0)
+                val fixHeight = min(targetHeight, maxHeight)
+                root.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, fixHeight)
+            }
+
+            fgBundle?.let {
+                fragment.arguments = it
+            }
+
+            childFragmentManager.beginTransaction().also {
+                it.replace(fcv.id, fragment, null)
+                it.commitNow()
+            }
         } else {
-            val root = inflater.inflate(R.layout.dialog_bottomsheet, container, false)
-            val fcv = root.findViewById<FragmentContainerView>(R.id.fcv)
-            ViewBindingWrap(root as ViewGroup, fcv)
+            dismiss()
+        }
+
+        return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!canCancel) {
+            setCancelable(false)
         }
     }
 }

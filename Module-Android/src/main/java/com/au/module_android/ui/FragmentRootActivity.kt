@@ -20,6 +20,7 @@ import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IFullWindow
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.serializableExtraCompat
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 
@@ -109,7 +110,7 @@ open class FragmentRootActivity : ViewActivity() {
         }
     }
 
-    val fragmentClass by unsafeLazy { intent.getSerializableExtra(KEY_FRAGMENT_CLASS) as Class<Fragment> }
+    val fragmentClass by unsafeLazy { intent.serializableExtraCompat<Class<Fragment>>(KEY_FRAGMENT_CLASS)!! }
     private val mEnterAnim by unsafeLazy { intent.getIntExtra(KEY_ENTER_ANIM, 0) }
     private val mExitAnim by unsafeLazy { intent.getIntExtra(KEY_EXIT_ANIM, 0) }
 
@@ -145,7 +146,10 @@ open class FragmentRootActivity : ViewActivity() {
             }
         }
 
-        supportFragmentManager.beginTransaction().replace(v.id, instance).commit() //todo 增加tag。
+        supportFragmentManager.beginTransaction().also {
+            it.replace(v.id, instance)
+            it.commit()
+        }//todo 增加tag。
         return v
     }
 
