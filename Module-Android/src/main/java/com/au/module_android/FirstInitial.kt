@@ -7,6 +7,7 @@ import com.au.module_android.init.GlobalActivityCallback
 import com.au.module_android.init.GlobalBackgroundCallback
 import com.au.module_android.init.optimizeSpTask
 import com.au.module_android.screenadapter.ToutiaoScreenAdapter
+import com.github.gzuliyujiang.oaid.DeviceIdentifier
 
 /**
  * 自动初始化
@@ -22,6 +23,8 @@ class FirstInitial {
         Globals.internalApp = context
 
         UncaughtExceptionHandlerObj.init()
+
+        DeviceIdentifier.register(context)
 
         val initConfig = initCfg ?: FirstInitialConfig()
         if(initConfig.isEnableToutiaoScreenAdapter) { ToutiaoScreenAdapter.init(context) }

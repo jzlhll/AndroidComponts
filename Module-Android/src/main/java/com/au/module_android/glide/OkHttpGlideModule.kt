@@ -3,7 +3,7 @@ package com.au.module_android.glide
 import android.content.Context
 import android.util.Log
 import com.au.module_android.BuildConfig
-import com.au.module_android.okhttp.OkhttpClients
+import com.au.module_android.okhttp.OkhttpClientCreator
 import com.au.module_android.okhttp.TrustAllCertsManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
@@ -56,7 +56,7 @@ class OkHttpGlideModule : AppGlideModule() {
         if (noSslCheck) {
             val trustAllCerts = TrustAllCertsManager()
             builder
-                .sslSocketFactory(OkhttpClients.createSSLSocketFactory(), trustAllCerts)
+                .sslSocketFactory(OkhttpClientCreator.createSSLSocketFactory(), trustAllCerts)
                 .hostnameVerifier(TrustAllCertsManager.TrustAllHostnameVerifier())
         }
         val okHttpClient = builder.build()

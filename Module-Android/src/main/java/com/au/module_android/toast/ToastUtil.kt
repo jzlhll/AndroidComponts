@@ -30,6 +30,7 @@ object ToastUtil {
     private var mLastInfo:String? = null
     private var mLastInfoTs = 0L
     private const val LastInfoDeltaTime = 1200L
+
     fun checkToastMsgAndDesc(message:String?, description:String?) : Pair<String, String?>? {
         val msg:String
         val desc:String?

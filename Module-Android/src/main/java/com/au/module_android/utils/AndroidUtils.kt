@@ -24,10 +24,11 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals.app
-import java.io.Serializable
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.net.URLDecoder
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import kotlin.math.roundToInt
 
 val isMainThread: Boolean
@@ -295,5 +296,29 @@ fun Intent.iteratorPrint(tag:String = TAG) {
 fun Bundle.iteratorPrint(tag:String = TAG) {
     keySet()?.forEach {
         Log.d(tag, "key: " + it + ", value: " + this.get(it))
+    }
+}
+
+/**
+ * 对字符串进行MD5加密
+ *
+ * @return 计算出的MD5哈希值的十六进制字符串表示，如果计算失败则返回空字符串
+ */
+fun String.md5(): String {
+    try {
+        val instance: MessageDigest = MessageDigest.getInstance("MD5")
+        val digest: ByteArray = instance.digest(this.toByteArray())
+        val sb = StringBuilder()
+        for (b in digest) {
+            val hexString = Integer.toHexString(b.toInt() and 0xff)
+            if (hexString.length < 2) {
+                sb.append("0")
+            }
+            sb.append(hexString)
+        }
+        return sb.toString()
+    } catch (e: NoSuchAlgorithmException) {
+        //do nothing.
+        return ""
     }
 }

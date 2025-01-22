@@ -2,22 +2,24 @@ package com.au.module_android
 
 import android.app.Activity
 import android.app.Application
+import android.app.admin.DevicePolicyManager
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.au.module_android.okhttp.AbsCookieJar
-import com.au.module_android.okhttp.OkhttpClients
+import com.au.module_android.Globals.internalApp
+import com.au.module_android.okhttp.OkhttpClientCreator
 import com.au.module_android.simplelivedata.NoStickLiveData
-import com.au.module_android.utils.secondLastOrNull
+import com.au.module_android.utils.md5
 import com.au.module_android.utils.unsafeLazy
+import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
-import okhttp3.OkHttpClient
 import java.io.File
 
 object Globals {
@@ -108,28 +110,7 @@ object Globals {
     }
 
     ///////////////okhttp
-    private val okhttpClients by lazy { OkhttpClients() }
-    /**
-     * 是否信任所有证书,默认不信任，为了传输安全
-     * okhttp（必须在创建之前使用）
-     */
-    var okHttpEnableTrustAllCertificates = false
-
-    /**
-     * 自定义cookie管理
-     * okhttp（必须在创建之前使用）
-     */
-    var okHttpCookieJar: AbsCookieJar? = null
-
-    /**
-     * 设置okhttp缓存，如果大于0，开启缓存
-     */
-    var okHttpCacheSize = 0L
-
-    /**
-     * 额外的okhttp builder设置
-     */
-    var okhttpExtraBuilder : ((OkHttpClient.Builder)->Unit)? = null
+    val okhttpClientCreator by lazy { OkhttpClientCreator() }
 
     /**
      * 获取okhttpClient对象
@@ -138,9 +119,9 @@ object Globals {
      *                    2 使用5分钟的long版。
      */
     fun okHttpClient(timeOutMode: Int = 0) = when (timeOutMode) {
-        1 -> okhttpClients.midTimeoutOkHttpClient()
-        2 -> okhttpClients.longTimeoutOkHttpClient()
-        else -> okhttpClients.okHttpClient
+        1 -> okhttpClientCreator.midTimeoutOkHttpClient()
+        2 -> okhttpClientCreator.longTimeoutOkHttpClient()
+        else -> okhttpClientCreator.okHttpClient
     }
 }
 
@@ -169,3 +150,24 @@ fun removeFromBgHandler(run:Runnable) {
     Globals.backgroundHandler.removeCallbacks(run)
 }
 //----------------------handler end
+
+
+/**
+ * 获取设备id
+ */
+val androidUtdid by lazy {
+    var androidId = DeviceIdentifier.getAndroidID(internalApp)
+    if (androidId.isNullOrBlank()) {
+        androidId = DeviceIdentifier.getPseudoID()
+        Log.d("androidId", "getPseudoID : $androidId")
+    }
+
+    if (androidId.isNullOrBlank()) {
+        androidId = DeviceIdentifier.getGUID(internalApp)
+        Log.d("androidId", "getGUID : $androidId")
+    }
+
+    androidId = androidId.md5().replace("-", "").lowercase()
+    Log.d("androidId", "md5 : $androidId")
+    androidId
+}

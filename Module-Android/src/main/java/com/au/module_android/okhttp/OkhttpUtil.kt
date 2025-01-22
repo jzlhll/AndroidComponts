@@ -1,5 +1,7 @@
 package com.au.module_android.okhttp
 
+import android.content.Context
+import android.net.Uri
 import com.au.module_android.Globals
 import com.au.module_android.json.fromJson
 import com.au.module_android.utils.awaitOnIoThread
@@ -14,6 +16,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.ResponseBody
 import okio.BufferedSink
+import okio.source
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -27,6 +30,7 @@ import kotlin.text.Charsets.UTF_8
  * 创建RequestBody。重构requestBody。
  *  fun String.toRequestBody(contentType: MediaType? = null)
  *  参考而来。
+ *  用于存储下发起的url。
  */
 fun String.toRequestJsonBody(): ParamsStrRequestBody {
     var charset: Charset = UTF_8
@@ -49,6 +53,36 @@ fun String.toRequestJsonBody(): ParamsStrRequestBody {
 
         override fun writeTo(sink: BufferedSink) {
             sink.write(bytes, 0, bytes.size)
+        }
+    }
+}
+
+/**
+ * 将Uri转换为InputStream类型的RequestBody
+ *
+ * 此函数用于将指定的Uri对应的资源转换为RequestBody对象，以便进行网络请求等操作
+ * 它允许调用者指定内容类型和内容长度，以更精确地控制请求的行为
+ *
+ * @param length 内容长度，以字节为单位，默认值为-1，表示长度未知
+ * @param contentType 内容类型，可选参数，指定内容的媒体类型
+ * @return 返回一个RequestBody对象，封装了Uri对应的输入流
+ */
+fun Uri.asInputStreamRequestBody(context: Context, length:Long = -1, contentType: MediaType? = null) : RequestBody {
+    return object : RequestBody() {
+        override fun contentType(): MediaType? {
+            return contentType
+        }
+
+        override fun contentLength(): Long {
+            return length
+        }
+
+        override fun writeTo(sink: BufferedSink) {
+            context.contentResolver.openInputStream(this@asInputStreamRequestBody)?.run {
+                source().use {
+                    sink.writeAll(it)
+                }
+            }
         }
     }
 }
@@ -236,7 +270,7 @@ suspend fun OkHttpClient.downloadFile(
     url: String,
     dirPath: String,
     fileName: String,
-    byteArraySize: Int = 1024,
+    byteArraySize: Int = 4096,
     deleteFileIfNoSuccess: Boolean = true,
     progressListener: (
         downloadLen: Long,
@@ -263,7 +297,7 @@ suspend fun OkHttpClient.downloadFile(
     request: Request,
     dirPath: String,
     fileName: String,
-    byteArraySize: Int = 1024,
+    byteArraySize: Int = 4096,
     deleteFileIfNoSuccess: Boolean = true,
     progressListener: (
         downloadLen: Long,

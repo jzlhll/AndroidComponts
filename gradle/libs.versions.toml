@@ -1,5 +1,6 @@
 [versions]
 
+android_cn_oaid = "4.2.11"
 appcompat = "1.7.0"
 lubanCompress = "v3.11.3"
 constraintlayout = "2.2.0"
@@ -29,6 +30,7 @@ workRuntimeKtx = "2.10.0"
 
 [libraries]
 
+android_cn_oaid = { module = "com.github.gzu-liyujiang:Android_CN_OAID", version.ref = "android_cn_oaid" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
