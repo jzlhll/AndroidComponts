@@ -1,17 +1,12 @@
 package com.au.module_android.utils
 
-import android.Manifest
-import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.annotation.DrawableRes
-import androidx.core.app.ActivityCompat
 
 object ForeNotificationUtil {
     private const val CHANNEL_ONE_ID = "foreNotifyId"
@@ -91,27 +86,4 @@ object ForeNotificationUtil {
         // Register the channel with system; you can't change the importance
         // or other notification behaviors after this
     }
-
-//低版本
-    //    private static Notification getNotification(Context context, String contentTitle, String contentText) {
-    //        Notification.Builder builder = new Notification.Builder(context, CHANNEL_ONE_ID)
-    //        .setPriority(Notification.PRIORITY_DEFAULT)
-    //        //.setLights(color, 1000, 0)
-    //        //.setSound(null, null);
-    //        ;
-    //
-    //        builder.setCategory(Notification.CATEGORY_RECOMMENDATION)
-    //        .setContentTitle(contentTitle)
-    //        .setContentText(contentText)
-    //        //.setContentIntent(getPendingIntent(context))
-    //        .setSmallIcon(android.R.drawable.ic_notification_overlay); //todo
-    //
-    //        return builder.build();
-    //    }
-    //    private static PendingIntent getPendingIntent(Context context) {
-    //        Intent intent = new Intent(context, MainActivity.class);
-    //        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-    //        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    //        return pi;
-    //    }
 }

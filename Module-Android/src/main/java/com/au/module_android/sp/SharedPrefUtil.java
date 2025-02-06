@@ -2,6 +2,8 @@ package com.au.module_android.sp;
 
 import android.content.Context;
 
+import java.util.Set;
+
 /**
  正确使用的建议
  1、不要存放大的key和value在SharedPreferences中,否则会一直存诸在内存中得不到释放,内存使用过高会频发引发GC,导致界面丢帧甚至ANR。
@@ -21,7 +23,7 @@ import android.content.Context;
   3. 太频繁则static sp。
  */
 public class SharedPrefUtil {
-    private static String SPXMLNAME = "sp_config";
+    private static final String SPXMLNAME = "sp_config";
 
     /**
      * @param ctx
@@ -72,6 +74,26 @@ public class SharedPrefUtil {
     public static int getInt(Context ctx, String key, int defValue) {
         // name存储文件名称
         return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getInt(key, defValue);
+    }
+
+    public static void putLong(Context ctx, String key, long value) {
+        // name存储文件名称
+        ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).edit().putLong(key, value).apply();
+    }
+
+    public static long getLong(Context ctx, String key, long defValue) {
+        // name存储文件名称
+        return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getLong(key, defValue);
+    }
+
+    public static void putStringSet(Context ctx, String key, Set<String> value) {
+        // name存储文件名称
+        ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).edit().putStringSet(key, value).apply();
+    }
+
+    public static Set<String> getStringSet(Context ctx, String key, Set<String> defValue) {
+        // name存储文件名称
+        return ctx.getSharedPreferences(SPXMLNAME, Context.MODE_PRIVATE).getStringSet(key, defValue);
     }
 
     public static boolean containsKey(Context ctx, String key) {

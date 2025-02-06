@@ -78,5 +78,5 @@ dependencies {
     api libs.okhttp3.integration
 
     implementation libs.androidx.core.splashscreen
-    implementation libs.android.cn.oaid
+    //implementation libs.android.cn.oaid
 }

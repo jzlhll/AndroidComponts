@@ -6,7 +6,7 @@ import kotlin.reflect.KProperty
 /**
  * 读多写少的代理实现
  */
-abstract class AbsRMWLCacheProperty<T:Any>(
+abstract class IReadMoreWriteLessCacheProperty<T:Any>(
     private val key: String,
     private val defaultValue: T
 ) : ReadWriteProperty<Any?, T> {

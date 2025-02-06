@@ -17,7 +17,7 @@ import com.au.module_android.okhttp.OkhttpClientCreator
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.md5
 import com.au.module_android.utils.unsafeLazy
-import com.github.gzuliyujiang.oaid.DeviceIdentifier
+//import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import java.io.File
@@ -155,19 +155,19 @@ fun removeFromBgHandler(run:Runnable) {
 /**
  * 获取设备id
  */
-val androidUtdid by lazy {
-    var androidId = DeviceIdentifier.getAndroidID(internalApp)
-    if (androidId.isNullOrBlank()) {
-        androidId = DeviceIdentifier.getPseudoID()
-        Log.d("androidId", "getPseudoID : $androidId")
-    }
-
-    if (androidId.isNullOrBlank()) {
-        androidId = DeviceIdentifier.getGUID(internalApp)
-        Log.d("androidId", "getGUID : $androidId")
-    }
-
-    androidId = androidId.md5().replace("-", "").lowercase()
-    Log.d("androidId", "md5 : $androidId")
-    androidId
-}
+//val androidUtdid by lazy {
+//    var androidId = DeviceIdentifier.getAndroidID(internalApp)
+//    if (androidId.isNullOrBlank()) {
+//        androidId = DeviceIdentifier.getPseudoID()
+//        Log.d("androidId", "getPseudoID : $androidId")
+//    }
+//
+//    if (androidId.isNullOrBlank()) {
+//        androidId = DeviceIdentifier.getGUID(internalApp)
+//        Log.d("androidId", "getGUID : $androidId")
+//    }
+//
+//    androidId = androidId.md5().replace("-", "").lowercase()
+//    Log.d("androidId", "md5 : $androidId")
+//    androidId
+//}
