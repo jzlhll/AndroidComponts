@@ -1,7 +1,7 @@
 package com.allan.autoclickfloat.activities.recordprojects
 
 import com.allan.autoclickfloat.databinding.RecordProjectOneItemBinding
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.visible

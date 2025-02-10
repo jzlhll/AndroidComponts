@@ -3,10 +3,10 @@ package com.au.jobstudy
 import android.graphics.Color
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
-import com.allan.nested.bottom_nav.BottomNavAdapter
-import com.allan.nested.bottom_nav.BottomPageBean
-import com.allan.nested.recyclerview.NoScrollLinearLayoutManager
-import com.allan.nested.viewpager2.simplePagerAdapter
+import com.au.module_nested.bottom_nav.BottomNavAdapter
+import com.au.module_nested.bottom_nav.BottomPageBean
+import com.au.module_nested.recyclerview.NoScrollLinearLayoutManager
+import com.au.module_nested.viewpager2.simplePagerAdapter
 import com.au.jobstudy.databinding.ActivityMainBinding
 import com.au.jobstudy.databinding.BottomPageMenuBinding
 import com.au.module_android.Globals.app

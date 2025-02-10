@@ -1,2 +1,2 @@
--keep public class com.allan.nested.layout.* { *; }
--keep public class com.allan.nested.widget.* { *; }
+-keep public class com.au.module_nested.layout.* { *; }
+-keep public class com.au.module_nested.widget.* { *; }

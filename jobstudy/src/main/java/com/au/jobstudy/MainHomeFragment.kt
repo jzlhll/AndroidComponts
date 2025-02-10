@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.allan.nested.decoration.PaddingItemDecoration
+import com.au.module_nested.decoration.PaddingItemDecoration
 import com.au.jobstudy.api.Api
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.check.NameList

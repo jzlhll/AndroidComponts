@@ -2,7 +2,7 @@ package com.au.jobstudy.completed
 
 import android.graphics.Color
 import android.view.View
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.databinding.HolderCompletedDateItemBinding
 import com.au.jobstudy.databinding.HolderCompletedItemBinding
 import com.au.jobstudy.utils.WeekDateUtil

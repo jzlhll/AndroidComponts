@@ -43,6 +43,13 @@ suspend inline fun <T> withIoThread(crossinline block: suspend () -> T): T {
 }
 
 /**
+ * 将异步代码写成同步调用示例
+ */
+suspend inline fun <T> awaitAny(crossinline block: (CancellableContinuation<T>) -> Unit): T {
+    return suspendCancellableCoroutine(block)
+}
+
+/**
  * 在io线程操作
  */
 suspend inline fun <T> awaitOnIoThread(crossinline block: (CancellableContinuation<T>) -> Unit): T {

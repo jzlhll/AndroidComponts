@@ -3,8 +3,8 @@ package com.au.jobstudy.checkwith.pic
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.FileProvider
-import com.allan.nested.recyclerview.BindRcvAdapter
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.BindRcvAdapter
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.BuildConfig
 import com.au.jobstudy.R
 import com.au.jobstudy.check.CheckConsts

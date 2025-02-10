@@ -36,6 +36,7 @@ include ':app'
 include ':Module-Android'
 include ':Module-AndroidColor'
 include ':Module-AndroidUi'
+include ':Module-Okhttp'
 
 include ':Module-Nested'
 include ':Module-Cached'

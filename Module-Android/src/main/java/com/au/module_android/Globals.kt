@@ -2,20 +2,15 @@ package com.au.module_android
 
 import android.app.Activity
 import android.app.Application
-import android.app.admin.DevicePolicyManager
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.au.module_android.Globals.internalApp
-import com.au.module_android.okhttp.OkhttpClientCreator
 import com.au.module_android.simplelivedata.NoStickLiveData
-import com.au.module_android.utils.md5
 import com.au.module_android.utils.unsafeLazy
 //import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.google.gson.Gson
@@ -108,21 +103,6 @@ object Globals {
     fun getString(@StringRes resId:Int) : String {
         return ContextCompat.getString(app, resId)
     }
-
-    ///////////////okhttp
-    val okhttpClientCreator by lazy { OkhttpClientCreator() }
-
-    /**
-     * 获取okhttpClient对象
-     * @param timeOutMode 0 使用常规15秒的。默认。
-     *                    1 使用45秒的mid版。
-     *                    2 使用5分钟的long版。
-     */
-    fun okHttpClient(timeOutMode: Int = 0) = when (timeOutMode) {
-        1 -> okhttpClientCreator.midTimeoutOkHttpClient()
-        2 -> okhttpClientCreator.longTimeoutOkHttpClient()
-        else -> okhttpClientCreator.okHttpClient
-    }
 }
 
 //----------------------handler start
@@ -150,7 +130,6 @@ fun removeFromBgHandler(run:Runnable) {
     Globals.backgroundHandler.removeCallbacks(run)
 }
 //----------------------handler end
-
 
 /**
  * 获取设备id

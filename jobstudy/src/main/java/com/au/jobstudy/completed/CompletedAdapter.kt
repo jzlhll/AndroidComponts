@@ -1,9 +1,9 @@
 package com.au.jobstudy.completed
 
 import android.view.ViewGroup
-import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
-import com.allan.nested.recyclerview.DiffCallback
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
+import com.au.module_nested.recyclerview.DiffCallback
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
 class CompletedAdapter(private val itemClick:(CompletedBean)->Unit) : AutoLoadMoreBindRcvAdapter<ICompletedBean, BindViewHolder<ICompletedBean, *>>() {
     override fun isSupportDiffer(): Boolean {

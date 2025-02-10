@@ -1,7 +1,7 @@
 package com.au.jobstudy.home
 
 import android.graphics.Color
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.R
 import com.au.jobstudy.databinding.HolderHomeHeadBinding
 import com.au.jobstudy.databinding.HomeCheckItemBinding

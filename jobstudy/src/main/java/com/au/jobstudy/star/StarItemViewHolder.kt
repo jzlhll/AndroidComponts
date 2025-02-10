@@ -3,7 +3,7 @@ package com.au.jobstudy.star
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.check.CheckConsts
 import com.au.jobstudy.databinding.HolderStarHeadBinding
 import com.au.jobstudy.databinding.HolderStarItemBinding

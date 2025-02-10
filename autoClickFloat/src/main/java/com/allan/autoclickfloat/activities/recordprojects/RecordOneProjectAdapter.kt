@@ -3,11 +3,9 @@ package com.allan.autoclickfloat.activities.recordprojects
 import android.view.ViewGroup
 import com.allan.autoclickfloat.database.Step
 import com.allan.autoclickfloat.databinding.RecordProjectOneItemBinding
-import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
-import com.allan.nested.recyclerview.DiffCallback
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
-import com.au.module_android.utils.HtmlPart
-import com.au.module_android.utils.useSimpleHtmlText
+import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
+import com.au.module_nested.recyclerview.DiffCallback
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
 data class StepWrap(val isSelected:Boolean, val step:Step)
 

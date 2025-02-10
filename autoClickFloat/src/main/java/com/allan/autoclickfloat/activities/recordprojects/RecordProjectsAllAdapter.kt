@@ -1,7 +1,7 @@
 package com.allan.autoclickfloat.activities.recordprojects
 
 import android.view.ViewGroup
-import com.allan.nested.recyclerview.BindRcvAdapter
+import com.au.module_nested.recyclerview.BindRcvAdapter
 
 /**
  * @author allan

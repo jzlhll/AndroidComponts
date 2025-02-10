@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import com.allan.androidlearning.databinding.FragmentCropEntryBinding
 import com.allan.classnameanno.EntryFrgName
-import com.allan.nested.fragments.AbsNestedIndicatorFragment
+import com.au.module_nested.fragments.AbsNestedIndicatorFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.glide.glideSetAnyAsCircleCrop
 import com.au.module_android.permissions.createActivityForResult

@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.allan.nested.recyclerview.AutoLoadMoreBindRcvAdapter
+import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
 
 /**
  * @author allan

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.allan.nested.layout.NestedConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.au.module_nested.layout.NestedConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -31,4 +31,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/myToolbar"
         android:layout_height="wrap_content"/>
-</com.allan.nested.layout.NestedConstraintLayout>
+</com.au.module_nested.layout.NestedConstraintLayout>

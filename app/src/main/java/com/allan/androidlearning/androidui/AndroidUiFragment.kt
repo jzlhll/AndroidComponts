@@ -5,7 +5,7 @@ import android.view.View
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentAndroidUiBinding
 import com.allan.classnameanno.EntryFrgName
-import com.allan.nested.viewpager2.simplePagerAdapter
+import com.au.module_nested.viewpager2.simplePagerAdapter
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.MenuBean
 import com.au.module_android.ui.views.ToolbarInfo

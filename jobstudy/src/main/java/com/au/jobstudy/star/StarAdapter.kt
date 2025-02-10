@@ -2,8 +2,8 @@ package com.au.jobstudy.star
 
 import android.view.View
 import android.view.ViewGroup
-import com.allan.nested.recyclerview.BindRcvAdapter
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.BindRcvAdapter
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.jobstudy.MainStarsFragment
 
 class StarAdapter(val f : MainStarsFragment) : BindRcvAdapter<IStarBean, BindViewHolder<IStarBean, *>>() {

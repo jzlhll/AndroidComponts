@@ -2,7 +2,7 @@ package com.allan.autoclickfloat.activities.recordprojects
 
 import com.allan.autoclickfloat.R
 import com.allan.autoclickfloat.databinding.AllAppListHolderBinding
-import com.allan.nested.recyclerview.viewholder.BindViewHolder
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
 /**
  * @author allan
