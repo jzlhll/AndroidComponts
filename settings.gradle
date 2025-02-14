@@ -39,7 +39,6 @@ include ':Module-AndroidUi'
 include ':Module-Okhttp'
 
 include ':Module-Nested'
-include ':Module-Cached'
 //include ':jsbridge'
 
 include ':studyjob'

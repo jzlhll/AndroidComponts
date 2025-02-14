@@ -77,6 +77,12 @@ dependencies {
     ksp libs.glideKsp
     api libs.okhttp3.integration
 
+    //implementation libs.mmkv.static
+    //implementation files('libs/mmkv.aar')
+
+    api libs.androidx.datastore.preferences
+
     implementation libs.androidx.core.splashscreen
     //implementation libs.android.cn.oaid
+
 }

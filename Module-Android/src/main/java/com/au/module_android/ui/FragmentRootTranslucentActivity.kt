@@ -47,7 +47,9 @@ class FragmentRootTranslucentActivity : FragmentRootActivity() {
                   optionsCompat: ActivityOptionsCompat? = null,
                    enterAnim:Int? = null,
                    exitAnim:Int? = null)  {
-            startRoot(context, FragmentRootTranslucentActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, enterAnim, exitAnim)
+            startRoot(context, FragmentRootTranslucentActivity::class.java,
+                fragmentClass, activityResult,
+                arguments, optionsCompat, enterAnim, exitAnim)
         }
     }
 }

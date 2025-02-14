@@ -39,7 +39,6 @@ android {
 
 dependencies {
     api project(":Module-Android")
-    api project(":Module-Cached")
     implementation project(':Module-AndroidUi')
     implementation project(":Module-Nested")
 //    implementation project(':AuLiteSql')

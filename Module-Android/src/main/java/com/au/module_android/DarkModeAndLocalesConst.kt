@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.os.LocaleList
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatDelegate
+import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logdNoFile
 import java.util.Locale
 
@@ -200,9 +201,11 @@ object DarkModeAndLocalesConst {
      * 返回null就是跟随系统。
      */
     fun spCurrentLocaleKey(context: Context) : String? {
-        return curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE)
+        return ignoreError {
+            curLanguageAndroidStr ?: context.getSharedPreferences(XML_NAME_LOCALES, Context.MODE_PRIVATE)
             .getString(KEY_CUR_LANGUAGE, "")
             .also { curLanguageAndroidStr = it }
+        }
     }
 
     /**
@@ -228,10 +231,11 @@ object DarkModeAndLocalesConst {
     fun spCurrentAppDarkMode(cxt: Context) : Int? {
         val m = _spCurrentAppDarkMode
         if (m == null) {
-            val sp = cxt.getSharedPreferences(XML_NAME_DARKMODE, Context.MODE_PRIVATE)
-            val mode = sp.getInt(KEY_DARK_MODE, -999)
-            _spCurrentAppDarkMode = mode
-            return mode
+            return ignoreError {
+                cxt.getSharedPreferences(XML_NAME_DARKMODE, Context.MODE_PRIVATE).getInt(KEY_DARK_MODE, -999).also {
+                    _spCurrentAppDarkMode = it
+                }
+            }
         }
 
         if (m == -999) {

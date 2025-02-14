@@ -1,6 +1,8 @@
 package com.au.module_cached
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
@@ -28,21 +30,29 @@ import kotlinx.coroutines.runBlocking
  *             ByteArray::class.java
  */
 object AppDataStore {
+    class OnceDataStore(val context:Context, dataStoreName:String) {
+        private val Context.mDataStore by preferencesDataStore(name = dataStoreName)
+        val dataStore = context.mDataStore
+    }
+
     /**
      * @author au
      * @date :2023/11/7 10:24
      * @description:
      */
-    private const val DATA_STORE_NAME = "dataStore" //对应最终件:/data/data/xxxx/files/datastore/dataStore.preferences_pb
+    private const val DATA_STORE_NAME = "globalDataStore" //对应最终件:/data/data/xxxx/files/datastore/globalDataStore.preferences_pb
 
-    val Context.dataStore by preferencesDataStore(
+    val Context.globalDataStore by preferencesDataStore(
         name = DATA_STORE_NAME,//指定名称
 //    produceMigrations = {context ->  //指定要恢复的sp文件，无需恢复可不写
 //        listOf(SharedPreferencesMigration(context, SP_PREFERENCES_NAME))
 //    }
     )
 
-    inline fun <reified T> containsKeyBlocked(key:String) : Boolean{
+    fun onceDataStore(context: Context, dataStoreName:String) = OnceDataStore(context, dataStoreName).dataStore
+
+    inline fun <reified T> containsKeyBlocked(key:String,
+                                              dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : Boolean{
         val ret = runBlocking {
             val prefKey = when (T::class.java) {
                 Int::class.java -> intPreferencesKey(key)
@@ -56,7 +66,7 @@ object AppDataStore {
                     throw IllegalArgumentException("This type can be removed from DataStore")
                 }
             }
-            val t = Globals.app.dataStore.data.map {
+            val t = dataStore.data.map {
                 it.contains(prefKey)
             }.first()
 
@@ -66,7 +76,8 @@ object AppDataStore {
         return ret
     }
 
-    suspend inline fun <reified T> containsKey(key:String) : Boolean{
+    suspend inline fun <reified T> containsKey(key:String,
+                                               dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : Boolean{
         val prefKey = when (T::class.java) {
             Int::class.java -> intPreferencesKey(key)
             Long::class.java -> longPreferencesKey(key)
@@ -79,28 +90,25 @@ object AppDataStore {
                 throw IllegalArgumentException("This type can be removed from DataStore")
             }
         }
-        val t = Globals.app.dataStore.data.map {
-            it.contains(prefKey)
-        }.first()
+        val t = dataStore.data.map { it.contains(prefKey) }.first()
         return t
     }
 
-    fun clear() {
-        runBlocking {Globals.app.dataStore.edit {
-            it.clear()
-        } }
+    fun clear(dataStore: DataStore<Preferences> = Globals.app.globalDataStore) {
+        runBlocking {dataStore.edit { it.clear() } }
     }
 
-    fun save(key:String, value: Any) {
+    fun save(key:String, value: Any, dataStore: DataStore<Preferences> = Globals.app.globalDataStore,) {
         runBlocking {
-            saveSuspend(key, value)
+            saveSuspend(key, value, dataStore)
         }
     }
 
-    fun save(vararg pair:Pair<String, Any>) {
+    fun save(dataStore: DataStore<Preferences> = Globals.app.globalDataStore,
+             vararg pair:Pair<String, Any>) {
         runBlocking {
             pair.forEach {
-                saveSuspend(it.first, it.second)
+                saveSuspend(it.first, it.second, dataStore)
             }
         }
     }
@@ -111,9 +119,10 @@ object AppDataStore {
         }
     }
 
-    suspend inline fun <reified T> removeSuspend(key:String) : T?{
+    suspend inline fun <reified T> removeSuspend(key:String,
+                                                 dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : T?{
         var ret : T? = null
-        Globals.app.dataStore.edit { setting ->
+        dataStore.edit { setting ->
             ret = when (T::class.java) {
                 Int::class.java -> setting.remove(intPreferencesKey(key)).asOrNull()
                 Long::class.java -> setting.remove(longPreferencesKey(key)).asOrNull()
@@ -134,8 +143,9 @@ object AppDataStore {
      * 因为我们用于保存，不应该使用lifeCycleScope来发起。有可能无法保存成功。应该使用全局scope。
      */
     @Deprecated("不建议直接使用，因为可能协程被取消，除非你明白你的scope一定保存成功")
-    private suspend fun saveSuspend(key:String, value:Any) {
-        Globals.app.dataStore.edit { setting ->
+    private suspend fun saveSuspend(key:String, value:Any,
+                                    dataStore: DataStore<Preferences> = Globals.app.globalDataStore) {
+        dataStore.edit { setting ->
             when (value) {
                 is Int -> setting[intPreferencesKey(key)] = value
                 is Long -> setting[longPreferencesKey(key)] = value
@@ -151,9 +161,10 @@ object AppDataStore {
         }
     }
 
-    inline fun < reified T : Any> readBlocked(key:String, defaultValue:T) : T {
+    inline fun < reified T : Any> readBlocked(key:String, defaultValue:T,
+                                              dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : T {
         val r = runBlocking {
-            read(key, defaultValue)
+            read(key, defaultValue, dataStore)
         }
         return r
     }
@@ -161,41 +172,42 @@ object AppDataStore {
     /**
      * 获取数据
      * */
-    suspend inline fun < reified T : Any> read(key: String, defaultValue:T): T {
+    suspend inline fun < reified T : Any> read(key: String, defaultValue:T,
+                                               dataStore: DataStore<Preferences> = Globals.app.globalDataStore): T {
         return when (T::class) {
             Int::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[intPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
             Long::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[longPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
             Double::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[doublePreferencesKey(key)] ?:defaultValue
                 }.first() as T
             }
             Float::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[floatPreferencesKey(key)] ?:defaultValue
                 }.first() as T
             }
             Boolean::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[booleanPreferencesKey(key)]?:defaultValue
                 }.first() as T
             }
             String::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[stringPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }
 
             ByteArray::class -> {
-                Globals.app.dataStore.data.map { setting ->
+                dataStore.data.map { setting ->
                     setting[byteArrayPreferencesKey(key)] ?: defaultValue
                 }.first() as T
             }

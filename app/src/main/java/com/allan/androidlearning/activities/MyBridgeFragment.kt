@@ -2,7 +2,9 @@ package com.allan.androidlearning.activities
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.au.module_android.Globals.getColor
 import com.au.module_android.ui.AndroidBug5497Workaround
@@ -21,6 +23,12 @@ open class MyBridgeFragment : BridgeWebViewExFragment(), IFullWindow {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAndroidBug5497Workaround = AndroidBug5497Workaround(requireActivity())
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = super.onCreateView(inflater, container, savedInstanceState)
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        return v
     }
 
     override fun onDestroyView() {
