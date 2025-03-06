@@ -104,8 +104,7 @@ object AppDataStore {
         }
     }
 
-    fun save(dataStore: DataStore<Preferences> = Globals.app.globalDataStore,
-             vararg pair:Pair<String, Any>) {
+    fun save(vararg pair:Pair<String, Any>, dataStore: DataStore<Preferences> = Globals.app.globalDataStore) {
         runBlocking {
             pair.forEach {
                 saveSuspend(it.first, it.second, dataStore)

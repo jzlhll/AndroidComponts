@@ -1,0 +1,61 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+def APP_SIGN_REL = "FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF".toUpperCase()
+def APP_SIGN_DEBUG = "EE:EE:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:EE:EE".toUpperCase()
+def APP_ID = "abcdefghij1234567"
+def APP_KEY = "abcdefghijklmnopkqjjd0129347578928"
+
+android {
+    namespace 'com.example.module_native'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 26
+
+        consumerProguardFiles "consumer-rules.pro"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                // 添加多个参数
+                arguments "-DAPP_SIGN_REL=$APP_SIGN_REL",
+                        "-DAPP_SIGN_DEBUG=$APP_SIGN_DEBUG",
+                        "-DAPP_ID=$APP_ID",
+                        "-DAPP_KEY=$APP_KEY"
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+        ndkVersion = '27.1.12297006'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Release 模式下的配置
+            externalNativeBuild {
+                cmake {
+                    cppFlags "-DIS_RELEASE"
+                }
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+}

@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -59,6 +61,17 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection"/>
+
+        <!-- 静态注册广播接收器 -->
+        <receiver
+            android:name=".activities.autofs.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false"> <!-- 非公开接收器，避免被外部调用 -->
+            <intent-filter>
+                <!-- 自定义Action（可选） -->
+                <action android:name="com.autoStartFs.ACTION_ALARM_TRIGGERED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

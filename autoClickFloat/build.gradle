@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.allan.autoclickfloat"
-        minSdk gradle.ext.minSdk
+        minSdk 31
         targetSdk gradle.ext.targetSdk
         versionCode 1
         versionName "1.0"

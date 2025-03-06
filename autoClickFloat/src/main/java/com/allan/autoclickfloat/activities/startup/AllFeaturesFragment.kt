@@ -1,7 +1,11 @@
 package com.allan.autoclickfloat.activities.startup
 
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.allan.autoclickfloat.activities.autofs.AutoStartAlarmFragment
 import com.allan.autoclickfloat.activities.autofs.AutoStartFragment
 import com.allan.autoclickfloat.activities.autofs.canWrite
 import com.allan.autoclickfloat.activities.autofs.goToManageSetting
@@ -48,13 +52,23 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.autoFsBtn.onClick {
-            if (canWrite(requireContext())) {
-                FragmentRootActivity.start(requireContext(), AutoStartFragment::class.java)
+            val alarmManager: AlarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (alarmManager.canScheduleExactAlarms()) {
+                if (canWrite(requireContext())) {
+                    FragmentRootActivity.start(requireContext(), AutoStartAlarmFragment::class.java)
+                } else {
+                    ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要调节亮度，即将跳转到系统设置，给予授权。", "OK", "取消",
+                        cancelBlock = {
+                        }, sureClick = {
+                            goToManageSetting(requireActivity())
+                            it.dismiss()
+                        })
+                }
             } else {
-                ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要调节亮度，即将跳转到系统设置，给予系统授权。", "OK", "取消",
+                ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要精确闹钟权限，即将跳转到系统设置，给予授权。", "OK", "取消",
                     cancelBlock = {
                     }, sureClick = {
-                        goToManageSetting(requireActivity())
+                        startActivity(Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
                         it.dismiss()
                     })
             }

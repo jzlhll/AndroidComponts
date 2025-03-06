@@ -4,21 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
-    <com.au.module_android.widget.CustomFontText
-        android:paddingHorizontal="@dimen/ui_padding_edge"
-        android:id="@+id/currentTimeTv"
-        style="@style/StyleFontText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_width="match_parent"
-        android:layout_height="65dp" />
 
     <FrameLayout
+        app:layout_constraintTop_toTopOf="parent"
         android:paddingHorizontal="@dimen/ui_padding_edge"
-        app:layout_constraintTop_toBottomOf="@id/currentTimeTv"
         android:id="@+id/pickersHost"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:layout_width="match_parent"
         android:layout_height="142dp">
 
@@ -117,23 +108,29 @@
         android:id="@+id/startTimerBtn"
         style="@style/StyleButtonPrimary"
         app:layout_constraintTop_toBottomOf="@+id/pickersHost"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="88dp"
         android:paddingHorizontal="24dp"
-        android:text="start worker"
+        android:text="start timer"
         android:paddingVertical="8dp"
         android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/currentAlarm"
+        app:layout_constraintTop_toBottomOf="@id/pickersHost"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <com.au.module_android.widget.CustomButton
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/stopTimerBtn"
-        android:visibility="gone"
         style="@style/StyleButtonWarn"
-        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
-        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/startTimerBtn"
+        android:layout_marginTop="12dp"
         android:paddingHorizontal="24dp"
-        android:text="stop  worker"
+        android:text="stop  timer"
         android:paddingVertical="8dp"
         android:layout_width="200dp"
         android:layout_height="wrap_content" />
