@@ -54,14 +54,14 @@ object AppDataStore {
     inline fun <reified T> containsKeyBlocked(key:String,
                                               dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : Boolean{
         val ret = runBlocking {
-            val prefKey = when (T::class.java) {
-                Int::class.java -> intPreferencesKey(key)
-                Long::class.java -> longPreferencesKey(key)
-                Double::class.java -> doublePreferencesKey(key)
-                Float::class.java -> floatPreferencesKey(key)
-                Boolean::class.java -> booleanPreferencesKey(key)
-                String::class.java -> stringPreferencesKey(key)
-                ByteArray::class.java -> byteArrayPreferencesKey(key)
+            val prefKey = when (T::class) {
+                Int::class -> intPreferencesKey(key)
+                Long::class -> longPreferencesKey(key)
+                Double::class -> doublePreferencesKey(key)
+                Float::class -> floatPreferencesKey(key)
+                Boolean::class -> booleanPreferencesKey(key)
+                String::class -> stringPreferencesKey(key)
+                ByteArray::class -> byteArrayPreferencesKey(key)
                 else -> {
                     throw IllegalArgumentException("This type can be removed from DataStore")
                 }
@@ -78,14 +78,14 @@ object AppDataStore {
 
     suspend inline fun <reified T> containsKey(key:String,
                                                dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : Boolean{
-        val prefKey = when (T::class.java) {
-            Int::class.java -> intPreferencesKey(key)
-            Long::class.java -> longPreferencesKey(key)
-            Double::class.java -> doublePreferencesKey(key)
-            Float::class.java -> floatPreferencesKey(key)
-            Boolean::class.java -> booleanPreferencesKey(key)
-            String::class.java -> stringPreferencesKey(key)
-            ByteArray::class.java -> byteArrayPreferencesKey(key)
+        val prefKey = when (T::class) {
+            Int::class -> intPreferencesKey(key)
+            Long::class -> longPreferencesKey(key)
+            Double::class -> doublePreferencesKey(key)
+            Float::class -> floatPreferencesKey(key)
+            Boolean::class -> booleanPreferencesKey(key)
+            String::class -> stringPreferencesKey(key)
+            ByteArray::class -> byteArrayPreferencesKey(key)
             else -> {
                 throw IllegalArgumentException("This type can be removed from DataStore")
             }
@@ -120,16 +120,20 @@ object AppDataStore {
 
     suspend inline fun <reified T> removeSuspend(key:String,
                                                  dataStore: DataStore<Preferences> = Globals.app.globalDataStore) : T?{
+        if (!containsKey<T>(key)) {
+            return null
+        }
+
         var ret : T? = null
         dataStore.edit { setting ->
-            ret = when (T::class.java) {
-                Int::class.java -> setting.remove(intPreferencesKey(key)).asOrNull()
-                Long::class.java -> setting.remove(longPreferencesKey(key)).asOrNull()
-                Double::class.java -> setting.remove(doublePreferencesKey(key)).asOrNull()
-                Float::class.java -> setting.remove(floatPreferencesKey(key)).asOrNull()
-                Boolean::class.java -> setting.remove(booleanPreferencesKey(key)).asOrNull()
-                String::class.java -> setting.remove(stringPreferencesKey(key)).asOrNull()
-                ByteArray::class.java -> setting.remove(byteArrayPreferencesKey(key)).asOrNull()
+            ret = when (T::class) {
+                Int::class -> setting.remove(intPreferencesKey(key)).asOrNull()
+                Long::class -> setting.remove(longPreferencesKey(key)).asOrNull()
+                Double::class -> setting.remove(doublePreferencesKey(key)).asOrNull()
+                Float::class -> setting.remove(floatPreferencesKey(key)).asOrNull()
+                Boolean::class -> setting.remove(booleanPreferencesKey(key)).asOrNull()
+                String::class -> setting.remove(stringPreferencesKey(key)).asOrNull()
+                ByteArray::class -> setting.remove(byteArrayPreferencesKey(key)).asOrNull()
                 else -> {
                     throw IllegalArgumentException("This type can be removed from DataStore")
                 }
