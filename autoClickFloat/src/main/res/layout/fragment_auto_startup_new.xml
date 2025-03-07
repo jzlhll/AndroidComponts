@@ -5,11 +5,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <com.au.module_android.widget.BgBuildView
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:layout_marginTop="22dp"
+        app:backgroundNormal="#f9f9f9"
+        app:cornerRadius="4dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <com.au.module_androidui.widget.SwitchLayoutButton
+        android:id="@+id/switchBtn"
+         app:first_str="       单次       "
+        app:second_str="       每日       "
+        android:layout_marginTop="28dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"/>
+
+    <com.au.module_android.widget.BgBuildView
+        app:layout_constraintTop_toBottomOf="@id/switchBtn"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:layout_marginTop="18dp"
+        app:backgroundNormal="#f9f9f9"
+        app:cornerRadius="4dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/playDayHost"
+        app:layout_constraintTop_toBottomOf="@id/switchBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/plusADayBtn"
+            style="@style/StyleButtonPrimary"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:text="+"
+            android:minHeight="20dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/plusDayText"
+            app:layout_constraintStart_toEndOf="@id/plusADayBtn"
+            android:paddingHorizontal="15dp"
+            android:gravity="center"
+            android:text="0"
+            app:layout_constraintTop_toTopOf="@id/plusADayBtn"
+            android:textSize="18sp"
+            android:layout_width="60dp"
+            android:layout_height="36dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/minusADayBtn"
+            style="@style/StyleButtonPrimary"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="@id/plusDayText"
+            app:layout_constraintStart_toEndOf="@id/plusDayText"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:text="-"
+            android:minHeight="20dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        app:layout_constraintTop_toBottomOf="@id/playDayHost"
         android:paddingHorizontal="@dimen/ui_padding_edge"
         android:id="@+id/pickersHost"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="21dp"
         android:layout_width="match_parent"
         android:layout_height="142dp">
 
@@ -107,8 +186,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/startTimerBtn"
         style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
-        android:layout_marginTop="88dp"
+        app:layout_constraintTop_toBottomOf="@+id/currentAlarm"
+        android:layout_marginTop="8dp"
         android:paddingHorizontal="24dp"
         android:text="start timer"
         android:paddingVertical="8dp"
@@ -116,9 +195,23 @@
         android:layout_height="wrap_content" />
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/currentAlarm"
+        android:id="@+id/currentAlarmDesc"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/pickersHost"
         android:layout_marginTop="60dp"
+        android:textSize="19sp"
+        android:paddingVertical="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/currentAlarm"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/currentAlarmDesc"
+        android:layout_marginTop="3dp"
+        android:textSize="21sp"
+        android:textColor="@color/color_text_desc"
+        android:paddingVertical="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
