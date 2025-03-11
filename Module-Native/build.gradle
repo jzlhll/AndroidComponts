@@ -19,7 +19,8 @@ android {
             cmake {
                 cppFlags ""
                 // 添加多个参数
-                arguments "-DAPP_SIGN_REL=$APP_SIGN_REL",
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
+                        "-DAPP_SIGN_REL=$APP_SIGN_REL",
                         "-DAPP_SIGN_DEBUG=$APP_SIGN_DEBUG",
                         "-DAPP_ID=$APP_ID",
                         "-DAPP_KEY=$APP_KEY"

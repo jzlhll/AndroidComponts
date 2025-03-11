@@ -34,7 +34,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_link_libraries(${CMAKE_PROJECT_NAME}
         # List libraries link to the target library
         android
-        log)
+        log
+        "-Wl,-z,max-page-size=16384")
 
 # 将参数传递给 C/C++ 代码（通过编译定义）
 add_compile_definitions(
