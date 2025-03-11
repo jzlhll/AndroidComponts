@@ -2,11 +2,14 @@ package com.allan.autoclickfloat.activities.startup
 
 import android.app.AlarmManager
 import android.content.Context
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
+import androidx.core.net.toUri
 import com.allan.autoclickfloat.activities.autofs.AutoStartAlarmFragment
-import com.allan.autoclickfloat.activities.autofs.AutoStartFragment
 import com.allan.autoclickfloat.activities.autofs.canWrite
 import com.allan.autoclickfloat.activities.autofs.goToManageSetting
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
@@ -20,6 +23,7 @@ import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.FragmentRootOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.openApp
+import com.au.module_android.utils.startActivityFix
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
@@ -55,7 +59,21 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
             val alarmManager: AlarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (alarmManager.canScheduleExactAlarms()) {
                 if (canWrite(requireContext())) {
-                    FragmentRootActivity.start(requireContext(), AutoStartAlarmFragment::class.java)
+                    val packageName: String = requireContext().packageName
+                    val pm = requireContext().getSystemService(POWER_SERVICE) as PowerManager
+                    if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                        ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要“无限制 - 不采取任何限制措施”的电池管理设置，给予授权。", "OK", "取消",
+                            cancelBlock = {
+                            }, sureClick = {
+                                val intent = Intent()
+                                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                                intent.setData("package:$packageName".toUri())
+                                startActivityFix(intent)
+                                it.dismiss()
+                            })
+                    } else {
+                        FragmentRootActivity.start(requireContext(), AutoStartAlarmFragment::class.java)
+                    }
                 } else {
                     ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要调节亮度，即将跳转到系统设置，给予授权。", "OK", "取消",
                         cancelBlock = {
@@ -68,7 +86,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
                 ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要精确闹钟权限，即将跳转到系统设置，给予授权。", "OK", "取消",
                     cancelBlock = {
                     }, sureClick = {
-                        startActivity(Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                        startActivityFix(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
                         it.dismiss()
                     })
             }

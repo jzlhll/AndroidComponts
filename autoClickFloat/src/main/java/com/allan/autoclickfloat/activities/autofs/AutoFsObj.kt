@@ -35,6 +35,7 @@ object AutoFsObj {
     private fun generatePendingIntent(context: Context) : PendingIntent {
         val intent: Intent = Intent(context, AlarmReceiver::class.java)
         intent.setAction("com.autoStartFs.ACTION_ALARM_TRIGGERED")
+        intent.setPackage(context.packageName)
         val flag = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         return PendingIntent.getBroadcast(
             context,
@@ -47,6 +48,7 @@ object AutoFsObj {
     fun fetchPendingIntent(context: Context) : PendingIntent? {
         val intent: Intent = Intent(context, AlarmReceiver::class.java)
         intent.setAction("com.autoStartFs.ACTION_ALARM_TRIGGERED")
+        intent.setPackage(context.packageName)
         val flag = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_MUTABLE
         return PendingIntent.getBroadcast(
             context,

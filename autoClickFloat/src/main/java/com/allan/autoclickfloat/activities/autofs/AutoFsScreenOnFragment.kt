@@ -18,7 +18,8 @@ import com.au.module_android.utils.startOutActivity
 import com.au.module_android.widget.CustomFontText
 import com.au.module_cached.AppDataStore
 
-class KeepScreenOnFragment : ViewFragment() {
+
+class AutoFsScreenOnFragment : ViewFragment() {
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         requireActivity().apply {
             setShowWhenLocked(true)
@@ -30,12 +31,25 @@ class KeepScreenOnFragment : ViewFragment() {
             logd { "allanAlarm set next alarm!!!" }
             AutoFsObj.startAlarmWhenLoop(requireContext())
         } else {
+            logd { "allanAlarm is once, remove saved info!" }
             AppDataStore.remove<Long>("autoFsTargetTs")
         }
 
+//        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        if (wifiManager.isWifiEnabled) {
+//            logd { "allanAlarm hasWifi..." }
+//        } else {
+//            logd { "allanAlarm no wifi..." }
+////            val panelIntent = Intent(Settings.Panel.ACTION_WIFI)
+////            startActivityFix(panelIntent)
+//          //android12失效  wifiManager.setWifiEnabled(true)
+//            // 直接修改系统设置 需要系统权限
+////            Settings.Global.putInt(requireContext().contentResolver,  "wifi_on", 1);
+//        }
+
         Globals.mainHandler.postDelayed({
             logd { "allanAlarm delay do launch!!!" }
-            val context = requireActivity()
+            val context = Globals.app
             val pm = context.packageManager
             val intent = pm.getLaunchIntentForPackage("com.ss.android.lark")
             if (intent != null) {

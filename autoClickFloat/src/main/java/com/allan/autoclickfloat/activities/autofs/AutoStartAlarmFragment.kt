@@ -23,7 +23,6 @@ import com.au.module_androidui.toast.toastOnTop
 import com.au.module_androidui.widget.NumberPickerCompat
 import com.au.module_androidui.widget.SimpleNumberPicker
 import com.au.module_androidui.widget.SimpleNumberPickerCompat
-import com.au.module_cached.AppDataStore
 import java.util.Calendar
 
 
@@ -68,7 +67,6 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         launchNumberPickerWrap(binding.hourPicker, true)
         launchNumberPickerWrap(binding.minutePicker, false)
-
         val c = Calendar.getInstance()
         initNumberPicker(hourPickerWrap, 23, 0, c.get(Calendar.HOUR_OF_DAY), true)
         initNumberPicker(minPickerWrap, 59, 0, c.get(Calendar.MINUTE), true)
@@ -198,7 +196,7 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
 
 class AlarmReceiver : BroadcastReceiver() {
     private fun doIt(context: Context) {
-        FragmentRootActivity.start(context, KeepScreenOnFragment::class.java)
+        FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java)
     }
 
     override fun onReceive(context: Context, intent: Intent?) {

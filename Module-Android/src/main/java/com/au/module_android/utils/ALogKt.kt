@@ -30,12 +30,12 @@ inline fun logwNoFile(tag:String = TAG, block:()->String) {
 }
 
 inline fun logd(tag:String = TAG, block:()->String) {
+    val str = block()
     if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        val str = block()
         Log.d(tag, str)
-        if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-            FileLog.write("D $tag: $str")
-        }
+    }
+    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
+        FileLog.write("D $tag: $str")
     }
 }
 

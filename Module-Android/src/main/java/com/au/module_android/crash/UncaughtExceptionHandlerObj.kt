@@ -64,10 +64,9 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
             while (true) {
                 //主线程异常拦截
                 try {
-                    logd(TAG) { "MainThread loop() by me()" }
                     Looper.loop()
                 } catch (e: Throwable) {
-                    logdNoFile(TAG) { "=======>>>" }
+                    logdNoFile(TAG) { "Crashed=======>>>" }
                     val isThrowableMainThreadAndInOnCreate = isThrowableMainThreadAndInOnCreate(Thread.currentThread(), e)
                     logd(TAG) { "uncaughtException2 loop crash: " + e.message + ", isCreateMain: " + isThrowableMainThreadAndInOnCreate }
                     e.printStackTrace()
