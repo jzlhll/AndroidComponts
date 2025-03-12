@@ -3,10 +3,14 @@ package com.allan.autoclickfloat.activities.autofs
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PowerManager
+import android.util.Log
 import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.lifecycleScope
+import com.allan.autoclickfloat.AllPermissionActivity
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewBinding
 import com.allan.autoclickfloat.taks.LifeCycleCountDowner
 import com.au.module_android.Globals
@@ -18,6 +22,7 @@ import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.widget.ViewStubPro
 import com.au.module_androidui.toast.toastOnTop
@@ -27,6 +32,7 @@ import com.au.module_androidui.widget.SimpleNumberPickerCompat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
+
 
 /**
  * @author allan
@@ -208,8 +214,20 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
 }
 
 class AlarmReceiver : BroadcastReceiver() {
-    private fun doIt(context: Context) {
-        FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java)
+    companion object {
+        fun start(context: Context) {
+            val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
+
+            val className = l.component?.className
+            val found = Globals.activityList.find { className?.contains(it.javaClass.simpleName) == true}
+            if (found == null) {
+                context.startActivityFix(l.also {
+                    it.putExtra("alarm", "alarmIsComingWhenNoStartActivity")
+                })
+            } else {
+                FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java)
+            }
+        }
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -223,7 +241,7 @@ class AlarmReceiver : BroadcastReceiver() {
         try {
             // 2. 执行定时任务（例如启动服务、发送通知等）
             logd { "allan-alarm do it in onReceiver!!!" }
-            doIt(context)
+            start(context)
         } finally {
             wakeLock.release() //try不做释放
         }

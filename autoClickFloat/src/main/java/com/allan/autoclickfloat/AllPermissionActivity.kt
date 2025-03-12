@@ -1,20 +1,27 @@
 package com.allan.autoclickfloat
 
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.accessibility.AutoClickFloatAccessService
+import com.allan.autoclickfloat.activities.autofs.AutoFsScreenOnFragment
 import com.allan.autoclickfloat.activities.startup.AllFeaturesFragment
 import com.allan.autoclickfloat.activities.startup.OnlyFloatPermissionViewModel
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
+import com.au.module_android.Globals
+import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.replaceFragment
+import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.Job
@@ -56,7 +63,16 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(Const.TAG, "onCreate: ")
+        val className = packageManager.getLaunchIntentForPackage(packageName)?.component?.className
+        Log.d(Const.TAG, "onCreate: " + className)
+
+        Globals.mainHandler.postDelayed({
+            val list = Globals.activityList
+            logd { "list $list" }
+        }, 8000)
+
+        parseStartIntent(intent)
+
         viewModel.allPermissionEnabled.observeUnStick(this) { it ->
             when (it) {
                 OnlyFloatPermissionViewModel.STATE_NO_FLOAT_WINDOW -> {
@@ -76,6 +92,13 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
                 delay(2000)
                 viewModel.getPermission(this@AllPermissionActivity)
             }
+        }
+    }
+
+    private fun parseStartIntent(intent: Intent?) {
+        if (intent?.getStringExtra("alarm") == "alarmIsComingWhenNoStartActivity") {
+            intent.removeExtra("alarm")
+            FragmentRootActivity.start(this, AutoFsScreenOnFragment::class.java)
         }
     }
 

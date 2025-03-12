@@ -1,6 +1,5 @@
 package com.allan.autoclickfloat.activities.autofs
 
-import com.au.module_android.utils.logd
 import java.util.Calendar
 import java.util.Locale
 
@@ -32,7 +31,6 @@ class TimeUtil {
                 "%04d-%02d-%02d %02d:%02d:%02d",  // 格式：YYYY-MM-DD HH:MM:SS
                 year, month, day, hour, minute, second
             )
-            logd { "allan-alarm dateTime: $dateTime" }
             return TimeInfo(dateTime, calendar.timeInMillis)
         }
 

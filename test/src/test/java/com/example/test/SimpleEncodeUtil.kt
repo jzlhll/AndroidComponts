@@ -4,7 +4,7 @@ class SimpleEncodeUtil {
     class Encoder(private val origStr:String) {
         fun originalToStringSplitClassString() : String {
             val chars = origStr.toCharArray()
-            val rands = arrayOf(0, 1, 2, 3, 4, 5)
+            val rands = arrayOf(1, 2, 3, 4, 5)
             val offset = rands[(Math.random() * rands.size).toInt()]
             val indexes = mutableListOf<Int>()
             indexes.add(offset + 100)
