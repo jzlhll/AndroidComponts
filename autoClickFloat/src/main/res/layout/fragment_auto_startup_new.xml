@@ -193,19 +193,36 @@
 
     <com.au.module_android.widget.CustomButton
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/startTimerBtn"
+        app:layout_constraintEnd_toStartOf="@id/startTimer2Btn"
+        android:id="@+id/startTimer1Btn"
         style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/currentAlarm"
+        app:layout_constraintTop_toBottomOf="@+id/currentAlarmTv"
+        app:layout_constraintHorizontal_chainStyle="packed"
         android:layout_marginTop="8dp"
         android:paddingHorizontal="24dp"
-        android:text="start timer"
+        android:text="start timer1"
         android:paddingVertical="8dp"
-        android:layout_width="200dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toEndOf="@id/startTimer1Btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/startTimer2Btn"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/currentAlarmTv"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:paddingHorizontal="24dp"
+        android:text="start timer2"
+        android:paddingVertical="8dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/currentAlarmDesc"
+        android:id="@+id/currentAlarmDescTv"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/pickersHost"
         android:layout_marginTop="60dp"
@@ -215,9 +232,9 @@
         android:layout_height="wrap_content" />
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/currentAlarm"
+        android:id="@+id/currentAlarmTv"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/currentAlarmDesc"
+        app:layout_constraintTop_toBottomOf="@id/currentAlarmDescTv"
         android:layout_marginTop="3dp"
         android:textSize="21sp"
         android:textColor="@color/color_text_desc"
@@ -227,15 +244,32 @@
 
     <com.au.module_android.widget.CustomButton
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/stopTimerBtn"
+        app:layout_constraintEnd_toStartOf="@id/stopTimer2Btn"
+        android:id="@+id/stopTimer1Btn"
         style="@style/StyleButtonWarn"
-        app:layout_constraintTop_toBottomOf="@+id/startTimerBtn"
+        app:layout_constraintTop_toBottomOf="@+id/startTimer1Btn"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:paddingHorizontal="24dp"
+        android:text="stop  timer1"
+        android:paddingVertical="8dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toEndOf="@id/stopTimer1Btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/stopTimer2Btn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        style="@style/StyleButtonWarn"
+        app:layout_constraintTop_toBottomOf="@+id/startTimer1Btn"
         android:layout_marginTop="12dp"
         android:paddingHorizontal="24dp"
-        android:text="stop  timer"
+        android:text="stop  timer2"
+        android:layout_marginStart="8dp"
         android:paddingVertical="8dp"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

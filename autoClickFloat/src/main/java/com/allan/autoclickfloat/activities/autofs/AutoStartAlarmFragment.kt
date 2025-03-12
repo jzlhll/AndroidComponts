@@ -173,6 +173,7 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         }
         endAction = {
             binding.currentAlarmDesc.text = ""
+            binding.currentAlarm.text = ""
         }
     } }
 
