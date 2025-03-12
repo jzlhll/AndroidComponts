@@ -5,8 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
 
-    <com.au.module_android.widget.BgBuildView
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/currentTime"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.BgBuildView
+        app:layout_constraintTop_toBottomOf="@id/currentTime"
         android:layout_marginStart="@dimen/ui_padding_edge"
         android:layout_marginEnd="@dimen/ui_padding_edge"
         android:layout_marginTop="22dp"
@@ -21,7 +31,7 @@
          app:first_str="       单次       "
         app:second_str="       每日       "
         android:layout_marginTop="28dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentTime"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"

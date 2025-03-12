@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PowerManager
 import android.view.accessibility.AccessibilityManager
+import androidx.lifecycle.lifecycleScope
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewBinding
 import com.allan.autoclickfloat.taks.LifeCycleCountDowner
 import com.au.module_android.Globals
@@ -23,9 +24,9 @@ import com.au.module_androidui.toast.toastOnTop
 import com.au.module_androidui.widget.NumberPickerCompat
 import com.au.module_androidui.widget.SimpleNumberPicker
 import com.au.module_androidui.widget.SimpleNumberPickerCompat
-import com.module_native.AppNative
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Calendar
-
 
 /**
  * @author allan
@@ -106,6 +107,16 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         }
 
         initAlarm()
+        initCurrentTime()
+    }
+
+    private fun initCurrentTime() {
+        lifecycleScope.launch {
+            while (true) {
+                binding.currentTime.text = TimeUtil.timeInfo(Calendar.getInstance()).timeStr
+                delay(1000)
+            }
+        }
     }
 
     private fun initAlarm() {
@@ -136,11 +147,12 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
             }
         }
 
-        AutoFsObj.targetTsData.observeUnStick(this) {
+        AutoFsObj.targetTsData.observe(this) {
             if (it == -1L) {
                 binding.currentAlarm.text = ""
                 binding.currentAlarmDesc.text = ""
             } else {
+                binding.currentAlarm.text = TimeUtil.timeInfo(Calendar.getInstance().apply { timeInMillis = it }).timeStr
                 countDowner.start(it)
             }
         }
