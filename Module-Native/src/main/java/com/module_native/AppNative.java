@@ -14,7 +14,7 @@ import androidx.annotation.Keep;
 @Keep
 public final class AppNative {
     static {
-        System.loadLibrary("module_appnative");
+        System.loadLibrary("module_native");
     }
 
     /**
@@ -24,4 +24,7 @@ public final class AppNative {
      */
     @Keep
     public static native String appIdAndKey(Context context);
+
+    @Keep
+    public static native String simpleDecoder(int[] indexes);
 }

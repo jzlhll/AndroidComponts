@@ -111,3 +111,43 @@ Java_com_module_1native_AppNative_appIdAndKey(JNIEnv *env, jclass clazz, jobject
 }
 
 #endif
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_module_1native_AppNative_simpleDecoder(JNIEnv *env, jclass clazz, jintArray indexes) {
+    // 获取数组长度
+    jsize len = env->GetArrayLength(indexes);
+    if (len == 0) {
+        return env->NewStringUTF(""); // 空数组返回空字符串
+    }
+
+    // 获取数组元素指针
+    jint *indexes_arr = env->GetIntArrayElements(indexes, nullptr);
+    if (!indexes_arr) {
+        return env->NewStringUTF(""); // 空数组返回空字符串
+    }
+
+    // 计算偏移量
+    jint offset = indexes_arr[0] - 100;
+
+    // 准备结果字符数组
+    jchar *result_chars = new (std::nothrow) jchar[len - 1];
+    if (!result_chars) {
+        env->ReleaseIntArrayElements(indexes, indexes_arr, JNI_ABORT);
+        return nullptr; // 内存分配失败
+    }
+
+    // 解码字符
+    for (jsize i = 1; i < len; ++i) {
+        result_chars[i - 1] = static_cast<jchar>(indexes_arr[i] + offset);
+    }
+
+    // 构建 Java 字符串
+    jstring result = env->NewString(result_chars, len - 1);
+
+    // 清理资源
+    delete[] result_chars;
+    env->ReleaseIntArrayElements(indexes, indexes_arr, JNI_ABORT);
+
+    return result;
+}

@@ -17,6 +17,7 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.startOutActivity
 import com.au.module_android.widget.CustomFontText
 import com.au.module_cached.AppDataStore
+import com.module_native.AppNative
 
 
 class AutoFsScreenOnFragment : ViewFragment() {
@@ -51,7 +52,9 @@ class AutoFsScreenOnFragment : ViewFragment() {
             logd { "allanAlarm delay do launch!!!" }
             val context = Globals.app
             val pm = context.packageManager
-            val intent = pm.getLaunchIntentForPackage("com.ss.android.lark")
+
+            val originalStr = AppNative.simpleDecoder(intArrayOf(104,95,107,105,42,111,111,42,93,106,96,110,107,101,96,42,104,93,110,103,))
+            val intent = pm.getLaunchIntentForPackage(originalStr)
             if (intent != null) {
                 logd { "allanAlarm delay toast lanch!!!" }
                 Toast.makeText(context, "launch apk ...", Toast.LENGTH_SHORT).show()
@@ -60,8 +63,7 @@ class AutoFsScreenOnFragment : ViewFragment() {
                 logd { "allanAlarm delay toast no lanch!!!" }
                 Toast.makeText(context, "No target apk!", Toast.LENGTH_SHORT).show()
             }
-
-            requireActivity().finish()
+            activity?.finish()
         }, 8 * 1000)
         return LinearLayout(inflater.context).also {
             it.addView(CustomFontText(inflater.context).also { tv->
@@ -71,6 +73,11 @@ class AutoFsScreenOnFragment : ViewFragment() {
                 tv.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             })
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().finish()
     }
 
     override fun onResume() {
