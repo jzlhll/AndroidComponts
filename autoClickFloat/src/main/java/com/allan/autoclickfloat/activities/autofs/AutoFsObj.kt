@@ -128,7 +128,10 @@ object AutoFsObj {
         val targetTs = calendar.timeInMillis
         val newList = targetTsListData.realValue?.toMutableList() ?: mutableListOf()
 
-        val autoFsId = UUID.randomUUID().toString().replace("-", "") + "_" + TimeUtil.timeYMHMS(targetTs) + if(isLoop) "loop" else "noLoop"
+        val uuid = UUID.randomUUID().toString().replace("-", "")
+        val time = TimeUtil.timeYMHMS(targetTs).replace(" ", "_")
+
+        val autoFsId = uuid + "_" + time + if(isLoop) "_loop" else "_noLoop"
         val found = newList.find { it.autoFsId == autoFsId }
         if (found == null) { //确认是新增
             newList.add(TargetTs(autoFsId, targetTs, isLoop, false))
