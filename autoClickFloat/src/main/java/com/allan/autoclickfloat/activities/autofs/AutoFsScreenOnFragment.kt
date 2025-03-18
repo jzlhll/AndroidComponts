@@ -16,9 +16,7 @@ import com.au.module_android.utils.dp
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.startOutActivity
 import com.au.module_android.widget.CustomFontText
-import com.au.module_cached.AppDataStore
 import com.module_native.AppNative
-
 
 class AutoFsScreenOnFragment : ViewFragment() {
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -28,13 +26,10 @@ class AutoFsScreenOnFragment : ViewFragment() {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
 
-        if (!AutoFsObj.isSwitchOnce()) {
-            logd { "allanAlarm set next alarm!!!" }
-            AutoFsObj.startAlarmWhenLoop(requireContext())
-        } else {
-            logd { "allanAlarm is once, remove saved info!" }
-            AppDataStore.remove<Long>("autoFsTargetTs")
-        }
+        val autoFsId = arguments?.getString("autoFsId")
+        arguments?.remove("autoFsId")
+        AutoFsObj.checkAndStartNextAlarm(requireContext())
+
 
 //        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
 //        if (wifiManager.isWifiEnabled) {
@@ -65,6 +60,7 @@ class AutoFsScreenOnFragment : ViewFragment() {
             }
             activity?.finish()
         }, 8 * 1000)
+
         return LinearLayout(inflater.context).also {
             it.addView(CustomFontText(inflater.context).also { tv->
                 tv.text = "Alarm!!!"

@@ -1,0 +1,103 @@
+package com.allan.autoclickfloat.activities.autofs
+
+import android.view.View
+import android.view.ViewGroup
+import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewHolderItemBinding
+import com.au.module_android.Globals
+import com.au.module_android.click.onClick
+import com.au.module_nested.recyclerview.BindRcvAdapter
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
+import java.util.Calendar
+
+class AutoStartRcvBean(val autoFsId:String, val targetTs:Long, val isClose:Boolean, val isLoop:Boolean, var isSelectMode:Boolean)
+
+class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmItemHolder>() {
+    private val deleteClick = { autoFsId:String ->
+        AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
+    }
+
+    private val switchClick = {autoFsId:String, isClose:Boolean ->
+        AutoFsObj.switchAlarmUi(Globals.app, autoFsId, isClose) == true
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutoStartAlarmItemHolder {
+        return AutoStartAlarmItemHolder(deleteClick, switchClick, create(parent))
+    }
+}
+
+/**
+ * switchClick的返回值如果不是true，我就需要将内容回弹。
+ */
+class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
+                               switchClick:(autoFsId:String, isClose:Boolean)->Boolean,
+                               binding: FragmentAutoStartupNewHolderItemBinding)
+        : BindViewHolder<AutoStartRcvBean, FragmentAutoStartupNewHolderItemBinding>(binding) {
+    init {
+        binding.stopBtn.onClick {
+            currentData?.autoFsId?.let { it1 -> deleteClick(it1) }
+        }
+        binding.switchBtn.valueCallback = {
+            binding.switchBtn.abort = true
+            currentData?.autoFsId?.let { it1 ->
+                val isAccept = switchClick(it1, binding.switchBtn.isClosed)
+                if (!isAccept) {
+                    binding.switchBtn.setValue(!binding.switchBtn.isClosed) //不会触发回调
+                }
+            }
+            binding.switchBtn.abort = false
+        }
+    }
+
+    override fun bindData(bean: AutoStartRcvBean) {
+        super.bindData(bean)
+        val c = Calendar.getInstance()
+        c.timeInMillis = bean.targetTs
+        val (ymd, time) = TimeUtil.timeDayAndTimeStrs(c)
+        binding.timeTv.text = time
+        binding.descTv.text = if(bean.isLoop) "每天" else ymd
+        if (binding.switchBtn.isInit) {
+            binding.switchBtn.setValue(bean.isClose)
+        } else {
+            binding.switchBtn.initValue(bean.isClose)
+        }
+        binding.switchBtn.visibility = if(bean.isSelectMode) View.GONE else View.VISIBLE
+        binding.stopBtn.visibility = if(bean.isSelectMode) View.VISIBLE else View.GONE
+
+        if (bean.isClose && !bean.isSelectMode) {
+            binding.root.alpha = 0.65f
+        } else {
+            binding.root.alpha = 1f
+        }
+    }
+}
+
+/**
+ *
+ *     private val COUNT_DOWN_OFFSET = 60_000L
+ *     private val COUNT_DOWN_OFFSET_HALF = 45_000L
+ *
+ *     private val countDowner by unsafeLazy { LifeCycleCountDowner(this, COUNT_DOWN_OFFSET).apply {
+ *         countDowningAction = {
+ *             binding.currentAlarmDesc.text = it
+ *         }
+ *         endAction = {
+ *             binding.currentAlarmDesc.text = ""
+ *             binding.currentAlarm.text = ""
+ *         }
+ *     } }
+ *
+ *
+ *
+ * 	if (isOnce) {
+ *                     if (targetTs - COUNT_DOWN_OFFSET_HALF >= curTs) {
+ *                         countDowner.start(targetTs)
+ *                     }
+ *                 } else {
+ *                     if (targetTs >= curTs) {
+ *                         countDowner.start(targetTs)
+ *                     } else {
+ *                         val nextTs = TimeUtil.targetTsToNextDayCalendar(targetTs).timeInMillis
+ *                         countDowner.start(nextTs)
+ *                     }
+ *                 }
+ */

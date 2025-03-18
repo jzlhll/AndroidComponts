@@ -98,7 +98,11 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     private fun parseStartIntent(intent: Intent?) {
         if (intent?.getStringExtra("alarm") == "alarmIsComingWhenNoStartActivity") {
             intent.removeExtra("alarm")
-            FragmentRootActivity.start(this, AutoFsScreenOnFragment::class.java)
+            val autoFsId = intent.getStringExtra("autoFsId")
+            intent.removeExtra("autoFsId")
+            FragmentRootActivity.start(this, AutoFsScreenOnFragment::class.java, Bundle().apply {
+                if(autoFsId != null) putString("autoFsId", autoFsId)
+            })
         }
     }
 

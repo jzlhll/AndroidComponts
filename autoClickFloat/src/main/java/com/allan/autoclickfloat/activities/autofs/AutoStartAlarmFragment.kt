@@ -3,36 +3,26 @@ package com.allan.autoclickfloat.activities.autofs
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PowerManager
-import android.util.Log
-import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.lifecycleScope
-import com.allan.autoclickfloat.AllPermissionActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewBinding
-import com.allan.autoclickfloat.taks.LifeCycleCountDowner
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.fontutil.FONT_NUMBER_PATH
-import com.au.module_android.fontutil.getOrCreateFontFace
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.gone
+import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.startActivityFix
-import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.widget.ViewStubPro
-import com.au.module_androidui.toast.toastOnTop
-import com.au.module_androidui.widget.NumberPickerCompat
-import com.au.module_androidui.widget.SimpleNumberPicker
-import com.au.module_androidui.widget.SimpleNumberPickerCompat
+import com.au.module_android.utils.visible
+import com.au.module_cached.AppDataStore
+import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
-
 
 /**
  * @author allan
@@ -40,86 +30,97 @@ import java.util.Calendar
  * @description:
  */
 class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() {
-    //default time
-    private lateinit var hourPickerWrap : NumberPickerCompat
-    private lateinit var minPickerWrap : NumberPickerCompat
+    private val adapter = AutoStartAlarmAdapter()
+    private var isSelectMode = false
 
-    fun isAccessibilityEnable() : Boolean {
-        val manager = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE).asOrNull<AccessibilityManager>()
-        return manager?.isTouchExplorationEnabled ?: false
+    private var mIgonePasswordCount = 0
+
+    private fun initRcv() {
+        binding.rcv.adapter = adapter
+        binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
+        binding.rcv.setHasFixedSize(true)
+        binding.rcv.addItemDecoration(VertPaddingItemDecoration(0, 0, 12.dp))
     }
 
-    private var plusDay = 0
+    override fun isAutoHideIme(): Boolean {
+        return true
+    }
 
-    private fun initPlusDay() {
-        binding.plusADayBtn.onClick {
-            plusDay++
-            binding.plusDayText.text = plusDay.toString()
-        }
-        binding.minusADayBtn.onClick {
-            plusDay--
-            if (plusDay < 0) {
-                plusDay = 0
+    private fun initEdit() {
+        val savePsWd = AppDataStore.readBlocked("autoFsInputPassword", "")
+
+        binding.inputTitle.onClick {
+            mIgonePasswordCount++
+            if (mIgonePasswordCount >= 5) {
+                binding.inputHost.gone()
+                hideImeNew(requireActivity().window, binding.inputHost)
             }
-            binding.plusDayText.text = plusDay.toString()
         }
-    }
 
-    private fun initSwitchBtn() {
-        binding.switchBtn.initValue(isLeft = AutoFsObj.isSwitchOnce(), false)
-        binding.switchBtn.valueCallback = {
-            AutoFsObj.saveSwitchOnce(it)
+        if (savePsWd.isEmpty()) {
+            binding.inputTitle.text = "首次使用，请设置密码:"
+            binding.inputOkBtn.onClick {
+                val t = binding.inputEdit.text.toString()
+                if (t == binding.inputEdit2.text.toString() && t.isNotEmpty()) {
+                    AppDataStore.save("autoFsInputPassword" to t)
+                    binding.inputHost.gone()
+                    hideImeNew(requireActivity().window, binding.inputHost)
+                }
+            }
+        } else {
+            binding.inputTitle.text = "请输入密码:"
+            binding.inputEdit2.gone()
+            binding.inputOkBtn.onClick {
+                val t = binding.inputEdit.text.toString()
+                if (t == savePsWd && t.isNotEmpty()) {
+                    binding.inputHost.gone()
+                    hideImeNew(requireActivity().window, binding.inputHost)
+                }
+            }
         }
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        launchNumberPickerWrap(binding.hourPicker, true)
-        launchNumberPickerWrap(binding.minutePicker, false)
-        val c = Calendar.getInstance()
-        initNumberPicker(hourPickerWrap, 23, 0, c.get(Calendar.HOUR_OF_DAY), true)
-        initNumberPicker(minPickerWrap, 59, 0, c.get(Calendar.MINUTE), true)
-        initPlusDay()
-        initSwitchBtn()
-
-        if (!isAccessibilityEnable()) {
-            //做点偏移
-            val dp = 8f.dp
-            (hourPickerWrap as SimpleNumberPickerCompat).numberPicker.setDrawXOffsetDp(dp)
-            (minPickerWrap as SimpleNumberPickerCompat).numberPicker.setDrawXOffsetDp(-dp)
-            binding.hourUnit.post {
-                binding.hourUnit.translationX = dp
-            }
-            binding.minuteUnit.post {
-                binding.minuteUnit.translationX = -dp
-            }
-        }
-
-        binding.startTimerBtn.onClick() {
-            AutoFsObj.cancelAlarm(requireContext(), null)
-
-            val timeInfo = AutoFsObj.startAlarmWhenClick(requireContext(), hourPickerWrap.getValue(), minPickerWrap.getValue(), plusDay)
-            if (timeInfo != null) {
-                binding.currentAlarm.text = timeInfo.timeStr
-                countDowner.start(timeInfo.targetTs)
-            } else {
-                toastOnTop("时间已经过去，请重新选择，或者加天。", icon = "warn")
-            }
-        }
-
-        binding.stopTimerBtn.onClick() {
-            AutoFsObj.cancelAlarm(requireContext(), null)
-            binding.currentAlarm.text = ""
-            countDowner.cancelAndTrigger("")
-        }
-
+        initBtns()
         initAlarm()
+        initEdit()
         initCurrentTime()
+        initRcv()
+    }
+
+    private fun initBtns() {
+        binding.addBtn.onClick {
+            if(isSelectMode) {
+                changeDeleteState()
+            }
+            AutoStartAlarmDialog.show(this)
+        }
+
+        binding.deleteBtn.onClick {
+            changeDeleteState()
+            if (isSelectMode) {
+                binding.deleteBtn.text = "还原"
+                binding.addBtn.gone()
+            } else {
+                binding.deleteBtn.text = "删除"
+                binding.addBtn.visible()
+            }
+        }
+    }
+
+    private fun changeDeleteState() {
+        val cur = !isSelectMode
+        adapter.datas.forEach {
+            it.isSelectMode = cur
+        }
+        isSelectMode = cur
+        adapter.submitList(mutableListOf<AutoStartRcvBean>().also { it.addAll(adapter.datas) }, false)
     }
 
     private fun initCurrentTime() {
         lifecycleScope.launch {
             while (true) {
-                binding.currentTime.text = TimeUtil.timeInfo(Calendar.getInstance()).timeStr
+                binding.currentTime.text = TimeUtil.timeYMHMS(Calendar.getInstance())
                 delay(1000)
             }
         }
@@ -129,94 +130,35 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         val oldPendingIntent = AutoFsObj.fetchPendingIntent(requireContext())
         if (oldPendingIntent == null) {
             logd { "allan-alarm old pending Intent is null" }
-            AutoFsObj.cancelAlarm(requireContext(), null)
+            AutoFsObj.cancelAlarmOnly(requireContext(), null)
         } else {
             logd { "allan-alarm old pending is not null" }
-            val targetTs = AutoFsObj.targetTsData.value ?: -1L
-            val isOnce = AutoFsObj.isSwitchOnce()
-            val curTs = System.currentTimeMillis()
-            if (targetTs == -1L) { //有pendingIntent但是没有保存数据？那么就可以用户清理了存储。我们也清理掉任务好了。
-                AutoFsObj.cancelAlarm(requireContext(), oldPendingIntent)
-            } else {
-                if (isOnce) {
-                    if (targetTs - COUNT_DOWN_OFFSET_HALF >= curTs) {
-                        countDowner.start(targetTs)
-                    }
-                } else {
-                    if (targetTs >= curTs) {
-                        countDowner.start(targetTs)
-                    } else {
-                        val nextTs = TimeUtil.targetTsToNextDayCalendar(targetTs).timeInMillis
-                        countDowner.start(nextTs)
-                    }
-                }
+            val isNotExist = AutoFsObj.targetTsListData.realValue.isNullOrEmpty()
+            if (isNotExist) { //有pendingIntent但是没有保存数据？那么就可以用户清理了存储。我们也清理掉任务好了。
+                AutoFsObj.cancelAlarmOnly(requireContext(), oldPendingIntent)
             }
         }
 
-        AutoFsObj.targetTsData.observe(this) {
-            if (it == -1L) {
-                binding.currentAlarm.text = ""
-                binding.currentAlarmDesc.text = ""
+        AutoFsObj.targetTsListData.observe(this) { targetTsList->
+            val list = targetTsList.map { AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose, it.isLoop, isSelectMode) }
+            adapter.submitList(list, false)
+            if (list.isEmpty()) {
+                binding.deleteBtn.gone()
+                binding.addBtn.visible()
+                binding.emptyText.visible()
+                binding.deleteBtn.text = "删除"
+                isSelectMode = false
             } else {
-                binding.currentAlarm.text = TimeUtil.timeInfo(Calendar.getInstance().apply { timeInMillis = it }).timeStr
-                countDowner.start(it)
+                binding.deleteBtn.visible()
+                binding.emptyText.gone()
             }
-        }
-    }
-
-    private val COUNT_DOWN_OFFSET = 60_000L
-    private val COUNT_DOWN_OFFSET_HALF = 45_000L
-
-    private val countDowner by unsafeLazy { LifeCycleCountDowner(this, COUNT_DOWN_OFFSET).apply {
-        countDowningAction = {
-            binding.currentAlarmDesc.text = it
-        }
-        endAction = {
-            binding.currentAlarmDesc.text = ""
-            binding.currentAlarm.text = ""
-        }
-    } }
-
-    fun initNumberPicker(picker: NumberPickerCompat, max: Int, min: Int, def: Int, changeToDef: Boolean) {
-        picker.setMaxValue(max)
-        picker.setMinValue(min)
-        if(changeToDef) picker.setValue(def)
-        getOrCreateFontFace(Globals.app, FONT_NUMBER_PATH)?.let { picker.setTypeFace(it) }
-        picker.setTextColor(requireContext().getColor(com.au.module_androidcolor.R.color.color_text_normal))
-        picker.setSecondTextColor(requireContext().getColor(com.au.module_androidcolor.R.color.color_text_desc))
-        picker.setTextSize(20f.dp) //文字大小，这里最好使用px转dp
-
-        if (picker is SimpleNumberPickerCompat) {
-            picker.setSelectionDividerHeight(0) //两道分割线的高度
-        }
-
-        picker.setWrapSelectorWheel(true)
-        //做一些格式转换
-        picker.setFormatter { value->
-            if (value < 10) {
-                "0$value"
-            } else {
-                "" + value
-            }
-        }
-    }
-
-    private fun launchNumberPickerWrap(stub: ViewStubPro, isHour:Boolean) {
-        val clazz = if (!isAccessibilityEnable()) SimpleNumberPicker::class.java else android.widget.NumberPicker::class.java
-        stub.setReplaceViewClass(clazz)
-        val numberPicker = stub.launch()
-        val wrap = NumberPickerCompat.create(numberPicker)
-        if (isHour) {
-            hourPickerWrap = wrap
-        } else {
-            minPickerWrap = wrap
         }
     }
 }
 
 class AlarmReceiver : BroadcastReceiver() {
     companion object {
-        fun start(context: Context) {
+        fun start(context: Context, autoFsId:String?) {
             val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
 
             val className = l.component?.className
@@ -224,9 +166,14 @@ class AlarmReceiver : BroadcastReceiver() {
             if (found == null) {
                 context.startActivityFix(l.also {
                     it.putExtra("alarm", "alarmIsComingWhenNoStartActivity")
+                    if (autoFsId != null) {
+                        it.putExtra("autoFsId", autoFsId)
+                    }
                 })
             } else {
-                FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java)
+                FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java, Bundle().apply {
+                    if(autoFsId != null) putString("autoFsId", autoFsId)
+                })
             }
         }
     }
@@ -238,11 +185,12 @@ class AlarmReceiver : BroadcastReceiver() {
             PowerManager.PARTIAL_WAKE_LOCK,
             "MyApp::AlarmWakeLock"
         )
+        val autoFsId = intent?.getStringExtra("autoFsId")
         wakeLock.acquire(10 * 1000)
         try {
             // 2. 执行定时任务（例如启动服务、发送通知等）
             logd { "allan-alarm do it in onReceiver!!!" }
-            start(context)
+            start(context, autoFsId)
         } finally {
             wakeLock.release() //try不做释放
         }

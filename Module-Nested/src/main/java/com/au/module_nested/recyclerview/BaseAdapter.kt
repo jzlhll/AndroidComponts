@@ -216,4 +216,13 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         ).invoke(null, LayoutInflater.from(parent.context), parent, false)
         return o as VB
     }
+
+    override fun onViewDetachedFromWindow(holder: VH) {
+        holder.onDetached()
+    }
+
+    override fun onViewAttachedToWindow(holder: VH) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAttached()
+    }
 }

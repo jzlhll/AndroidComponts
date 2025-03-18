@@ -47,4 +47,7 @@ abstract class BindViewHolder<DATA:Any, BINDING: ViewBinding>(val binding: BINDI
     open fun payloadsRefresh(bean:DATA, payloads:MutableList<Any>) {
         current = bean
     }
+
+    open fun onDetached() {}
+    open fun onAttached() {}
 }

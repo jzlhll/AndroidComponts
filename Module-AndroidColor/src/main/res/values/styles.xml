@@ -60,6 +60,20 @@
         <item name="android:textColor">@color/secondary_btn_text_color</item>
     </style>
 
+    <!-- 一种颜色样式的button -->
+    <style name="StyleButtonMainColor" parent="StyleButtonPrimary">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/main_color_btn_text_color</item>
+    </style>
+
+    <!-- 一种颜色样式的button -->
+    <style name="StyleButtonSecondaryColor" parent="StyleButtonPrimary">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/secondary_color_btn_text_color</item>
+    </style>
+
     <!-- 有的地方需要一个类似disable的btn，却又支持点击 -->
     <style name="StyleButtonFakeDisabled" parent="StyleButtonPrimary">
         <item name="android:background">@drawable/corner_btn_disabled</item>

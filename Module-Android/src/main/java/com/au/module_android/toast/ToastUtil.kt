@@ -9,7 +9,7 @@ import com.au.module_android.Globals
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IBaseDialog
-import com.au.module_android.ui.base.findDialogByContentFragment
+import com.au.module_android.ui.base.findDialog
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.invisible
@@ -200,7 +200,7 @@ abstract class AbsToastBuilder {
     }
 
     fun setOnFragmentDialog(contentFragment: AbsFragment) : AbsToastBuilder {
-        decorView = contentFragment.findDialogByContentFragment().asOrNull<IBaseDialog>()?.findToastViewGroup()
+        decorView = findDialog(contentFragment).asOrNull<IBaseDialog>()?.findToastViewGroup()
         return this
     }
 

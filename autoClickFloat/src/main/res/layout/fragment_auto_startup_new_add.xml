@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="12dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/titleTv"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="新建闹钟"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.BgBuildView
+        android:id="@+id/switchBtnBg"
+        app:layout_constraintTop_toBottomOf="@id/titleTv"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:layout_marginTop="32dp"
+        app:backgroundNormal="#f9f9f9"
+        app:cornerRadius="4dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <com.au.module_androidui.widget.SwitchLayoutButton
+        android:id="@+id/switchBtn"
+         app:first_str="       单次       "
+        app:second_str="       每日       "
+        android:layout_marginTop="-40dp"
+        app:layout_constraintTop_toBottomOf="@id/switchBtnBg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"/>
+
+    <com.au.module_android.widget.BgBuildView
+        app:layout_constraintTop_toBottomOf="@id/switchBtn"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:layout_marginTop="18dp"
+        app:backgroundNormal="#f9f9f9"
+        app:cornerRadius="4dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/playDayHost"
+        app:layout_constraintTop_toBottomOf="@id/switchBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="26dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/plusADayBtn"
+            style="@style/StyleButtonPrimary"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:text="+"
+            android:minHeight="20dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/plusDayText"
+            app:layout_constraintStart_toEndOf="@id/plusADayBtn"
+            android:paddingHorizontal="15dp"
+            android:gravity="center"
+            android:text="0"
+            app:layout_constraintTop_toTopOf="@id/plusADayBtn"
+            android:textSize="18sp"
+            android:layout_width="60dp"
+            android:layout_height="36dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/minusADayBtn"
+            style="@style/StyleButtonPrimary"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="@id/plusDayText"
+            app:layout_constraintStart_toEndOf="@id/plusDayText"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:text="-"
+            android:minHeight="20dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        app:layout_constraintTop_toBottomOf="@id/playDayHost"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:id="@+id/pickersHost"
+        android:layout_marginTop="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="142dp">
+
+        <com.au.module_android.widget.BgBuildView
+            app:backgroundNormal="@color/color_line"
+            app:cornerRadius="4dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/hourUnit"
+                    style="@style/StyleFontText"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@id/hourPicker"
+                    android:layout_marginStart="85dp"
+                    android:gravity="center_vertical"
+                    android:text="时"/>
+
+                <com.au.module_android.widget.CustomFontText
+                    android:id="@+id/minuteUnit"
+                    style="@style/StyleFontText"
+                    android:includeFontPadding="false"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="85dp"
+                    app:layout_constraintStart_toStartOf="@id/minutePicker"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_text_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16dp"
+                    android:text="分"/>
+
+                <com.au.module_android.widget.ViewStubPro
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/pickerSpace"
+                    android:paddingHorizontal="19dp"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    android:id="@+id/hourPicker"
+                    android:layout_width="120dp"
+                    android:contentDescription="时"
+                    android:layout_height="match_parent" />
+
+                <Space
+                    app:layout_constraintStart_toEndOf="@id/hourPicker"
+                    app:layout_constraintEnd_toStartOf="@id/minutePicker"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    android:id="@+id/pickerSpace"
+                    tools:visibility="visible"
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"/>
+
+                <com.au.module_android.widget.ViewStubPro
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@id/pickerSpace"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingHorizontal="19dp"
+                    android:id="@+id/minutePicker"
+                    app:internalMaxWidth="120dp"
+                    app:internalMinWidth="120dp"
+                    android:layout_width="120dp"
+                    android:contentDescription="分"
+                    android:layout_height="match_parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/cancelBtn"
+        android:id="@+id/addBtn"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginTop="32dp"
+        android:paddingHorizontal="32dp"
+        android:text="完成"
+        android:layout_marginEnd="12dp"
+        android:paddingVertical="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addBtn"
+        android:id="@+id/cancelBtn"
+        style="@style/StyleButtonSecondary"
+        app:layout_constraintTop_toBottomOf="@+id/pickersHost"
+        android:layout_marginTop="32dp"
+        android:paddingHorizontal="32dp"
+        android:text="取消"
+        android:paddingVertical="8dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        app:layout_constraintTop_toBottomOf="@id/cancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

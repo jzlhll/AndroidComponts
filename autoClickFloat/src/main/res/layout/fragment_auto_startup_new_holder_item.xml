@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.module_android.widget.BgBuildConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp"
+    app:cornerRadius="12dp"
+    app:backgroundNormal="@color/color_edit_background"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/timeTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/descTv"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:textSize="20sp"
+        tools:text="text ajdkfjfdk "
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/descTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timeTv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:textSize="17sp"
+        tools:text="text ajdkfjfdk "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/stopBtn"
+        style="@style/StyleButtonWarn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="0dp"
+        android:paddingHorizontal="8dp"
+        android:text="Delete"
+        android:paddingVertical="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_androidui.widget.SwitchButton
+        android:id="@+id/switchBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="62dp"
+        android:layout_height="33dp"/>
+
+</com.au.module_android.widget.BgBuildConstraintLayout>
