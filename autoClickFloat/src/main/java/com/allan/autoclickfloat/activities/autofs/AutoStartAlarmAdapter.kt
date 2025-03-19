@@ -12,7 +12,12 @@ import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import java.util.Calendar
 
-class AutoStartRcvBean(val autoFsId:String, val targetTs:Long, val isClose:Boolean, val isLoop:Boolean, var isSelectMode:Boolean)
+class AutoStartRcvBean(val autoFsId:String,
+                       val targetTs:Long,
+                       val isClose:Boolean,
+                       val isLoop:Boolean,
+                       var isSelectMode:Boolean,
+                       var leftTimeStr:String?)
 
 class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmItemHolder>() {
     private val deleteClick = { autoFsId:String ->
@@ -85,7 +90,8 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
         c.timeInMillis = bean.targetTs
         val (ymd, time) = TimeUtil.timeDayAndTimeStrs(c)
         binding.timeTv.text = time
-        binding.descTv.text = if(bean.isLoop) "每天" else ymd
+        binding.descTv.text = (if(bean.isLoop) "每天" else ymd)
+        binding.leftTv.text = "(" + bean.leftTimeStr + ")"
         if (binding.switchBtn.isInit) {
             binding.switchBtn.setValue(bean.isClose)
         } else {
@@ -101,34 +107,3 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
         }
     }
 }
-
-/**
- *
- *     private val COUNT_DOWN_OFFSET = 60_000L
- *     private val COUNT_DOWN_OFFSET_HALF = 45_000L
- *
- *     private val countDowner by unsafeLazy { LifeCycleCountDowner(this, COUNT_DOWN_OFFSET).apply {
- *         countDowningAction = {
- *             binding.currentAlarmDesc.text = it
- *         }
- *         endAction = {
- *             binding.currentAlarmDesc.text = ""
- *             binding.currentAlarm.text = ""
- *         }
- *     } }
- *
- *
- *
- * 	if (isOnce) {
- *                     if (targetTs - COUNT_DOWN_OFFSET_HALF >= curTs) {
- *                         countDowner.start(targetTs)
- *                     }
- *                 } else {
- *                     if (targetTs >= curTs) {
- *                         countDowner.start(targetTs)
- *                     } else {
- *                         val nextTs = TimeUtil.targetTsToNextDayCalendar(targetTs).timeInMillis
- *                         countDowner.start(nextTs)
- *                     }
- *                 }
- */

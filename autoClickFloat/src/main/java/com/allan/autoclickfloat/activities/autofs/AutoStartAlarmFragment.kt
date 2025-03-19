@@ -88,6 +88,17 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         initEdit()
         initCurrentTime()
         initRcv()
+
+        initTimer()
+    }
+
+    private fun initTimer() {
+        lifecycleScope.launch {
+            while (true) {
+                delay(10 * 1000) //30秒更新一次所有的ViewHolder
+                onTargetTsListChanged(AutoFsObj.targetTsListData.realValue ?: listOf())
+            }
+        }
     }
 
     private fun initBtns() {
@@ -142,18 +153,25 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         }
 
         AutoFsObj.targetTsListData.observe(this) { targetTsList->
-            val list = targetTsList.map { AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose, it.isLoop, isSelectMode) }
-            adapter.submitList(list, false)
-            if (list.isEmpty()) {
-                binding.deleteBtn.gone()
-                binding.addBtn.visible()
-                binding.emptyText.visible()
-                binding.deleteBtn.text = "删除"
-                isSelectMode = false
-            } else {
-                binding.deleteBtn.visible()
-                binding.emptyText.gone()
-            }
+            onTargetTsListChanged(targetTsList)
+        }
+    }
+
+    private fun onTargetTsListChanged(targetTsList: List<TargetTs>) {
+        val cur = System.currentTimeMillis()
+        val list = targetTsList.map {
+            AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose, it.isLoop, isSelectMode, TimeUtil.fmtLeftTimeStr(it.targetTs - cur))
+        }
+        adapter.submitList(list, false)
+        if (list.isEmpty()) {
+            binding.deleteBtn.gone()
+            binding.addBtn.visible()
+            binding.emptyText.visible()
+            binding.deleteBtn.text = "删除"
+            isSelectMode = false
+        } else {
+            binding.deleteBtn.visible()
+            binding.emptyText.gone()
         }
     }
 }

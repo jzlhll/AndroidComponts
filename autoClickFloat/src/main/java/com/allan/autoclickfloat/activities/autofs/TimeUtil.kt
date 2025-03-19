@@ -2,9 +2,32 @@ package com.allan.autoclickfloat.activities.autofs
 
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.abs
 
 class TimeUtil {
     companion object {
+        fun fmtLeftTimeStr(millis: Long): String {
+            val isMinus = millis < 0
+            val ms = abs(millis)
+
+            // 计算时、分、秒
+            val hours = ms / (1000 * 60 * 60) // 总小时数
+            val minutes = (ms % (1000 * 60 * 60)) / (1000 * 60) // 剩余分钟数
+            val seconds = (ms % (1000 * 60)) / 1000 // 剩余秒数
+
+            val prefix = if (!isMinus) "剩余" else "已完成"
+            return if (hours > 0) {
+                // 超过 1 小时，显示 "时:分:秒"
+                String.format("$prefix %02d时%02d分", hours, minutes)
+            } else if (minutes > 0) {
+                // 超过 1 分钟但不足 1 小时，显示 "分:秒"
+                String.format("$prefix %02d分", minutes)
+            } else {
+                // 不足 1 分钟，显示 "秒"
+                String.format("$prefix %02d 秒", seconds)
+            }
+        }
+
         fun hourMinuteToCalendar(hour:Int, min:Int, playDay:Int = 0) : Calendar {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()

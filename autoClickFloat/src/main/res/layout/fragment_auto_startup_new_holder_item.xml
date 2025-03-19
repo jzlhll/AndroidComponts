@@ -26,7 +26,19 @@
         app:layout_constraintTop_toBottomOf="@id/timeTv"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        android:textSize="17sp"
+        android:textSize="16sp"
+        tools:text="text ajdkfjfdk "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/leftTv"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/descTv"
+        app:layout_constraintTop_toTopOf="@id/descTv"
+        app:layout_constraintBottom_toBottomOf="@id/descTv"
+        android:textColor="@color/color_text_desc"
+        android:textSize="14sp"
         tools:text="text ajdkfjfdk "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
