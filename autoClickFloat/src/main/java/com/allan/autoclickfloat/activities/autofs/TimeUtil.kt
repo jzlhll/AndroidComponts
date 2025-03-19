@@ -11,6 +11,23 @@ class TimeUtil {
             calendar[Calendar.HOUR_OF_DAY] = hour
             calendar[Calendar.MINUTE] = min
             calendar[Calendar.SECOND] = 0
+            calendar[Calendar.MILLISECOND] = 0
+            if (playDay != 0) {
+                calendar.timeInMillis += playDay * 24 * 60 * 60 * 1000
+            }
+            return calendar
+        }
+
+        fun hourMinuteToCalendar2(hour:Int, min:Int, playDay:Int = 0) : Calendar {
+            // 1. 获取 Calendar 实例（默认当前系统时间）
+            val calendar = Calendar.getInstance()
+            // 2. 设置小时和分钟
+            calendar.set(Calendar.HOUR_OF_DAY, hour) // 使用 24 小时制
+            calendar.set(Calendar.MINUTE, min)
+            // 3. 可选：重置秒和毫秒为 0（避免残留值）
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
             if (playDay != 0) {
                 calendar.timeInMillis += playDay * 24 * 60 * 60 * 1000
             }

@@ -91,19 +91,18 @@ object AutoFsObj {
     }
 
     /**
-     * 返回true表示接受本次切换。false表示不存在或者有问题
+     * 返回""表示接受本次切换。"not found", "expired"表示不存在或者有问题
      */
-    fun switchAlarmUi(context: Context, autoFsId: String, isClose:Boolean) : Boolean?{
+    fun switchAlarmUi(context: Context, autoFsId: String, isClose:Boolean) : String{
         logd { "allan-alarm switchAlarm Ui autoFsId $autoFsId" }
-        val targetTsList = targetTsListData.realValue?.toMutableList() ?: return null
+        val targetTsList = targetTsListData.realValue?.toMutableList() ?: return "not found"
         val foundTargetTs = targetTsList.find { it.autoFsId == autoFsId }
         if (foundTargetTs == null) {
-            return null
+            return "not found"
         }
 
         if (!isClose && !foundTargetTs.isLoop && foundTargetTs.targetTs < System.currentTimeMillis()) {
-            toastOnTop("该闹钟已经过期，请自行删除。") //todo支持编辑或者恢复。
-            return false
+            return "expired"
         }
 
         if (foundTargetTs.isClose != isClose) {
@@ -113,7 +112,7 @@ object AutoFsObj {
             targetTsListData.setValueSafe(targetTsList)
             checkAndStartNextAlarm(context)
         }
-        return true
+        return ""
     }
 
     /**
@@ -124,26 +123,45 @@ object AutoFsObj {
         if (calendar.timeInMillis <= System.currentTimeMillis() + 15_000L && !isLoop) {
             return false
         }
-
         val targetTs = calendar.timeInMillis
+        val autoFsId = generateId(targetTs, isLoop)
+
         val newList = targetTsListData.realValue?.toMutableList() ?: mutableListOf()
 
-        val uuid = UUID.randomUUID().toString().replace("-", "")
-        val time = TimeUtil.timeYMHMS(targetTs).replace(" ", "_")
-
-        val autoFsId = uuid + "_" + time + if(isLoop) "_loop" else "_noLoop"
         val found = newList.find { it.autoFsId == autoFsId }
         if (found == null) { //确认是新增
             newList.add(TargetTs(autoFsId, targetTs, isLoop, false))
-            if (false) { //不做保存。交给checkAndStartNextAlarm里面二次处理。
-                val json = newList.toJsonString()
-                AppDataStore.save("targetTsList", json)
-            }
+//             //不做保存。交给checkAndStartNextAlarm里面二次处理。
+//                val json = newList.toJsonString()
+//                AppDataStore.save("targetTsList", json)
+//            }
             targetTsListData.setValueSafe(newList)
         } else {
             throw RuntimeException("不可能有重复的autoFsId")
         }
 
+        checkAndStartNextAlarm(context)
+        return true
+    }
+
+    private fun generateId(targetTs: Long, isLoop: Boolean): String {
+        val uuid = UUID.randomUUID().toString().replace("-", "")
+        val time = TimeUtil.timeYMHMS(targetTs).replace(" ", "_")
+        val autoFsId = uuid + "_" + time + if (isLoop) "_loop" else "_noLoop"
+        return autoFsId
+    }
+
+    fun editAlarmUiAndCheckStart(context:Context, hour:Int, min:Int, plusDay:Int, isLoop:Boolean, oldAutoFsId:String) : Boolean {
+        val calendar = TimeUtil.hourMinuteToCalendar(hour, min, plusDay)
+        if (calendar.timeInMillis <= System.currentTimeMillis() + 15_000L && !isLoop) {
+            return false
+        }
+        val targetTs = calendar.timeInMillis
+        val newList = targetTsListData.realValue?.toMutableList() ?: mutableListOf()
+        newList.removeIf { it.autoFsId == oldAutoFsId }
+
+        newList.add(TargetTs(generateId(targetTs, isLoop), targetTs, isLoop, false))
+        targetTsListData.setValueSafe(newList)
         checkAndStartNextAlarm(context)
         return true
     }

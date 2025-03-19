@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewHolderItemBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.utils.asOrNull
+import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import java.util.Calendar
@@ -16,12 +19,36 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
         AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
     }
 
+    private val editClick = { autoFsId:String ->
+        AutoStartAlarmDialog.edit(Globals.topActivity as FragmentRootActivity, autoFsId)
+    }
+
     private val switchClick = {autoFsId:String, isClose:Boolean ->
-        AutoFsObj.switchAlarmUi(Globals.app, autoFsId, isClose) == true
+        val r = AutoFsObj.switchAlarmUi(Globals.app, autoFsId, isClose)
+        if (r == "expired") {
+            Globals.mainHandler.post {
+                Globals.topActivity?.asOrNull<FragmentRootActivity>()?.let { ac->
+                    ConfirmBottomDialog.show2(ac.supportFragmentManager,
+                        "闹钟已过期",
+                        "请选择接下来的操作。",
+                        "编辑",
+                        "删除",
+                        sureClick = {
+                            AutoStartAlarmDialog.edit(ac, autoFsId)
+                            it.dismissAllowingStateLoss()
+                        },
+                        cancelClick = {
+                            AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
+                            it.dismissAllowingStateLoss()
+                        })
+                }
+            }
+        }
+        r == ""
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutoStartAlarmItemHolder {
-        return AutoStartAlarmItemHolder(deleteClick, switchClick, create(parent))
+        return AutoStartAlarmItemHolder(deleteClick, switchClick, editClick, create(parent))
     }
 }
 
@@ -30,6 +57,7 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
  */
 class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
                                switchClick:(autoFsId:String, isClose:Boolean)->Boolean,
+                               editClick:(autoFsId:String)->Unit,
                                binding: FragmentAutoStartupNewHolderItemBinding)
         : BindViewHolder<AutoStartRcvBean, FragmentAutoStartupNewHolderItemBinding>(binding) {
     init {
@@ -45,6 +73,9 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
                 }
             }
             binding.switchBtn.abort = false
+        }
+        binding.root.onClick {
+            currentData?.autoFsId?.let { it1 -> editClick(it1) }
         }
     }
 
@@ -64,7 +95,7 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
         binding.stopBtn.visibility = if(bean.isSelectMode) View.VISIBLE else View.GONE
 
         if (bean.isClose && !bean.isSelectMode) {
-            binding.root.alpha = 0.65f
+            binding.root.alpha = 0.8f
         } else {
             binding.root.alpha = 1f
         }
