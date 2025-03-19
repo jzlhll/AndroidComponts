@@ -49,6 +49,8 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
     private fun initEdit() {
         val savePsWd = AppDataStore.readBlocked("autoFsInputPassword", "")
 
+        binding.inputHost.onClick {  } //必须添加用来阻止到被覆盖的界面
+
         binding.inputTitle.onClick {
             mIgonePasswordCount++
             if (mIgonePasswordCount >= 5) {
