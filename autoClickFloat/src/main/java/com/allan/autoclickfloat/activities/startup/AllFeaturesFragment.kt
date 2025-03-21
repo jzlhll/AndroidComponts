@@ -19,12 +19,17 @@ import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AllFeaturesFragmentBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.permissions.gotoFloatWindowPermission
+import com.au.module_android.permissions.hasFloatWindowPermission
+import com.au.module_android.permissions.hasPermission
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.FragmentRootOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.openApp
 import com.au.module_android.utils.startActivityFix
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
+import java.util.jar.Manifest
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
@@ -33,6 +38,20 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
         binding.autoClickButton.onClick {
             FragmentRootOrientationActivity.start(requireActivity(), AutoContinuousClickActivityFragment::class.java)
+        }
+
+        binding.coverScreenBtn.onClick {
+            if (requireContext().hasFloatWindowPermission()) {
+//                FragmentRootActivity.start(requireContext(), CoverScreenFragment::class.java)
+            } else {
+                ConfirmCenterDialog.show(childFragmentManager,
+                    "请授予悬浮窗权限",
+                    "请点击确定，跳转去设置，找到应用「AShoot辅助点击方案」开启悬浮窗权限。",
+                    "确定") {
+                    requireActivity().gotoFloatWindowPermission()
+                    it.dismissAllowingStateLoss()
+                }
+            }
         }
 
         binding.recordModeBtn.onClick {
@@ -57,6 +76,9 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
         binding.autoFsBtn.onClick {
             val alarmManager: AlarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val hasBootReceiverPermission = hasPermission(android.Manifest.permission.RECEIVE_BOOT_COMPLETED)
+            logd { "allanAlarm hasBootReceiverPermission $hasBootReceiverPermission" }
+
             if (alarmManager.canScheduleExactAlarms()) {
                 if (canWrite(requireContext())) {
                     val packageName: String = requireContext().packageName

@@ -16,6 +16,7 @@ import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
 import com.au.module_android.Globals
+import com.au.module_android.permissions.hasPermission
 import com.au.module_android.ui.FragmentRootActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
@@ -108,6 +109,9 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
 
     override fun onResume() {
         super.onResume()
+        val hasBootReceiverPermission = hasPermission(android.Manifest.permission.RECEIVE_BOOT_COMPLETED)
+        logd { "allanAlarm2 hasBootReceiverPermission $hasBootReceiverPermission" }
+
         viewModel.getPermission(this)
     }
 

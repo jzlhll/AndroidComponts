@@ -18,6 +18,7 @@ import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.visible
+import com.au.module_androidui.toast.toastOnTop
 import com.au.module_cached.AppDataStore
 import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.delay
@@ -92,6 +93,36 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         initTimer()
     }
 
+    private fun initDing() {
+        val lastTime = AppDataStore.readBlocked("autoFSDingInfoLastShowTime", 0L)
+        val cur = System.currentTimeMillis()
+        if (cur - lastTime > 7 * 24 * 3600 * 1000L) { //每七天显示一次
+            binding.dingInfoHost.visible()
+            binding.dingInfoHost.onClick {
+                binding.dingInfoHost.tag = "isClicked"
+                if (goToAutoStartSettings(requireContext())) {
+                    binding.dingInfoHost.gone()
+                } else {
+                    toastOnTop("暂时无法跳转到自启动设置界面，请手动去系统中设置。")
+                }
+            }
+        } else {
+            binding.dingInfoHost.gone()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initDing()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (binding.dingInfoHost.tag == "isClicked") {
+            AppDataStore.save("autoFSDingInfoLastShowTime" to System.currentTimeMillis())
+        }
+    }
+
     private fun initTimer() {
         lifecycleScope.launch {
             while (true) {
@@ -112,12 +143,19 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         binding.deleteBtn.onClick {
             changeDeleteState()
             if (isSelectMode) {
-                binding.deleteBtn.text = "还原"
+                binding.restoreBtn.visible()
+                binding.deleteBtn.gone()
                 binding.addBtn.gone()
             } else {
-                binding.deleteBtn.text = "删除"
                 binding.addBtn.visible()
             }
+        }
+
+        binding.restoreBtn.onClick {
+            changeDeleteState()
+            binding.addBtn.visible()
+            binding.restoreBtn.gone()
+            binding.deleteBtn.visible()
         }
     }
 
@@ -165,12 +203,20 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         adapter.submitList(list, false)
         if (list.isEmpty()) {
             binding.deleteBtn.gone()
+            binding.restoreBtn.gone()
             binding.addBtn.visible()
             binding.emptyText.visible()
             binding.deleteBtn.text = "删除"
             isSelectMode = false
         } else {
-            binding.deleteBtn.visible()
+            binding.restoreBtn.gone()
+            if(isSelectMode) {
+                binding.restoreBtn.visible()
+                binding.deleteBtn.gone()
+            } else {
+                binding.deleteBtn.visible()
+                binding.restoreBtn.gone()
+            }
             binding.emptyText.gone()
         }
     }

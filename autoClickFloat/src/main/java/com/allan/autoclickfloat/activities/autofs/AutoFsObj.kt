@@ -26,8 +26,11 @@ data class TargetTs(val autoFsId:String, var targetTs:Long, var isLoop:Boolean, 
  */
 object AutoFsObj {
     val targetTsListData = NoStickLiveData<List<TargetTs>>()
+    private var isInited = false
 
     fun init() {
+        if(isInited) return
+        isInited = true
         val targetTsListJsonStr = AppDataStore.readBlocked("targetTsList", "")
         if (targetTsListJsonStr.isNotEmpty()) {
             val targetTsList = targetTsListJsonStr.fromJsonList<TargetTs>()

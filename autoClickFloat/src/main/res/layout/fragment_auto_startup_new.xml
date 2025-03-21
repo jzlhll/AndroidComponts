@@ -44,6 +44,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <com.au.module_android.widget.CustomButton
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/restoreBtn"
+        style="@style/StyleButtonMainColor"
+        android:layout_marginTop="12dp"
+        android:text="还原"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.au.module_android.widget.CustomFontText
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -59,16 +73,48 @@
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/btnBarrir"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="addBtn, deleteBtn, currentTime"
+        app:constraint_referenced_ids="addBtn, deleteBtn, restoreBtn, currentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.BgBuildLinearLayout
+        android:id="@+id/dingInfoHost"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:backgroundNormal="@color/color_ding_bg"
+        app:cornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btnBarrir"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_marginTop="3dp"
+            android:src="@drawable/ic_warning"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:paddingHorizontal="8dp"
+            style="@style/StyleFontTitleDescText"
+            android:ellipsize="end"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:text="请跳转到应用自启动管理界面，将本应用开启。该信息每7天会显示一次。点击这里去跳转。"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+    </com.au.module_android.widget.BgBuildLinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
         android:layout_marginHorizontal="@dimen/ui_padding_edge"
         android:layout_width="match_parent"
         android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnBarrir"
+        app:layout_constraintTop_toBottomOf="@id/dingInfoHost"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="0dp" />
 

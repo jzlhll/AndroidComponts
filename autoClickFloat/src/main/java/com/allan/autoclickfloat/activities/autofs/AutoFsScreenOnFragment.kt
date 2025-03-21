@@ -30,7 +30,6 @@ class AutoFsScreenOnFragment : ViewFragment() {
         arguments?.remove("autoFsId")
         AutoFsObj.checkAndStartNextAlarm(requireContext())
 
-
 //        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
 //        if (wifiManager.isWifiEnabled) {
 //            logd { "allanAlarm hasWifi..." }

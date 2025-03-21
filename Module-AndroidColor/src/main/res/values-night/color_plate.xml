@@ -79,4 +79,7 @@
     <!-- glide 的基础颜色 -->
     <color name="color_glide_gray_default">#212121</color>
     <color name="color_glide_gray_default2">#343434</color>
+
+    <!-- 悬挂提醒DING信息背景色 -->
+    <color name="color_ding_bg">#331e00</color>
 </resources>

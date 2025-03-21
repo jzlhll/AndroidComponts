@@ -3,6 +3,12 @@ package com.allan.autoclickfloat.activities.autofs
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.abs
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
+import java.time.temporal.WeekFields
 
 class TimeUtil {
     companion object {
@@ -101,5 +107,68 @@ class TimeUtil {
             c.timeInMillis = ts + 24 * 60 * 60 * 1000
             return c
         }
+
+        fun formatDayOfWeek(timestamp: Long, zoneId: ZoneId = ZoneId.systemDefault()): String {
+            val targetDate = Instant.ofEpochMilli(timestamp)
+                .atZone(zoneId)
+                .toLocalDate()
+
+            val currentDate = LocalDate.now(zoneId)
+
+            // 计算与当前日期的天数差（过去为负数，未来为正数）
+            val daysDifference = ChronoUnit.DAYS.between(currentDate, targetDate)
+
+            return when (daysDifference) {
+                0L -> "今天"
+                1L -> "明天"
+                2L -> "后天"
+                else -> {
+                    // 获取星期几名称
+                    val dayOfWeek = getChineseDayOfWeek(targetDate.dayOfWeek)
+
+                    // 判断是否属于下周
+                    if (isDateInNextWeek(targetDate, currentDate)) {
+                        "下周$dayOfWeek"
+                    } else {
+                        "周$dayOfWeek"
+                    }
+                }
+            }
+        }
+
+        // 独立的中文星期转换函数
+        private fun getChineseDayOfWeek(dayOfWeek: DayOfWeek): String = when (dayOfWeek) {
+            DayOfWeek.MONDAY -> "一"
+            DayOfWeek.TUESDAY -> "二"
+            DayOfWeek.WEDNESDAY -> "三"
+            DayOfWeek.THURSDAY -> "四"
+            DayOfWeek.FRIDAY -> "五"
+            DayOfWeek.SATURDAY -> "六"
+            DayOfWeek.SUNDAY -> "日"
+        }
+
+        // 增强的周判断逻辑（处理跨年）
+        private fun isDateInNextWeek(targetDate: LocalDate, currentDate: LocalDate): Boolean {
+            val weekFields = WeekFields.ISO
+
+            // 获取周数和年份
+            val currentWeek = currentDate.get(weekFields.weekOfYear())
+            val targetWeek = targetDate.get(weekFields.weekOfYear())
+            val currentYear = currentDate.year
+            val targetYear = targetDate.year
+
+            return when {
+                // 同一年且周数差1
+                targetYear == currentYear && targetWeek - currentWeek == 1 -> true
+
+                // 跨年周判断（例如当前周是12月最后一周，目标周是次年第一周）
+                targetYear - currentYear == 1 && currentDate.monthValue == 12
+                        && targetWeek == 1 && targetDate.dayOfMonth <= 7 -> true
+
+                else -> false
+            }
+        }
     }
+
 }
+

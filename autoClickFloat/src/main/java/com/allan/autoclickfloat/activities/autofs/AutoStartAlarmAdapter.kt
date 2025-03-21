@@ -90,7 +90,12 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
         c.timeInMillis = bean.targetTs
         val (ymd, time) = TimeUtil.timeDayAndTimeStrs(c)
         binding.timeTv.text = time
-        binding.descTv.text = (if(bean.isLoop) "每天" else ymd)
+        if (bean.isLoop) {
+            binding.descTv.text = "每天"
+        } else {
+            val dayOfWeekStr = TimeUtil.formatDayOfWeek(c.timeInMillis)
+            binding.descTv.text = "$ymd ($dayOfWeekStr)"
+        }
         binding.leftTv.text = "(" + bean.leftTimeStr + ")"
         if (binding.switchBtn.isInit) {
             binding.switchBtn.setValue(bean.isClose)
