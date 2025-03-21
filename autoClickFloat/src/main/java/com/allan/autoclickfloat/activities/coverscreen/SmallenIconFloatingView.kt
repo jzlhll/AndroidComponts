@@ -40,7 +40,7 @@ class SmallenIconFloatingView(@LayoutRes layoutId:Int) : BaseFloatingView(layout
             getInstanceOrNull()?.remove()
         }
 
-        mNotAlpha = 0.3f
+        mNotAlpha = 0.5f
     }
 
     fun savePoint(x:Int, y:Int,  rotation:Int) {

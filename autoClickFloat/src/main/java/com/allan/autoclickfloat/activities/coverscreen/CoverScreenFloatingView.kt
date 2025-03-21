@@ -186,6 +186,7 @@ class CoverScreenFloatingView private constructor() {
                     if (++mClickCount == 2) {
                         mMode = MODE_BLACK
                         mClickCount = 0
+                        ctrlHost.gone()
                         mRoot.setBackgroundColor(blackColor)
                     } else {
                         ctrlHost.visible()
