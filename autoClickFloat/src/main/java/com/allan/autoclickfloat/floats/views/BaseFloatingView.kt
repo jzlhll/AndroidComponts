@@ -149,6 +149,7 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
         if (isShown) {
             //更新浮动窗口位置参数
             WindowMgr.updateView(mRoot, mParams) //刷新显示
+            onSelfUpdated()
         }
     }
 
@@ -232,7 +233,12 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
             WindowMgr.removeView(mRoot)
         }
 
-        WindowMgr.addView(mRoot, mParams)
+        WindowMgr.addView(mRoot, mParams.also {
+            addViewInitParam(mParams)
+        })
+
+        onSelfAttached()
+
         isShown = true
 
         //监听
@@ -252,7 +258,20 @@ open class BaseFloatingView(@LayoutRes private val layoutId:Int) {
     fun remove() {
         if (mRoot.isAttachedToWindow) {
             WindowMgr.removeView(mRoot)
+            onSelfDetached()
         }
         isShown = false
+    }
+
+    open fun onSelfAttached() {
+    }
+
+    open fun onSelfDetached() {
+    }
+
+    open fun onSelfUpdated() {
+    }
+
+    open fun addViewInitParam(mParams: WindowManager.LayoutParams) {
     }
 }

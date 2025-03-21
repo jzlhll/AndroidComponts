@@ -13,6 +13,7 @@ import com.allan.autoclickfloat.activities.autofs.AutoStartAlarmFragment
 import com.allan.autoclickfloat.activities.autofs.canWrite
 import com.allan.autoclickfloat.activities.autofs.goToManageSetting
 import com.allan.autoclickfloat.activities.autooneclick.AutoContinuousClickActivityFragment
+import com.allan.autoclickfloat.activities.coverscreen.CoverScreenFloatingView
 import com.allan.autoclickfloat.activities.nongyao.NongyaoFragment
 import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragment
 import com.allan.autoclickfloat.consts.Const
@@ -29,7 +30,6 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.openApp
 import com.au.module_android.utils.startActivityFix
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
-import java.util.jar.Manifest
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
@@ -42,7 +42,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
         binding.coverScreenBtn.onClick {
             if (requireContext().hasFloatWindowPermission()) {
-//                FragmentRootActivity.start(requireContext(), CoverScreenFragment::class.java)
+                CoverScreenFloatingView.getInstance().show(0, 0, Const.rotationLiveData.value!!)
             } else {
                 ConfirmCenterDialog.show(childFragmentManager,
                     "请授予悬浮窗权限",
