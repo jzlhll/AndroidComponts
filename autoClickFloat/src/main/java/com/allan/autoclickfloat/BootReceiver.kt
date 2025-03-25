@@ -11,8 +11,7 @@ class BootReceiver : BroadcastReceiver() {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             logd { "allanAlarm receiver boot completed！" }
             // 从本地存储读取闹钟配置
-            AutoFsObj.init()
-            AutoFsObj.checkAndStartNextAlarm(context)
+            AutoFsObj.init(context, "boot")
         }
     }
 }

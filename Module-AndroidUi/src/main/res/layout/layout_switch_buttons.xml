@@ -10,26 +10,26 @@
     tools:layout_height="32dp">
 
     <com.au.module_android.widget.BgBuildView
-        app:layout_constraintStart_toStartOf="@id/left_tv"
-        app:layout_constraintEnd_toEndOf="@id/left_tv"
-        android:id="@+id/select_bg_view"
-        app:backgroundNormal="@android:color/white"
+        app:layout_constraintStart_toStartOf="@id/leftTv"
+        app:layout_constraintEnd_toEndOf="@id/leftTv"
+        android:id="@+id/selectBgView"
+        app:backgroundNormal="@color/color_text_reverse"
         app:cornerRadius="7dp"
         android:layout_height="match_parent"
         android:layout_width="0dp"/>
 
     <com.au.module_android.widget.BgBuildView
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@id/left_tv"
-        app:layout_constraintEnd_toEndOf="@id/left_tv"
-        android:id="@+id/select_bg_view_disable"
+        app:layout_constraintStart_toStartOf="@id/leftTv"
+        app:layout_constraintEnd_toEndOf="@id/leftTv"
+        android:id="@+id/selectBgViewDisable"
         app:backgroundNormal="@color/color_switch_block_sel_dis_bg"
         app:cornerRadius="7dp"
         android:layout_height="match_parent"
         android:layout_width="0dp"/>
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/left_tv"
+        android:id="@+id/leftTv"
         android:paddingHorizontal="6dp"
         style="@style/StyleFontText"
         android:layout_width="wrap_content"
@@ -43,14 +43,14 @@
         tools:text="first" />
 
     <View
-        app:layout_constraintStart_toEndOf="@id/left_tv"
-        app:layout_constraintEnd_toStartOf="@id/right_tv"
+        app:layout_constraintStart_toEndOf="@id/leftTv"
+        app:layout_constraintEnd_toStartOf="@id/rightTv"
         android:id="@+id/padding"
         android:layout_width="2dp"
         android:layout_height="match_parent"/>
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/right_tv"
+        android:id="@+id/rightTv"
         style="@style/StyleFontText"
         android:layout_width="wrap_content"
         android:paddingHorizontal="6dp"

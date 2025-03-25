@@ -4,16 +4,14 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import androidx.annotation.Keep
+import com.au.module_android.Globals
 import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logd
-import com.au.module_androidui.toast.toastOnTop
 import com.au.module_cached.AppDataStore
 import java.util.Calendar
-import java.util.Random
 import java.util.UUID
 
 @Keep
@@ -28,7 +26,7 @@ object AutoFsObj {
     val targetTsListData = NoStickLiveData<List<TargetTs>>()
     private var isInited = false
 
-    fun init() {
+    fun init(context: Context, reason:String = "") {
         if(isInited) return
         isInited = true
         val targetTsListJsonStr = AppDataStore.readBlocked("targetTsList", "")
@@ -37,6 +35,14 @@ object AutoFsObj {
             targetTsListData.setValueSafe(targetTsList)
         } else {
             targetTsListData.setValueSafe(listOf())
+        }
+
+        if (reason == "boot") {
+            checkAndStartNextAlarm(context)
+        } else {
+            Globals.mainHandler.postDelayed({
+                checkAndStartNextAlarm(context)
+            }, 3000)
         }
     }
 
@@ -91,6 +97,12 @@ object AutoFsObj {
 
             checkAndStartNextAlarm(context)
         }
+    }
+
+    fun isAlarmExpired(autoFsId: String) : Boolean{
+        val targetTsList = targetTsListData.realValue?.toMutableList() ?: return false
+        val foundTargetTs = targetTsList.find { it.autoFsId == autoFsId } ?: return false
+        return !foundTargetTs.isLoop && foundTargetTs.targetTs < System.currentTimeMillis()
     }
 
     /**
@@ -170,6 +182,7 @@ object AutoFsObj {
     }
 
     fun checkAndStartNextAlarm(context:Context) {
+        logd { "allanAlarm check start:" }
         targetTsListData.realValue?.toMutableList()?.let { newList ->
             val curTs = System.currentTimeMillis()
             val changeList = mutableListOf<TargetTs>()

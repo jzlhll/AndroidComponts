@@ -59,6 +59,22 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
 
     private fun initSwitchBtn() {
         binding.switchBtn.initValue(isLeft = true, false)
+
+        binding.switchBtn.valueCallback = { isLeft->
+            changeEnablePlusDayControls(isLeft)
+        }
+    }
+
+    private fun changeEnablePlusDayControls(isLeft: Boolean) {
+        if (isLeft) {
+            binding.plusADayBtn.isEnabled = true
+            binding.minusADayBtn.isEnabled = true
+            binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
+        } else {
+            binding.plusADayBtn.isEnabled = false
+            binding.minusADayBtn.isEnabled = false
+            binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_desc))
+        }
     }
 
     fun initNumberPicker(picker: NumberPickerCompat, max: Int, min: Int, def: Int, changeToDef: Boolean) {
@@ -133,18 +149,20 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
 
         binding.addBtn.onClick {
             val oldId = mEditAutoFsId
+            val isLoop = !binding.switchBtn.isLeft
+            val dayPlus = if(isLoop) 0 else plusDay
             val isGood = if (oldId.isNullOrEmpty()) {
                 AutoFsObj.addAlarmUiAndCheckStart(requireContext(),
                     hourPickerWrap.getValue(),
                     minPickerWrap.getValue(),
-                    plusDay,
-                    !binding.switchBtn.isLeft)
+                    dayPlus,
+                    isLoop)
             } else {
                 AutoFsObj.editAlarmUiAndCheckStart(requireContext(),
                     hourPickerWrap.getValue(),
                     minPickerWrap.getValue(),
-                    plusDay,
-                    !binding.switchBtn.isLeft,
+                    dayPlus,
+                    isLoop,
                     oldId)
             }
 
@@ -191,6 +209,7 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
 
                 val isLoop = targetTs.isLoop
                 binding.switchBtn.setValue(!isLoop)
+                changeEnablePlusDayControls(!isLoop)
             }
         }
     }

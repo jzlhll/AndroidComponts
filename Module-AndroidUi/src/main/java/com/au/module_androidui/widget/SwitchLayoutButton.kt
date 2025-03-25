@@ -30,7 +30,7 @@ class SwitchLayoutButton @JvmOverloads constructor(context: Context, attrs: Attr
     /**
      * 点击切换的回调函数
      */
-    var valueCallback : ((Boolean)->Unit)? = null
+    var valueCallback : ((isLeft:Boolean)->Unit)? = null
 
     private var isPost = false
 

@@ -126,7 +126,7 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
     private fun initTimer() {
         lifecycleScope.launch {
             while (true) {
-                delay(10 * 1000) //30秒更新一次所有的ViewHolder
+                delay(15 * 1000)
                 onTargetTsListChanged(AutoFsObj.targetTsListData.realValue ?: listOf())
             }
         }
@@ -195,10 +195,37 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         }
     }
 
+    private fun timeToColor(targetTs:Long, current:Long) : ColorMode {
+        val delta = targetTs - current
+        if (delta < 0) {
+            return ColorMode.IsOver
+        }
+
+        if (delta < 5 * 60 * 1000) {
+            return ColorMode.AlmostClose
+        }
+
+        val calendar = Calendar.getInstance().also { it.timeInMillis = current }
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val dayStart = calendar.timeInMillis + 1
+        return if (targetTs <= dayStart) {
+            ColorMode.Today
+        } else {
+            ColorMode.Later
+        }
+    }
+
     private fun onTargetTsListChanged(targetTsList: List<TargetTs>) {
         val cur = System.currentTimeMillis()
         val list = targetTsList.map {
-            AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose, it.isLoop, isSelectMode, TimeUtil.fmtLeftTimeStr(it.targetTs - cur))
+            AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose,
+                it.isLoop,
+                isSelectMode,
+                color = timeToColor(it.targetTs, cur),
+                TimeUtil.fmtLeftTimeStr(it.targetTs - cur))
         }
         adapter.submitList(list, false)
         if (list.isEmpty()) {

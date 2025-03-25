@@ -1,5 +1,6 @@
 package com.allan.autoclickfloat.activities.autofs
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewHolderItemBinding
@@ -11,12 +12,21 @@ import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import java.util.Calendar
+import androidx.core.graphics.toColorInt
+
+enum class ColorMode {
+    IsOver,
+    AlmostClose,
+    Today,
+    Later
+}
 
 class AutoStartRcvBean(val autoFsId:String,
                        val targetTs:Long,
                        val isClose:Boolean,
                        val isLoop:Boolean,
                        var isSelectMode:Boolean,
+                       val color:ColorMode,
                        var leftTimeStr:String?)
 
 class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmItemHolder>() {
@@ -24,8 +34,26 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
         AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
     }
 
-    private val editClick = { autoFsId:String ->
-        AutoStartAlarmDialog.edit(Globals.topActivity as FragmentRootActivity, autoFsId)
+    private val editClick:(String)->Unit = { autoFsId:String ->
+        if (AutoFsObj.isAlarmExpired(autoFsId)) {
+            Globals.topActivity?.asOrNull<FragmentRootActivity>()?.let { ac ->
+                ConfirmBottomDialog.show2(ac.supportFragmentManager,
+                    "闹钟已过期",
+                    "请选择接下来的操作。",
+                    "编辑",
+                    "删除",
+                    sureClick = {
+                        AutoStartAlarmDialog.edit(ac, autoFsId)
+                        it.dismissAllowingStateLoss()
+                    },
+                    cancelClick = {
+                        AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
+                        it.dismissAllowingStateLoss()
+                    })
+            }
+        } else {
+            AutoStartAlarmDialog.edit(Globals.topActivity as FragmentRootActivity, autoFsId)
+        }
     }
 
     private val switchClick = {autoFsId:String, isClose:Boolean ->
@@ -65,6 +93,10 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
                                editClick:(autoFsId:String)->Unit,
                                binding: FragmentAutoStartupNewHolderItemBinding)
         : BindViewHolder<AutoStartRcvBean, FragmentAutoStartupNewHolderItemBinding>(binding) {
+    val orangeColor = "#FFA500".toColorInt()
+    val defaultColor = Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal)
+    val descColor = Globals.getColor(com.au.module_androidcolor.R.color.color_text_desc)
+
     init {
         binding.stopBtn.onClick {
             currentData?.autoFsId?.let { it1 -> deleteClick(it1) }
@@ -97,6 +129,26 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
             binding.descTv.text = "$ymd ($dayOfWeekStr)"
         }
         binding.leftTv.text = "(" + bean.leftTimeStr + ")"
+
+        when (bean.color) {
+            ColorMode.AlmostClose -> {
+                binding.timeTv.setTextColor(Color.RED)
+                binding.descTv.setTextColor(defaultColor)
+            }
+            ColorMode.Today -> {
+                binding.timeTv.setTextColor(orangeColor)
+                binding.descTv.setTextColor(defaultColor)
+            }
+            ColorMode.Later -> {
+                binding.timeTv.setTextColor(defaultColor)
+                binding.descTv.setTextColor(defaultColor)
+            }
+            ColorMode.IsOver -> {
+                binding.timeTv.setTextColor(descColor)
+                binding.descTv.setTextColor(descColor)
+            }
+        }
+
         if (binding.switchBtn.isInit) {
             binding.switchBtn.setValue(bean.isClose)
         } else {
@@ -106,7 +158,7 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
         binding.stopBtn.visibility = if(bean.isSelectMode) View.VISIBLE else View.GONE
 
         if (bean.isClose && !bean.isSelectMode) {
-            binding.root.alpha = 0.8f
+            binding.root.alpha = 0.85f
         } else {
             binding.root.alpha = 1f
         }

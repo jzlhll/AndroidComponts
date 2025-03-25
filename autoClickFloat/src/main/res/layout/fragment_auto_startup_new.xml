@@ -120,6 +120,7 @@
 
     <LinearLayout
         tools:visibility="gone"
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/inputHost"
         android:background="@color/windowDialogBackground"
