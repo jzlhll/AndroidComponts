@@ -32,7 +32,6 @@ import com.au.module_android.utils.startActivityFix
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
 class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,7 +73,20 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
             }
         }
 
-        binding.autoFsBtn.onClick {
+        binding.autoFsBtn.onClick(paddingTime = 50) {
+            val tag = binding.autoFsBtn.tag
+            if (tag == null) {
+                binding.autoFsBtn.tag = 1
+                return@onClick
+            }
+
+            if (tag == 1) {
+                binding.autoFsBtn.tag = 2
+                return@onClick
+            }
+
+            binding.autoFsBtn.tag = null
+
             val alarmManager: AlarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val hasBootReceiverPermission = hasPermission(android.Manifest.permission.RECEIVE_BOOT_COMPLETED)
             logd { "allanAlarm hasBootReceiverPermission $hasBootReceiverPermission" }

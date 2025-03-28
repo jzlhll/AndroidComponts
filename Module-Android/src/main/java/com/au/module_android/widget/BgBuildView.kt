@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.au.module_android.R
 import com.au.module_android.utils.viewBackgroundBuild
+import androidx.core.content.withStyledAttributes
 
 /**
  * @author allan
@@ -15,8 +16,8 @@ class BgBuildView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : View(context, attrs) {
     init {
-        val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
-        viewBackgroundBuild(attr)
-        attr.recycle()
+        context.withStyledAttributes(attrs, R.styleable.AnyView) {
+            viewBackgroundBuild(this)
+        }
     }
 }

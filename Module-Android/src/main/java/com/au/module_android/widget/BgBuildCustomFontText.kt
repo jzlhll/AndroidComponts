@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.au.module_android.R
 import com.au.module_android.utils.viewBackgroundBuild
+import androidx.core.content.withStyledAttributes
 
 /**
  * @author au
@@ -17,8 +18,8 @@ open class BgBuildCustomFontText : CustomFontText {
         attrs,
         defStyleAttr
     ) {
-        val attr = context.obtainStyledAttributes(attrs, R.styleable.AnySimpleView)
-        viewBackgroundBuild(attr)
-        attr.recycle()
+        context.withStyledAttributes(attrs, R.styleable.AnyView) {
+            viewBackgroundBuild(this)
+        }
     }
 }

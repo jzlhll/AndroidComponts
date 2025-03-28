@@ -2,13 +2,13 @@ package com.au.module_android.utils
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.view.View
 import androidx.annotation.ColorInt
 import com.au.module_android.R
+import androidx.core.graphics.drawable.toDrawable
 
 class ViewBackgroundBuilder {
     //private var mShape:Int = -1
@@ -160,7 +160,7 @@ fun View.viewBackgroundBuild(array:TypedArray) {
 
     val noColor = 0
 
-    val bgAlpha = array.getFloat(R.styleable.AnySimpleView_backgroundAlpha, -1f)
+    val bgAlpha = array.getFloat(R.styleable.AnyView_backgroundAlpha, -1f)
     if (bgAlpha in 0f..255f) {
         val alpha = if (bgAlpha <= 1f) {
             (225f * bgAlpha).toInt()
@@ -170,28 +170,28 @@ fun View.viewBackgroundBuild(array:TypedArray) {
         builder.setBackgroundAlpha(alpha)
     }
 
-    val bgNormalColor = array.getColor(R.styleable.AnySimpleView_backgroundNormal, noColor)
-    val bgDisabledColor = array.getColor(R.styleable.AnySimpleView_backgroundDisabled, noColor)
-    val bgPressedColor = array.getColor(R.styleable.AnySimpleView_backgroundPressed, noColor)
+    val bgNormalColor = array.getColor(R.styleable.AnyView_backgroundNormal, noColor)
+    val bgDisabledColor = array.getColor(R.styleable.AnyView_backgroundDisabled, noColor)
+    val bgPressedColor = array.getColor(R.styleable.AnyView_backgroundPressed, noColor)
     builder.setBackground(bgNormalColor, bgPressedColor, bgDisabledColor)
 
-    val cornerRadius = array.getDimension(R.styleable.AnySimpleView_cornerRadius, -1f)
+    val cornerRadius = array.getDimension(R.styleable.AnyView_cornerRadius, -1f)
     if (cornerRadius < 0f) {
         val cornerSizeTopLeft =
-            array.getDimension(R.styleable.AnySimpleView_cornerSizeTopLeft, 0f)
+            array.getDimension(R.styleable.AnyView_cornerSizeTopLeft, 0f)
         val cornerSizeTopRight =
-            array.getDimension(R.styleable.AnySimpleView_cornerSizeTopRight, 0f)
+            array.getDimension(R.styleable.AnyView_cornerSizeTopRight, 0f)
         val cornerSizeBottomLeft =
-            array.getDimension(R.styleable.AnySimpleView_cornerSizeBottomLeft, 0f)
+            array.getDimension(R.styleable.AnyView_cornerSizeBottomLeft, 0f)
         val cornerSizeBottomRight =
-            array.getDimension(R.styleable.AnySimpleView_cornerSizeBottomRight, 0f)
+            array.getDimension(R.styleable.AnyView_cornerSizeBottomRight, 0f)
         builder.setCornerRadius(cornerSizeTopLeft, cornerSizeTopRight, cornerSizeBottomLeft, cornerSizeBottomRight)
     } else {
         builder.setCornerRadius(cornerRadius)
     }
 
-    val strokeColor = array.getColor(R.styleable.AnySimpleView_strokeColor, noColor)
-    val strokeWidth = array.getDimension(R.styleable.AnySimpleView_strokeWidth, 0f)
+    val strokeColor = array.getColor(R.styleable.AnyView_strokeColor, noColor)
+    val strokeWidth = array.getDimension(R.styleable.AnyView_strokeWidth, 0f)
 
     builder.setStroke(strokeWidth, strokeColor)
     if (builder.isAtLeastOne) {
@@ -214,7 +214,7 @@ fun Drawable?.setRippleColor(@ColorInt rippleColor: Int, radius: Int? = null) : 
         ColorStateList.valueOf(rippleColor),
         this,
         if (this == null)
-            ColorDrawable(rippleColor)
+            rippleColor.toDrawable()
         else
             null
     )

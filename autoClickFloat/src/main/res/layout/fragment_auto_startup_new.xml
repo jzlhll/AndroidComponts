@@ -122,7 +122,7 @@
         tools:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/inputHost"
-        android:background="@color/windowDialogBackground"
+        android:background="@color/windowBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.au.module_android.widget.CustomFontText

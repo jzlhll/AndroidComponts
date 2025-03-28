@@ -57,7 +57,7 @@
     </declare-styleable>
 
     <!-- 没有alpha，水波纹等比较特殊的场景。-->
-    <declare-styleable name="AnySimpleView">
+    <declare-styleable name="AnyView">
         <attr name="backgroundNormal" />
         <attr name="backgroundAlpha" />
         <attr name="backgroundPressed" />

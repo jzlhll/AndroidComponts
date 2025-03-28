@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:paddingStart="40dp"
     android:paddingEnd="40dp"
-    android:background="#ffffff"
     tools:context=".activities.autooneclick.AutoContinuousClickActivityFragment">
 
     <com.au.module_android.widget.CustomFontText
