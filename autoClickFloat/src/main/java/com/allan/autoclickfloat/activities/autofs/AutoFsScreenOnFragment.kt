@@ -2,6 +2,7 @@ package com.allan.autoclickfloat.activities.autofs
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -9,11 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.au.module_android.Globals
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.myHideSystemUI
 import com.au.module_android.utils.startOutActivity
 import com.au.module_android.widget.CustomFontText
 import com.module_native.AppNative
@@ -24,9 +25,10 @@ class AutoFsScreenOnFragment : ViewFragment() {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+            myHideSystemUI()
         }
 
-        val autoFsId = arguments?.getString("autoFsId")
         arguments?.remove("autoFsId")
         AutoFsObj.checkAndStartNextAlarm(requireContext())
 
@@ -51,20 +53,19 @@ class AutoFsScreenOnFragment : ViewFragment() {
             val intent = pm.getLaunchIntentForPackage(originalStr)
             if (intent != null) {
                 logd { "allanAlarm delay toast lanch!!!" }
-                Toast.makeText(context, "launch apk ...", Toast.LENGTH_SHORT).show()
                 context.startOutActivity(intent)
             } else {
                 logd { "allanAlarm delay toast no lanch!!!" }
-                Toast.makeText(context, "No target apk!", Toast.LENGTH_SHORT).show()
             }
             activity?.finish()
         }, 8 * 1000)
 
         return LinearLayout(inflater.context).also {
             it.addView(CustomFontText(inflater.context).also { tv->
-                tv.text = "Alarm!!!"
+                tv.text = ""
                 tv.textSize = 20f.dp
                 tv.gravity = Gravity.CENTER
+                tv.setBackgroundColor(Color.BLACK)
                 tv.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             })
         }
