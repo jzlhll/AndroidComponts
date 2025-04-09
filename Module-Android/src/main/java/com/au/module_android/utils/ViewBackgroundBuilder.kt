@@ -75,8 +75,9 @@ class ViewBackgroundBuilder {
         return this
     }
 
-    fun setBackgroundAlpha(alpha:Int) {
+    fun setBackgroundAlpha(alpha:Int): ViewBackgroundBuilder {
         mBgAlpha = alpha
+        return this
     }
 
     fun setBackground(color:Int, pressedColor:Int = 0, disabledColor:Int = 0)

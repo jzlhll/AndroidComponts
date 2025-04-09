@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.ui.views.ViewToolbarFragment
 
@@ -18,7 +18,7 @@ import com.au.module_android.ui.views.ViewToolbarFragment
 abstract class SelectListFragment<B: SelectListItem> : ViewToolbarFragment() {
     companion object {
         fun start(context:Context, fragment: Class<SelectListFragment<*>>) {
-            FragmentRootActivity.start(context, fragment)
+            FragmentShellActivity.start(context, fragment)
         }
     }
 

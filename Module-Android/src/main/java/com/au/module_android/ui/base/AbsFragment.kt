@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 
 /**
- * 这样所有的框架中的Fragment都实现了IFullWindow。但是由于只有在FragmentRootActivity中使用。故而没有问题。
+ * 这样所有的框架中的Fragment都实现了IFullWindow。但是由于只有在FragmentShellActivity中使用。故而没有问题。
  */
 @Deprecated("基础框架的一环，请使用BindingFragment或者ViewFragment")
 open class AbsFragment : Fragment(), IFullWindow {

@@ -1,18 +1,14 @@
 package com.allan.autoclickfloat.activities.recordprojects
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.databinding.RecordProjectOneFragmentBinding
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingParamsFragment
 import com.au.module_android.utils.gone
-import com.au.module_android.utils.logd
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
@@ -21,7 +17,7 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
         fun startAsAdd(context: Context) {
             putTempParams(RecordOneProjectFragment::class.java,
                 "isAddMode" to true)
-            FragmentRootActivity.start(context, RecordOneProjectFragment::class.java)
+            FragmentShellActivity.start(context, RecordOneProjectFragment::class.java)
         }
 
         fun startAsEdit(context:Context, projectName:String, projectId:Int) {
@@ -29,7 +25,7 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
                 "isAddMode" to false,
                         "projectName" to projectName,
                         "projectId" to projectId)
-            FragmentRootActivity.start(context, RecordOneProjectFragment::class.java)
+            FragmentShellActivity.start(context, RecordOneProjectFragment::class.java)
         }
     }
 
@@ -73,7 +69,7 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
     }
 
     private fun addStep() {
-        FragmentRootActivity.start(requireContext(), AllAppListFragment::class.java)
+        FragmentShellActivity.start(requireContext(), AllAppListFragment::class.java)
     }
 
 

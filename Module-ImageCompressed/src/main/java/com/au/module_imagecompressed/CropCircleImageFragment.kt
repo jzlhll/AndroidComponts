@@ -11,7 +11,7 @@ import com.au.module_android.Globals
 import com.au.module_android.Globals.getColor
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.activity.ActivityForResult
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.gone
@@ -44,7 +44,7 @@ class CropCircleImageFragment : BindingFragment<CropCircleLayoutBinding>(), UCro
                 this.putString("inputUri", inputUri.toString())
             }
 
-            FragmentRootActivity.startForResult(context,
+            FragmentShellActivity.startForResult(context,
                 CropCircleImageFragment::class.java,
                 activityResult,
                 arguments = bundle,

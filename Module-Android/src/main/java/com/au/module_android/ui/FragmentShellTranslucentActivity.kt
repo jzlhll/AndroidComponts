@@ -11,7 +11,7 @@ import com.au.module_android.permissions.activity.ActivityForResult
  * Date: 2023/8/29
  * Description 限制
  */
-class FragmentRootTranslucentActivity : FragmentRootActivity() {
+class FragmentShellTranslucentActivity : FragmentShellActivity() {
     companion object {
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
@@ -28,7 +28,7 @@ class FragmentRootTranslucentActivity : FragmentRootActivity() {
                             optionsCompat: ActivityOptionsCompat? = null,
                               enterAnim:Int? = null,
                               exitAnim:Int? = null)  {
-            startRoot(context, FragmentRootTranslucentActivity::class.java, fragmentClass, null, arguments, optionsCompat, enterAnim, exitAnim)
+            startRoot(context, FragmentShellTranslucentActivity::class.java, fragmentClass, null, arguments, optionsCompat, enterAnim, exitAnim)
         }
 
         /**
@@ -47,7 +47,7 @@ class FragmentRootTranslucentActivity : FragmentRootActivity() {
                   optionsCompat: ActivityOptionsCompat? = null,
                    enterAnim:Int? = null,
                    exitAnim:Int? = null)  {
-            startRoot(context, FragmentRootTranslucentActivity::class.java,
+            startRoot(context, FragmentShellTranslucentActivity::class.java,
                 fragmentClass, activityResult,
                 arguments, optionsCompat, enterAnim, exitAnim)
         }

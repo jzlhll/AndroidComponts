@@ -14,7 +14,7 @@ import com.allan.androidlearning.databinding.FragmentAndroidUi2Binding
 import com.allan.androidlearning.databinding.FragmentDialogEditBinding
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialogByContentFragment
 import com.au.module_android.ui.bindings.BindingFragment
@@ -135,7 +135,7 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
     fun selectList() {
         binding.androidUiSelectList.onClick {
-            FragmentRootActivity.start(requireContext(), CoroutineFragment::class.java)
+            FragmentShellActivity.start(requireContext(), CoroutineFragment::class.java)
         }
     }
 

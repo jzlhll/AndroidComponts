@@ -29,17 +29,17 @@ import com.au.module_android.utils.unsafeLazy
  * Date: 2023/8/29
  * Description 限制
  */
-open class FragmentRootActivity : ViewActivity() {
+open class FragmentShellActivity : ViewActivity() {
     override fun toString(): String {
         val superStr = super.toString()
         return superStr + "fragmentClass: $fragmentClass"
     }
 
     companion object {
-        const val KEY_FRAGMENT_CLASS = "FragmentRootActivity_key_fragment"
-        const val KEY_FRAGMENT_ARGUMENTS = "FragmentRootActivity_key_arguments"
-        const val KEY_EXIT_ANIM = "FragmentRootActivity_key_exit_anim"
-        const val KEY_ENTER_ANIM = "FragmentRootActivity_key_enter_anim"
+        const val KEY_FRAGMENT_CLASS = "FragmentShellActivity_key_fragment"
+        const val KEY_FRAGMENT_ARGUMENTS = "FragmentShellActivity_key_arguments"
+        const val KEY_EXIT_ANIM = "FragmentShellActivity_key_exit_anim"
+        const val KEY_ENTER_ANIM = "FragmentShellActivity_key_enter_anim"
 
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
@@ -58,7 +58,7 @@ open class FragmentRootActivity : ViewActivity() {
                             enterAnim:Int? = null,
                             exitAnim:Int? = null,
                             activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
-            startRoot(context, FragmentRootActivity::class.java, fragmentClass, null, arguments, optionsCompat, enterAnim, exitAnim, activityResultCallback)
+            startRoot(context, FragmentShellActivity::class.java, fragmentClass, null, arguments, optionsCompat, enterAnim, exitAnim, activityResultCallback)
         }
 
         /**
@@ -80,7 +80,7 @@ open class FragmentRootActivity : ViewActivity() {
                   enterAnim:Int? = null,
                   exitAnim:Int? = null,
                   activityResultCallback:ActivityResultCallback<ActivityResult>? = null) {
-            startRoot(context, FragmentRootActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, enterAnim, exitAnim, activityResultCallback)
+            startRoot(context, FragmentShellActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat, enterAnim, exitAnim, activityResultCallback)
         }
 
         internal fun startRoot(context: Context,
@@ -133,7 +133,7 @@ open class FragmentRootActivity : ViewActivity() {
         mIsAutoHideIme = instance.asOrNull<AbsFragment>()?.isAutoHideIme() ?: false
 
         if (BuildConfig.DEBUG) {
-            Log.d("AU_APP", "FragmentRootActivity: ${fragmentClass.name}")
+            Log.d("AU_APP", "FragmentShellActivity: ${fragmentClass.name}")
         }
 
         if (BuildConfig.ENABLE_EDGE_TO_EDGE) {

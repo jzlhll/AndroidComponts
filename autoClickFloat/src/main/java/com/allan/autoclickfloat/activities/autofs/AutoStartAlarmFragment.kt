@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
@@ -264,7 +264,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
                 })
             } else {
-                FragmentRootActivity.start(context, AutoFsScreenOnFragment::class.java, Bundle().apply {
+                FragmentShellActivity.start(context, AutoFsScreenOnFragment::class.java, Bundle().apply {
                     if(autoFsId != null) putString("autoFsId", autoFsId)
                 })
             }

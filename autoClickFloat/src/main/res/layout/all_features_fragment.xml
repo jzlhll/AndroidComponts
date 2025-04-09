@@ -80,6 +80,17 @@
             android:layout_gravity="center_vertical"
             android:layout_height="50dp"
             android:text="Debug"/>
+
+        <com.au.module_android.widget.CustomButton
+            style="@style/StyleButtonPrimary"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="0dp"
+            android:id="@+id/logSysBtn"
+            android:layout_marginHorizontal="30dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="50dp"
+            android:text="logSys"/>
     </com.au.module_android.widget.BgBuildLinearLayout>
 
 </FrameLayout>

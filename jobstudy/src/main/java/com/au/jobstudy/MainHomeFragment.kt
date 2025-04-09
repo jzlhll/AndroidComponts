@@ -21,7 +21,7 @@ import com.au.jobstudy.utils.WeekDateUtil
 import com.au.jobstudy.utils.WeekDateUtil.currentTimeToHelloGood
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.launchOnThread
@@ -50,7 +50,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         }
 
         binding.lookWeeklyText.onClick {
-            FragmentRootActivity.start(requireContext(), CompletedBeforeFragment::class.java)
+            FragmentShellActivity.start(requireContext(), CompletedBeforeFragment::class.java)
         }
 
         binding.root.refresher.apply {

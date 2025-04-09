@@ -7,9 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.R
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.logd
-import com.github.lzyzsd.jsbridge.BridgeWebViewExFragment
 import kotlinx.coroutines.launch
 
 @EntryFrgName
@@ -22,15 +21,15 @@ class WebVideoPlayFragment : MyBridgeFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         root.findViewById<Button>(R.id.startEchartsHtmlBtn).onClick {
-            FragmentRootActivity.start(requireContext(), WebEChartsHtmlRtcRecordFragment::class.java)
+            FragmentShellActivity.start(requireContext(), WebEChartsHtmlRtcRecordFragment::class.java)
         }
 
         root.findViewById<Button>(R.id.startEchartsSoftWebViewBtn).onClick {
-            FragmentRootActivity.start(requireContext(), WebEChartsWebViewSoftRecordFragment::class.java)
+            FragmentShellActivity.start(requireContext(), WebEChartsWebViewSoftRecordFragment::class.java)
         }
 
         root.findViewById<Button>(R.id.startEchartsBitmapBtn).onClick {
-            FragmentRootActivity.start(requireContext(), WebEChartsGetDataUrlBitmapFragment::class.java)
+            FragmentShellActivity.start(requireContext(), WebEChartsGetDataUrlBitmapFragment::class.java)
         }
 
         lifecycleScope.launch {

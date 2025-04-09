@@ -57,7 +57,12 @@ object FileLog {
     }
 
     private fun getRootPath() = Globals.goodFilesDir.absolutePath + File.separator + "Log"
-    private val logDir by unsafeLazy { getRootPath() + File.separatorChar }
+    val logDir by unsafeLazy { getRootPath() + File.separatorChar }
+
+    /**
+     * 暂时停止写入
+     */
+    var ignoreWrite = false
 
     private fun writeToDisk2(item: FileItem) {
         val dirPath = logDir
@@ -101,17 +106,22 @@ object FileLog {
         }
     }
 
+    private val timestampFmt by unsafeLazy { SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ms", Locale.getDefault()) }
+
     /**时间戳转日期*/
-    private fun longTimeToStr(time: Long?, pattern: String): String {
+    private fun longTimeToStr(time: Long?): String {
         if (time == null) {
             return ""
         }
-        val format = SimpleDateFormat(pattern, Locale.getDefault())
-        return format.format(time).toString()
+        return timestampFmt.format(time).toString()
     }
 
     fun write(log: String, needStace: Boolean = false, throwable: Throwable? = null) {
-        val logTimeStr = longTimeToStr(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss.ms")
+        if (ignoreWrite) {
+            return
+        }
+
+        val logTimeStr = longTimeToStr(System.currentTimeMillis())
         val writeStr = "$logTimeStr>>$log"
         val stace: String? = if (needStace) {
             var exception = throwable

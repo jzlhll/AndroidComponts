@@ -15,12 +15,24 @@ import java.io.File
  * @author au
  * @date :2024/5/22 14:01
  * @description: 配合
+file_paths.xml
 <?xml version="1.0" encoding="utf-8"?>
+<paths>
+<external-path
+name="external_storage_root"
+path="." />
+
 <cache-path
+name="videoShare"
+path="videoShare" />
+
+<!--代表app 外部存储区域根目录下的文件 Context.getExternalCacheDir目录下的目录-->
+<external-cache-path
 name="videoShare"
 path="videoShare" />
 </paths>
 
+androidManifest.xml
 <provider
 android:name="androidx.core.content.FileProvider"
 android:authorities="${applicationId}.fileprovider"
@@ -178,7 +190,7 @@ class MediaHelper {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 // "项目包名.fileprovider"即是在清单文件中配置的authorities
-                uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file)
+                uri = FileProvider.getUriForFile(context, context.packageName + ".provider", file)
                 // 给目标应用一个临时授权
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {

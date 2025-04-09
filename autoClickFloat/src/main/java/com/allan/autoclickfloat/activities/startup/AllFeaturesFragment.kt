@@ -18,13 +18,14 @@ import com.allan.autoclickfloat.activities.nongyao.NongyaoFragment
 import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AllFeaturesFragmentBinding
+import com.au.logsystem.LogSystemFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.gotoFloatWindowPermission
 import com.au.module_android.permissions.hasFloatWindowPermission
 import com.au.module_android.permissions.hasPermission
-import com.au.module_android.ui.FragmentRootActivity
-import com.au.module_android.ui.FragmentRootOrientationActivity
+import com.au.module_android.ui.FragmentShellActivity
+import com.au.module_android.ui.FragmentShellOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.openApp
@@ -36,7 +37,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.autoClickButton.onClick {
-            FragmentRootOrientationActivity.start(requireActivity(), AutoContinuousClickActivityFragment::class.java)
+            FragmentShellOrientationActivity.start(requireActivity(), AutoContinuousClickActivityFragment::class.java)
         }
 
         binding.coverScreenBtn.onClick {
@@ -54,15 +55,19 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.recordModeBtn.onClick {
-            FragmentRootOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
+            FragmentShellOrientationActivity.start(requireActivity(), RecordProjectsAllFragment::class.java)
         }
 
         binding.nongyaoBtn.onClick {
-            FragmentRootOrientationActivity.start(requireActivity(), NongyaoFragment::class.java)
+            FragmentShellOrientationActivity.start(requireActivity(), NongyaoFragment::class.java)
         }
 
         binding.debugBtn.onClick {
             openApp(Globals.app, "com.tencent.tgclub")
+        }
+
+        binding.logSysBtn.onClick {
+            FragmentShellActivity.start(requireActivity(), LogSystemFragment::class.java)
         }
 
         Const.autoOnePoint.autoOnePointOpenLiveData.observe(viewLifecycleOwner) {
@@ -106,7 +111,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
                                 it.dismiss()
                             })
                     } else {
-                        FragmentRootActivity.start(requireContext(), AutoStartAlarmFragment::class.java)
+                        FragmentShellActivity.start(requireContext(), AutoStartAlarmFragment::class.java)
                     }
                 } else {
                     ConfirmCenterDialog.show(childFragmentManager, "设置", "本功能需要调节亮度，即将跳转到系统设置，给予授权。", "OK", "取消",

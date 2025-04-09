@@ -40,6 +40,7 @@ dependencies {
     implementation project(':Module-AndroidUi')
     implementation project(':Module-Nested')
     implementation project(':Module-Native')
+    implementation project(':Module-AndroidLogSystem')
 
     implementation libs.androidx.work.runtime
     implementation libs.androidx.work.runtime.ktx

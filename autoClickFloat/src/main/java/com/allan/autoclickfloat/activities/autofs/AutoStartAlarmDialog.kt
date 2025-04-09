@@ -9,7 +9,7 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.fontutil.FONT_NUMBER_PATH
 import com.au.module_android.fontutil.getOrCreateFontFace
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.base.findDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
@@ -32,7 +32,7 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
             })
         }
 
-        fun edit(ac:FragmentRootActivity, autoFsId:String) {
+        fun edit(ac:FragmentShellActivity, autoFsId:String) {
             FragmentBottomSheetDialog.show<AutoStartAlarmDialog>(ac.supportFragmentManager, Bundle().apply {
                 putString("editAutoFsId", autoFsId)
                 putBoolean("isEditMode", true)

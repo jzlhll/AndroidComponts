@@ -1,13 +1,13 @@
 package com.au.module_android.fontutil
 
 import android.content.Context
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.TextView
 import com.au.module_android.R
 import com.au.module_android.widget.FontMode
 import com.au.module_android.widget.TextViewCheckMode
+import androidx.core.content.withStyledAttributes
 
 /**
  * 全局字体默认文件。可以自行更换任意一项，目前虽然一样。
@@ -36,16 +36,18 @@ fun getOrCreateFontFace(context: Context, assetsPath: String?) : Typeface? {
 
 /**
  * 设置assets里面的字体文件
+ * @return true表示设置成功。
  */
-private fun TextView.setFontFromAssets(context: Context, assetsPath: String?) {
-    if (isInEditMode) return
-    val tf = getOrCreateFontFace(context, assetsPath) ?: return
+private fun TextView.setFontFromAssets(context: Context, assetsPath: String?) : Boolean {
+    if (isInEditMode) return false
+    val tf = getOrCreateFontFace(context, assetsPath) ?: return false
     //性能优化，防止多次赋值
     if (tf == typeface) {
-        return
+        return true
     }
 
     typeface = tf
+    return true
 }
 
 /**
@@ -62,36 +64,36 @@ fun TextView.checkBoldAndSetFont(cxt: Context, attrs: AttributeSet?) : TextViewC
     var fontMode: FontMode = FontMode.NORMAL
 
     if (attrs != null) {
-        val sa = cxt.obtainStyledAttributes(attrs, R.styleable.CustomTextView)
-        when (sa.getString(R.styleable.CustomTextView_fontMode)) {
-            FontMode.BOLD.mode -> fontMode = FontMode.BOLD
-            FontMode.MID.mode -> fontMode = FontMode.MID
-            null -> {
-                val textStyle = attrs.getAttributeIntValue(
-                    "http://schemas.android.com/apk/res/android",
-                    "textStyle",
-                    -1
-                )
-                if (textStyle == 1) { //解析textStyle是否是bold。
-                    fontMode = FontMode.BOLD
-                } else if (textStyle == -1) {
-                    //如果textStyle申明在控件上，是可以的。
-                    //如果设置在@style/xxx中，是不支持的。这里采取名字匹配策略二次解决。
-                    val sid = attrs.getAttributeResourceValue(null, "style", 0) //same as: attrs?.getStyleAttribute()
-                    if (sid != 0) {
-                        val styleName = cxt.resources.getResourceEntryName(sid)
-                        if (styleName.contains("BText")) {
-                            fontMode = FontMode.BOLD
-                        } else if (styleName.contains("MText")) {
-                            fontMode = FontMode.MID
+        cxt.withStyledAttributes(attrs, R.styleable.CustomTextView) {
+            when (getString(R.styleable.CustomTextView_fontMode)) {
+                FontMode.BOLD.mode -> fontMode = FontMode.BOLD
+                FontMode.MID.mode -> fontMode = FontMode.MID
+                null -> {
+                    val textStyle = attrs.getAttributeIntValue(
+                        "http://schemas.android.com/apk/res/android",
+                        "textStyle",
+                        -1
+                    )
+                    if (textStyle == 1) { //解析textStyle是否是bold。
+                        fontMode = FontMode.BOLD
+                    } else if (textStyle == -1) {
+                        //如果textStyle申明在控件上，是可以的。
+                        //如果设置在@style/xxx中，是不支持的。这里采取名字匹配策略二次解决。
+                        val sid = attrs.getAttributeResourceValue(null, "style", 0) //same as: attrs?.getStyleAttribute()
+                        if (sid != 0) {
+                            val styleName = cxt.resources.getResourceEntryName(sid)
+                            if (styleName.contains("BText")) {
+                                fontMode = FontMode.BOLD
+                            } else if (styleName.contains("MText")) {
+                                fontMode = FontMode.MID
+                            }
                         }
                     }
                 }
             }
-        }
 
-        isNumber = sa.getBoolean(R.styleable.CustomTextView_isFontNum, false)
-        sa.recycle()
+            isNumber = getBoolean(R.styleable.CustomTextView_isFontNum, false)
+        }
     }
 
     paint.isFakeBoldText = fontMode != FontMode.NORMAL
@@ -101,7 +103,7 @@ fun TextView.checkBoldAndSetFont(cxt: Context, attrs: AttributeSet?) : TextViewC
 
 fun TextView.setFontFromAsset(context: Context, mode: FontMode, isNumber:Boolean) {
     //todo 根据是否存在这些字体，来决定比如mid=bold，或者num=非num。
-    if (isNumber) {
+    val isSuc = if (isNumber) {
         when (mode) {
             FontMode.NORMAL -> setFontFromAssets(context, FONT_NUMBER_PATH)
             FontMode.MID -> setFontFromAssets(context, FONT_NUMBER_MEDIUM_PATH)
@@ -112,6 +114,14 @@ fun TextView.setFontFromAsset(context: Context, mode: FontMode, isNumber:Boolean
             FontMode.NORMAL -> setFontFromAssets(context, FONT_NORMAL_PATH)
             FontMode.MID -> setFontFromAssets(context, FONT_MEDIUM_PATH)
             FontMode.BOLD -> setFontFromAssets(context, FONT_BOLD_PATH)
+        }
+    }
+
+    if (!isSuc) {
+        when (mode) {
+            FontMode.NORMAL -> this.setTypeface(null, Typeface.NORMAL)
+            FontMode.MID,
+            FontMode.BOLD -> this.setTypeface(null, Typeface.BOLD)
         }
     }
 }

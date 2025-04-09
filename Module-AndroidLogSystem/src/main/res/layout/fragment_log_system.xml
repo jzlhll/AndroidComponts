@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent">
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonMainColor"
+        android:layout_marginStart="@dimen/ui_padding_edge"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:id="@+id/refreshBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="刷新"/>
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonMainColor"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:id="@+id/uploadBtn"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/selectBtn"
+        android:text="压缩分享"/>
+
+    <com.au.module_android.widget.CustomButton
+        style="@style/StyleButtonMainColor"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:id="@+id/selectBtn"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/ui_padding_edge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="选择"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/headBarrier"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="refreshBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/rcv"
+        android:layout_marginHorizontal="12dp"
+        tools:listitem="@layout/fragment_log_system_holder_normal"
+        app:layout_constraintTop_toBottomOf="@id/headBarrier"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="0dp" />
+
+    <!-- loading part -->
+    <RelativeLayout
+        android:visibility="gone"
+        android:background="#30000000"
+        android:id="@+id/holdingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="56dp"
+            android:layout_height="56dp"/>
+    </RelativeLayout>
+
+    <!-- upload part -->
+    <View
+        android:id="@+id/uploadBg"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:background="#30000000"
+        android:layout_height="match_parent"/>
+
+    <com.au.module_android.widget.BgBuildConstraintLayout
+        android:id="@+id/uploadHost"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="@id/rcv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        app:backgroundNormal="#ffffff"
+        app:cornerRadius="16dp"
+        android:layout_height="0dp">
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/uploadTitleTv"
+            style="@style/StyleFontMenuText"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="压缩中, 尽量不要关闭"/>
+
+        <com.au.module_android.widget.CustomFontText
+            style="@style/StyleFontBText"
+            android:textSize="56dp"
+            android:paddingHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:id="@+id/progressPercentText"
+            app:layout_constraintTop_toBottomOf="@id/uploadTitleTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:text="0%"
+            android:layout_height="wrap_content" />
+
+        <com.au.module_android.widget.CustomFontText
+            style="@style/StyleFontText"
+            android:id="@+id/progressText"
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="20dp"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/progressPercentText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="infos...fdafdfdsdfafjkadjf32128393rjkadfjkd812398jkfdaf89123jkfd89123jkd89fjkf\ndfjd"/>
+
+        <com.au.module_android.widget.CustomButton
+            style="@style/StyleButtonSecondary"
+            android:id="@+id/uploadCloseBtn"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp"
+            android:text="关闭"/>
+    </com.au.module_android.widget.BgBuildConstraintLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/uploadGroup"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="uploadBg, uploadHost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- upload part end -->
+</androidx.constraintlayout.widget.ConstraintLayout>

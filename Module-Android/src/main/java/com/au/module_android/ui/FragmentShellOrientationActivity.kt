@@ -11,7 +11,7 @@ import com.au.module_android.permissions.activity.ActivityForResult
  * Date: 2023/8/29
  * Description 限制
  */
-class FragmentRootOrientationActivity : FragmentRootActivity() {
+class FragmentShellOrientationActivity : FragmentShellActivity() {
     companion object {
         /**
          * 把一个Fragment放到本Activity当做唯一的界面。
@@ -26,7 +26,7 @@ class FragmentRootOrientationActivity : FragmentRootActivity() {
                             fragmentClass:Class<out Fragment>,
                             arguments: Bundle? = null,
                             optionsCompat: ActivityOptionsCompat? = null)  {
-            startRoot(context, FragmentRootOrientationActivity::class.java, fragmentClass, null, arguments, optionsCompat)
+            startRoot(context, FragmentShellOrientationActivity::class.java, fragmentClass, null, arguments, optionsCompat)
         }
 
         /**
@@ -43,7 +43,7 @@ class FragmentRootOrientationActivity : FragmentRootActivity() {
                   activityResult:ActivityForResult,
                   arguments: Bundle? = null,
                   optionsCompat: ActivityOptionsCompat? = null)  {
-            startRoot(context, FragmentRootOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat)
+            startRoot(context, FragmentShellOrientationActivity::class.java, fragmentClass, activityResult, arguments, optionsCompat)
         }
     }
 }

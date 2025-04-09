@@ -1,7 +1,6 @@
 package com.allan.androidlearning.androidui
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.accessibility.AccessibilityManager
@@ -10,8 +9,7 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.fontutil.FONT_NUMBER_PATH
 import com.au.module_android.fontutil.getOrCreateFontFace
-import com.au.module_android.ui.FragmentRootActivity
-import com.au.module_android.ui.base.findDialogByContentFragment
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
@@ -42,13 +40,13 @@ class AndroidUi3Fragment : BindingFragment<FragmentAndroidUi3Binding>() {
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.gotoEditBtn.onClick {
-            FragmentRootActivity.start(requireContext(), AndroidUiEditFragment::class.java)
+            FragmentShellActivity.start(requireContext(), AndroidUiEditFragment::class.java)
         }
         binding.gotoEdit2Btn.onClick {
-            FragmentRootActivity.start(requireContext(), AndroidUiEdit2Fragment::class.java)
+            FragmentShellActivity.start(requireContext(), AndroidUiEdit2Fragment::class.java)
         }
         binding.gotoEdit3Btn.onClick {
-            FragmentRootActivity.start(requireContext(), AndroidUiEdit3Fragment::class.java)
+            FragmentShellActivity.start(requireContext(), AndroidUiEdit3Fragment::class.java)
         }
 
         val timeHour = time / 3600

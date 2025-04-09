@@ -11,7 +11,7 @@ import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
@@ -39,7 +39,7 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
             val btn = MaterialButton(this)
             btn.text = if(fragmentClassTriple.third != null) fragmentClassTriple.third else fragmentClassTriple.first.simpleName.replace("Fragment", "")
             btn.onClick {
-                FragmentRootActivity.start(this, fragmentClassTriple.first)
+                FragmentShellActivity.start(this, fragmentClassTriple.first)
             }
             binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
@@ -47,9 +47,9 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
         binding.buttonsHost.addView(Space(this), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getScreenFullSize().second / 5))
 
         if (goto == "LiveData") {
-            FragmentRootActivity.start(this, LiveDataFragment::class.java)
+            FragmentShellActivity.start(this, LiveDataFragment::class.java)
         } else if (goto == "FontTest") {
-            FragmentRootActivity.start(this, FontTestFragment::class.java)
+            FragmentShellActivity.start(this, FontTestFragment::class.java)
         }
     }
 }

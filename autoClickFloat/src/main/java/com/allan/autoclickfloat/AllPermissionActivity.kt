@@ -1,8 +1,6 @@
 package com.allan.autoclickfloat
 
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,12 +15,11 @@ import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
 import com.au.module_android.Globals
 import com.au.module_android.permissions.hasPermission
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.replaceFragment
-import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.Job
@@ -101,7 +98,7 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
             intent.removeExtra("alarm")
             val autoFsId = intent.getStringExtra("autoFsId")
             intent.removeExtra("autoFsId")
-            FragmentRootActivity.start(this, AutoFsScreenOnFragment::class.java, Bundle().apply {
+            FragmentShellActivity.start(this, AutoFsScreenOnFragment::class.java, Bundle().apply {
                 if(autoFsId != null) putString("autoFsId", autoFsId)
             })
         }

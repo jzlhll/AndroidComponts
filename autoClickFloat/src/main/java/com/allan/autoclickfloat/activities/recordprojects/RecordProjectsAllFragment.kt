@@ -7,14 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.databinding.RecordProjectsAllFragmentBinding
 import com.au.module_android.click.onClick
-import com.au.module_android.simplelivedata.Status
-import com.au.module_android.ui.FragmentRootOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.gone
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.utils.visible
 import com.au.module_android.utils.visibleOrGone
-import kotlinx.coroutines.flow.combine
 
 /**
  * @author allan

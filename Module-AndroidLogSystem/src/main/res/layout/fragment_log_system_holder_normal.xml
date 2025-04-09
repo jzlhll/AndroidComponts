@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="@dimen/ui_padding_edge"
+    android:paddingVertical="9dp"
+    android:orientation="horizontal"
+    android:layout_height="72dp">
+
+    <View
+        tools:background="#f0f0e1"
+        android:id="@+id/bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.au.module_android.widget.CustomFontText
+        style="@style/StyleFontMText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nameTv"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2025-01-04.txt" />
+
+    <com.au.module_android.widget.CustomFontText
+        style="@style/StyleFontText"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="21dp"
+        android:id="@+id/sizeTv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20.8MB"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

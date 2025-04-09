@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewHolderItemBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.asOrNull
 import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_nested.recyclerview.BindRcvAdapter
@@ -36,7 +36,7 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
 
     private val editClick:(String)->Unit = { autoFsId:String ->
         if (AutoFsObj.isAlarmExpired(autoFsId)) {
-            Globals.topActivity?.asOrNull<FragmentRootActivity>()?.let { ac ->
+            Globals.topActivity?.asOrNull<FragmentShellActivity>()?.let { ac ->
                 ConfirmBottomDialog.show2(ac.supportFragmentManager,
                     "闹钟已过期",
                     "请选择接下来的操作。",
@@ -52,7 +52,7 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
                     })
             }
         } else {
-            AutoStartAlarmDialog.edit(Globals.topActivity as FragmentRootActivity, autoFsId)
+            AutoStartAlarmDialog.edit(Globals.topActivity as FragmentShellActivity, autoFsId)
         }
     }
 
@@ -60,7 +60,7 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
         val r = AutoFsObj.switchAlarmUi(Globals.app, autoFsId, isClose)
         if (r == "expired") {
             Globals.mainHandler.post {
-                Globals.topActivity?.asOrNull<FragmentRootActivity>()?.let { ac->
+                Globals.topActivity?.asOrNull<FragmentShellActivity>()?.let { ac->
                     ConfirmBottomDialog.show2(ac.supportFragmentManager,
                         "闹钟已过期",
                         "请选择接下来的操作。",

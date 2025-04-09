@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.Globals
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IBaseDialog
 import com.au.module_android.ui.base.findDialog
@@ -227,7 +227,7 @@ abstract class AbsToastBuilder {
 
     fun setOnActivityByFragClass(clz : Class<*>): AbsToastBuilder {
         Globals.activityList.forEach {
-            val activity = it.asOrNull<FragmentRootActivity>()
+            val activity = it.asOrNull<FragmentShellActivity>()
             if (activity?.fragmentClass == clz) {
                 return setOnActivity(activity)
             }

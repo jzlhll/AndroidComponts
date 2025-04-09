@@ -25,7 +25,7 @@ import com.au.module_android.click.onClick
 import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
 import com.au.module_android.permissions.activity.ActivityForResult
-import com.au.module_android.ui.FragmentRootActivity
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.MediaHelper
@@ -49,14 +49,14 @@ class CheckWithFragment : BindingFragment<FragmentCheckInBinding>() {
 
         fun start(context: Context, dataItem: WorkEntity) {
             this.sDataItem = dataItem
-            FragmentRootActivity.start(context, CheckWithFragment::class.java)
+            FragmentShellActivity.start(context, CheckWithFragment::class.java)
         }
 
         fun start(context: Context, forResult: ActivityForResult, dataItem: WorkEntity, completedEntity: CompletedEntity?,
                   activityResultCallback: ActivityResultCallback<ActivityResult>?) {
             this.sDataItem = dataItem
             sCompletedItem = completedEntity
-            FragmentRootActivity.startForResult(context, CheckWithFragment::class.java,
+            FragmentShellActivity.startForResult(context, CheckWithFragment::class.java,
                 activityResult = forResult, activityResultCallback = activityResultCallback)
         }
     }
