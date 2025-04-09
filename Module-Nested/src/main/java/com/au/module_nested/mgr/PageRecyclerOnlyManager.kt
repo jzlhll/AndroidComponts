@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.module_nested.decoration.GridTwoDownItemDecoration
-import com.au.module_nested.recyclerview.AutoLoadMore2BindRcvAdapter
 import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.au.module_nested.recyclerview.page.AbstractPageViewModel
 import com.au.module_android.simplelivedata.Status
@@ -69,13 +68,7 @@ open class PageRecyclerOnlyManager<Bean:Any>(
             //让loading变成占据2个。
             it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if (!adapter.supportLoadMore()) return 1
-
-                    return if (adapter is AutoLoadMore2BindRcvAdapter && adapter.isLoadMoreHolder(position)) {
-                        2 //如果是
-                    } else {
-                        1
-                    }
+                    return 1
                 }
             }
         }
@@ -98,13 +91,7 @@ open class PageRecyclerOnlyManager<Bean:Any>(
             //让loading变成占据2个。
             it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if (!adapter.supportLoadMore()) return 1
-
-                    return if (adapter is AutoLoadMore2BindRcvAdapter && adapter.isLoadMoreHolder(position)) {
-                        2 //如果是
-                    } else {
-                        1
-                    }
+                    return 1
                 }
             }
         }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.module_android.widget.CustomFontText xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/StyleFontText"
+    android:paddingHorizontal="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</com.au.module_android.widget.CustomFontText>

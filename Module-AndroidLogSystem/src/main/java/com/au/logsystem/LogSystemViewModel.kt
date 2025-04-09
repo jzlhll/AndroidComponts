@@ -24,13 +24,13 @@ class LogSystemViewModel : ViewModel() {
      */
     val compressProgress = NoStickLiveData<CompressProgressInfo>()
 
-    fun scanLogs() {
+    fun scanLogs(singleClickBlock:(LogBean)->Unit) {
         viewModelScope.launchOnThread {
             try {
                 val dir = File(FileLog.logDir)
                 if (dir.exists() && dir.isDirectory) {
                     val sortedList = scan(dir)
-                    val cvtList = sortedList?.let { convertMapToList(it) }
+                    val cvtList = sortedList?.let { convertMapToList(singleClickBlock, it) }
                     scannedList.setValueSafe(cvtList ?: listOf())
                 } else {
                     scannedList.setValueSafe(listOf())
@@ -41,7 +41,7 @@ class LogSystemViewModel : ViewModel() {
         }
     }
 
-    private fun convertMapToList(map: Map<FileSorter.Group, List<File>>): List<LogBean> {
+    private fun convertMapToList(singleClickBlock:(LogBean)->Unit, map: Map<FileSorter.Group, List<File>>): List<LogBean> {
         val list = mutableListOf<LogBean>()
         map.forEach { kv->
             val day = FileSorter.groupToName(kv.key)
@@ -52,7 +52,8 @@ class LogSystemViewModel : ViewModel() {
                     generateNormal(
                         file.name,
                         ZipUtil.Companion.formatSize(file.length()),
-                        file
+                        file,
+                        singleClickBlock
                     )
                 )
             }

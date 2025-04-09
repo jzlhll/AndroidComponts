@@ -14,6 +14,7 @@ import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
+import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.toastOnTop
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,7 +51,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
             }
         }
 
-        FileLog.ignoreWrite = true
         binding.rcv.adapter = this.adapter
         binding.rcv.layoutManager = LinearLayoutManager(requireContext()).apply {
             orientation = LinearLayoutManager.VERTICAL
@@ -70,6 +70,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
                 val files = selectedData.map { it.file }
                 switchSelectMode()
                 binding.uploadGroup.visible()
+                FileLog.ignoreWrite = true
                 viewModel.compressAndShare(files)
             }
         }
@@ -80,6 +81,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
 
         binding.uploadCloseBtn.onClick {
             binding.uploadGroup.gone()
+            FileLog.ignoreWrite = false
         }
     }
 
@@ -119,7 +121,19 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
                 adapter.submitList(listOf(), false)
                 delay(800)
             }
-            viewModel.scanLogs()
+            viewModel.scanLogs(singleClickBlock)
+        }
+    }
+
+    private val singleClickBlock: (LogBean) -> Unit = { logBean->
+        val file = logBean.file
+        if (file != null) {
+            ConfirmCenterDialog.show(childFragmentManager, "查看", "是否开启阅读?",
+                "OK",
+                sureClick = {
+                    LogViewFragment.show(requireContext(), file)
+                    it.dismissAllowingStateLoss()
+                })
         }
     }
 }

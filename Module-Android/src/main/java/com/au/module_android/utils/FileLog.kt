@@ -74,7 +74,13 @@ object FileLog {
         if (!file.exists()) {
             file.mkdirs()
         }
+
+        if (ignoreWrite) {
+            return
+        }
+
         file = File(logDir, item.fileName)
+
         if (!file.exists()) {
             try {
                 file.createNewFile()

@@ -17,14 +17,15 @@ const val TYPE_NORMAL = 0
 
 @Keep
 data class LogBean(val type:Int, val info:String, val secondInfo:String, val file: File? = null,
-                   var isSelectedMode: Boolean = false, var isSelected: Boolean = false)
+                   var isSelectedMode: Boolean = false, var isSelected: Boolean = false,
+                   val clickBlock:((LogBean)->Unit)? = null)
 
 fun generateHead(head:String) :  LogBean {
     return LogBean(TYPE_HEAD, head, "")
 }
 
-fun generateNormal(info:String, secondInfo: String, file: File) :  LogBean {
-    return LogBean(TYPE_NORMAL, info, secondInfo, file)
+fun generateNormal(info:String, secondInfo: String, file: File, clickBlock:(LogBean)->Unit) :  LogBean {
+    return LogBean(TYPE_NORMAL, info, secondInfo, file, clickBlock = clickBlock)
 }
 
 class LogRcvAdapter : BindRcvAdapter<LogBean, BindViewHolder<LogBean, *>>() {
@@ -64,6 +65,8 @@ class LogRcvHolder(private val normalBackground: Drawable?,
                         it.isSelected = newState
                         binding.bg.background = if (newState) selectedBackground else normalBackground
                     }
+                } else {
+                    currentData?.let { p1 -> p1.clickBlock?.let { it1 -> it1(p1) } }
                 }
             }
         }
