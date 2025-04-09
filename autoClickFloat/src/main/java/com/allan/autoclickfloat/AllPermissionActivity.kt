@@ -107,8 +107,7 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     override fun onResume() {
         super.onResume()
         val hasBootReceiverPermission = hasPermission(android.Manifest.permission.RECEIVE_BOOT_COMPLETED)
-        logd { "allanAlarm2 hasBootReceiverPermission $hasBootReceiverPermission" }
-
+        logd { "onResume All permissionActivity hasBootReceiverPermission $hasBootReceiverPermission" }
         viewModel.getPermission(this)
     }
 

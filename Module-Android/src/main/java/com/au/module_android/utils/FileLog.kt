@@ -2,6 +2,7 @@ package com.au.module_android.utils
 
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Process
 import android.util.Log
 import com.au.module_android.Globals
 import java.io.BufferedWriter
@@ -106,7 +107,7 @@ object FileLog {
         }
     }
 
-    private val timestampFmt by unsafeLazy { SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ms", Locale.getDefault()) }
+    private val timestampFmt by unsafeLazy { SimpleDateFormat("MM-dd HH:mm:ss.ms", Locale.getDefault()) }
 
     /**时间戳转日期*/
     private fun longTimeToStr(time: Long?): String {
@@ -122,7 +123,7 @@ object FileLog {
         }
 
         val logTimeStr = longTimeToStr(System.currentTimeMillis())
-        val writeStr = "$logTimeStr>>$log"
+        val writeStr = "$logTimeStr ${Process.myPid()} $log"
         val stace: String? = if (needStace) {
             var exception = throwable
             if (exception == null){

@@ -4,6 +4,7 @@ import android.util.Log
 import com.allan.autoclickfloat.activities.autofs.AutoFsObj
 import com.allan.autoclickfloat.consts.Const
 import com.au.module_android.InitApplication
+import com.au.module_android.utils.logd
 
 /**
  * @author allan
@@ -13,7 +14,8 @@ import com.au.module_android.InitApplication
 class AutoClickApplication : InitApplication() {
     override fun onCreate() {
         super.onCreate()
-        Log.d(Const.TAG, "application onCreate") //这就能让他进行初始化了.所以不要去掉。
+        //这就能让Const进行初始化.所以不要去掉。
+        logd { Const.TAG + "autoClick: application onCreate" }
         AutoFsObj.init(this)
     }
 }
