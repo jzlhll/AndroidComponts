@@ -3,7 +3,7 @@ package com.au.module_okhttp
 import android.content.Context
 import android.util.Log
 import com.au.module_android.BuildConfig
-import com.au.module_okhttp.beans.OkhttpBuildParams
+import com.au.module_okhttp.beans.OkhttpInitParams
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
@@ -29,7 +29,9 @@ class OkHttpGlideModule : AppGlideModule() {
             val client = _okhttpClient
             if (client == null) {
                 //添加okhttp的使用。
-                val builder = OkhttpGlobal.createCertOkHttpBuilder(OkhttpBuildParams(NO_SSL_CHECK))
+                val builder = OkhttpGlobal.createCertOkHttpBuilder(OkhttpInitParams().also {
+                    it.okHttpEnableTrustAllCertificates = NO_SSL_CHECK
+                })
                 val c = builder.build()
                 _okhttpClient = c
                 return c

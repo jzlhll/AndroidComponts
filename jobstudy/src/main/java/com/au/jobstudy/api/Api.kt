@@ -3,9 +3,10 @@ package com.au.jobstudy.api
 import com.au.jobstudy.api.bean.JobBean
 import com.au.module_android.Globals
 import com.au.module_android.json.fromJson
-import com.au.module_android.okhttp.downloadFile
 import com.au.module_android.utils.awaitOnIoThread
 import com.au.module_android.utils.logd
+import com.au.module_okhttp.OkhttpGlobal
+import com.au.module_okhttp.creator.downloadFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -23,7 +24,7 @@ object Api {
             "$day"
         }
         val url = "https://gitee.com/allan001/JobStudyDispatcher/blob/master/jobs/$yearMonth/job$dayStr.txt"
-        return Globals.okHttpClient().downloadFile(url, Globals.goodCacheDir.absolutePath, "job" + System.currentTimeMillis() + ".txt")
+        return OkhttpGlobal.okHttpClient().downloadFile(url, Globals.goodCacheDir.absolutePath, "job" + System.currentTimeMillis() + ".txt")
     }
 
     private val parseStartText = """

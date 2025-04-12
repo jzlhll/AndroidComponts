@@ -16,7 +16,7 @@ import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.base.IBaseDialog
-import com.au.module_android.ui.base.findDialogByContentFragment
+import com.au.module_android.ui.base.findDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.asOrNull
@@ -110,7 +110,7 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
 
             if (!isInitDialogOnce) {
                 isInitDialogOnce = true
-                this.findDialogByContentFragment()?.asOrNull<IBaseDialog>()?.apply {
+                findDialog(this)?.asOrNull<IBaseDialog>()?.apply {
                     onDismissBlock = { dialog->
                         dialog.window?.let {
                             logd{"hide ime before dismiss"}
@@ -120,12 +120,12 @@ class AndroidUi2Fragment : BindingFragment<FragmentAndroidUi2Binding>() {
                 }
 
                 binding.closeBtn.onClick {
-                    findDialogByContentFragment()?.dismissAllowingStateLoss()
+                    findDialog(this)?.dismissAllowingStateLoss()
                 }
             }
 
             // 弹出键盘；需要验证是否比较流畅
-            findDialogByContentFragment()?.asOrNull<IBaseDialog>()?.let {
+            findDialog(this)?.asOrNull<IBaseDialog>()?.let {
                 it.window?.let {window->
                     showImeNew(window, binding.etText)
                 }

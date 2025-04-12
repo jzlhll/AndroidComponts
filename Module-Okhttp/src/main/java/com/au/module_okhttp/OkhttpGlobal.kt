@@ -1,7 +1,6 @@
 package com.au.module_okhttp
 
 import com.au.module_android.Globals
-import com.au.module_okhttp.beans.OkhttpBuildParams
 import com.au.module_okhttp.beans.OkhttpInitParams
 import com.au.module_okhttp.creator.TrustAllCertsManager
 import okhttp3.Cache
@@ -25,16 +24,16 @@ object OkhttpGlobal {
         else -> okHttpClient
     }
 
-    private var mParams : OkhttpInitParams? = null
+    private var _params : OkhttpInitParams? = null
 
-    private val params
-        get() = mParams ?: OkhttpInitParams().also { mParams = it }
+    private val mParams
+        get() = _params ?: OkhttpInitParams().also { _params = it }
 
     /**
      * 如果有必要则在application尽早初始化。
      */
     fun initParams(params: OkhttpInitParams) {
-        this.mParams = params
+        this._params = params
     }
 
     private val okHttpClient by lazy {
@@ -44,7 +43,7 @@ object OkhttpGlobal {
             .writeTimeout(15, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false)
             .also {
-                params.okhttpExtraBuilder?.invoke(it)
+                mParams.okhttpExtraBuilder?.invoke(it)
                 //最后添加日志打印，保证打印最全
                 //                    doOnlyDebug {
                 //                        it.addNetworkInterceptor(::httpRequestLog)
@@ -91,11 +90,11 @@ object OkhttpGlobal {
     /**
      * 添加证书相关设置
      */
-    internal fun createCertOkHttpBuilder(params: OkhttpBuildParams? = null) : OkHttpClient.Builder {
+    internal fun createCertOkHttpBuilder(params: OkhttpInitParams? = null) : OkHttpClient.Builder {
         val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-        val okHttpEnableTrustAllCertificates = params?.okHttpEnableTrustAllCertificates ?: this.params.okHttpEnableTrustAllCertificates
-        val okHttpCacheSize = params?.okHttpCacheSize ?: this.params.okHttpCacheSize
-        val okHttpCookieJar = params?.okHttpCookieJar ?: this.params.okHttpCookieJar
+        val okHttpEnableTrustAllCertificates = params?.okHttpEnableTrustAllCertificates ?: mParams.okHttpEnableTrustAllCertificates
+        val okHttpCacheSize = params?.okHttpCacheSize ?: mParams.okHttpCacheSize
+        val okHttpCookieJar = params?.okHttpCookieJar ?: mParams.okHttpCookieJar
 
         if (okHttpEnableTrustAllCertificates) {
             //下面两行信任所有证书

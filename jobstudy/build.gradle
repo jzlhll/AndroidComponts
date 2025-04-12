@@ -38,9 +38,10 @@ android {
 }
 
 dependencies {
-    api project(":Module-Android")
+    implementation project(":Module-Android")
     implementation project(':Module-AndroidUi')
     implementation project(":Module-Nested")
+    implementation project(":Module-Okhttp")
 //    implementation project(':AuLiteSql')
 //    implementation project(':MultiMedia')
 

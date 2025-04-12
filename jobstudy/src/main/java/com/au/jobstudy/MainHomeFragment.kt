@@ -26,6 +26,7 @@ import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
+import com.au.module_cached.delegate.AppDataStoreIntCache
 
 class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
     private lateinit var adapter: HomeRcvAdapter
@@ -35,7 +36,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
         CheckWithFragment.start(requireContext(), itemBean.oneWork)
     }
 
-    private val mFirstRunDay = AppDataStoreMemCache("firstRunDay", 0)
+    private var mFirstRunDay by AppDataStoreIntCache("firstRunDay", 0)
 
     private var mineStarDataIsObservered = false
 
@@ -90,7 +91,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
                 }
             }
 
-            val firstRunDay = this.mFirstRunDay.readInt()
+            val firstRunDay = this.mFirstRunDay
             if (firstRunDay != 0 && firstRunDay != CheckConsts.currentDay()) {
                 val uncompletedWorksYesterday = CheckConsts.yesterdayUncompletedWorks()
                 if (uncompletedWorksYesterday.isEmpty()) {
@@ -102,7 +103,7 @@ class MainHomeFragment : BindingFragment<FragmentMainHomeBinding>() {
                     }
                 }
             } else {
-                this.mFirstRunDay.save(CheckConsts.currentDay())
+                mFirstRunDay = CheckConsts.currentDay()
             }
 
             val uncompletedWorksWeekly = CheckConsts.weeklyUncompletedWorks()

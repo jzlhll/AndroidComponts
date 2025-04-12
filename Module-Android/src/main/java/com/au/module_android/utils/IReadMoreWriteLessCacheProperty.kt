@@ -5,7 +5,6 @@ import kotlin.reflect.KProperty
 
 /**
  * 读多写少的代理实现
- * @param cacheFileName 存储介质的文字。SP就是xmlName，DataStore就是文件名。
  */
 abstract class IReadMoreWriteLessCacheProperty<T:Any>(
     private val key: String,
