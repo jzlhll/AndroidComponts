@@ -16,6 +16,7 @@ import androidx.core.net.toFile
 import com.au.module_android.Globals
 import com.au.module_android.utils.logt
 import com.au.module_imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
+import com.au.module_imagecompressed.util.getUriMimeType
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -122,6 +123,102 @@ private fun isSupportConvertImage(extension: String): Boolean {
     return extension in imageExtensions
 }
 
+fun Uri.copyToCacheFileSchemeFile(size:LongArray? = null): File? {
+    val file = this.path?.let { File(it) }
+    if (file != null) {
+        size?.set(0, file.length())
+    }
+    return file
+}
+
+fun Uri.copyToCacheFileSchemeContent(cr: ContentResolver, param:String? = null, size:LongArray? = null) : File? {
+    val cacheDir = Globals.goodCacheDir
+    val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(getUriMimeType(cr))?.lowercase()
+    val isSourceHeic = extension == "heic"
+    logt(tag = "picker") { "$this $param, extension: $extension"}
+    var cvtExtension = extension
+    if (extension != null && isSupportConvertImage(extension)) {
+        when (param) {
+            URI_COPY_PARAM_ANY_TO_JPG -> {
+                cvtExtension = "jpg"
+            }
+
+            URI_COPY_PARAM_HEIC_TO_PNG -> {
+                if (isSourceHeic) {
+                    cvtExtension = "png"
+                }
+            }
+
+            URI_COPY_PARAM_HEIC_TO_JPG -> {
+                if (isSourceHeic) {
+                    cvtExtension = "jpg"
+                }
+            }
+        }
+    }
+
+    val displayName = COPY_FILE_PREFIX + System.currentTimeMillis() + "_" + (Math.random() * 1000).toInt().toString() + "." + cvtExtension
+    val subDirFile = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR")
+    if (!subDirFile.exists()) {
+        subDirFile.mkdirs()
+    }
+    val cache = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR", displayName)
+    val file = cache
+    copyFromCr(cr, cache, param, extension, isSourceHeic, size)
+    return file
+}
+
+private fun Uri.copyFromCr(
+    cr: ContentResolver,
+    cache: File,
+    param: String?,
+    extension: String?,
+    isSourceHeic: Boolean,
+    size: LongArray?
+) {
+    try {
+        cr.openInputStream(this)?.use { inputStream ->
+            val fos = FileOutputStream(cache)
+            var cvtFmt: String? = null
+            if (param != null && extension != null && isSupportConvertImage(extension)) {
+                when (param) {
+                    URI_COPY_PARAM_ANY_TO_JPG -> {
+                        if (extension != "jpg" && extension != "jpeg") {
+                            cvtFmt = "jpg"
+                        }
+                    }
+
+                    URI_COPY_PARAM_HEIC_TO_JPG -> {
+                        if (isSourceHeic) {
+                            cvtFmt = "jpg"
+                        }
+                    }
+
+                    URI_COPY_PARAM_HEIC_TO_PNG -> {
+                        if (isSourceHeic) {
+                            cvtFmt = "png"
+                        }
+                    }
+                }
+            }
+
+            if (cvtFmt != null) {
+                copyImageAndCvtTo(inputStream, fos, cvtFmt)
+            } else {
+                copyFile(inputStream, fos)
+            }
+
+            fos.flush()
+            fos.close()
+
+            size?.set(0, cache.length())
+            logt(tag = "picker") { "$cache $cvtFmt after copy ${size?.get(0)}" }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
 /**
  * 经过研究，android对于content uri想要使用File最好的办法，就是拷贝到自己的目录下。
  * 才是最保险的，而且不需要考虑权限问题。
@@ -137,85 +234,10 @@ private fun isSupportConvertImage(extension: String): Boolean {
 @WorkerThread
 fun Uri.copyToCacheFile(cr: ContentResolver, param:String? = null, size:LongArray? = null): File? {
     var file: File? = null
-    val cacheDir = Globals.goodCacheDir
     if (this.scheme == ContentResolver.SCHEME_FILE) {
-        file = this.path?.let { File(it) }
-        if (file != null) {
-            size?.set(0, file.length())
-        }
+        file = copyToCacheFileSchemeFile(size)
     } else if (this.scheme == ContentResolver.SCHEME_CONTENT) {
-        val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(getUriMimeType(cr))?.lowercase()
-        val isSourceHeic = extension == "heic"
-        logt(tag = "picker"){ "$this $param, extension: $extension"}
-        var cvtExtension = extension
-        if (extension != null && isSupportConvertImage(extension)) {
-            when (param) {
-                URI_COPY_PARAM_ANY_TO_JPG -> {
-                    cvtExtension = "jpg"
-                }
-
-                URI_COPY_PARAM_HEIC_TO_PNG -> {
-                    if (isSourceHeic) {
-                        cvtExtension = "png"
-                    }
-                }
-
-                URI_COPY_PARAM_HEIC_TO_JPG -> {
-                    if (isSourceHeic) {
-                        cvtExtension = "jpg"
-                    }
-                }
-            }
-        }
-
-        val displayName = COPY_FILE_PREFIX + System.currentTimeMillis() + "_" + (Math.random() * 1000).toInt().toString() + "." + cvtExtension
-        val subDirFile = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR")
-        if (!subDirFile.exists()) {
-            subDirFile.mkdirs()
-        }
-        val cache = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR", displayName)
-        file = cache
-        try {
-            cr.openInputStream(this)?.use { inputStream->
-                val fos = FileOutputStream(cache)
-                var cvtFmt:String? = null
-                if (param != null && extension != null && isSupportConvertImage(extension)) {
-                    when (param) {
-                        URI_COPY_PARAM_ANY_TO_JPG -> {
-                            if (extension != "jpg" && extension != "jpeg") {
-                                cvtFmt = "jpg"
-                            }
-                        }
-
-                        URI_COPY_PARAM_HEIC_TO_JPG -> {
-                            if (isSourceHeic) {
-                                cvtFmt = "jpg"
-                            }
-                        }
-
-                        URI_COPY_PARAM_HEIC_TO_PNG -> {
-                            if (isSourceHeic) {
-                                cvtFmt = "png"
-                            }
-                        }
-                    }
-                }
-
-                if (cvtFmt != null) {
-                    copyImageAndCvtTo(inputStream, fos, cvtFmt)
-                } else {
-                    copyFile(inputStream, fos)
-                }
-
-                fos.flush()
-                fos.close()
-
-                size?.set(0, cache.length())
-                logt(tag = "picker"){"$cache $cvtFmt after copy ${size?.get(0)}"}
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        file = copyToCacheFileSchemeContent(cr, param, size)
     }
     return file
 }

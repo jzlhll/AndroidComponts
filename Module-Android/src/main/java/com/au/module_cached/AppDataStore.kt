@@ -63,7 +63,7 @@ object AppDataStore {
                 String::class -> stringPreferencesKey(key)
                 ByteArray::class -> byteArrayPreferencesKey(key)
                 else -> {
-                    throw IllegalArgumentException("This type can be removed from DataStore")
+                    throw IllegalArgumentException("This type can be removed from DataStore1")
                 }
             }
             val t = dataStore.data.map {
@@ -87,7 +87,7 @@ object AppDataStore {
             String::class -> stringPreferencesKey(key)
             ByteArray::class -> byteArrayPreferencesKey(key)
             else -> {
-                throw IllegalArgumentException("This type can be removed from DataStore")
+                throw IllegalArgumentException("This type can be removed from DataStore2")
             }
         }
         val t = dataStore.data.map { it.contains(prefKey) }.first()
@@ -135,7 +135,7 @@ object AppDataStore {
                 String::class -> setting.remove(stringPreferencesKey(key)).asOrNull()
                 ByteArray::class -> setting.remove(byteArrayPreferencesKey(key)).asOrNull()
                 else -> {
-                    throw IllegalArgumentException("This type can be removed from DataStore")
+                    throw IllegalArgumentException("This type can be removed from DataStore3")
                 }
             }
         }

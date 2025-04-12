@@ -5,6 +5,6 @@ package com.au.learning.classnamecompiler
  * @date :2024/7/3 16:41
  * @description:
  */
-abstract class AbsCodeTemplate {
-    abstract val codeTemplate : String
+interface AbsCodeTemplate {
+    val codeTemplate : String
 }

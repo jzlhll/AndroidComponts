@@ -18,6 +18,9 @@ public class PcmInfo {
             case AudioFormat.CHANNEL_IN_STEREO:
                 outChannelConfig = AudioFormat.CHANNEL_OUT_STEREO;
                 break;
+            default:
+                //no
+                break;
         }
 
         this.encodingFmt = encodingFmt;

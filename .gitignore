@@ -12,4 +12,5 @@ ClassNameAnnotations-ksp/build/
 /jsbridge
 .externalNativeBuild
 .cxx
+.scannerwork/
 local.properties

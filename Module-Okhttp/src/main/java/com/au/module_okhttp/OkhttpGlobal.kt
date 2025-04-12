@@ -77,11 +77,11 @@ object OkhttpGlobal {
     /** 传入 Array(1) 为1的空数组即可。
      * 返回okhttp的设置参数。
      */
-    internal fun createSSLSocketFactory() : SSLSocketFactory {
+    internal fun createSSLSocketFactory(tls:String) : SSLSocketFactory {
         val cert = TrustAllCertsManager()
 
         val ssfFactory: SSLSocketFactory
-        val sc = SSLContext.getInstance("TLS")
+        val sc = SSLContext.getInstance(tls)
         sc.init(null, arrayOf(cert), SecureRandom())
         ssfFactory = sc.socketFactory
         return ssfFactory
@@ -99,7 +99,7 @@ object OkhttpGlobal {
         if (okHttpEnableTrustAllCertificates) {
             //下面两行信任所有证书
             builder.sslSocketFactory(
-                createSSLSocketFactory(),
+                createSSLSocketFactory("TLS"),
                 TrustAllCertsManager()
             )
             builder.hostnameVerifier(TrustAllCertsManager.TrustAllHostnameVerifier())

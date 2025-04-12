@@ -6,6 +6,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
+import java.util.Locale
 
 fun toHtml(html: String?): Spanned {
     return if (html == null) {
@@ -42,6 +43,38 @@ data class HtmlPart(val text:String,
                     val bold:Boolean=false,
                     val link:Boolean=false)
 
+private fun fmtLinkBold(part: HtmlPart): String {
+    return if (part.color != null) { //下划线&粗体&颜色
+        "<b><u><font color='#%s'>%s</font></u></b>"
+    } else { //下划线&粗体
+        "<b><u>%s</u></b>"
+    }
+}
+
+private fun fmtLinkNotBold(part: HtmlPart) : String {
+    return if (part.color != null) {//下划线&颜色
+        "<u><font color='#%s'>%s</font></u>"
+    } else {//下划线
+        "<u>%s</u>"
+    }
+}
+
+private fun fmtNotLinkBold(part: HtmlPart) : String {
+    return if (part.color != null) {//粗体&颜色
+        "<b><font color='#%s'>%s</font></b>"
+    } else { //粗体
+        "<b>%s</b>"
+    }
+}
+
+private fun fmtNotLinkNotBold(part: HtmlPart) : String {
+    return if (part.color != null) {//颜色
+        "<font color='#%s'>%s</font>"
+    } else { //nothing
+        "%s"
+    }
+}
+
 /**
  * 将一些常用的东西，封装一些常用且简单的代码。
  * 至于更复杂的组合，比如textSize，斜体，等，自行编写。
@@ -52,47 +85,35 @@ fun TextView.useSimpleHtmlText(vararg items : HtmlPart) {
         val fmt =
             if (it.link) {
                 if (it.bold) {
-                    if (it.color != null) { //下划线&粗体&颜色
-                        "<b><u><font color='#%s'>%s</font></u></b>"
-                    } else { //下划线&粗体
-                        "<b><u>%s</u></b>"
-                    }
+                    fmtLinkBold(it)
                 } else {
-                    if (it.color != null) {//下划线&颜色
-                        "<u><font color='#%s'>%s</font></u>"
-                    } else {//下划线
-                        "<u>%s</u>"
-                    }
+                    fmtLinkNotBold(it)
                 }
             } else {
                 if (it.bold) {
-                    if (it.color != null) {//粗体&颜色
-                        "<b><font color='#%s'>%s</font></b>"
-                    } else { //粗体
-                        "<b>%s</b>"
-                    }
+                    fmtNotLinkBold(it)
                 } else {
-                    if (it.color != null) {//颜色
-                        "<font color='#%s'>%s</font>"
-                    } else { //nothing
-                        "%s"
-                    }
+                    fmtNotLinkNotBold(it)
                 }
             }
 
         val part = if (it.color != null) {
-            val c = if (it.color.startsWith("#")) {
-                it.color.substring(1)
-            } else {
-                it.color
-            }
-            String.format(fmt, c, it.text)
+            String.format(fmt, htmlPartColor(it.color), it.text)
         } else {
             String.format(fmt, it.text)
         }
         sb.append(part)
     }
     text = toHtml(sb.toString())
+}
+
+private fun htmlPartColor(color: String): String {
+    val c = if (color.startsWith("#")) {
+        color.substring(1)
+    } else {
+        color
+    }
+    return c
 }
 
 private const val INT_SPLIT_CHAR = " "
@@ -129,66 +150,46 @@ fun fractionToHtml(triple: Triple<Int?, Int?, Int?>): String {
     val fractionUnicode = fractionToUnicode(triple.second!!, triple.third!!)
     if (triple.first == null) {
         if (fractionUnicode != null) return fractionUnicode
-        return String.format("<sup>%d</sup>&frasl;<sub>%d</sub>", triple.second, triple.third)
+        return String.format(Locale.US, "<sup>%d</sup>&frasl;<sub>%d</sub>", triple.second, triple.third)
     }
     if (fractionUnicode != null) return triple.first.toString() + fractionUnicode
-    return String.format("%d<sup>%d</sup>&frasl;<sub>%d</sub>", triple.first, triple.second, triple.third)
+    return String.format(Locale.US, "%d<sup>%d</sup>&frasl;<sub>%d</sub>", triple.first, triple.second, triple.third)
 }
 
 /** 分数转unicode。预测分支。
  */
-fun fractionToUnicode(molecular:Int, denominator:Int):String? {
-    if (molecular == 1) {
-        if (denominator == 2) {
-            return "\u00BD"
-        }
-        if (denominator == 3) {
-            return "\u2153"
-        }
-        if (denominator == 4) {
-            return "\u00BC"
-        }
-        if (denominator == 8) {
-            return "\u215B"
-        }
-        if (denominator == 5) {
-            return "\u2155"
-        }
-        if (denominator == 6) {
-            return "\u2159"
-        }
-    } else if (molecular == 2) {
-        if (denominator == 3) {
-            return "\u2154"
-        }
-        if (denominator == 5) {
-            return "\u2156"
-        }
-    } else if (molecular == 3) {
-        if (denominator == 4) {
-            return "\u00BE"
-        }
-        if (denominator == 8) {
-            return "\u215C"
-        }
-        if (denominator == 5) {
-            return "\u2157"
-        }
-    } else if (molecular == 4) {
-        if (denominator == 5) {
-            return "\u2158"
-        }
-    } else if (molecular == 5) {
-        if (denominator == 8) {
-            return "\u215D"
-        }
-        if (denominator == 6) {
-            return "\u215A"
-        }
-    } else if (molecular == 7) {
-        if (denominator == 8) {
-            return "\u215E"
-        }
-    }
-    return null
+fun fractionToUnicode(molecular: Int, denominator: Int): String? {
+    // 使用Pair作为键的映射表
+    val fractionMap = mapOf(
+        1 to mapOf(
+            2 to "\u00BD",   // ½
+            3 to "\u2153",   // ⅓
+            4 to "\u00BC",   // ¼
+            5 to "\u2155",   // ⅕
+            6 to "\u2159",   // ⅙
+            8 to "\u215B"    // ⅛
+        ),
+        2 to mapOf(
+            3 to "\u2154",   // ⅔
+            5 to "\u2156"    // ⅖
+        ),
+        3 to mapOf(
+            4 to "\u00BE",   // ¾
+            5 to "\u2157",   // ⅗
+            8 to "\u215C"    // ⅜
+        ),
+        4 to mapOf(
+            5 to "\u2158"    // ⅘
+        ),
+        5 to mapOf(
+            6 to "\u215A",   // ⅚
+            8 to "\u215D"    // ⅝
+        ),
+        7 to mapOf(
+            8 to "\u215E"    // ⅞
+        )
+    )
+
+    // 双重安全访问
+    return fractionMap[molecular]?.get(denominator)
 }

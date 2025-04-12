@@ -9,10 +9,12 @@ import javax.net.ssl.X509TrustManager
 class TrustAllCertsManager : X509TrustManager {
     @Throws(CertificateException::class)
     override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+        //empty 不验证客户端证书
     }
 
     @Throws(CertificateException::class)
     override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+        //empty 不验证客户端证书
     }
 
     override fun getAcceptedIssuers(): Array<X509Certificate> {

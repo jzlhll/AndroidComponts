@@ -14,12 +14,12 @@ import androidx.core.content.withStyledAttributes
  */
 
 const val FONT_NORMAL_PATH = "fonts/SourceHanSansSCNormal.otf"
-const val FONT_MEDIUM_PATH = "fonts/SourceHanSansSCNormal.otf"
-const val FONT_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_MEDIUM_PATH = FONT_NORMAL_PATH//"fonts/SourceHanSansSCNormal.otf"
+const val FONT_BOLD_PATH = FONT_NORMAL_PATH//"fonts/SourceHanSansSCNormal.otf"
 
-const val FONT_NUMBER_PATH = "fonts/SourceHanSansSCNormal.otf"
-const val FONT_NUMBER_MEDIUM_PATH = "fonts/SourceHanSansSCNormal.otf"
-const val FONT_NUMBER_BOLD_PATH = "fonts/SourceHanSansSCNormal.otf"
+const val FONT_NUMBER_PATH = FONT_NORMAL_PATH//"fonts/SourceHanSansSCNormal.otf"
+const val FONT_NUMBER_MEDIUM_PATH = FONT_NUMBER_PATH//"fonts/SourceHanSansSCNormal.otf"
+const val FONT_NUMBER_BOLD_PATH = FONT_NUMBER_MEDIUM_PATH//"fonts/SourceHanSansSCNormal.otf"
 
 private val fontFaceMap by lazy { hashMapOf<String, Typeface>() }
 

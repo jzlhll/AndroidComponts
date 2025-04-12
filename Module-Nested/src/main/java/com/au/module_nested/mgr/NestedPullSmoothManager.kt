@@ -73,7 +73,7 @@ internal class NestedPullSmoothManager
         }
     }
 
-    private fun initial() {
+    private fun init1() {
         refresher.pullDownLooseFingerCallback = { fra, state ->
             when (state) {
                 NestedLayoutRefresher.PullDownShrinkState.START -> {
@@ -113,7 +113,9 @@ internal class NestedPullSmoothManager
                 }
             }
         }
+    }
 
+    private fun init2() {
         refresher.pullDownScrollingCallback = { dy ->
             val ny = -dy * params.realMoveRatio
             val translation1 = ny + bePullView.translationY
@@ -136,6 +138,11 @@ internal class NestedPullSmoothManager
                 showIndicator()
             }
         }
+    }
+
+    private fun initial() {
+        init1()
+        init2()
     }
 
     override fun refreshCompleted() {

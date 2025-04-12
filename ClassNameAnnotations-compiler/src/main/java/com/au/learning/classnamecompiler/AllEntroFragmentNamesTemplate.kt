@@ -5,7 +5,7 @@ package com.au.learning.classnamecompiler
  * @date :2024/7/3 14:11
  * @description:
  */
-class AllEntryFragmentNamesTemplate : AbsCodeTemplate() {
+class AllEntryFragmentNamesTemplate : AbsCodeTemplate {
     private val insertCode = StringBuilder()
 
     /**

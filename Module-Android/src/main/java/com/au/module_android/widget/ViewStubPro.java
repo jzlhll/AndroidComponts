@@ -295,6 +295,7 @@ public final class ViewStubPro extends View {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        //do nothing.
     }
 
     private boolean mIsLaunched = false;

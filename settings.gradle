@@ -54,7 +54,7 @@ include ':Module-ImageCompressed'
 
 //自定义apt
 include ':ClassNameAnnotations'
-//include ':ClassNameAnnotations-compiler'
+include ':ClassNameAnnotations-compiler'
 include ':ClassNameAnnotations-ksp'
 include ':Module-Native'
 include ':test'

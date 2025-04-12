@@ -94,30 +94,38 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
             return LoadStatus.NoMore
         }
 
-        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}loadPageData running...${pageData.data}")
+        return loadPageDataChecked(initOrAppend)
+    }
+
+    private fun currentPage(initOrAppend:Boolean) : Int {
+        return if (initOrAppend) firstPageIndex else (pageData.data?.nextPageIndex ?: firstPageIndex)
+    }
+
+    private fun loadPageDataChecked(initOrAppend: Boolean): LoadStatus {
+        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}loadPageData running...${pageData.data}")
         pageData.runningOldData()
-        val currentPage = if(initOrAppend) firstPageIndex else (pageData.data?.nextPageIndex ?: firstPageIndex)
+        val currentPage = currentPage(initOrAppend)
 
         val myData = pageData.data ?: LoadPage()
         viewModelScope.launch {
             try {
-                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData----$currentPage")
+                if (BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData----$currentPage")
                 val data = realLoadData(currentPage, pageSize) //返回获取到的数据
                 val records = data.records
 
                 //todo 可以根据http结果data的page信息修改如下的isOver逻辑
 
-                val loadCode:Int
+                val loadCode: Int
                 var needUpdatePageData = true
                 if (initOrAppend) {
-                    loadCode = if(!myData.isFirst) LoadCode.InitWithOldMulti.code else LoadCode.Init.code
+                    loadCode = if (!myData.isFirst) LoadCode.InitWithOldMulti.code else LoadCode.Init.code
 
                     if (records == null || records.size == 0) {
-                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}init with empty")
+                        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}init with empty")
                         myData.initWithEmpty()
                         totalSizeData.setValueSafe(0)
                     } else {
-                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}init with page")
+                        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}init with page")
                         myData.initPage(records, isCurrentPageLastPage(data))
                         totalSizeData.setValueSafe(data.pages)
                     }
@@ -125,30 +133,31 @@ abstract class AbstractPageViewModel<Bean:Any> : ViewModel() {
                     loadCode = LoadCode.Append.code
 
                     if (records == null || records.size == 0) {
-                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}append with end")
+                        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}append with end")
                         myData.appendNullMaskEnd()
+                        needUpdatePageData = false //这种情况，不应该更新pageData，更为严谨。
                     } else {
-                        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}append with page")
+                        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}append with page")
                         myData.appendPage(records, isCurrentPageLastPage(data))
                     }
                 }
 
-                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}realLoadData success!")
-                if(needUpdatePageData) pageData.success(myData, code=loadCode)
+                if (BuildConfig.DEBUG) Log.d("nested", "${logTag}realLoadData success!")
+                if (needUpdatePageData) pageData.success(myData, code = loadCode)
             } catch (e: Throwable) {
                 //e.printStackTrace()
-                val errorMsg:String?
-                val errorCode:Int?
+                val errorMsg: String?
+                val errorCode: Int?
                 errorCode = -1
                 errorMsg = e.message
-                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData error----$currentPage")
+                if (BuildConfig.DEBUG) Log.d("nested", "${logTag}real LoadData error----$currentPage")
                 realLoadDataError(e.message)
-                if(BuildConfig.DEBUG) Log.d("nested", "${logTag}load error!")
+                if (BuildConfig.DEBUG) Log.d("nested", "${logTag}load error!")
                 pageData.error(myData, errorCode, errorMsg)
             }
         }
 
-        if(BuildConfig.DEBUG) Log.d("nested", "${logTag}start search load page data emitted.")
+        if (BuildConfig.DEBUG) Log.d("nested", "${logTag}start search load page data emitted.")
         return LoadStatus.Emitted
     }
 }

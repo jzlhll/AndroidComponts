@@ -84,13 +84,17 @@ public final class IOUtils {
             if (children != null) {
                 //递归删除目录中的子目录下
                 for (File child : children) {
-                    boolean subIsHasFailed = iterateDeleteDir(child);
-                    isHasFailed = isHasFailed | subIsHasFailed;
+                    if(!iterateDeleteDir(child)) {
+                        isHasFailed = true;
+                    }
                 }
             }
         }
+        if (isHasFailed) {
+            return false;
+        }
         // 目录此时为空，可以删除
-        return !dir.delete() | isHasFailed; //** 千万不能换成||,会短路。为了避免，把delete放前面
+        return dir.delete();
     }
 
     public static boolean createDir(@NonNull String dirs) {
@@ -123,7 +127,6 @@ public final class IOUtils {
             File a=new File(oldPath);
             String[] file=a.list();
             File temp;
-            byte[] b = new byte[1024 * 4];
             for (int i = 0; file != null && i < file.length; i++) {
                 if(oldPath.endsWith(File.separator)){
                     temp=new File(oldPath+file[i]);
@@ -133,16 +136,19 @@ public final class IOUtils {
                 }
 
                 if(temp.isFile()){
-                    FileInputStream input = new FileInputStream(temp);
-                    FileOutputStream output = new FileOutputStream(newPath + "/" +
-                            (temp.getName()));
-                    int len;
-                    while ( (len = input.read(b)) != -1) {
-                        output.write(b, 0, len);
+                    try (
+                            FileInputStream input = new FileInputStream(temp);
+                            FileOutputStream output = new FileOutputStream(newPath + "/" + temp.getName())
+                    ) {
+                        byte[] b = new byte[1024 * 4];
+                        int len;
+                        while ((len = input.read(b)) != -1) {
+                            output.write(b, 0, len);
+                        }
+                        output.flush();
+                    } catch (IOException e) {
+                        //ignore error.
                     }
-                    output.flush();
-                    output.close();
-                    input.close();
                 }
                 if(temp.isDirectory()){//如果是子文件夹
                     copyFolder(oldPath+"/"+file[i],newPath+"/"+file[i]);
@@ -193,7 +199,7 @@ public final class IOUtils {
             }
     }
 
-    interface IFilter {
+    public interface IFilter {
         boolean filter(File f);
     }
 }

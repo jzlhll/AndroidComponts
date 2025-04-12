@@ -42,14 +42,16 @@ class Processor : AbstractProcessor() {
         val result: MutableSet<TypeElement> = HashSet()
         //遍历包含的 package class method
         for (element in elements) {
+            if (element !is TypeElement) {
+                continue
+            }
+
             //匹配 class or interface
-            if (element is TypeElement) {
-                for (annotationMirror in element.annotationMirrors) {
-                    val found = isElementInAnnotations(annotationMirror.annotationType.asElement(), annotations)
-                    if (found) {
-                        result.add(element)
-                        break
-                    }
+            for (annotationMirror in element.annotationMirrors) {
+                val found = isElementInAnnotations(annotationMirror.annotationType.asElement(), annotations)
+                if (found) {
+                    result.add(element)
+                    break
                 }
             }
         }
