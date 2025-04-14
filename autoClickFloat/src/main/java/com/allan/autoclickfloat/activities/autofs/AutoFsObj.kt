@@ -10,7 +10,10 @@ import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.loge
 import com.au.module_cached.AppDataStore
+import com.au.module_cached.delegate.AppDataStoreLongCache
+import okhttp3.internal.toImmutableList
 import java.util.Calendar
 import java.util.UUID
 
@@ -46,11 +49,13 @@ object AutoFsObj {
         }
     }
 
-    private val REQUEST_CODE = 118
+    private const val REQUEST_CODE = 118
+
+    private const val ACTION_TRIGGER = "com.autoStartFs.ACTION_ALARM_TRIGGERED"
 
     private fun generatePendingIntent(context: Context) : PendingIntent {
         val intent: Intent = Intent(context, AlarmReceiver::class.java)
-        intent.setAction("com.autoStartFs.ACTION_ALARM_TRIGGERED")
+        intent.setAction(ACTION_TRIGGER)
         intent.setPackage(context.packageName)
         val flag = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         return PendingIntent.getBroadcast(
@@ -63,7 +68,7 @@ object AutoFsObj {
 
     fun fetchPendingIntent(context: Context) : PendingIntent? {
         val intent: Intent = Intent(context, AlarmReceiver::class.java)
-        intent.setAction("com.autoStartFs.ACTION_ALARM_TRIGGERED")
+        intent.setAction(ACTION_TRIGGER)
         intent.setPackage(context.packageName)
         val flag = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_MUTABLE
         return PendingIntent.getBroadcast(
@@ -181,57 +186,74 @@ object AutoFsObj {
         return true
     }
 
-    fun checkAndStartNextAlarm(context:Context) {
-        logd { "allanAlarm check start:" }
-        targetTsListData.realValue?.toMutableList()?.let { newList ->
-            val curTs = System.currentTimeMillis()
-            val changeList = mutableListOf<TargetTs>()
-            newList.forEach {
-                if (it.isClose) {
+    private var lastCheckAndStartSystemTs by AppDataStoreLongCache("lastCheckAndStartSystemTs", System.currentTimeMillis())
+    private const val TIME_ONE_DAY = 3600 * 24 * 1000L
+
+    private fun recoverTargetList(): List<TargetTs>? {
+        val lastTs = lastCheckAndStartSystemTs
+        val curTs = System.currentTimeMillis()
+        if (curTs < lastTs) {
+            loge { "Error check AndStart NextAlarm 不可能的curTs" }
+            return null
+        }
+
+        lastCheckAndStartSystemTs = curTs
+
+        val newList = targetTsListData.realValueUnsafe.toImmutableList()
+
+        val changeList = mutableListOf<TargetTs>()
+        newList.forEach {
+            if (it.isClose) {
+                changeList.add(it)
+            } else {
+                if (it.isLoop) {
+                    while(it.targetTs <= curTs) {
+                        it.targetTs += TIME_ONE_DAY
+                    }
+                    it.isClose = false
                     changeList.add(it)
                 } else {
-                    if (it.isLoop) {
-                        if (it.targetTs <= curTs) {
-                            it.targetTs += 3600 * 24 * 1000L
-                        }
-                        it.isClose = false
-                        changeList.add(it)
-                    } else {
-                        if (it.targetTs <= curTs) {
-                            it.isClose = true
-                        }
-                        changeList.add(it)
+                    if (it.targetTs <= curTs) {
+                        it.isClose = true
                     }
+                    changeList.add(it)
                 }
             }
+        }
 
-            changeList.sortBy { it.targetTs }
-            val json = changeList.toJsonString()
-            AppDataStore.save("targetTsList", json)
-            targetTsListData.setValueSafe(changeList)
+        changeList.sortBy { it.targetTs }
+        return changeList
+    }
 
-            //先关闭
-            cancelAlarmOnly(context, null)
-            //开始最近一个闹钟
-            if (changeList.isNotEmpty()) {
-                val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    fun checkAndStartNextAlarm(context:Context) {
+        logd { "allanAlarm check start:" }
+        val changeList = recoverTargetList() ?: return
 
-                val ts = changeList.find { !it.isClose }?.targetTs
-                if (ts != null) {
-                    val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
-                    try {
-                        val it = generatePendingIntent(context)
-                        alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
-                        logd { "allanAlarm start next alarm time: $log" }
-                    } catch (e: SecurityException) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    logd{"allan start next alarm time: alarm all isClose."}
+        val json = changeList.toJsonString()
+        AppDataStore.save("targetTsList", json)
+        targetTsListData.setValueSafe(changeList)
+
+        //先关闭
+        cancelAlarmOnly(context, null)
+        //开始最近一个闹钟
+        if (changeList.isNotEmpty()) {
+            val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+            val ts = changeList.find { !it.isClose }?.targetTs
+            if (ts != null) {
+                val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
+                try {
+                    val it = generatePendingIntent(context)
+                    alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
+                    logd { "allanAlarm start next alarm time: $log" }
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
                 }
             } else {
-                logd{"allan start next alarm time: no alarms."}
+                logd{"allan start next alarm time: alarm all isClose."}
             }
+        } else {
+            logd{"allan start next alarm time: no alarms."}
         }
     }
 }

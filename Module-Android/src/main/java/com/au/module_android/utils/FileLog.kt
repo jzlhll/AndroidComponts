@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Process
 import android.util.Log
+import androidx.annotation.WorkerThread
 import com.au.module_android.Globals
 import java.io.BufferedWriter
 import java.io.File
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-internal class FileItem(val fileName:String, val log: String, val stace: String?)
+internal class FileItem(val fileName:String, val log: String)
 object FileLog {
     private val logFileCreateType = LogFileCreateType.OneFileEveryDay //必须放在前面
 
@@ -60,12 +61,46 @@ object FileLog {
     private fun getRootPath() = Globals.goodFilesDir.absolutePath + File.separator + "Log"
     val logDir by unsafeLazy { getRootPath() + File.separatorChar }
 
+    private val memCachedFileItemsLock = Any()
+    private const val CAPACITY_OF_FIXED_FILE_ITEMS = 1000
+    private val memCachedFileItems by unsafeLazy {
+        FixedSizeLinkedList<FileItem>(CAPACITY_OF_FIXED_FILE_ITEMS)
+    }
+
+    private var _ignoreWrite = false
+
     /**
      * 暂时停止写入
      */
-    var ignoreWrite = false
+    var ignoreWrite: Boolean
+        get() = _ignoreWrite
+        set(value) {
+            //证明是开启。
+            if (_ignoreWrite && !value) {
+                writeMemCachedLogs()
+            }
 
-    private fun writeToDisk2(item: FileItem) {
+            _ignoreWrite = value
+        }
+
+    private fun writeMemCachedLogs() {
+        val sb = StringBuilder()
+        synchronized(memCachedFileItemsLock) {
+            while (memCachedFileItems.isNotEmpty()) {
+                val item = memCachedFileItems.removeFirst()
+                sb.append(item.log).append("\n")
+            }
+        }
+        val str = sb.toString()
+        if (str.isNotEmpty()) {
+            logHandler.post {
+                writeToDisk(FileItem(getCurrentFileName(), str))
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun writeToDisk(item: FileItem) {
         val dirPath = logDir
         if (dirPath.length <= 1) {
             return
@@ -93,16 +128,7 @@ object FileLog {
             FileOutputStream(file, true).use { fis ->
                 OutputStreamWriter(fis, StandardCharsets.UTF_8).use { osw ->
                     BufferedWriter(osw).use { out ->
-                        if (item.stace == null) {
-                            out.write(item.log)
-                        } else {
-                            out.write(
-                                """
-                                $item.stace
-                                ${item.log}
-                                """.trimIndent()
-                            )
-                        }
+                        out.write(item.log)
                         out.write("\n")
                         out.flush()
                     }
@@ -116,25 +142,15 @@ object FileLog {
     private val timestampFmt by unsafeLazy { SimpleDateFormat("MM-dd HH:mm:ss.ms", Locale.getDefault()) }
 
     /**时间戳转日期*/
-    private fun longTimeToStr(time: Long?): String {
-        if (time == null) {
-            return ""
-        }
+    private fun longTimeToStr(time: Long): String {
         return timestampFmt.format(time).toString()
     }
 
     fun write(log: String, needStace: Boolean = false, throwable: Throwable? = null) {
-        if (ignoreWrite) {
-            return
-        }
-
         val logTimeStr = longTimeToStr(System.currentTimeMillis())
-        val writeStr = "$logTimeStr ${Process.myPid()} $log"
-        val stace: String? = if (needStace) {
-            var exception = throwable
-            if (exception == null){
-                exception = Exception()
-            }
+        val writeStr = "$logTimeStr ${Process.myPid()}-${Thread.currentThread().id} $log"
+        val staceStr: String? = if (needStace) {
+            val exception = throwable ?: Exception()
             val sb = StringBuilder()
             sb.append(exception.message).append("\n").append(exception.cause).append("\n")
             for (element in exception.stackTrace) {
@@ -144,13 +160,22 @@ object FileLog {
         } else {
             null
         }
-        try {
-            //排队写日志
-            logHandler.post {
-                writeToDisk2(FileItem(getCurrentFileName(), writeStr, stace))
+
+        //排队写日志
+        logHandler.post {
+            val fileItem = if(staceStr == null) {
+                FileItem(getCurrentFileName(), writeStr)
+            } else {
+                FileItem(getCurrentFileName(), writeStr + "\n" + staceStr)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+
+            if (ignoreWrite) {
+                synchronized(memCachedFileItemsLock) {
+                    memCachedFileItems.add(fileItem)
+                }
+            } else {
+                writeToDisk(fileItem)
+            }
         }
     }
 

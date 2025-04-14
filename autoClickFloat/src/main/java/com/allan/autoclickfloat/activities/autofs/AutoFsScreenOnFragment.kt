@@ -29,7 +29,6 @@ class AutoFsScreenOnFragment : ViewFragment() {
             myHideSystemUI()
         }
 
-        arguments?.remove("autoFsId")
         AutoFsObj.checkAndStartNextAlarm(requireContext())
 
 //        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
