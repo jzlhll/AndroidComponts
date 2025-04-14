@@ -139,7 +139,7 @@ object FileLog {
         }
     }
 
-    private val timestampFmt by unsafeLazy { SimpleDateFormat("MM-dd HH:mm:ss.ms", Locale.getDefault()) }
+    private val timestampFmt by unsafeLazy { SimpleDateFormat("dd-HH:mm:ss.SSS", Locale.getDefault()) }
 
     /**时间戳转日期*/
     private fun longTimeToStr(time: Long): String {

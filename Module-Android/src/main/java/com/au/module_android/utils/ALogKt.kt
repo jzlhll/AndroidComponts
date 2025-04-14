@@ -9,33 +9,39 @@ const val TAG:String = "au_log"
 const val ALWAYS_LOG = false
 const val ALWAYS_FILE_LOG = false
 
-inline fun loge(tag:String = TAG, block:()->String) {
-    val str = block()
-    Log.e(tag, str)
+inline fun <THIS : Any> THIS.loge(tag:String = TAG, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val className = this.javaClass.simpleName
+    Log.e(tag, "$className: $str")
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("E $tag: $str", true)
+        FileLog.write("E $className: $tag: $str", true)
     }
 }
 
-inline fun logw(tag:String = TAG, block:()->String) {
-    val str = block()
-    Log.w(tag, str)
+inline fun <THIS : Any> THIS.loge(tag:String = TAG, exception: Throwable, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val className = this.javaClass.simpleName
+    val sb = StringBuilder()
+    sb.append(exception.message).append("\n").append(exception.cause).append("\n")
+    for (element in exception.stackTrace) {
+        sb.append(element.toString()).append(System.lineSeparator())
+    }
+    sb.toString()
+    Log.e(tag, "$className: $str")
+    Log.e(tag, "$className: $sb")
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("W $tag: $str")
+        FileLog.write("E $className: $tag: $str\nE $className: $tag: $sb", true)
     }
 }
 
-inline fun logwNoFile(tag:String = TAG, block:()->String) {
-    Log.w(tag, block())
-}
-
-inline fun logd(tag:String = TAG, block:()->String) {
-    val str = block()
+inline fun <THIS : Any> THIS.logd(tag:String = TAG, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val className = this.javaClass.simpleName
     if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        Log.d(tag, str)
+        Log.d(tag, "$className: $str")
     }
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("D $tag: $str")
+        FileLog.write("D $className: $tag: $str", true)
     }
 }
 

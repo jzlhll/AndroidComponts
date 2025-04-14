@@ -7,6 +7,7 @@ import android.os.PowerManager
 import com.au.module_android.Globals
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.loge
 import com.au.module_android.utils.startActivityFix
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -33,11 +34,29 @@ class AlarmReceiver : BroadcastReceiver() {
             PowerManager.PARTIAL_WAKE_LOCK,
             "MyApp::AlarmWakeLock"
         )
+
+        val targetTsLong = intent?.getLongExtra(AutoFsObj.EXTRA_TARGET_TS_LONG, 0L)
+        val targetTsInfo = intent?.getStringExtra(AutoFsObj.EXTRA_TARGET_TS_INFO)
+        if (targetTsLong != null) {
+            val curTs = System.currentTimeMillis()
+            val deltaTs = curTs - targetTsLong
+            if (deltaTs > 2 * 60 * 1000) { //比目标时间晚了2分钟才执行
+                logd { "Alarm>>>> do it too late. $targetTsInfo" }
+            } else if (deltaTs > -2 * 60 * 1000) { //比目标时间早了2分钟才执行~晚了2分钟区间内，都算作正常执行
+                logd { "Alarm>>>> do it good. $targetTsInfo" }
+            } else { //比目标时间早了2分钟才执行~晚了2分钟区间内，都算作正常执行
+                logd { "Alarm>>>> do it too early. $targetTsInfo" }
+            }
+        } else {
+            logd { "Alarm>>>> do it in intent no extra." }
+        }
+
         wakeLock.acquire(30 * 1000)
         try {
             // 2. 执行定时任务（例如启动服务、发送通知等）
-            logd { "allan-alarm do it in onReceiver!!!" }
             start(context)
+        } catch (e: Exception) {
+          loge(exception = e) {"on receiver."}
         } finally {
             //wakeLock.release() //try不做释放
         }

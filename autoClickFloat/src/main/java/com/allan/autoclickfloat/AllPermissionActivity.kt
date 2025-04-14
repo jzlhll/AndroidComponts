@@ -13,7 +13,6 @@ import com.allan.autoclickfloat.activities.startup.OnlyFloatPermissionViewModel
 import com.allan.autoclickfloat.activities.startup.PermissionsRequestFragment
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.RootActivityBinding
-import com.au.module_android.Globals
 import com.au.module_android.permissions.hasPermission
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
@@ -62,12 +61,7 @@ class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val className = packageManager.getLaunchIntentForPackage(packageName)?.component?.className
-        Log.d(Const.TAG, "onCreate: " + className)
-
-        Globals.mainHandler.postDelayed({
-            val list = Globals.activityList
-            logd { "list $list" }
-        }, 8000)
+        Log.d(Const.TAG, "onCreate: $className")
 
         parseStartIntent(intent)
 

@@ -53,10 +53,15 @@ object AutoFsObj {
 
     private const val ACTION_TRIGGER = "com.autoStartFs.ACTION_ALARM_TRIGGERED"
 
-    private fun generatePendingIntent(context: Context) : PendingIntent {
-        val intent: Intent = Intent(context, AlarmReceiver::class.java)
+    const val EXTRA_TARGET_TS_LONG = "targetTsLong"
+    const val EXTRA_TARGET_TS_INFO = "targetTsInfo"
+
+    private fun generatePendingIntent(context: Context, targetTs: Long, targetTsInfo:String) : PendingIntent {
+        val intent = Intent(context, AlarmReceiver::class.java)
         intent.setAction(ACTION_TRIGGER)
         intent.setPackage(context.packageName)
+        intent.putExtra(EXTRA_TARGET_TS_LONG, targetTs)
+        intent.putExtra(EXTRA_TARGET_TS_INFO, targetTsInfo)
         val flag = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         return PendingIntent.getBroadcast(
             context,
@@ -67,7 +72,7 @@ object AutoFsObj {
     }
 
     fun fetchPendingIntent(context: Context) : PendingIntent? {
-        val intent: Intent = Intent(context, AlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java)
         intent.setAction(ACTION_TRIGGER)
         intent.setPackage(context.packageName)
         val flag = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_MUTABLE
@@ -236,24 +241,28 @@ object AutoFsObj {
         //先关闭
         cancelAlarmOnly(context, null)
         //开始最近一个闹钟
-        if (changeList.isNotEmpty()) {
-            val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+        if (changeList.isEmpty()) {
+            logd { "allan >>startNextAlarm<< time: no alarms." }
+        } else {
             val ts = changeList.find { !it.isClose }?.targetTs
             if (ts != null) {
-                val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
-                try {
-                    val it = generatePendingIntent(context)
-                    alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
-                    logd { "allanAlarm start next alarm time: $log" }
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
+                startAlarmByTs(ts, context)
             } else {
-                logd{"allan start next alarm time: alarm all isClose."}
+                logd { "allan >>startNextAlarm<< time: alarm all isClose." }
             }
-        } else {
-            logd{"allan start next alarm time: no alarms."}
+        }
+    }
+
+    private fun startAlarmByTs(ts:Long, context: Context) {
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
+        try {
+            val it = generatePendingIntent(context, ts, log)
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
+            logd { "allanAlarm >>startNextAlarm<< time: $log" }
+        } catch (e: SecurityException) {
+            loge { "allanAlarm >>startNextAlarm<< time error: ${e.message}" }
         }
     }
 }
