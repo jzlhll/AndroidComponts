@@ -14,7 +14,6 @@ import com.au.module_android.ui.base.findDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
-import com.au.module_android.utils.logd
 import com.au.module_android.widget.ViewStubPro
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_androidui.toast.ToastBuilder
@@ -166,8 +165,6 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
                     oldId)
             }
 
-            val d = findDialog(this)
-            logd { "d $d" }
             if (!isGood) {
                 ToastBuilder().setOnFragmentDialog(this).setMessage("时间已经过期，请重新选择或者加天。").toast()
                 return@onClick
