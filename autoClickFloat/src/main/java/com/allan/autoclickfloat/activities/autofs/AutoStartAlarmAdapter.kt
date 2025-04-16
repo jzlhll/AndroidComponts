@@ -1,8 +1,8 @@
 package com.allan.autoclickfloat.activities.autofs
 
 import android.graphics.Color
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewHolderItemBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -12,7 +12,6 @@ import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import java.util.Calendar
-import androidx.core.graphics.toColorInt
 
 enum class ColorMode {
     IsOver,
@@ -25,36 +24,10 @@ class AutoStartRcvBean(val autoFsId:String,
                        val targetTs:Long,
                        val isClose:Boolean,
                        val isLoop:Boolean,
-                       var isSelectMode:Boolean,
                        val color:ColorMode,
                        var leftTimeStr:String?)
 
-class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmItemHolder>() {
-    private val deleteClick = { autoFsId:String ->
-        AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
-    }
-
-    private val editClick:(String)->Unit = { autoFsId:String ->
-        if (AutoFsObj.isAlarmExpired(autoFsId)) {
-            Globals.topActivity?.asOrNull<FragmentShellActivity>()?.let { ac ->
-                ConfirmBottomDialog.show2(ac.supportFragmentManager,
-                    "闹钟已过期",
-                    "请选择接下来的操作。",
-                    "编辑",
-                    "删除",
-                    sureClick = {
-                        AutoStartAlarmDialog.edit(ac, autoFsId)
-                        it.dismissAllowingStateLoss()
-                    },
-                    cancelClick = {
-                        AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
-                        it.dismissAllowingStateLoss()
-                    })
-            }
-        } else {
-            AutoStartAlarmDialog.edit(Globals.topActivity as FragmentShellActivity, autoFsId)
-        }
-    }
+class AutoStartAlarmAdapter(val rootClick:(autoFsId:String)->Unit) : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmItemHolder>() {
 
     private val switchClick = {autoFsId:String, isClose:Boolean ->
         val r = AutoFsObj.switchAlarmUi(Globals.app, autoFsId, isClose)
@@ -81,16 +54,15 @@ class AutoStartAlarmAdapter : BindRcvAdapter<AutoStartRcvBean, AutoStartAlarmIte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutoStartAlarmItemHolder {
-        return AutoStartAlarmItemHolder(deleteClick, switchClick, editClick, create(parent))
+        return AutoStartAlarmItemHolder(switchClick, rootClick, create(parent))
     }
 }
 
 /**
  * switchClick的返回值如果不是true，我就需要将内容回弹。
  */
-class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
-                               switchClick:(autoFsId:String, isClose:Boolean)->Boolean,
-                               editClick:(autoFsId:String)->Unit,
+class AutoStartAlarmItemHolder(switchClick:(autoFsId:String, isClose:Boolean)->Boolean,
+                               rootClick:(autoFsId:String)->Unit,
                                binding: FragmentAutoStartupNewHolderItemBinding)
         : BindViewHolder<AutoStartRcvBean, FragmentAutoStartupNewHolderItemBinding>(binding) {
     val orangeColor = "#FFA500".toColorInt()
@@ -98,9 +70,6 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
     val descColor = Globals.getColor(com.au.module_androidcolor.R.color.color_text_desc)
 
     init {
-        binding.stopBtn.onClick {
-            currentData?.autoFsId?.let { it1 -> deleteClick(it1) }
-        }
         binding.switchBtn.valueCallback = {
             binding.switchBtn.abort = true
             currentData?.autoFsId?.let { it1 ->
@@ -112,7 +81,7 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
             binding.switchBtn.abort = false
         }
         binding.root.onClick {
-            currentData?.autoFsId?.let { it1 -> editClick(it1) }
+            currentData?.autoFsId?.let { it1 -> rootClick(it1) }
         }
     }
 
@@ -153,14 +122,6 @@ class AutoStartAlarmItemHolder(deleteClick:(autoFsId:String)->Unit,
             binding.switchBtn.setValue(bean.isClose)
         } else {
             binding.switchBtn.initValue(bean.isClose)
-        }
-        binding.switchBtn.visibility = if(bean.isSelectMode) View.GONE else View.VISIBLE
-        binding.stopBtn.visibility = if(bean.isSelectMode) View.VISIBLE else View.GONE
-
-        if (bean.isClose && !bean.isSelectMode) {
-            binding.root.alpha = 0.85f
-        } else {
-            binding.root.alpha = 1f
         }
     }
 }

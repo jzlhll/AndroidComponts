@@ -18,40 +18,11 @@
 
     <com.au.module_android.widget.CustomButton
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/addBtn"
-        android:id="@+id/deleteBtn"
-        android:visibility="gone"
-        tools:visibility="visible"
-        style="@style/StyleButtonSecondaryColor"
-        android:layout_marginTop="12dp"
-        android:text="删除"
-        android:layout_marginEnd="12dp"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.au.module_android.widget.CustomButton
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/addBtn"
         style="@style/StyleButtonMainColor"
         android:layout_marginTop="12dp"
         android:text="添加"
-        android:layout_marginEnd="@dimen/ui_padding_edge"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.au.module_android.widget.CustomButton
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/restoreBtn"
-        style="@style/StyleButtonMainColor"
-        android:layout_marginTop="12dp"
-        android:text="还原"
-        android:visibility="gone"
         android:layout_marginEnd="@dimen/ui_padding_edge"
         android:paddingVertical="8dp"
         android:paddingHorizontal="8dp"
@@ -73,7 +44,7 @@
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/btnBarrir"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="addBtn, deleteBtn, restoreBtn, currentTime"
+        app:constraint_referenced_ids="addBtn, currentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

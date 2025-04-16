@@ -13,17 +13,24 @@ import com.au.module_android.utils.startActivityFix
 class AlarmReceiver : BroadcastReceiver() {
     companion object {
         fun start(context: Context) {
-            val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
-
-            val className = l.component?.className
-            val found = Globals.activityList.find { className?.contains(it.javaClass.simpleName) == true}
-            if (found == null) {
-                context.startActivityFix(l.also {
+            val pair = AutoFsObj.findLaunchActivity(context)
+            if (!pair.second) {
+                context.startActivityFix(pair.first.also {
                     it.putExtra("alarm", "alarmIsComingWhenNoStartActivity")
                 })
             } else {
                 FragmentShellActivity.start(context, AutoFsScreenOnFragment::class.java)
             }
+        }
+    }
+
+    fun formatTimeDifference(curTs: Long, targetTsLong: Long): String {
+        val deltaMs = curTs - targetTsLong
+        val deltaMinutes = deltaMs / (60 * 1000)
+        return when {
+            deltaMinutes > 0 -> "已过去${deltaMinutes}分钟"
+            deltaMinutes < 0 -> "提前${-deltaMinutes}分钟"
+            else -> "准时"
         }
     }
 
@@ -40,12 +47,13 @@ class AlarmReceiver : BroadcastReceiver() {
         if (targetTsLong != null) {
             val curTs = System.currentTimeMillis()
             val deltaTs = curTs - targetTsLong
-            if (deltaTs > 2 * 60 * 1000) { //比目标时间晚了2分钟才执行
-                logd { "Alarm>>>> do it too late. $targetTsInfo" }
-            } else if (deltaTs > -2 * 60 * 1000) { //比目标时间早了2分钟才执行~晚了2分钟区间内，都算作正常执行
-                logd { "Alarm>>>> do it good. $targetTsInfo" }
-            } else { //比目标时间早了2分钟才执行~晚了2分钟区间内，都算作正常执行
-                logd { "Alarm>>>> do it too early. $targetTsInfo" }
+            val info = formatTimeDifference(curTs, targetTsLong)
+            if (deltaTs > 60 * 1000) {
+                logd { "Alarm $targetTsInfo >>>> do it too late. $info" }
+            } else if (deltaTs > -60 * 1000) {
+                logd { "Alarm $targetTsInfo >>>> do it good. $info" }
+            } else {
+                logd { "Alarm $targetTsInfo >>>> do it too early. $info" }
             }
         } else {
             logd { "Alarm>>>> do it in intent no extra." }

@@ -150,20 +150,11 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
             val oldId = mEditAutoFsId
             val isLoop = !binding.switchBtn.isLeft
             val dayPlus = if(isLoop) 0 else plusDay
-            val isGood = if (oldId.isNullOrEmpty()) {
-                AutoFsObj.addAlarmUiAndCheckStart(requireContext(),
-                    hourPickerWrap.getValue(),
-                    minPickerWrap.getValue(),
-                    dayPlus,
-                    isLoop)
-            } else {
-                AutoFsObj.editAlarmUiAndCheckStart(requireContext(),
-                    hourPickerWrap.getValue(),
-                    minPickerWrap.getValue(),
-                    dayPlus,
-                    isLoop,
-                    oldId)
-            }
+            val isGood = AutoFsObj.setAlarmUiAndCheckStart(requireContext(),  hourPickerWrap.getValue(),
+                minPickerWrap.getValue(),
+                dayPlus,
+                isLoop,
+                oldId)
 
             if (!isGood) {
                 ToastBuilder().setOnFragmentDialog(this).setMessage("时间已经过期，请重新选择或者加天。").toast()

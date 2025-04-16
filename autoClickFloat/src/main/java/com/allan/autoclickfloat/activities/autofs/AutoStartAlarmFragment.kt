@@ -1,10 +1,6 @@
 package com.allan.autoclickfloat.activities.autofs
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.PowerManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.autoclickfloat.databinding.FragmentAutoStartupNewBinding
@@ -12,12 +8,14 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.hideImeNew
 import com.au.module_android.utils.logd
-import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.visible
+import com.au.module_androidui.dialogs.ConfirmBottomDialog
+import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.toastOnTop
 import com.au.module_cached.AppDataStore
 import com.au.module_nested.decoration.VertPaddingItemDecoration
@@ -30,9 +28,52 @@ import java.util.Calendar
  * @date :2024/9/24 11:25
  * @description:
  */
-class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() {
-    private val adapter = AutoStartAlarmAdapter()
-    private var isSelectMode = false
+class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>(), ActionDialog.IAction {
+
+    private var mLastActionId:String? = null
+    private val adapter = AutoStartAlarmAdapter {
+        mLastActionId = it
+        ActionDialog.pop(this)
+    }
+
+    override fun onNotify(mode: ActionDialog.ActionMode) {
+        val autoFsId = mLastActionId ?: return
+        when (mode) {
+            ActionDialog.ActionMode.Edit -> {
+                deleteAlarm(autoFsId)
+            }
+            ActionDialog.ActionMode.Delete -> {
+                ConfirmCenterDialog.show(childFragmentManager,
+                    "删除闹钟", "确定删除闹钟吗？", getString(com.au.module_android.R.string.ok)) {
+                    AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
+                    it.dismissAllowingStateLoss()
+                }
+            }
+        }
+    }
+
+    private fun deleteAlarm(autoFsId: String) {
+        if (AutoFsObj.isAlarmExpired(autoFsId)) {
+            Globals.topActivity?.asOrNull<FragmentShellActivity>()?.let { ac ->
+                ConfirmBottomDialog.show2(
+                    ac.supportFragmentManager,
+                    "闹钟已过期",
+                    "请选择接下来的操作。",
+                    "编辑",
+                    "删除",
+                    sureClick = {
+                        AutoStartAlarmDialog.edit(ac, autoFsId)
+                        it.dismissAllowingStateLoss()
+                    },
+                    cancelClick = {
+                        AutoFsObj.removeAlarmUi(Globals.app, autoFsId)
+                        it.dismissAllowingStateLoss()
+                    })
+            }
+        } else {
+            AutoStartAlarmDialog.edit(Globals.topActivity as FragmentShellActivity, autoFsId)
+        }
+    }
 
     private var mIgonePasswordCount = 0
 
@@ -134,38 +175,8 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
 
     private fun initBtns() {
         binding.addBtn.onClick {
-            if(isSelectMode) {
-                changeDeleteState()
-            }
             AutoStartAlarmDialog.show(this)
         }
-
-        binding.deleteBtn.onClick {
-            changeDeleteState()
-            if (isSelectMode) {
-                binding.restoreBtn.visible()
-                binding.deleteBtn.gone()
-                binding.addBtn.gone()
-            } else {
-                binding.addBtn.visible()
-            }
-        }
-
-        binding.restoreBtn.onClick {
-            changeDeleteState()
-            binding.addBtn.visible()
-            binding.restoreBtn.gone()
-            binding.deleteBtn.visible()
-        }
-    }
-
-    private fun changeDeleteState() {
-        val cur = !isSelectMode
-        adapter.datas.forEach {
-            it.isSelectMode = cur
-        }
-        isSelectMode = cur
-        adapter.submitList(mutableListOf<AutoStartRcvBean>().also { it.addAll(adapter.datas) }, false)
     }
 
     private fun initCurrentTime() {
@@ -223,27 +234,14 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>() 
         val list = targetTsList.map {
             AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose,
                 it.isLoop,
-                isSelectMode,
                 color = timeToColor(it.targetTs, cur),
                 TimeUtil.fmtLeftTimeStr(it.targetTs - cur))
         }
         adapter.submitList(list, false)
         if (list.isEmpty()) {
-            binding.deleteBtn.gone()
-            binding.restoreBtn.gone()
             binding.addBtn.visible()
             binding.emptyText.visible()
-            binding.deleteBtn.text = "删除"
-            isSelectMode = false
         } else {
-            binding.restoreBtn.gone()
-            if(isSelectMode) {
-                binding.restoreBtn.visible()
-                binding.deleteBtn.gone()
-            } else {
-                binding.deleteBtn.visible()
-                binding.restoreBtn.gone()
-            }
             binding.emptyText.gone()
         }
     }

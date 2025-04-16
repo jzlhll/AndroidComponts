@@ -4,4 +4,6 @@
     <dimen name="au_seekbar_thumb_size_half">9dp</dimen>
     <dimen name="au_seekbar_bg_height">6dp</dimen>
     <dimen name="au_seekbar_bg_corner">4dp</dimen>
+
+    <dimen name="action_dialog_item_height">58dp</dimen>
 </resources>

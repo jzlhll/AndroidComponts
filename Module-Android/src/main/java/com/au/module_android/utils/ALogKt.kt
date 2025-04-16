@@ -41,7 +41,7 @@ inline fun <THIS : Any> THIS.logd(tag:String = TAG, crossinline block: (THIS) ->
         Log.d(tag, "$className: $str")
     }
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("D $className: $tag: $str", true)
+        FileLog.write("D $className: $tag: $str", false)
     }
 }
 

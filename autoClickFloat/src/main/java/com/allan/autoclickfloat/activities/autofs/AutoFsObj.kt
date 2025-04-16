@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.Keep
+import com.allan.autoclickfloat.AllPermissionActivity
 import com.au.module_android.Globals
 import com.au.module_android.json.fromJsonList
 import com.au.module_android.json.toJsonString
@@ -50,8 +51,10 @@ object AutoFsObj {
     }
 
     private const val REQUEST_CODE = 118
+    private const val SHOW_UI_CODE = 119
 
     private const val ACTION_TRIGGER = "com.autoStartFs.ACTION_ALARM_TRIGGERED"
+    private const val ACTION_JUMP = "com.autoStartFs.ACTION_ALARM_JUMP"
 
     const val EXTRA_TARGET_TS_LONG = "targetTsLong"
     const val EXTRA_TARGET_TS_INFO = "targetTsInfo"
@@ -141,29 +144,39 @@ object AutoFsObj {
     }
 
     /**
+     * 还剩下N秒，就不允许设定
+     */
+    private const val SET_ALARM_DELTA_CURRENT = 10_000L
+
+    /**
      * 返回false表示过期的时间
      */
-    fun addAlarmUiAndCheckStart(context:Context, hour:Int, min:Int, plusDay:Int, isLoop:Boolean) : Boolean{
+    fun setAlarmUiAndCheckStart(
+        context: Context,
+        hour: Int,
+        min: Int,
+        plusDay: Int,
+        isLoop: Boolean,
+        oldAutoFsId: String? = null
+    ): Boolean {
         val calendar = TimeUtil.hourMinuteToCalendar(hour, min, plusDay)
-        if (calendar.timeInMillis <= System.currentTimeMillis() + 15_000L && !isLoop) {
+        val currentTime = System.currentTimeMillis()
+
+        // 时间有效性检查
+        if (calendar.timeInMillis <= currentTime + SET_ALARM_DELTA_CURRENT && !isLoop) {
             return false
         }
-        val targetTs = calendar.timeInMillis
-        val autoFsId = generateId(targetTs, isLoop)
 
+        val targetTs = calendar.timeInMillis
         val newList = targetTsListData.realValue?.toMutableList() ?: mutableListOf()
 
-        val found = newList.find { it.autoFsId == autoFsId }
-        if (found == null) { //确认是新增
-            newList.add(TargetTs(autoFsId, targetTs, isLoop, false))
-//             //不做保存。交给checkAndStartNextAlarm里面二次处理。
-//                val json = newList.toJsonString()
-//                AppDataStore.save("targetTsList", json)
-//            }
-            targetTsListData.setValueSafe(newList)
-        } else {
-            throw RuntimeException("不可能有重复的autoFsId")
+        if (!oldAutoFsId.isNullOrEmpty()) { // 编辑模式 移除旧条目
+            newList.removeIf { it.autoFsId == oldAutoFsId }
         }
+
+        // 添加新条目（新增模式直接添加，编辑模式已确保移除旧条目）
+        newList.add(TargetTs(generateId(targetTs, isLoop), targetTs, isLoop, false))
+        targetTsListData.setValueSafe(newList)
 
         checkAndStartNextAlarm(context)
         return true
@@ -174,21 +187,6 @@ object AutoFsObj {
         val time = TimeUtil.timeYMHMS(targetTs).replace(" ", "_")
         val autoFsId = uuid + "_" + time + if (isLoop) "_loop" else "_noLoop"
         return autoFsId
-    }
-
-    fun editAlarmUiAndCheckStart(context:Context, hour:Int, min:Int, plusDay:Int, isLoop:Boolean, oldAutoFsId:String) : Boolean {
-        val calendar = TimeUtil.hourMinuteToCalendar(hour, min, plusDay)
-        if (calendar.timeInMillis <= System.currentTimeMillis() + 15_000L && !isLoop) {
-            return false
-        }
-        val targetTs = calendar.timeInMillis
-        val newList = targetTsListData.realValue?.toMutableList() ?: mutableListOf()
-        newList.removeIf { it.autoFsId == oldAutoFsId }
-
-        newList.add(TargetTs(generateId(targetTs, isLoop), targetTs, isLoop, false))
-        targetTsListData.setValueSafe(newList)
-        checkAndStartNextAlarm(context)
-        return true
     }
 
     private var lastCheckAndStartSystemTs by AppDataStoreLongCache("lastCheckAndStartSystemTs", System.currentTimeMillis())
@@ -254,15 +252,60 @@ object AutoFsObj {
         }
     }
 
-    private fun startAlarmByTs(ts:Long, context: Context) {
+//    private fun startAlarmByTs(ts:Long, context: Context) {
+//        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
+//        try {
+//            val it = generatePendingIntent(context, ts, log)
+//            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
+//            logd { "allanAlarm >>startNextAlarm<< time: $log" }
+//        } catch (e: SecurityException) {
+//            loge { "allanAlarm >>startNextAlarm<< time error: ${e.message}" }
+//        }
+//    }
+
+    private fun startAlarmByTs(ts: Long, context: Context) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
+
         try {
-            val it = generatePendingIntent(context, ts, log)
-            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, ts, it)
-            logd { "allanAlarm >>startNextAlarm<< time: $log" }
+            // 生成用于实际触发操作的PendingIntent（例如启动Service）
+            val triggerIntent = generatePendingIntent(context, ts, log)
+
+            // 创建用于状态栏显示的跳转Intent（例如打开应用主界面）
+            val showIntent = Intent(context, AllPermissionActivity::class.java).apply {
+                action = ACTION_JUMP
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("alarm", "alarmIsComingWhenNoStartActivity")
+            }
+
+            // 构建显示用PendingIntent（与触发用区分requestCode）
+            val showPendingIntent = PendingIntent.getActivity(
+                context,
+                SHOW_UI_CODE, // 使用独立requestCode避免冲突
+                showIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // 创建AlarmClockInfo对象（必须包含显示用PendingIntent）
+            val alarmInfo = AlarmManager.AlarmClockInfo(ts, showPendingIntent)
+
+            // 设置AlarmClock类型的精确闹钟
+            alarmMgr.setAlarmClock(alarmInfo, triggerIntent)
+            logd { "allanAlarm >>startNextAlarm V2<< time: $log" }
         } catch (e: SecurityException) {
-            loge { "allanAlarm >>startNextAlarm<< time error: ${e.message}" }
+            loge { "allanAlarm >>startNextAlarm V2<< time error: ${e.message}" }
         }
     }
+
+    /**
+     * 找到启动的activity其实就是AllPermissionActivity。
+     */
+    fun findLaunchActivity(context: Context): Pair<Intent, Boolean> {
+        val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
+        val className = l.component?.className
+        val found = Globals.activityList.find { className?.contains(it.javaClass.simpleName) == true}
+        return l to (found != null)
+    }
+
 }

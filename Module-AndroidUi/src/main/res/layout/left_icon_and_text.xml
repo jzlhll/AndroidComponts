@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="@dimen/ui_padding_edge"
+    android:layout_height="@dimen/action_dialog_item_height">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="3dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/tv"
+        tools:text="Remove"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="18dp"
+        android:textColor="@color/color_text_normal"
+        style="@style/StyleFontText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
