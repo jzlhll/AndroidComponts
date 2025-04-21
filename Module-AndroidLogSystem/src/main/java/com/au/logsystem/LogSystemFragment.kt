@@ -13,6 +13,7 @@ import com.au.module_android.utils.FileLog
 import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
+import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
@@ -20,7 +21,7 @@ import com.au.module_androidui.toast.toastOnTop
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
+class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewActionDialog.IAction {
     override fun toolbarInfo(): ToolbarInfo? {
         return ToolbarInfo(title = "日志系统")
     }
@@ -116,8 +117,8 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
     }
 
     private fun reload(init: Boolean) {
-        binding.holdingView.visible()
         lifecycleScope.launch {
+            binding.holdingView.visible()
             if (!init) {
                 adapter.submitList(listOf(), false)
                 delay(800)
@@ -126,15 +127,42 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
         }
     }
 
+    private var logBean: LogBean? = null
+
     private val singleClickBlock: (LogBean) -> Unit = { logBean->
-        val file = logBean.file
-        if (file != null) {
-            ConfirmCenterDialog.show(childFragmentManager, "查看", "是否开启阅读?",
+        this.logBean = logBean
+        LogViewActionDialog.pop(this)
+    }
+
+    override fun onNotify(mode: String) {
+        val file = logBean?.file ?: return
+        when (mode) {
+            "view" -> OnceLogViewFragment.show(requireContext(), file)
+            "delete" -> ConfirmCenterDialog.show(childFragmentManager, "删除", "是否删除?",
                 "OK",
                 sureClick = {
-                    OnceLogViewFragment.show(requireContext(), file)
+                    deleteFile()
                     it.dismissAllowingStateLoss()
                 })
+        }
+    }
+
+    private fun deleteFile() {
+        FileLog.ignoreWrite = true
+        binding.holdingView.visible()
+
+        lifecycleScope.launchOnThread {
+            delay(500)
+
+            try {
+                logBean?.file?.delete()
+                delay(500)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            FileLog.ignoreWrite = false
+            reload(false)
         }
     }
 }
