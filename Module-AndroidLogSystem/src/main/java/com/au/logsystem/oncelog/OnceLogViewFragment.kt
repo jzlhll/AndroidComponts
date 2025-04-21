@@ -1,4 +1,4 @@
-package com.au.logsystem
+package com.au.logsystem.oncelog
 
 import android.content.Context
 import android.os.Bundle
@@ -19,12 +19,11 @@ import kotlinx.coroutines.delay
 import java.io.File
 import kotlin.math.min
 
-
-class LogViewFragment : ViewFragment() {
+class OnceLogViewFragment : ViewFragment() {
     companion object {
         fun show(context: Context, file: File) {
             FragmentShellActivity.start(context,
-                LogViewFragment::class.java,
+                OnceLogViewFragment::class.java,
                 Bundle().apply {
                     putSerializable("file", file)
                 })

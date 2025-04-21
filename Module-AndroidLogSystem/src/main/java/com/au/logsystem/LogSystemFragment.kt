@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.logsystem.databinding.FragmentLogSystemBinding
+import com.au.logsystem.oncelog.OnceLogViewFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
@@ -131,7 +132,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>() {
             ConfirmCenterDialog.show(childFragmentManager, "查看", "是否开启阅读?",
                 "OK",
                 sureClick = {
-                    LogViewFragment.show(requireContext(), file)
+                    OnceLogViewFragment.show(requireContext(), file)
                     it.dismissAllowingStateLoss()
                 })
         }

@@ -1,6 +1,5 @@
-package com.au.logsystem
+package com.au.logsystem.oncelog
 
-import com.au.module_android.utils.logdNoFile
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader

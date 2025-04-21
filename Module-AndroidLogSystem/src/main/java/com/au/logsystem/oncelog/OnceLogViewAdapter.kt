@@ -1,4 +1,4 @@
-package com.au.logsystem
+package com.au.logsystem.oncelog
 
 import android.view.ViewGroup
 import com.au.logsystem.databinding.HolderLogViewNormalBinding

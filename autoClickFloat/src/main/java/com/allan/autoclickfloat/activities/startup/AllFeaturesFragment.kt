@@ -19,8 +19,7 @@ import com.allan.autoclickfloat.activities.recordprojects.RecordProjectsAllFragm
 import com.allan.autoclickfloat.consts.Const
 import com.allan.autoclickfloat.databinding.AllFeaturesFragmentBinding
 import com.au.logsystem.LogSystemFragment
-import com.au.logsystem.LogViewFragment
-import com.au.module_android.Globals
+import com.au.logsystem.oncelog.OnceLogViewFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.gotoFloatWindowPermission
 import com.au.module_android.permissions.hasFloatWindowPermission
@@ -29,7 +28,6 @@ import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.FragmentShellOrientationActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
-import com.au.module_android.utils.openApp
 import com.au.module_android.utils.startActivityFix
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import java.io.File
@@ -66,7 +64,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
 
         binding.debugBtn.onClick {
            // openApp(Globals.app, "com.tencent.tgclub")
-            LogViewFragment.show(requireContext(), File("/sdcard/Android/data/com.allan.autoclickfloat/cache/logShare/2025-04-19.log"))
+            OnceLogViewFragment.show(requireContext(), File("/sdcard/Android/data/com.allan.autoclickfloat/cache/logShare/2025-04-19.log"))
         }
 
         binding.logSysBtn.onClick {

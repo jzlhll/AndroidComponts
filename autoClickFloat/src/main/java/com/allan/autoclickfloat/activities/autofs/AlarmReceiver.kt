@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
-import com.au.module_android.Globals
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.startActivityFix
+import kotlin.math.abs
 
 class AlarmReceiver : BroadcastReceiver() {
     companion object {
@@ -26,12 +26,21 @@ class AlarmReceiver : BroadcastReceiver() {
 
     fun formatTimeDifference(curTs: Long, targetTsLong: Long): String {
         val deltaMs = curTs - targetTsLong
-        val deltaMinutes = deltaMs / (60 * 1000)
-        return when {
-            deltaMinutes > 0 -> "已过去${deltaMinutes}分钟"
-            deltaMinutes < 0 -> "提前${-deltaMinutes}分钟"
-            else -> "准时"
+        val deltaMinutes = abs(deltaMs / (60 * 1000))
+        if (deltaMs >= 100 * 1000) {
+            return "*已过去 $deltaMinutes 分钟"
         }
+        if (deltaMs >= 30 * 1000) {
+            return "已过去 $deltaMs 秒"
+        }
+        if (deltaMs >= -30 * 1000) {
+            return "准时"
+        }
+        val absDeltaMs = abs(deltaMs)
+        if (deltaMs > -100 * 1000) {
+            return "提前 $absDeltaMs 秒"
+        }
+        return "*提前 $deltaMinutes 分钟"
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -46,15 +55,8 @@ class AlarmReceiver : BroadcastReceiver() {
         val targetTsInfo = intent?.getStringExtra(AutoFsObj.EXTRA_TARGET_TS_INFO)
         if (targetTsLong != null) {
             val curTs = System.currentTimeMillis()
-            val deltaTs = curTs - targetTsLong
             val info = formatTimeDifference(curTs, targetTsLong)
-            if (deltaTs > 60 * 1000) {
-                logd { "Alarm $targetTsInfo >>>> do it too late. $info" }
-            } else if (deltaTs > -60 * 1000) {
-                logd { "Alarm $targetTsInfo >>>> do it good. $info" }
-            } else {
-                logd { "Alarm $targetTsInfo >>>> do it too early. $info" }
-            }
+            logd { "Alarm $targetTsInfo >>>> do it $info" }
         } else {
             logd { "Alarm>>>> do it in intent no extra." }
         }
