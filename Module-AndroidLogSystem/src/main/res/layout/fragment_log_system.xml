@@ -63,7 +63,6 @@
     <!-- loading part -->
     <RelativeLayout
         android:visibility="gone"
-        android:background="#30000000"
         android:id="@+id/holdingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -61,7 +61,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
         binding.rcv.itemAnimator = null
 
         binding.refreshBtn.onClick {
-            reload(false)
+            reload()
         }
 
         binding.uploadBtn.onClick {
@@ -116,13 +116,10 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
         reload(true)
     }
 
-    private fun reload(init: Boolean) {
+    private fun reload(init: Boolean = false) {
         lifecycleScope.launch {
             binding.holdingView.visible()
-            if (!init) {
-                adapter.submitList(listOf(), false)
-                delay(800)
-            }
+            if(!init) delay(500)
             viewModel.scanLogs(singleClickBlock)
         }
     }
@@ -162,7 +159,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
             }
 
             FileLog.ignoreWrite = false
-            reload(false)
+            reload()
         }
     }
 }
