@@ -2,22 +2,23 @@ package com.au.logsystem.oncelog
 
 import android.content.Context
 import android.os.Bundle
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.logsystem.databinding.FragmentLogViewBinding
+import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.FileLog
+import com.au.module_android.utils.currentStatusBarAndNavBarHeight
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.myHideSystemUI
+import com.au.module_android.utils.myShowSystemUI
 import com.au.module_android.utils.serializableCompat
 import com.au.module_android.utils.unsafeLazy
-import kotlinx.coroutines.delay
 import java.io.File
-import kotlin.compareTo
-import kotlin.math.min
 
 class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
     companion object {
@@ -45,7 +46,6 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
         }
     }
 
-
     private lateinit var mRcv: RecyclerView
 
     private val logViewReader: OnceLogViewReader? by unsafeLazy {
@@ -57,8 +57,6 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
             OnceLogViewReader(file)
         }
     }
-
-
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().myHideSystemUI()
@@ -72,6 +70,24 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
 
             onceRead()
         }
+
+        binding.floatBtn.onClick {
+            if (currentIsFull) {
+                requireActivity().myShowSystemUI()
+
+                binding.floatBtn.post {
+                    val barsHeights = requireActivity().currentStatusBarAndNavBarHeight()!!
+                    binding.root.updatePadding(top = barsHeights.first, bottom = barsHeights.second)
+                    currentIsFull = false
+                }
+            } else {
+                requireActivity().myHideSystemUI()
+                binding.floatBtn.post {
+                    binding.root.updatePadding(top = 0, bottom = 0)
+                    currentIsFull = true
+                }
+            }
+        }
     }
 
     private fun onceRead() {
@@ -84,6 +100,8 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
             }
         }
     }
+
+    private var currentIsFull = true
 
     override fun isPaddingStatusBar(): Boolean {
         return false

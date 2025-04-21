@@ -149,6 +149,8 @@ fun Activity.myHideSystemUI() {
         c.hide(WindowInsetsCompat.Type.systemBars())
         c.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     } else {
+        @Suppress
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -160,8 +162,28 @@ fun Activity.myHideSystemUI() {
 
 //todo
 fun Activity.myShowSystemUI() {
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
+    //设置布局延伸到刘海屏内，没此处设置会导致小米手机顶部导航栏显示黑色。
+    val window = this.window ?: return
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        ignoreError {
+            val lp = window.attributes
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+            getWindow().setAttributes(lp)
+        }
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val c = WindowCompat.getInsetsController(window, window.decorView)
+        c.show(WindowInsetsCompat.Type.systemBars())
+        c.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+    } else {
+        @Suppress("DEPRECATION")
+        // 清除全屏标志
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE // 或直接设为 0
+        // 可选：清除 Window 的全屏标志（如果之前通过 Window 设置过）
+        @Suppress("DEPRECATION")
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
 }
 
 /**
