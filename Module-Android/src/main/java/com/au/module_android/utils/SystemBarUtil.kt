@@ -2,6 +2,8 @@ package com.au.module_android.utils
 
 import android.app.Activity
 import android.graphics.Color
+import android.os.Build
+import android.view.View
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -38,6 +40,7 @@ fun Activity.transparentStatusBar(statusBarTextDark: Boolean? = null,
     window.run {
         addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         WindowCompat.setDecorFitsSystemWindows(this, false)
+        //其实是二选一。只是一起设置并没有什么问题
         statusBarColor = Color.TRANSPARENT
         navigationBarColor = Color.TRANSPARENT
 
@@ -131,11 +134,27 @@ fun DialogFragment.transparentStatusBar(insetsBlock: (
 }
 
 fun Activity.myHideSystemUI() {
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    WindowCompat.getInsetsController(window, window.decorView).let { controller ->
-        controller.hide(WindowInsetsCompat.Type.systemBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    //设置布局延伸到刘海屏内，没此处设置会导致小米手机顶部导航栏显示黑色。
+    val window = this.window ?: return
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        ignoreError {
+            val lp = window.attributes
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            getWindow().setAttributes(lp)
+        }
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val c = WindowCompat.getInsetsController(window, window.decorView)
+        c.hide(WindowInsetsCompat.Type.systemBars())
+        c.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    } else {
+        @Suppress("DEPRECATION")
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
     }
 }
 

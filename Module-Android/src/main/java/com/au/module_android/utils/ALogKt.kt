@@ -14,7 +14,7 @@ inline fun <THIS : Any> THIS.loge(tag:String = TAG, crossinline block: (THIS) ->
     val className = this.javaClass.simpleName
     Log.e(tag, "$className: $str")
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("E $className: $tag: $str", true)
+        FileLog.write("E $className: $tag $str", true)
     }
 }
 
@@ -30,11 +30,23 @@ inline fun <THIS : Any> THIS.loge(tag:String = TAG, exception: Throwable, crossi
     Log.e(tag, "$className: $str")
     Log.e(tag, "$className: $sb")
     if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("E $className: $tag: $str\nE $className: $tag: $sb", true)
+        FileLog.write("E $className: $str\nE $className: $tag: $sb", true)
     }
 }
 
-inline fun <THIS : Any> THIS.logd(tag:String = TAG, crossinline block: (THIS) -> String) {
+inline fun <THIS : Any> THIS.logd(crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val className = this.javaClass.simpleName
+    if (BuildConfig.DEBUG || ALWAYS_LOG) {
+        Log.d(TAG, "$className: $str")
+    }
+    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
+        FileLog.write("D $className: $str", false)
+    }
+}
+
+
+inline fun <THIS : Any> THIS.logd(tag:String, crossinline block: (THIS) -> String) {
     val str = block(this)
     val className = this.javaClass.simpleName
     if (BuildConfig.DEBUG || ALWAYS_LOG) {

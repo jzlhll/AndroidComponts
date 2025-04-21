@@ -1,6 +1,7 @@
 package com.au.module_nested.recyclerview.viewholder
 
 import androidx.annotation.CallSuper
+import androidx.annotation.EmptySuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.click.onClick
@@ -48,6 +49,8 @@ abstract class BindViewHolder<DATA:Any, BINDING: ViewBinding>(val binding: BINDI
         current = bean
     }
 
+    @EmptySuper
     open fun onDetached() {}
+    @EmptySuper
     open fun onAttached() {}
 }

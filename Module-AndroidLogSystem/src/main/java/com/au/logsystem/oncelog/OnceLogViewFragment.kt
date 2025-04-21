@@ -2,27 +2,28 @@ package com.au.logsystem.oncelog
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.au.logsystem.databinding.FragmentLogViewBinding
 import com.au.module_android.ui.FragmentShellActivity
-import com.au.module_android.ui.views.ViewFragment
+import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.FileLog
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.myHideSystemUI
 import com.au.module_android.utils.serializableCompat
 import com.au.module_android.utils.unsafeLazy
 import kotlinx.coroutines.delay
 import java.io.File
+import kotlin.compareTo
 import kotlin.math.min
 
-class OnceLogViewFragment : ViewFragment() {
+class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
     companion object {
         fun show(context: Context, file: File) {
-            FragmentShellActivity.start(context,
+            FragmentShellActivity.start(
+                context,
                 OnceLogViewFragment::class.java,
                 Bundle().apply {
                     putSerializable("file", file)
@@ -30,23 +31,25 @@ class OnceLogViewFragment : ViewFragment() {
         }
     }
 
-    private val mAdapter = LogViewAdapter().apply {
-        loadMoreAction = {
-            if (mAdapterSubmitCount > 0) {
-                mRcv.post {
-                    loadNext()
-                }
+    private val mAdapter by unsafeLazy {
+        LogViewAdapter(binding.rcv).apply {
+            loadMoreAction = {
+                loadMore()
             }
         }
     }
-    private var mAdapterSubmitCount = 0
-    private var mBeanIndex = 0
-    private var mLoadedToRcvIndex = 0
+
+    private fun loadMore() {
+        mRcv.post {
+            mAdapter.loadNext()
+        }
+    }
+
 
     private lateinit var mRcv: RecyclerView
 
     private val logViewReader: OnceLogViewReader? by unsafeLazy {
-        val file:File? = arguments?.serializableCompat("file")
+        val file: File? = arguments?.serializableCompat("file")
         if (file == null || !file.exists()) {
             null
         } else {
@@ -55,68 +58,38 @@ class OnceLogViewFragment : ViewFragment() {
         }
     }
 
-    private var loadedBeans: List<LogViewNormalBean>?= null
 
-    private fun onceRead() {
-        logdNoFile { "logView: onceRead" }
-        logViewReader?.let { reader->
-            lifecycleScope.launchOnThread {
-                val lines = reader.readAll()
-                delay(20)
-                logdNoFile { "logView: lines ${lines.size}" }
-                val beans = lines.chunked(5) { chunk ->
-                    chunk.joinToString(separator = "\n")
-                }.map {
-                    LogViewNormalBean(mBeanIndex++, it)
-                }
-                logdNoFile { "logView: beans ${beans.size}" }
 
-                loadedBeans = beans
+    override fun onBindingCreated(savedInstanceState: Bundle?) {
+        requireActivity().myHideSystemUI()
 
-                FileLog.ignoreWrite = false
-                mRcv.post {
-                    loadNext()
-                }
-            }
-        }
-    }
-
-    private fun loadNext() {
-        val beans = loadedBeans ?: return
-        if (beans.isEmpty()) return
-        if (!mRcv.isAttachedToWindow) {
-            return
-        }
-
-        val lastIndex = mLoadedToRcvIndex
-        mLoadedToRcvIndex = min(beans.size - 1, mLoadedToRcvIndex + 100)
-        val hasMore = mLoadedToRcvIndex + 1 < beans.size
-        val subList = beans.subList(lastIndex, mLoadedToRcvIndex + 1)
-
-        if (!mRcv.isAttachedToWindow) {
-            return
-        }
-
-        if (mAdapterSubmitCount == 0) {
-            mAdapter.initDatas(subList, hasMore)
-        } else {
-            mAdapter.appendDatas(subList, hasMore)
-        }
-        mAdapterSubmitCount++
-    }
-
-    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        FileLog.ignoreWrite = true
-
-        return RecyclerView(inflater.context).apply {
-            mRcv = this
-            adapter = mAdapter
-            layoutManager = LinearLayoutManager(requireContext()).apply {
+        mRcv = binding.rcv.also {
+            it.adapter = mAdapter
+            it.layoutManager = LinearLayoutManager(requireContext()).apply {
                 orientation = LinearLayoutManager.VERTICAL
             }
-            itemAnimator = null
+            it.itemAnimator = null
 
             onceRead()
         }
+    }
+
+    private fun onceRead() {
+        FileLog.ignoreWrite = true
+        lifecycleScope.launchOnThread {
+            val beans = logViewReader?.onceRead() ?: emptyList()
+            mRcv.post {
+                FileLog.ignoreWrite = false
+                mAdapter.initBy(beans)
+            }
+        }
+    }
+
+    override fun isPaddingStatusBar(): Boolean {
+        return false
+    }
+
+    override fun isPaddingNavBar(): Boolean {
+        return false
     }
 }
