@@ -42,6 +42,7 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
     }
 
     private var plusDay = 0
+    private var withinOffsetMinute = 0
     private var mEditAutoFsId:String? = null
 
     private fun initPlusDay() {
@@ -58,6 +59,20 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
         }
     }
 
+    private fun initOffsetMinute() {
+        binding.plusOffsetBtn.onClick {
+            withinOffsetMinute++
+            binding.plusOffsetText.text = withinOffsetMinute.toString()
+        }
+        binding.minusOffsetBtn.onClick {
+            withinOffsetMinute--
+            if (withinOffsetMinute < 0) {
+                withinOffsetMinute = 0
+            }
+            binding.plusOffsetText.text = withinOffsetMinute.toString()
+        }
+    }
+
     private fun initSwitchBtn() {
         binding.switchBtn.initValue(isLeft = true, false)
 
@@ -68,16 +83,8 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
 
     private fun changeEnablePlusDayControls(isLeft: Boolean) {
         if (isLeft) {
-            binding.plusADayBtn.isEnabled = true
-            binding.minusADayBtn.isEnabled = true
-            binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
-
             binding.playDayHost.visible()
         } else {
-            binding.plusADayBtn.isEnabled = false
-            binding.minusADayBtn.isEnabled = false
-            binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_desc))
-
             binding.playDayHost.invisible()
         }
     }
@@ -133,6 +140,7 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
         initNumberPicker(hourPickerWrap, 23, 0, c.get(Calendar.HOUR_OF_DAY), true)
         initNumberPicker(minPickerWrap, 59, 0, c.get(Calendar.MINUTE), true)
         initPlusDay()
+        initOffsetMinute()
         initSwitchBtn()
         val isEditMode = arguments?.getBoolean("isEditMode") == true
         if (isEditMode) {
@@ -159,6 +167,7 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
             val isGood = AutoFsObj.setAlarmUiAndCheckStart(requireContext(),  hourPickerWrap.getValue(),
                 minPickerWrap.getValue(),
                 dayPlus,
+                withinOffsetMinute,
                 isLoop,
                 oldId)
 
@@ -199,6 +208,11 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
                     val plusDay = deltaTsBySecond / (24 * 60 * 60)
                     this.plusDay = plusDay.toInt()
                     binding.plusDayText.text = "" + plusDay
+                }
+
+                if (targetTs.offsetMinute != 0) {
+                    binding.plusOffsetText.text = "" + targetTs.offsetMinute
+                    this.withinOffsetMinute = targetTs.offsetMinute
                 }
 
                 val isLoop = targetTs.isLoop

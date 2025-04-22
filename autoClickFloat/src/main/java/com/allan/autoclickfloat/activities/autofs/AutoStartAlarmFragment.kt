@@ -232,7 +232,10 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>(),
     private fun onTargetTsListChanged(targetTsList: List<TargetTs>) {
         val cur = System.currentTimeMillis()
         val list = targetTsList.map {
-            AutoStartRcvBean(it.autoFsId, it.targetTs, it.isClose,
+            AutoStartRcvBean(it.autoFsId,
+                it.targetTs,
+                it.offsetMinute,
+                it.isClose,
                 it.isLoop,
                 color = timeToColor(it.targetTs, cur),
                 TimeUtil.fmtLeftTimeStr(it.targetTs - cur))

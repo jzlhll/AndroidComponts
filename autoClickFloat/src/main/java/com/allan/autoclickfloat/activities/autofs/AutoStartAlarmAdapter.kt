@@ -22,6 +22,7 @@ enum class ColorMode {
 
 class AutoStartRcvBean(val autoFsId:String,
                        val targetTs:Long,
+                       val offsetMinute:Int,
                        val isClose:Boolean,
                        val isLoop:Boolean,
                        val color:ColorMode,
@@ -97,7 +98,7 @@ class AutoStartAlarmItemHolder(switchClick:(autoFsId:String, isClose:Boolean)->B
             val dayOfWeekStr = TimeUtil.formatDayOfWeek(c.timeInMillis)
             binding.descTv.text = "$ymd ($dayOfWeekStr)"
         }
-        binding.leftTv.text = "(" + bean.leftTimeStr + ")"
+        binding.leftTv.text = "(" + bean.leftTimeStr + " ±${bean.offsetMinute})"
 
         when (bean.color) {
             ColorMode.AlmostClose -> {

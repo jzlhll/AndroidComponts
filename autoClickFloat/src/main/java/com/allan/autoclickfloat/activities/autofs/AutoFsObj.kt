@@ -17,9 +17,10 @@ import com.au.module_cached.delegate.AppDataStoreLongCache
 import okhttp3.internal.toImmutableList
 import java.util.Calendar
 import java.util.UUID
+import kotlin.random.Random
 
 @Keep
-data class TargetTs(val autoFsId:String, var targetTs:Long, var isLoop:Boolean, var isClose:Boolean)
+data class TargetTs(val autoFsId:String, var targetTs:Long, var isLoop:Boolean, var isClose:Boolean, var offsetMinute:Int)
 
 /**
  * @author allan
@@ -156,6 +157,7 @@ object AutoFsObj {
         hour: Int,
         min: Int,
         plusDay: Int,
+        withinOffsetMinute:Int,
         isLoop: Boolean,
         oldAutoFsId: String? = null
     ): Boolean {
@@ -175,7 +177,7 @@ object AutoFsObj {
         }
 
         // 添加新条目（新增模式直接添加，编辑模式已确保移除旧条目）
-        newList.add(TargetTs(generateId(targetTs, isLoop), targetTs, isLoop, false))
+        newList.add(TargetTs(generateId(targetTs, isLoop), targetTs, isLoop, false, withinOffsetMinute))
         targetTsListData.setValueSafe(newList)
 
         checkAndStartNextAlarm(context)
@@ -243,9 +245,14 @@ object AutoFsObj {
         if (changeList.isEmpty()) {
             logd { "allan >>startNextAlarm<< time: no alarms." }
         } else {
-            val ts = changeList.find { !it.isClose }?.targetTs
-            if (ts != null) {
-                startAlarmByTs(ts, context)
+            var offsetMinute = 0
+            var ts = 0L
+            changeList.find { !it.isClose }?.let {
+                ts = it.targetTs
+                offsetMinute = it.offsetMinute
+            }
+            if (ts > 0L) {
+                startAlarmByTs(ts, offsetMinute, context)
             } else {
                 logd { "allan >>startNextAlarm<< time: alarm all isClose." }
             }
@@ -264,7 +271,18 @@ object AutoFsObj {
 //        }
 //    }
 
-    private fun startAlarmByTs(ts: Long, context: Context) {
+    private fun startAlarmByTs(origTs: Long, offsetMinute: Int, context: Context) {
+        val origLog = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = origTs })
+
+        val ts = if (offsetMinute != 0) {
+            val offsetMax = offsetMinute * 60 * 1000L
+            val offsetMin = -offsetMinute * 60 * 1000L
+            val offsetRandom = Random.nextLong(offsetMin, offsetMax)
+            origTs + offsetRandom
+        } else {
+            origTs
+        }
+
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val log = TimeUtil.timeYMHMS(Calendar.getInstance().also { it.timeInMillis = ts })
 
@@ -292,7 +310,7 @@ object AutoFsObj {
 
             // 设置AlarmClock类型的精确闹钟
             alarmMgr.setAlarmClock(alarmInfo, triggerIntent)
-            logd { "allanAlarm >>startNextAlarm V2<< time: $log" }
+            logd { "allanAlarm >>startNextAlarm V2<< time: $log origLog:$origLog" }
         } catch (e: SecurityException) {
             loge { "allanAlarm >>startNextAlarm V2<< time error: ${e.message}" }
         }
