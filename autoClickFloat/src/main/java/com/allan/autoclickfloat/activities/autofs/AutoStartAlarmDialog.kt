@@ -14,6 +14,8 @@ import com.au.module_android.ui.base.findDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.invisible
+import com.au.module_android.utils.visible
 import com.au.module_android.widget.ViewStubPro
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_androidui.toast.ToastBuilder
@@ -69,10 +71,14 @@ class AutoStartAlarmDialog : BindingFragment<FragmentAutoStartupNewAddBinding>()
             binding.plusADayBtn.isEnabled = true
             binding.minusADayBtn.isEnabled = true
             binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
+
+            binding.playDayHost.visible()
         } else {
             binding.plusADayBtn.isEnabled = false
             binding.minusADayBtn.isEnabled = false
             binding.plusDayText.setTextColor(Globals.getColor(com.au.module_androidcolor.R.color.color_text_desc))
+
+            binding.playDayHost.invisible()
         }
     }
 
