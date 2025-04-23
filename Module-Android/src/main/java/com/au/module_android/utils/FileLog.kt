@@ -146,7 +146,7 @@ object FileLog {
         return timestampFmt.format(time).toString()
     }
 
-    fun write(log: String, needStace: Boolean = false, throwable: Throwable? = null) {
+    fun write(log: String?, needStace: Boolean = false, throwable: Throwable? = null) {
         val logTimeStr = longTimeToStr(System.currentTimeMillis())
         val writeStr = "$logTimeStr ${Process.myPid()}-${Thread.currentThread().id} $log"
         val staceStr: String? = if (needStace) {

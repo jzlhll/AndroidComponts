@@ -39,6 +39,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
+        FileLog.ignoreWrite = true
         this.setTitle("日志系统")
 
         viewModel.scannedList.observe(viewLifecycleOwner) {
@@ -72,7 +73,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
                 val files = selectedData.map { it.file }
                 switchSelectMode()
                 binding.uploadGroup.visible()
-                FileLog.ignoreWrite = true
                 viewModel.compressAndShare(files)
             }
         }
@@ -83,7 +83,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
 
         binding.uploadCloseBtn.onClick {
             binding.uploadGroup.gone()
-            FileLog.ignoreWrite = false
         }
     }
 
@@ -145,7 +144,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
     }
 
     private fun deleteFile() {
-        FileLog.ignoreWrite = true
         binding.holdingView.visible()
 
         lifecycleScope.launchOnThread {
@@ -158,7 +156,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
                 e.printStackTrace()
             }
 
-            FileLog.ignoreWrite = false
             reload()
         }
     }

@@ -58,8 +58,14 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        FileLog.ignoreWrite = false
+    }
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().myHideSystemUI()
+        FileLog.ignoreWrite = true
 
         mRcv = binding.rcv.also {
             it.adapter = mAdapter

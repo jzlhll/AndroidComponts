@@ -8,7 +8,6 @@ android {
     namespace 'com.au.module_android'
     compileSdk gradle.ext.compileSdk
 
-    def enableFileLog = Boolean.parseBoolean(findProperty("app.enable_filelog"))
     def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
     def supportLocales = Boolean.parseBoolean(findProperty("app.supportLocales"))
     def supportDarkMode = Boolean.parseBoolean(findProperty("app.supportDarkMode"))
@@ -19,15 +18,38 @@ android {
 
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
-        buildConfigField("boolean", "ENABLE_FILE_LOG", "" + enableFileLog)
         buildConfigField("boolean", "SUPPORT_LOCALES", "" + supportLocales)
         buildConfigField("boolean", "SUPPORT_DARKMODE", "" + supportDarkMode)
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            //是否混淆
+            minifyEnabled true
+            //压缩资源，必须开启minifyEnabled才有用
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //signingConfig signingConfigs.typhurRelease
+            // 设置是否要自动上传
+            // firebaseCrashlytics {
+            //     mappingFileUploadEnabled false
+            // }
+            // 上传bundle包所需的原生调试符号
+//            ndk {
+//                debugSymbolLevel = 'FULL'//或者 'SYMBOL_TABLE'
+//            }
+
+            buildConfigField("boolean", "ENABLE_LOGCAT", "false")
+        }
+        debug {
+            debuggable true
+            //是否混淆
+            minifyEnabled false
+            //压缩资源，必须开启minifyEnabled才有用
+            shrinkResources false
+
+            buildConfigField("boolean", "ENABLE_LOGCAT", "true")
         }
     }
 
@@ -37,6 +59,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
+        freeCompilerArgs = ["-Xstring-concat=inline"]
     }
     buildFeatures {
         viewBinding true

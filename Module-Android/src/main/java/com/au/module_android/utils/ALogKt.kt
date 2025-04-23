@@ -5,66 +5,99 @@ import android.util.Log
 import com.au.module_android.BuildConfig
 import java.util.Locale
 
-const val TAG:String = "au_log"
-const val ALWAYS_LOG = false
-const val ALWAYS_FILE_LOG = false
+const val TAG:String = "au"
+var ALWAYS_FILE_LOG = false
 
-inline fun <THIS : Any> THIS.loge(tag:String = TAG, crossinline block: (THIS) -> String) {
+inline fun <THIS : Any> THIS.loge(tag:String, crossinline block: (THIS) -> String) {
     val str = block(this)
-    val className = this.javaClass.simpleName
-    Log.e(tag, "$className: $str")
-    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("E $className: $tag $str", true)
-    }
+    val log = ALogJ.log("E", str, tag, this.javaClass)
+    Log.e(TAG, log)
+
+    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
 }
 
-inline fun <THIS : Any> THIS.loge(tag:String = TAG, exception: Throwable, crossinline block: (THIS) -> String) {
+inline fun <THIS : Any> THIS.loge(crossinline block: (THIS) -> String) {
     val str = block(this)
-    val className = this.javaClass.simpleName
-    val sb = StringBuilder()
-    sb.append(exception.message).append("\n").append(exception.cause).append("\n")
-    for (element in exception.stackTrace) {
-        sb.append(element.toString()).append(System.lineSeparator())
-    }
-    sb.toString()
-    Log.e(tag, "$className: $str")
-    Log.e(tag, "$className: $sb")
-    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("E $className: $str\nE $className: $tag: $sb", true)
-    }
+    val log = ALogJ.log("E", str, this.javaClass)
+    Log.e(TAG, log)
+
+    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+}
+
+inline fun <THIS : Any> THIS.logw(tag:String, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val log = ALogJ.log("W", str, tag, this.javaClass)
+    Log.w(TAG, log)
+
+    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+}
+
+inline fun <THIS : Any> THIS.logw(crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val log = ALogJ.log("W", str, this.javaClass)
+    Log.w(TAG, log)
+
+    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+}
+
+inline fun <THIS : Any> THIS.loge(tag:String, exception: Throwable, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val log = ALogJ.log("E", str, tag, this.javaClass)
+    val ex = ALogJ.ex(exception)
+
+    Log.e(TAG, log)
+    Log.e(TAG, ex)
+    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex, true)
+}
+
+inline fun <THIS : Any> THIS.loge(exception: Throwable, crossinline block: (THIS) -> String) {
+    val str = block(this)
+    val log = ALogJ.log("E", str, this.javaClass)
+    val ex = ALogJ.ex(exception)
+
+    Log.e(TAG, log)
+    Log.e(TAG, ex)
+    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex, true)
 }
 
 inline fun <THIS : Any> THIS.logd(crossinline block: (THIS) -> String) {
-    val str = block(this)
-    val className = this.javaClass.simpleName
-    if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        Log.d(TAG, "$className: $str")
-    }
-    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("D $className: $str", false)
+    if (BuildConfig.ENABLE_LOGCAT || ALWAYS_FILE_LOG) {
+        val str = block(this)
+        val log = ALogJ.log("D", str, this.javaClass)
+        if(BuildConfig.ENABLE_LOGCAT) Log.d(TAG, log)
+
+        if (ALWAYS_FILE_LOG) FileLog.write(log, true)
     }
 }
-
 
 inline fun <THIS : Any> THIS.logd(tag:String, crossinline block: (THIS) -> String) {
-    val str = block(this)
-    val className = this.javaClass.simpleName
-    if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        Log.d(tag, "$className: $str")
-    }
-    if (BuildConfig.ENABLE_FILE_LOG || ALWAYS_FILE_LOG) {
-        FileLog.write("D $className: $tag: $str", false)
+    if (BuildConfig.ENABLE_LOGCAT || ALWAYS_FILE_LOG) {
+        val str = block(this)
+        val log = ALogJ.log("D", str, tag, this.javaClass)
+        if(BuildConfig.ENABLE_LOGCAT) Log.d(TAG, log)
+
+        if (ALWAYS_FILE_LOG) FileLog.write(log, true)
     }
 }
 
-inline fun logdNoFile(tag:String = TAG, block:()->String) {
-    if (BuildConfig.DEBUG || ALWAYS_LOG) {
-        Log.d(tag, block())
+inline fun <THIS : Any> THIS.logdNoFile(crossinline block: (THIS) -> String) {
+    if (BuildConfig.ENABLE_LOGCAT) {
+        val str = block(this)
+        val log = ALogJ.log("D", str, this.javaClass)
+        Log.d(TAG, log)
+    }
+}
+
+inline fun <THIS : Any> THIS.logdNoFile(tag:String = TAG, crossinline block: (THIS) -> String) {
+    if (BuildConfig.ENABLE_LOGCAT) {
+        val str = block(this)
+        val log = ALogJ.log("D", str, tag, this.javaClass)
+        Log.d(TAG, log)
     }
 }
 
 inline fun logt(tag:String = TAG, block:()->String) {
-    if(BuildConfig.DEBUG || ALWAYS_LOG) {
+    if(BuildConfig.ENABLE_LOGCAT) {
         val isMainThread = (Thread.currentThread().id == Looper.getMainLooper().thread.id)
         val str = block()
         val log = if (isMainThread) {
