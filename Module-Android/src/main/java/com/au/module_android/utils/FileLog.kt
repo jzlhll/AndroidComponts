@@ -139,36 +139,31 @@ object FileLog {
         }
     }
 
-    private val timestampFmt by unsafeLazy { SimpleDateFormat("dd-HH:mm:ss.SSS", Locale.getDefault()) }
+    private val timestampFmt by unsafeLazy { SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()) }
+
+    data class LogParserInfo(val time:String, val threadProcess:String, val level:String, val tag:String, val msg:String)
+
+    fun logParser(s:String) : LogParserInfo? {
+        return ignoreError {
+            val ss = s.split(" ")
+            val tag = ss[3]
+            val cutTag = tag.substring(0, tag.length - 1)
+            val index = s.indexOf(tag)
+            LogParserInfo(ss[0], ss[1], ss[2], cutTag, s.substring(index + tag.length + 1))
+        }
+    }
 
     /**时间戳转日期*/
     private fun longTimeToStr(time: Long): String {
         return timestampFmt.format(time).toString()
     }
 
-    fun write(log: String?, needStace: Boolean = false, throwable: Throwable? = null) {
+    fun write(log: String?) {
         val logTimeStr = longTimeToStr(System.currentTimeMillis())
         val writeStr = "$logTimeStr ${Process.myPid()}-${Thread.currentThread().id} $log"
-        val staceStr: String? = if (needStace) {
-            val exception = throwable ?: Exception()
-            val sb = StringBuilder()
-            sb.append(exception.message).append("\n").append(exception.cause).append("\n")
-            for (element in exception.stackTrace) {
-                sb.append(element.toString()).append(System.lineSeparator())
-            }
-            sb.toString()
-        } else {
-            null
-        }
-
         //排队写日志
         logHandler.post {
-            val fileItem = if(staceStr == null) {
-                FileItem(getCurrentFileName(), writeStr)
-            } else {
-                FileItem(getCurrentFileName(), writeStr + "\n" + staceStr)
-            }
-
+            val fileItem = FileItem(getCurrentFileName(), writeStr)
             if (ignoreWrite) {
                 synchronized(memCachedFileItemsLock) {
                     memCachedFileItems.add(fileItem)

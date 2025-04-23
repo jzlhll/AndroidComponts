@@ -6,14 +6,14 @@ import com.au.module_android.BuildConfig
 import java.util.Locale
 
 const val TAG:String = "au"
-var ALWAYS_FILE_LOG = false
+var ALWAYS_FILE_LOG = BuildConfig.ENABLE_FILE_LOG_DEFAULT
 
 inline fun <THIS : Any> THIS.loge(tag:String, crossinline block: (THIS) -> String) {
     val str = block(this)
     val log = ALogJ.log("E", str, tag, this.javaClass)
     Log.e(TAG, log)
 
-    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log)
 }
 
 inline fun <THIS : Any> THIS.loge(crossinline block: (THIS) -> String) {
@@ -21,7 +21,7 @@ inline fun <THIS : Any> THIS.loge(crossinline block: (THIS) -> String) {
     val log = ALogJ.log("E", str, this.javaClass)
     Log.e(TAG, log)
 
-    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log)
 }
 
 inline fun <THIS : Any> THIS.logw(tag:String, crossinline block: (THIS) -> String) {
@@ -29,7 +29,7 @@ inline fun <THIS : Any> THIS.logw(tag:String, crossinline block: (THIS) -> Strin
     val log = ALogJ.log("W", str, tag, this.javaClass)
     Log.w(TAG, log)
 
-    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log)
 }
 
 inline fun <THIS : Any> THIS.logw(crossinline block: (THIS) -> String) {
@@ -37,7 +37,7 @@ inline fun <THIS : Any> THIS.logw(crossinline block: (THIS) -> String) {
     val log = ALogJ.log("W", str, this.javaClass)
     Log.w(TAG, log)
 
-    if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log)
 }
 
 inline fun <THIS : Any> THIS.loge(tag:String, exception: Throwable, crossinline block: (THIS) -> String) {
@@ -47,7 +47,7 @@ inline fun <THIS : Any> THIS.loge(tag:String, exception: Throwable, crossinline 
 
     Log.e(TAG, log)
     Log.e(TAG, ex)
-    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex)
 }
 
 inline fun <THIS : Any> THIS.loge(exception: Throwable, crossinline block: (THIS) -> String) {
@@ -57,7 +57,7 @@ inline fun <THIS : Any> THIS.loge(exception: Throwable, crossinline block: (THIS
 
     Log.e(TAG, log)
     Log.e(TAG, ex)
-    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex, true)
+    if (ALWAYS_FILE_LOG) FileLog.write(log + "\n" + ex)
 }
 
 inline fun <THIS : Any> THIS.logd(crossinline block: (THIS) -> String) {
@@ -66,7 +66,7 @@ inline fun <THIS : Any> THIS.logd(crossinline block: (THIS) -> String) {
         val log = ALogJ.log("D", str, this.javaClass)
         if(BuildConfig.ENABLE_LOGCAT) Log.d(TAG, log)
 
-        if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+        if (ALWAYS_FILE_LOG) FileLog.write(log)
     }
 }
 
@@ -76,7 +76,7 @@ inline fun <THIS : Any> THIS.logd(tag:String, crossinline block: (THIS) -> Strin
         val log = ALogJ.log("D", str, tag, this.javaClass)
         if(BuildConfig.ENABLE_LOGCAT) Log.d(TAG, log)
 
-        if (ALWAYS_FILE_LOG) FileLog.write(log, true)
+        if (ALWAYS_FILE_LOG) FileLog.write(log)
     }
 }
 

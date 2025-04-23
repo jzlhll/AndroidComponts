@@ -16,7 +16,7 @@
         android:id="@+id/tv"
         tools:text="Remove"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="18dp"
+        android:layout_marginStart="24dp"
         android:textColor="@color/color_text_normal"
         style="@style/StyleFontText"
         android:layout_width="wrap_content"

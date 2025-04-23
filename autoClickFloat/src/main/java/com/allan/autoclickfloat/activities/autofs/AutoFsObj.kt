@@ -12,6 +12,7 @@ import com.au.module_android.json.toJsonString
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.loge
+import com.au.module_android.utils.logw
 import com.au.module_cached.AppDataStore
 import com.au.module_cached.delegate.AppDataStoreLongCache
 import okhttp3.internal.toImmutableList
@@ -310,7 +311,7 @@ object AutoFsObj {
 
             // 设置AlarmClock类型的精确闹钟
             alarmMgr.setAlarmClock(alarmInfo, triggerIntent)
-            logd { "allanAlarm >>startNextAlarm V2<< time: $log origLog:$origLog" }
+            logw { "allanAlarm >>startNextAlarm V2<< time: $log origLog:$origLog" }
         } catch (e: SecurityException) {
             loge { "allanAlarm >>startNextAlarm V2<< time error: ${e.message}" }
         }

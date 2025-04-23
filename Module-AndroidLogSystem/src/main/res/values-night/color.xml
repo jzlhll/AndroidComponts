@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 暗黑模式错误 (深红色) -->
+    <color name="color_log_error">#D32F2F</color>
+    <!-- 暗黑模式警告 (暗橙色) -->
+    <color name="color_log_warn">#F57C00</color>
+</resources>

@@ -41,6 +41,7 @@ android {
 //            }
 
             buildConfigField("boolean", "ENABLE_LOGCAT", "false")
+            buildConfigField("boolean", "ENABLE_FILE_LOG_DEFAULT", "false")
         }
         debug {
             debuggable true
@@ -50,6 +51,7 @@ android {
             shrinkResources false
 
             buildConfigField("boolean", "ENABLE_LOGCAT", "true")
+            buildConfigField("boolean", "ENABLE_FILE_LOG_DEFAULT", "true")
         }
     }
 

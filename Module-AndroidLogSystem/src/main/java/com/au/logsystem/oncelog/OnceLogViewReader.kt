@@ -1,5 +1,6 @@
 package com.au.logsystem.oncelog
 
+import com.au.module_android.utils.FileLog
 import com.au.module_android.utils.logdNoFile
 import kotlinx.coroutines.delay
 import java.io.BufferedReader
@@ -9,17 +10,15 @@ import java.io.FileReader
 class OnceLogViewReader(private val file: File) {
     private var mBeanIndex = 0
 
-    private val chunkedSize = 8
-
     suspend fun onceRead() : List<LogViewNormalBean> {
         logdNoFile { "logView: onceRead" }
         val lines = readAll()
         delay(20)
         logdNoFile { "logView: lines ${lines.size}" }
-        val beans = lines.chunked(chunkedSize) { chunk ->
-            chunk.joinToString(separator = "\n")
-        }.map {
-            LogViewNormalBean(mBeanIndex++, it)
+
+        val showBits = generateShowBits(time =true, threadProcess = true, level = true, tag = true)
+        val beans = lines.map {
+            LogViewNormalBean(mBeanIndex++, it, FileLog.logParser(it), showBits, false)
         }
         logdNoFile { "logView: beans ${beans.size}" }
         return beans

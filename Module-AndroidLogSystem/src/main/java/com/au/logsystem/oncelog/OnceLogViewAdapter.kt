@@ -2,11 +2,8 @@ package com.au.logsystem.oncelog
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.au.logsystem.databinding.HolderLogViewNormalBinding
-import com.au.module_android.utils.logdNoFile
 import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.au.module_nested.recyclerview.DiffCallback
-import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import kotlin.math.min
 
 class LogViewAdapter(private val mRcv: RecyclerView) : AutoLoadMoreBindRcvAdapter<LogViewNormalBean, LogViewBinder>() {
@@ -64,12 +61,5 @@ class LogViewAdapter(private val mRcv: RecyclerView) : AutoLoadMoreBindRcvAdapte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewBinder {
         return LogViewBinder(create(parent))
-    }
-}
-
-class LogViewBinder(binding: HolderLogViewNormalBinding) : BindViewHolder<LogViewNormalBean, HolderLogViewNormalBinding>(binding) {
-    override fun bindData(bean: LogViewNormalBean) {
-        super.bindData(bean)
-        binding.textView.text = bean.string
     }
 }

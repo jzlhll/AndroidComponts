@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 错误日志 (暖红色) -->
+    <color name="color_log_error">#EF5350</color>
+    <!-- 警告日志 (琥珀橙) -->
+    <color name="color_log_warn">#FFA726</color>
+</resources>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingHorizontal="12dp"
+    android:paddingVertical="3dp"
     android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/textView"
+        android:id="@+id/tv"
         style="@style/StyleFontText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </com.au.module_android.widget.CustomFontText>
-</HorizontalScrollView>
+</FrameLayout>
