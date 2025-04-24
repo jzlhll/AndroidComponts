@@ -10,15 +10,14 @@ import java.io.FileReader
 class OnceLogViewReader(private val file: File) {
     private var mBeanIndex = 0
 
-    suspend fun onceRead() : List<LogViewNormalBean> {
+    suspend fun onceRead(savedShownInfo: LogViewShownInfo) : List<LogViewNormalBean> {
         logdNoFile { "logView: onceRead" }
         val lines = readAll()
         delay(20)
         logdNoFile { "logView: lines ${lines.size}" }
 
-        val showBits = generateShowBits(time =true, threadProcess = true, level = true, tag = true)
         val beans = lines.map {
-            LogViewNormalBean(mBeanIndex++, it, FileLog.logParser(it), showBits, false)
+            LogViewNormalBean(mBeanIndex++, it, FileLog.logParser(it), savedShownInfo)
         }
         logdNoFile { "logView: beans ${beans.size}" }
         return beans

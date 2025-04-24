@@ -2,16 +2,30 @@ package com.au.logsystem.oncelog
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.au.logsystem.R
+import com.au.module_android.Globals
+import com.au.module_android.utils.NoWayException
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_nested.recyclerview.AutoLoadMoreBindRcvAdapter
 import com.au.module_nested.recyclerview.DiffCallback
 import kotlin.math.min
 
-class LogViewAdapter(private val mRcv: RecyclerView) : AutoLoadMoreBindRcvAdapter<LogViewNormalBean, LogViewBinder>() {
+class LogViewAdapter(private val mRcv: RecyclerView) : AutoLoadMoreBindRcvAdapter<LogViewNormalBean, AbsLogViewBinder<*>>() {
     private var mLoadedToRcvIndex = 0
 
     private val onceLoadPage = 100
 
     private var beans:List<LogViewNormalBean>? = null
+
+    val errorColor by unsafeLazy {
+        Globals.getColor(R.color.color_log_error)
+    }
+    val warnColor by unsafeLazy {
+        Globals.getColor(R.color.color_log_warn)
+    }
+    val debugColor by unsafeLazy {
+        Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal)
+    }
 
     fun loadNext() {
         val lastIndex = mLoadedToRcvIndex
@@ -59,7 +73,15 @@ class LogViewAdapter(private val mRcv: RecyclerView) : AutoLoadMoreBindRcvAdapte
         return Differ(a, b)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewBinder {
-        return LogViewBinder(create(parent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbsLogViewBinder<*> {
+        return when (viewType) {
+            AbsLogViewBinder.VIEW_TYPE_WRAP -> LogViewWrapBinder(create(parent))
+            AbsLogViewBinder.VIEW_TYPE_NO_WRAP -> LogViewNoWrapBinder(create(parent))
+            else -> throw NoWayException()
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if(datas[position].showBits.isWrap) AbsLogViewBinder.VIEW_TYPE_WRAP else AbsLogViewBinder.VIEW_TYPE_NO_WRAP
     }
 }

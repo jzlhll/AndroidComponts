@@ -9,10 +9,10 @@ def APP_KEY = "abcdefghijklmnopkqjjd0129347578928"
 
 android {
     namespace 'com.example.module_native'
-    compileSdk 35
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk 26
+        minSdk gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
         externalNativeBuild {

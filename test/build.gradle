@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace 'com.example.test'
-    compileSdk 35
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk 26
+        minSdk gradle.ext.minSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace 'com.au.logsystem'
-    compileSdk 35
+    compileSdk gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk 26
+        minSdk gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }

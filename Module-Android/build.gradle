@@ -24,7 +24,6 @@ android {
 
     buildTypes {
         release {
-            debuggable false
             //是否混淆
             minifyEnabled true
             //压缩资源，必须开启minifyEnabled才有用
@@ -44,7 +43,6 @@ android {
             buildConfigField("boolean", "ENABLE_FILE_LOG_DEFAULT", "false")
         }
         debug {
-            debuggable true
             //是否混淆
             minifyEnabled false
             //压缩资源，必须开启minifyEnabled才有用

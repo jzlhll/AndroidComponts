@@ -9,18 +9,36 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floatBtn"-->
+<!--        android:contentDescription="toggle"-->
+<!--        android:src="@drawable/floating_menu"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_marginBottom="28dp"-->
+<!--        android:layout_marginEnd="28dp"-->
+<!--        app:fabSize="normal"-->
+<!--        android:tint="@android:color/white"-->
+<!--        app:layout_behavior="com.au.logsystem.FabScrollBehavior"-->
+<!--        app:pressedTranslationZ="18dp"-->
+<!--        app:rippleColor="@color/colorPrimary"-->
+<!--        app:backgroundTint="@color/colorPrimary_press"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+    <com.au.module_androidui.widget.UnfoldButton
         android:id="@+id/floatBtn"
         android:contentDescription="toggle"
-        android:src="@android:drawable/ic_menu_help"
+        android:src="@drawable/ic_floating_menu"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="28dp"
+        app:maxImageSize="36dp"
         android:layout_marginEnd="28dp"
         app:fabSize="normal"
+        android:tint="@android:color/white"
         app:layout_behavior="com.au.logsystem.FabScrollBehavior"
         app:pressedTranslationZ="18dp"
-        app:rippleColor="@color/colorPrimary_press"
-        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimary_press"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

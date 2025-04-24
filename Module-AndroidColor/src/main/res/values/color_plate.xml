@@ -82,4 +82,7 @@
 
     <!-- 悬挂提醒DING信息背景色 -->
     <color name="color_ding_bg">#fff2e0</color>
+
+    <!-- 悬浮floatingButton的背景色 -->
+    <color name="color_floating_btn_bg">#8b414141</color>
 </resources>
