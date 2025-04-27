@@ -27,17 +27,17 @@ class AlarmReceiver : BroadcastReceiver() {
     fun formatTimeDifference(curTs: Long, targetTsLong: Long): String {
         val deltaMs = curTs - targetTsLong
         val deltaMinutes = abs(deltaMs / (60 * 1000))
-        if (deltaMs >= 100 * 1000) {
+        if (deltaMs >= 60 * 1000) {
             return "*已过去 $deltaMinutes 分钟"
         }
-        if (deltaMs >= 30 * 1000) {
+        if (deltaMs >= 15 * 1000) {
             return "已过去 $deltaMs 秒"
         }
-        if (deltaMs >= -30 * 1000) {
+        if (deltaMs >= -15 * 1000) {
             return "准时"
         }
         val absDeltaMs = abs(deltaMs)
-        if (deltaMs > -100 * 1000) {
+        if (deltaMs > -60 * 1000) {
             return "提前 $absDeltaMs 秒"
         }
         return "*提前 $deltaMinutes 分钟"

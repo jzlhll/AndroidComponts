@@ -114,26 +114,34 @@ class OnceLogViewFragment : BindingFragment<FragmentLogViewBinding>() {
                 }
             }
         }
-        f.addElementOnCreate(TAG_TAG, R.drawable.ic_floating_tag, bgColor) {
+        val tagImg = if(mShowInfo.tag) R.drawable.ic_floating_tag else R.drawable.ic_floating_tag_no
+        f.addElementOnCreate(TAG_TAG, tagImg, bgColor) {
             mShowInfo = mShowInfo.also { it.tag = !it.tag }
             changeShown()
+            f.findElement(TAG_TAG)?.setImageResource(if(mShowInfo.tag) R.drawable.ic_floating_tag else R.drawable.ic_floating_tag_no)
         }
-        f.addElementOnCreate(TAG_THREAD_PROCESS, R.drawable.ic_floating_thread_process, bgColor) {
+        val threadProcessImg = if(mShowInfo.threadProcess) R.drawable.ic_floating_thread_process else R.drawable.ic_floating_thread_process_no
+        f.addElementOnCreate(TAG_THREAD_PROCESS, threadProcessImg, bgColor) {
             mShowInfo = mShowInfo.also { it.threadProcess = !it.threadProcess }
             changeShown()
+            f.findElement(TAG_THREAD_PROCESS)?.setImageResource(if(mShowInfo.threadProcess) R.drawable.ic_floating_thread_process else R.drawable.ic_floating_thread_process_no)
         }
-        f.addElementOnCreate(TAG_LEVEL, R.drawable.ic_floating_level, bgColor) {
+        val lvlImg = if(mShowInfo.level) R.drawable.ic_floating_level else R.drawable.ic_floating_level_no
+        f.addElementOnCreate(TAG_LEVEL, lvlImg, bgColor) {
             mShowInfo = mShowInfo.also { it.level = !it.level }
             changeShown()
+            f.findElement(TAG_LEVEL)?.setImageResource(if(mShowInfo.level) R.drawable.ic_floating_level else R.drawable.ic_floating_level_no)
         }
-        f.addElementOnCreate(TAG_IS_WRAP, R.drawable.ic_floating_wrap_no, bgColor) {
+        val wrapImg = if(mShowInfo.isWrap) R.drawable.ic_floating_wrap else R.drawable.ic_floating_wrap_no
+        f.addElementOnCreate(TAG_IS_WRAP, wrapImg, bgColor) {
             mShowInfo = mShowInfo.also { it.isWrap = !it.isWrap }
             changeShown()
+            f.findElement(TAG_IS_WRAP)?.setImageResource(if(mShowInfo.isWrap) R.drawable.ic_floating_wrap else R.drawable.ic_floating_wrap_no)
         }
 
-        f.setMyAngle(90) //这个是展开的总角度  建议取90的倍数
-        f.setMyScale(0.88f) //设置弹出缩放的比例  1为不缩放 范围是0—1
-        f.setMyLength(125.dp) //设置弹出的距离
+        f.setMyAngle(98) //这个是展开的总角度  建议取90的倍数
+        f.setMyScale(0.82f) //设置弹出缩放的比例  1为不缩放 范围是0—1
+        f.setMyLength(132.dp) //设置弹出的距离
     }
 
     private fun changeShown() {
