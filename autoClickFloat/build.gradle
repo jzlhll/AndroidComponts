@@ -50,5 +50,7 @@ dependencies {
     implementation libs.material
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.room.runtime
+    implementation libs.jsbridgev2
+
     ksp libs.androidx.room.compiler
 }

@@ -9,6 +9,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.view.View
 import androidx.core.net.toUri
+import com.allan.autoclickfloat.activities.autofs.AutoFsScreenOnFragment
 import com.allan.autoclickfloat.activities.autofs.AutoStartAlarmFragment
 import com.allan.autoclickfloat.activities.autofs.canWrite
 import com.allan.autoclickfloat.activities.autofs.goToManageSetting
@@ -63,8 +64,7 @@ class AllFeaturesFragment : BindingFragment<AllFeaturesFragmentBinding>() {
         }
 
         binding.debugBtn.onClick {
-           // openApp(Globals.app, "com.tencent.tgclub")
-            OnceLogViewFragment.show(requireContext(), File("/sdcard/Android/data/com.allan.autoclickfloat/cache/logShare/2025-04-19.log"))
+            FragmentShellActivity.start(requireActivity(), AutoFsScreenOnFragment::class.java)
         }
 
         binding.logSysBtn.onClick {

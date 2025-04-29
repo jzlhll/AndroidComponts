@@ -19,7 +19,6 @@ gradle.ext.compileSdk          = 36
 gradle.ext.targetSdk           = 35
 gradle.ext.minSdk              = 26
 
-
 ///////end of extra params
 
 dependencyResolutionManagement {

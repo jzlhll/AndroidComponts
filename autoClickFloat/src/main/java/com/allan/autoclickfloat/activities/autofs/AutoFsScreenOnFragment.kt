@@ -2,25 +2,25 @@ package com.allan.autoclickfloat.activities.autofs
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.LinearLayout
+import com.allan.autoclickfloat.activities.autofs.spider.SpiderFragment
+import com.allan.autoclickfloat.activities.autofs.spider.checkhtml.AbstractCheckHtml
+import com.allan.autoclickfloat.activities.autofs.spider.checkhtml.CheckHtmlArgs
+import com.allan.autoclickfloat.activities.autofs.spider.filter.DnSpiderWebViewFilter
+import com.allan.autoclickfloat.databinding.FragmentFsScreenOnBinding
 import com.au.module_android.Globals
-import com.au.module_android.ui.views.ViewFragment
-import com.au.module_android.utils.dp
+import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.myHideSystemUI
 import com.au.module_android.utils.startOutActivity
-import com.au.module_android.widget.CustomFontText
 import com.module_native.AppNative
 
-class AutoFsScreenOnFragment : ViewFragment() {
-    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
+    private var jump = true
+
+    override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().apply {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -29,26 +29,42 @@ class AutoFsScreenOnFragment : ViewFragment() {
             myHideSystemUI()
         }
 
+        Globals.mainHandler.post {
+            binding.fragContainerId.getFragment<SpiderFragment?>()?.webView?.let { spiderWebView->
+                spiderWebView.filter = DnSpiderWebViewFilter()
+                spiderWebView.checkHtml = object : AbstractCheckHtml() {
+                    override fun checkHtml(html: String): CheckHtmlArgs {
+                        val autoFsDot = "autofs."
+                        if (html.contains(autoFsDot)) {
+                            val index = html.indexOf(autoFsDot) + autoFsDot.length
+                            val nextDotIndex = html.indexOf(".", index)
+                            val moreStr = html.substring(index, nextDotIndex)
+                            logdNoFile { moreStr }
+                            if (moreStr == "disable") {
+                                jump = false
+                            }
+                        }
+                        return CheckHtmlArgs(false)
+                    }
+                }
+                spiderWebView.loadUrl("https://blog.csdn.net/jzlhll123/article/details/145456286")
+            }
+        }
+
         AutoFsObj.checkAndStartNextAlarm(requireContext())
 
-//        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
-//        if (wifiManager.isWifiEnabled) {
-//            logd { "allanAlarm hasWifi..." }
-//        } else {
-//            logd { "allanAlarm no wifi..." }
-////            val panelIntent = Intent(Settings.Panel.ACTION_WIFI)
-////            startActivityFix(panelIntent)
-//          //android12失效  wifiManager.setWifiEnabled(true)
-//            // 直接修改系统设置 需要系统权限
-////            Settings.Global.putInt(requireContext().contentResolver,  "wifi_on", 1);
-//        }
-
         Globals.mainHandler.postDelayed({
-            logd { "allanAlarm delay do launch!!!" }
+            delayWork()
+        }, 8 * 1000)
+    }
+
+    private fun delayWork() {
+        logd { "allanAlarm delay do launch!!! jump $jump" }
+        if (jump) {
             val context = Globals.app
             val pm = context.packageManager
 
-            val originalStr = AppNative.simpleDecoder(intArrayOf(104,95,107,105,42,111,111,42,93,106,96,110,107,101,96,42,104,93,110,103,))
+            val originalStr = AppNative.simpleDecoder(intArrayOf(104, 95, 107, 105, 42, 111, 111, 42, 93, 106, 96, 110, 107, 101, 96, 42, 104, 93, 110, 103))
             val intent = pm.getLaunchIntentForPackage(originalStr)
             if (intent != null) {
                 logd { "allanAlarm delay toast lanch!!!" }
@@ -56,18 +72,9 @@ class AutoFsScreenOnFragment : ViewFragment() {
             } else {
                 logd { "allanAlarm delay toast no lanch!!!" }
             }
-            activity?.finish()
-        }, 8 * 1000)
-
-        return LinearLayout(inflater.context).also {
-            it.addView(CustomFontText(inflater.context).also { tv->
-                tv.text = ""
-                tv.textSize = 20f.dp
-                tv.gravity = Gravity.CENTER
-                tv.setBackgroundColor(Color.BLACK)
-                tv.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            })
         }
+
+        activity?.finish()
     }
 
     override fun onStop() {
@@ -96,4 +103,16 @@ class AutoFsScreenOnFragment : ViewFragment() {
             }
         })
     }
+
+//        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        if (wifiManager.isWifiEnabled) {
+//            logd { "allanAlarm hasWifi..." }
+//        } else {
+//            logd { "allanAlarm no wifi..." }
+////            val panelIntent = Intent(Settings.Panel.ACTION_WIFI)
+////            startActivityFix(panelIntent)
+//          //android12失效  wifiManager.setWifiEnabled(true)
+//            // 直接修改系统设置 需要系统权限
+////            Settings.Global.putInt(requireContext().contentResolver,  "wifi_on", 1);
+//        }
 }
