@@ -16,6 +16,8 @@ android {
         versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("long", "APK_BUILD_TIME", "" + System.currentTimeMillis())
 //
 //        javaCompileOptions {
 //            annotationProcessorOptions {
@@ -55,7 +57,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
-
+    implementation libs.nanohttpd
     implementation libs.gson
 
 //    implementation project(":jsbridge")

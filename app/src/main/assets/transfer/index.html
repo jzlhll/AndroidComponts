@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f6fa;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-section {
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .custom-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        #dropZone {
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+        }
+
+        #dropZone.dragover {
+            border-color: #3498db;
+            background-color: #e8f4ff;
+            color: #3498db;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        #uploadProgress {
+            height: 100%;
+            background: #3498db;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    </style>
+    <title></title>
+</head>
+
+<script src="sparkmd5.min.js"></script>
+
+<body>
+<div class="container">
+    <h1>MyDroidTransfer%d</h1>
+
+    <div class="form-container">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="upload-section">
+                <input type="file" name="file" id="real-file">
+                <button type="button" class="custom-button" onclick="document.getElementById('real-file').click()">
+                    📁 选择文件
+                </button>
+            </div>
+        </form>
+        
+        <button type="button" class="custom-button" 
+                style="background-color: #27ae60" 
+                onclick="startUpload()">
+            🚀 开始上传
+        </button>
+    </div>
+
+    <div class="progress-container">
+        <div id="uploadProgress" class="progress-bar"></div>
+    </div>
+
+    <div id="dropZone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+        ⬇️ 或者拖拽文件至此区域
+    </div>
+
+    <div id="fileList" class="status-message" style="white-space: pre-line;"></div>
+    <div id="status" class="status-message"></div>
+</div>
+
+<script>
+    let selectedFile = null; // 存储选择的文件
+    let selectedMd5 = null; //文件的md5
+
+    // 处理文件选择（通过按钮）
+    document.getElementById('real-file').addEventListener('change', function(e) {
+        selectedFile = e.target.files[0];
+        showFileInfo();
+    });
+
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('dropZone').classList.remove('dragover');
+
+        selectedFile = e.dataTransfer.files[0];
+        showFileInfo();
+    }
+
+    //显示文件信息
+    async function showFileInfo() {
+        if (selectedFile) {
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.className = `status-message info`;
+            fileListDiv.style.display = 'block';
+            fileListDiv.textContent = `文件: ${selectedFile.name} (${formatSize(selectedFile.size)}) \nmd5: 计算中`;
+            
+            const fileHash = await calculateFileHash(selectedFile); // 计算文件唯一标识
+            console.log("get file hash " + fileHash);
+            selectedMd5 = fileHash;
+            fileListDiv.textContent = `文件: ${selectedFile.name} (${formatSize(selectedFile.size)}) \nmd5: ${fileHash}`;
+        }
+    }
+
+    function changeProgressVisible(visible) {
+        if(visible) 
+            document.querySelector('.progress-container').style.display = 'block';
+        else 
+            document.querySelector('.progress-container').style.display = 'none';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('dropZone').classList.add('dragover');
+    }
+
+    // 开始上传
+    async function startUpload() {
+        if (!selectedFile) {
+            showStatus('请先选择文件', 'error');
+            return;
+        }
+
+        const file = selectedFile;
+        const md5 = selectedMd5;
+        const fileName = file.name;
+
+        changeProgressVisible(true);
+
+        const CHUNK_SIZE = 64 * 1024;
+        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+
+        const fileSize = file.size;
+        const chunks = Math.ceil(fileSize / CHUNK_SIZE); // 计算分片数量
+
+        try {
+            let uploadedChunks = 0; // 已上传的分片数量
+            for (let i = 0; i < chunks; i++) {
+                const start = i * CHUNK_SIZE;
+                const end = Math.min(fileSize, start + CHUNK_SIZE);
+                const chunk = file.slice(start, end); // 切割分片
+
+                const formData = new FormData();
+                formData.append('fileName', fileName);
+                formData.append('chunk', chunk);
+                formData.append('chunkIndex', i + 1);
+                formData.append('totalChunks', chunks);
+                formData.append('md5', md5);
+
+                try {
+                    const ans = await uploadChunk(formData); // 上传分片
+                    console.log(`each response ${ans}`);
+                    uploadedChunks++;
+                    console.log(`分片 ${i + 1}/${chunks} 上传成功`);
+                } catch (error) {
+                    console.error(`分片 ${i + 1}/${chunks} 上传失败`, error);
+                    return;
+                }
+            }
+
+            console.log('所有分片上传完成，通知服务器合并文件');
+            await mergeChunks(md5, file.name); // 通知服务器合并分片
+            showStatus('文件上传成功！', 'success');
+            resetUI();
+        } catch (err) {
+            showStatus(`上传失败: ${err.message}`, 'error');
+        }
+    }
+
+    // 计算文件唯一标识（MD5）
+    function calculateFileHash(file) {
+    return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = () => {
+            const buffer = reader.result;
+            const spark = new SparkMD5.ArrayBuffer();
+            spark.append(buffer);
+            resolve(spark.end());
+        };
+    });
+    }
+
+    // 上传分片
+    function uploadChunk(formData) {
+        return fetch('/upload-chunk', {
+            method: 'POST',
+            body: formData,
+        }).then((response) => {
+            if (!response.ok) throw new Error('上传失败');
+        });
+    }
+
+    // 通知服务器合并分片
+    function mergeChunks(fileHash, fileName) {
+        return fetch('/merge-chunks', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fileHash, fileName }),
+        }).then((response) => {
+            if (!response.ok) throw new Error('合并失败');
+        });
+    }
+
+    // 辅助函数：格式化文件大小
+    function formatSize(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let size = bytes;
+        let unitIndex = 0;
+
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        return `${size.toFixed(2)} ${units[unitIndex]}`;
+    }
+
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('status');
+        statusDiv.textContent = message;
+        statusDiv.className = `status-message ${type}`;
+        statusDiv.style.display = 'block';
+
+        setTimeout(() => {
+           statusDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    // 重置UI状态
+    function resetUI() {
+        selectedFile = null;
+        document.getElementById('real-file').value = '';
+        document.getElementById('fileList').textContent = '';
+        changeProgressVisible(false);
+        updateProgress(0);
+    }
+
+    function updateProgress(percent) {
+        const progressBar = document.getElementById('uploadProgress');
+        progressBar.style.width = `${percent}%`;
+    }
+</script>
+</body>
+</html>
