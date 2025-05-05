@@ -1,6 +1,7 @@
 package com.au.module_android.simplelivedata
 
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -34,6 +35,7 @@ open class NoStickLiveData<T> : LiveData<T> {
     }
 
     constructor(value: T) : super(value) {
+        mRealData = value
         mVersion = 0
     }
 
@@ -46,7 +48,12 @@ open class NoStickLiveData<T> : LiveData<T> {
     //////////////////////////////////
 
     fun setValueSafe(value : T?) {
-        if (Looper.getMainLooper() === Looper.myLooper()) {
+        val isPosting = mIsPosting
+        val isMainThread = Looper.getMainLooper() === Looper.myLooper()
+        if (isPosting && isMainThread) {
+            Log.w("NoStickLiveData", "When posting must postValue!")
+            postValue(value)
+        } else if (!isPosting && isMainThread) {
             setValue(value)
         } else {
             postValue(value)
@@ -57,11 +64,16 @@ open class NoStickLiveData<T> : LiveData<T> {
     override fun setValue(value: T?) {
         mVersion++
         mRealData = value
+        mIsPosting = false
         super.setValue(value)
     }
 
+    @Volatile
+    private var mIsPosting = false
+
     @Deprecated("如非必要，推荐使用setValueSafe。")
     override fun postValue(value: T?) {
+        mIsPosting = true
         mRealData = value
         super.postValue(value)
     }
