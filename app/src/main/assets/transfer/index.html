@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
     <style>
@@ -20,7 +19,7 @@
         .form-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: baseline;
             gap: 8px;
         }
 
@@ -43,6 +42,8 @@
         }
 
         .custom-button {
+            height: 48px; /* 统一高度 */
+            line-height: 24px; /* 文字垂直居中 */
             background-color: #3498db;
             color: white;
             padding: 12px 24px;
@@ -111,7 +112,10 @@
     <title></title>
 </head>
 
-<script src="sparkmd5.min.js"></script>
+<script src="mydroid-md5generator.js"></script>
+<!-- 指定 app/worker 否则无法识别。-->
+<script src="worker-mydroid-md5.js" type="app/worker"></script>
+<script src="mydroid-uploadfile.js"></script>
 
 <body>
 <div class="container">
@@ -163,19 +167,50 @@
         selectedFile = e.dataTransfer.files[0];
         showFileInfo();
     }
+    
+    // 辅助函数：格式化文件大小
+    function myDroidFormatSize(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let size = bytes;
+        let unitIndex = 0;
+
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        return `${size.toFixed(2)} ${units[unitIndex]}`;
+    }
 
     //显示文件信息
     async function showFileInfo() {
+        // 添加兼容性检查
+        if (!window.Worker) {
+            alert("您的浏览器不支持Web Worker，请使用Chrome/Firefox/Edge等现代浏览器");
+        }
+
         if (selectedFile) {
             const fileListDiv = document.getElementById('fileList');
             fileListDiv.className = `status-message info`;
             fileListDiv.style.display = 'block';
-            fileListDiv.textContent = `文件: ${selectedFile.name} (${formatSize(selectedFile.size)}) \nmd5: 计算中`;
+            const fileSize = myDroidFormatSize(selectedFile.size);
+            fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: 计算中...`;
             
-            const fileHash = await calculateFileHash(selectedFile); // 计算文件唯一标识
-            console.log("get file hash " + fileHash);
+            const startTs = Date.now();
+            let deltaTs = 0;
+            function checkCb() {
+                const nowTs = Date.now();
+                deltaTs = nowTs - startTs;
+                fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: 计算中 ${deltaTs}毫秒...`;
+            }
+            startLoopingCheck(checkCb);
+
+            const fileHash = await streamBasedHashBig(selectedFile); // 计算文件唯一标识
+            stopLoopingCheck();
+            
             selectedMd5 = fileHash;
-            fileListDiv.textContent = `文件: ${selectedFile.name} (${formatSize(selectedFile.size)}) \nmd5: ${fileHash}`;
+            const nowTs = Date.now();
+            deltaTs = nowTs - startTs;
+            fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: ${fileHash} ${deltaTs}毫秒。`;
         }
     }
 
@@ -192,106 +227,10 @@
     }
 
     // 开始上传
-    async function startUpload() {
-        if (!selectedFile) {
-            showStatus('请先选择文件', 'error');
-            return;
-        }
-
-        const file = selectedFile;
-        const md5 = selectedMd5;
-        const fileName = file.name;
-
-        changeProgressVisible(true);
-
-        const CHUNK_SIZE = 64 * 1024;
-        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-
-        const fileSize = file.size;
-        const chunks = Math.ceil(fileSize / CHUNK_SIZE); // 计算分片数量
-
-        try {
-            let uploadedChunks = 0; // 已上传的分片数量
-            for (let i = 0; i < chunks; i++) {
-                const start = i * CHUNK_SIZE;
-                const end = Math.min(fileSize, start + CHUNK_SIZE);
-                const chunk = file.slice(start, end); // 切割分片
-
-                const formData = new FormData();
-                formData.append('fileName', fileName);
-                formData.append('chunk', chunk);
-                formData.append('chunkIndex', i + 1);
-                formData.append('totalChunks', chunks);
-                formData.append('md5', md5);
-
-                try {
-                    const ans = await uploadChunk(formData); // 上传分片
-                    console.log(`each response ${ans}`);
-                    uploadedChunks++;
-                    console.log(`分片 ${i + 1}/${chunks} 上传成功`);
-                } catch (error) {
-                    console.error(`分片 ${i + 1}/${chunks} 上传失败`, error);
-                    return;
-                }
-            }
-
-            console.log('所有分片上传完成，通知服务器合并文件');
-            await mergeChunks(md5, file.name); // 通知服务器合并分片
-            showStatus('文件上传成功！', 'success');
-            resetUI();
-        } catch (err) {
-            showStatus(`上传失败: ${err.message}`, 'error');
-        }
-    }
-
-    // 计算文件唯一标识（MD5）
-    function calculateFileHash(file) {
-    return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            reader.onload = () => {
-            const buffer = reader.result;
-            const spark = new SparkMD5.ArrayBuffer();
-            spark.append(buffer);
-            resolve(spark.end());
-        };
-    });
-    }
-
-    // 上传分片
-    function uploadChunk(formData) {
-        return fetch('/upload-chunk', {
-            method: 'POST',
-            body: formData,
-        }).then((response) => {
-            if (!response.ok) throw new Error('上传失败');
+    function startUpload() {
+        startUploadFile(selectedFile, selectedMd5, (str, st) => {
+            showStatus(str, st);
         });
-    }
-
-    // 通知服务器合并分片
-    function mergeChunks(fileHash, fileName) {
-        return fetch('/merge-chunks', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ fileHash, fileName }),
-        }).then((response) => {
-            if (!response.ok) throw new Error('合并失败');
-        });
-    }
-
-    // 辅助函数：格式化文件大小
-    function formatSize(bytes) {
-        const units = ['B', 'KB', 'MB', 'GB'];
-        let size = bytes;
-        let unitIndex = 0;
-
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        return `${size.toFixed(2)} ${units[unitIndex]}`;
     }
 
     function showStatus(message, type) {
@@ -317,6 +256,30 @@
     function updateProgress(percent) {
         const progressBar = document.getElementById('uploadProgress');
         progressBar.style.width = `${percent}%`;
+    }
+
+    let intervalId = null;
+    let isLooping = false;
+    function startLoopingCheck(callback) {
+        if (isLooping) {
+            return;
+        }
+        
+        isLooping = true;
+
+        if (!intervalId) {
+            intervalId = setInterval(() => {
+            callback();
+            }, 200);
+        }
+    }
+
+    function stopLoopingCheck() {
+        isLooping = false;
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
     }
 </script>
 </body>

@@ -83,6 +83,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
                     "该功能需要全局设置权限，即将跳转，打开该功能。",
                     "OK") {
                     gotoMgrAll()
+                    it.dismissAllowingStateLoss()
                 }
             }
             return ex

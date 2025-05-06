@@ -197,6 +197,6 @@ object FileLog {
                 }
             }
         } while (false)
-        Log.d("FileLog", "clear old log file over! $count")
+        //Log.d("FileLog", "clear old log file over! $count")
     }
 }
