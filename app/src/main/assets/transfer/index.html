@@ -113,9 +113,11 @@
 </head>
 
 <script src="mydroid-md5generator.js"></script>
+<script src="mydroid-uploadfile.js"></script>
+<script src="spark-md5.min.js"></script>
+
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
-<script src="mydroid-uploadfile.js"></script>
 
 <body>
 <div class="container">
@@ -181,37 +183,65 @@
         return `${size.toFixed(2)} ${units[unitIndex]}`;
     }
 
-    //显示文件信息
-    async function showFileInfo() {
+    function showFileInfo() {
+        const startTs = Date.now();
+        window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
+        window.lastStartTsFlagArr.sharedData = startTs;
+        console.log("start show file info startTs: " + startTs);
+
         // 添加兼容性检查
-        if (!window.Worker) {
-            alert("您的浏览器不支持Web Worker，请使用Chrome/Firefox/Edge等现代浏览器");
-        }
-
         if (selectedFile) {
-            const fileListDiv = document.getElementById('fileList');
-            fileListDiv.className = `status-message info`;
-            fileListDiv.style.display = 'block';
-            const fileSize = myDroidFormatSize(selectedFile.size);
-            fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: 计算中...`;
+            const file = selectedFile;
+            const fileSize = myDroidFormatSize(file.size);
             
-            const startTs = Date.now();
-            let deltaTs = 0;
-            function checkCb() {
-                const nowTs = Date.now();
-                deltaTs = nowTs - startTs;
-                fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: 计算中 ${deltaTs}毫秒...`;
+            if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
+                showFileInfoByWorker(startTs, file, fileSize);
+            } else {
+                showFileInfoBySmall(file, fileSize);
             }
-            startLoopingCheck(checkCb);
+        }
+    }
 
-            const fileHash = await streamBasedHashBig(selectedFile); // 计算文件唯一标识
-            stopLoopingCheck();
-            
-            selectedMd5 = fileHash;
+    // 计算文件唯一标识（MD5）
+    async function showFileInfoBySmall(file, fileSize) {
+        const fileListDiv = document.getElementById('fileList');
+        fileListDiv.className = `status-message info`;
+        fileListDiv.style.display = 'block';
+        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 计算中...`;
+
+        const spark = new SparkMD5.ArrayBuffer();
+        const stream = file.stream().getReader();
+        while (true) {
+            const { done, value } = await stream.read();
+            if (done) break;
+            spark.append(value.buffer);
+        }
+        const fileHash = spark.end();
+
+        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash}`;
+    }
+
+    async function showFileInfoByWorker(startTs, file, fileSize) {
+        const fileListDiv = document.getElementById('fileList');
+        fileListDiv.className = `status-message info`;
+        fileListDiv.style.display = 'block';
+        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 计算中...`;
+        
+        let deltaTs = 0;
+        function checkCb() {
             const nowTs = Date.now();
             deltaTs = nowTs - startTs;
-            fileListDiv.textContent = `文件: ${selectedFile.name} (${fileSize}) \nmd5: ${fileHash} ${deltaTs}毫秒。`;
+            fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 耗时${deltaTs}毫秒...`;
         }
+        startLoopingCheck(checkCb);
+
+        const fileHash = await streamBasedHashWorker(file, startTs);
+        stopLoopingCheck();
+
+        selectedMd5 = fileHash;
+        const nowTs = Date.now();
+        deltaTs = nowTs - startTs;
+        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash} 耗时${deltaTs}毫秒。`;
     }
 
     function changeProgressVisible(visible) {
@@ -246,7 +276,6 @@
 
     // 重置UI状态
     function resetUI() {
-        selectedFile = null;
         document.getElementById('real-file').value = '';
         document.getElementById('fileList').textContent = '';
         changeProgressVisible(false);

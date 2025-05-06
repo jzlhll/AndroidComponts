@@ -8,14 +8,14 @@ self.onmessage = function(e) {
     case 'DATA_CHUNK':
       spark.append(e.data.chunk); // 增量计算哈希
       break;
-      
     case 'FINISH':
       const hash = spark.end(); // 获取最终结果
-      self.postMessage({ 
+      self.postMessage({
         type: 'HASH_RESULT', 
         hash: hash 
       });
       spark.destroy(); // 清理内存
+      //self.close();
       break;
   }
 };
