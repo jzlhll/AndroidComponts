@@ -5,7 +5,6 @@ import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.ALogJ
 import com.au.module_android.utils.getFileMD5
 import com.au.module_android.utils.logd
-import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import fi.iki.elonen.NanoHTTPD.IHTTPSession
 import fi.iki.elonen.NanoHTTPD.Response
@@ -38,7 +37,6 @@ class MyDroidHttpChunksMgr : IChunkMgr{
     }
 
     override fun handleUploadChunk(session: IHTTPSession) : Response {
-        val tag = "handle Upload Chunk"
         var fileName:String? = null
         var chunkIndex:Int = -1
         var totalChunks = 0
@@ -60,7 +58,7 @@ class MyDroidHttpChunksMgr : IChunkMgr{
             }
 
             val tmpFile = File(tmpFileStr)
-            logdNoFile { "$tag chunk: $fileName $md5 $chunkIndex/$totalChunks chunk:$tmpFileStr ${tmpFile.length()}" }
+            //logdNoFile { "chunk: $fileName $md5 $chunkIndex/$totalChunks chunk:$tmpFileStr ${tmpFile.length()}" }
 
             // 3. 将临时文件转存 否则框架立刻clear掉了。
             val chunkTmpFileStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_CHUNKS_DIR + File.separatorChar + tmpFile.name

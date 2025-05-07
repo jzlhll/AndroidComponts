@@ -4,22 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/bigTitle"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/StyleFontMText"
-        android:text="MyDroidTransfer"
-        android:textSize="24sp"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.au.module_android.widget.CustomFontText
         android:id="@+id/descTitle"
-        app:layout_constraintTop_toBottomOf="@id/bigTitle"
+        app:layout_constraintTop_toTopOf="parent"
         style="@style/StyleFontSecondTitleText"
         android:textSize="18sp"
-        android:layout_marginTop="4dp"
-        android:text="请保持常亮"
+        android:text="保持在该界面，不息屏"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -27,21 +16,9 @@
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/title"
         style="@style/StyleFontMText"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/descTitle"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/startServerBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="24dp"
-        style="@style/StyleButtonPrimary"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="@dimen/ui_padding_edge"
-        android:text="Start Server"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

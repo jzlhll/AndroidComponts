@@ -1,5 +1,6 @@
 package com.allan.androidlearning.activities2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -11,28 +12,30 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.view.WindowManager
-import com.allan.androidlearning.databinding.FragmentMyDroidBinding
-import com.allan.classnameanno.EntryFrgName
-import com.au.module_android.ui.bindings.BindingFragment
-import java.net.Inet4Address
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidServerViewModel
-import com.au.module_android.click.onClick
-import com.au.module_android.utils.logdNoFile
+import com.allan.classnameanno.EntryFrgName
+import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.logt
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.launch
+import java.net.Inet4Address
 
-@EntryFrgName(priority = 12, autoEnter = true)
+@EntryFrgName(priority = 12)
 class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
+    override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer")
+
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
     private val viewModel by unsafeLazy { ViewModelProvider(this)[MyDroidServerViewModel::class.java] }
+
+    private val mFileListMgr by unsafeLazy { MyDroidTransferFileListMgr(this) }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         viewModel.ipPortData.observe(this) { pair->
@@ -40,7 +43,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
             if (pair.second.isEmpty()) {
                 binding.title.text = pair.first
             } else if (viewModel.isSuccessOpenServer) {
-                binding.title.text = "局域网内访问地址\n" + pair.first + ":" + pair.second
+                binding.title.text = "局域网内访问：" + pair.first + ":" + pair.second
             } else {
                 binding.title.text = pair.first + ":" + pair.second
             }
@@ -52,14 +55,6 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         connectRegister()
-
-        binding.startServerBtn.onClick {
-            startServer()
-        }
-
-        if (ifGotoMgrAll()) {
-            startServer()
-        }
     }
 
     private fun startServer() {
@@ -102,9 +97,18 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
         startActivityFix(intent)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
-        binding.bigTitle.text = "MyDroidTransfer-${viewModel.magicCode}"
+
+        val desc = binding.descTitle.text.toString()
+        if (!desc.contains(" (")) {
+            binding.descTitle.text = binding.descTitle.text.toString() + " (${viewModel.magicCode})"
+        }
+
+        if (!viewModel.isSuccessOpenServer && ifGotoMgrAll()) {
+            startServer()
+        }
     }
 
     override fun onDestroyView() {
