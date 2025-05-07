@@ -40,7 +40,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
             if (pair.second.isEmpty()) {
                 binding.title.text = pair.first
             } else if (viewModel.isSuccessOpenServer) {
-                binding.title.text = "成功开启http服务\n在局域网内访问下面地址\n" + pair.first + ":" + pair.second
+                binding.title.text = "局域网内访问地址\n" + pair.first + ":" + pair.second
             } else {
                 binding.title.text = pair.first + ":" + pair.second
             }

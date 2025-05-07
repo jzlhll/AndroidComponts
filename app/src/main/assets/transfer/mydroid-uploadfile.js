@@ -30,14 +30,21 @@
         const fileName = file.name;
     
         changeProgressVisible(true);
-    
-        const CHUNK_SIZE = 64 * 1024;
+        // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越少，越快。
+        const CHUNK_SIZE = 1024 * 1024;
         const fileSize = file.size;
         const chunks = Math.ceil(fileSize / CHUNK_SIZE); // 计算分片数量
         let uploadedChunks = 0; // 已上传的分片数量
+        let sendBytes = 0;
+        const startTime = Date.now();
+        let deltaTime = 0;
+        let sendSpeedStr = "-- KB/s";
+
         for (let i = 0; i < chunks; i++) {
             const start = i * CHUNK_SIZE;
             const end = Math.min(fileSize, start + CHUNK_SIZE);
+
+            sendBytes += (end - start);
             const chunk = file.slice(start, end); // 切割分片
 
             const formData = new FormData();
@@ -53,11 +60,20 @@
                 throw new Error(`${ans.msg}`);
             }
             uploadedChunks++;
-            onProgress(uploadedChunks, chunks, "uploadChunk");
+            deltaTime = Date.now() - startTime;
+            if (deltaTime > 0) {
+                const speedBps = (sendBytes / deltaTime) * 1000;
+                if (speedBps >= 1024 * 1024) {
+                    sendSpeedStr = `${(speedBps / (1024 * 1024)).toFixed(2)} MB/s`;
+                } else {
+                    sendSpeedStr = `${(speedBps / 1024).toFixed(2)} KB/s`;
+                }
+            }
+            onProgress(uploadedChunks, chunks, sendSpeedStr, "uploadChunk");
         }
 
         console.log('所有分片上传完成，通知服务器合并文件');
-        onProgress(chunks, chunks, "mergeChunksStart");
+        onProgress(chunks, chunks, "", "mergeChunksStart");
         const mergeAns = await mergeChunks(md5, file.name, chunks); // 通知服务器合并分片
         if (mergeAns.code != 0) {
             throw new Error(`${mergeAns.msg}`);

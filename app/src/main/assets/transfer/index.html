@@ -33,7 +33,7 @@
             color: #2c3e50;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.5em;
+            font-size: 1.8em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -108,6 +108,11 @@
             border-radius: 4px;
             transition: width 0.3s ease;
         }
+
+        .divider {
+            margin: 50px 0 20px 0;
+            border-top: 1px solid #ddd;
+        }
     </style>
     <title></title>
 </head>
@@ -151,11 +156,18 @@
 
     <div id="fileList" class="status-message" style="white-space: pre-line;"></div>
     <div id="status" class="status-message"></div>
+    <div class="divider" style="display: none;"></div>
+    <div id="alreadyFileList"
+         class="status-message"
+         style="display: none; white-space: pre-line; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+    </div>
 </div>
 
 <script>
     let selectedFile = null; // 存储选择的文件
     let selectedMd5 = null; //文件的md5
+
+    let alreadyFilesInfo = "🗃️ 已上传文件列表\n"; //已经发送的文件s
 
     // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
@@ -255,19 +267,26 @@
         document.getElementById('dropZone').classList.add('dragover');
     }
 
+    // 显示文件列表区域的函数
+    function showAlreadyFileList() {
+        document.querySelector('.divider').style.display = 'block';
+        document.getElementById('alreadyFileList').style.display = 'block'; //none 是hide
+    }
+
     // 开始上传
     function startUpload() {
-        startUploadFile(selectedFile, selectedMd5, (uploaded, total, str) => {
+        startUploadFile(selectedFile, selectedMd5, (uploaded, total, speed, str) => {
             if (str == "mergeChunksStart") {
                 showStatus("最后的检验中...", "info");
             } else if(str == "uploadChunk") {
                 const percent = Math.round((uploaded / total) * 100);
-                updateProgress(percent)
+                updateProgress(percent);
+                showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
             }
         })
             .then(message => {
                 console.log(message);
-                showStatus("文件上传成功!", "success");
+                showStatus("文件上传成功!", "success", true);
                 resetUI(true);
             })
             .catch(error => {
@@ -277,15 +296,17 @@
             });
     }
 
-    function showStatus(message, type) {
+    function showStatus(message, type, shouldReset=false) {
         const statusDiv = document.getElementById('status');
         statusDiv.textContent = message;
         statusDiv.className = `status-message ${type}`;
         statusDiv.style.display = 'block';
 
-        setTimeout(() => {
-        statusDiv.style.display = 'none';
-        }, 3000);
+        if (shouldReset) {
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
     }
 
     // 重置UI状态
@@ -293,6 +314,14 @@
         if (isSuccess) {
             document.getElementById('real-file').value = '';
             document.getElementById('fileList').textContent = '';
+
+            const fileSize = myDroidFormatSize(selectedFile.size);
+            alreadyFilesInfo = alreadyFilesInfo + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n\n";
+            document.getElementById('alreadyFileList').textContent = alreadyFilesInfo;
+            selectedFile = null;
+            selectedMd5 = null;
+
+            showAlreadyFileList();
         }
 
         changeProgressVisible(false);
