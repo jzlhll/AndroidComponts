@@ -139,7 +139,7 @@
             </div>
         </form>
         
-        <button type="button" class="custom-button" 
+        <button id="uploadButton" type="button" class="custom-button" 
                 style="background-color: #27ae60" 
                 onclick="startUpload()">
             🚀 开始上传
@@ -169,24 +169,37 @@
 
     let alreadyFilesInfo = "🗃️ 已上传文件列表\n"; //已经发送的文件s
 
+    let isUploadingFile = false; //正在上传
+
+    function requireNotUploading(continueCallback) {
+        if (isUploadingFile) {
+            alert("正在上传中，请勿操作。");
+        } else {
+            continueCallback();
+        }
+    }
+
     // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
-        selectedFile = e.target.files[0];
-        showFileInfo();
+        requireNotUploading(()=>{
+            selectedFile = e.target.files[0];
+            showFileInfo();
+        });
     });
 
     function handleDrop(e) {
         e.preventDefault();
         document.getElementById('dropZone').classList.remove('dragover');
-
-        selectedFile = e.dataTransfer.files[0];
-        showFileInfo();
+        requireNotUploading(()=>{
+            selectedFile = e.dataTransfer.files[0];
+            showFileInfo();
+        });
     }
 
     function showFileInfo() {
         const startTs = Date.now();
         window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
-        window.lastStartTsFlagArr.startTs = startTs;
+        window.lastStartTsFlagArr.checkMd5StartTime = startTs;
 
         // 添加兼容性检查
         if (selectedFile) {
@@ -273,9 +286,38 @@
         document.getElementById('alreadyFileList').style.display = 'block'; //none 是hide
     }
 
+    function changeUploadButton(reset) {
+        const uploadButton = document.getElementById('uploadButton');
+        
+        if (reset) {
+            // 重置为上传状态（原始样式）
+            uploadButton.innerHTML = '🚀 开始上传';
+            uploadButton.style.backgroundColor = '#27ae60';
+            uploadButton.onclick = startUpload;
+        } else {
+            // 变为取消状态
+            uploadButton.innerHTML = '❌ 取消上传';
+            uploadButton.style.backgroundColor = '#e74c3c'; // 红色
+            uploadButton.onclick = cancelUpload;
+        }
+    }
+
+    //取消上传
+    function cancelUpload() {
+        if (window.lastStartTsFlagArr) {
+            window.lastStartTsFlagArr.startUploadTime = Date.now();
+        }
+    }
+
     // 开始上传
     function startUpload() {
-        startUploadFile(selectedFile, selectedMd5, (uploaded, total, speed, str) => {
+        isUploadingFile = true;
+        changeUploadButton(false);
+
+        const startTime = Date.now();
+        window.lastStartTsFlagArr.startUploadTime = startTime;
+
+        startUploadFile(startTime, selectedFile, selectedMd5, (uploaded, total, speed, str) => {
             if (str == "mergeChunksStart") {
                 showStatus("最后的检验中...", "info");
             } else if(str == "uploadChunk") {
@@ -288,11 +330,15 @@
                 console.log(message);
                 showStatus("文件上传成功!", "success", true);
                 resetUI(true);
+                isUploadingFile = false;
+                changeUploadButton(true);
             })
             .catch(error => {
                 console.error(error.message);
                 showStatus(error.message, "error");
                 resetUI(false);
+                isUploadingFile = false;
+                changeUploadButton(true);
             });
     }
 

@@ -28,7 +28,7 @@
                         worker.postMessage({ type: 'FINISH' });
                         reader.releaseLock();
                         break;
-                    } else if (startTs != window.lastStartTsFlagArr.startTs) {
+                    } else if (startTs != window.lastStartTsFlagArr.checkMd5StartTime) {
                         console.log(file.name + " aborted.");
                         await reader.cancel();
                         reader.releaseLock();

@@ -39,10 +39,9 @@ class MyDroidHttpChunksMgr : IChunkMgr{
 
     override fun handleUploadChunk(session: IHTTPSession) : Response {
         val tag = "handle Upload Chunk"
-        logdNoFile { "$tag start---" }
         var fileName:String? = null
         var chunkIndex:Int = -1
-        var totalChunks:Int = 0
+        var totalChunks = 0
         try {
             filesMap.clear()
             session.parseBody(filesMap)
