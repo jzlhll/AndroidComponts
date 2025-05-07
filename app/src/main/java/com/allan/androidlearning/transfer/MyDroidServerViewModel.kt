@@ -2,10 +2,14 @@ package com.allan.androidlearning.transfer
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
+import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.utils.getFileMD5
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.logt
 import fi.iki.elonen.NanoHTTPD
+import kotlinx.coroutines.delay
+import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
 
@@ -37,7 +41,6 @@ class MyDroidServerViewModel : ViewModel() {
             isSuccessOpenServer = true
             val ip = ipPortData.realValue?.first ?: ""
             val target = ip to "" + p
-            logt { "ipport111 " + ipPortData.realValue + ", " + target }
             ipPortData.setValueSafe(target)
         } catch (e: IOException) {
             val msg = "Port $p occupied ${e.message}"
@@ -48,5 +51,29 @@ class MyDroidServerViewModel : ViewModel() {
 
     fun stopServer() {
         httpServer?.closeAllConnections()
+    }
+
+    fun formatSize(bytes: Long): String {
+        val units = listOf("B", "KB", "MB", "GB")
+        var size = bytes.toDouble()
+        var unitIndex = 0
+
+        while (size >= 1024 && unitIndex < units.size - 1) {
+            size /= 1024
+            unitIndex++
+        }
+        return "%.2f %s".format(size, units[unitIndex])
+    }
+
+    suspend fun loadFileList() : List<MergedFileInfo>{
+        delay(0)
+        val nanoMergedDir = File(Globals.goodCacheDir, TEMP_CACHE_MERGED_DIR)
+        val fileList = ArrayList<MergedFileInfo>()
+        if (nanoMergedDir.exists()) {
+            nanoMergedDir.listFiles()?.forEach {
+                fileList.add(MergedFileInfo(it, getFileMD5(it.absolutePath), formatSize(it.length())))
+            }
+        }
+        return fileList
     }
 }

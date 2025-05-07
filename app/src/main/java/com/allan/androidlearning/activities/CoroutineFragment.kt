@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.allan.androidlearning.crashtest.debugOtherActivityCreateCrash
@@ -16,7 +15,6 @@ import com.au.module_android.selectlist.SelectListItem
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logt
-import com.au.module_android.utils.unsafeLazy
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -57,8 +55,6 @@ class CoroutineFragment(override val title: String = "Coroutine",
         super.onCreate(savedInstanceState)
         debugOtherActivityCreateCrash()
     }
-
-    private val vm by unsafeLazy { ViewModelProvider(this)[CoroutineViewModel::class.java] }
 
     private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 

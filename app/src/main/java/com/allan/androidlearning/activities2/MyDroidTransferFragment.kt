@@ -17,10 +17,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidServerViewModel
+import com.allan.androidlearning.transfer.MyDroidTransferFileListMgr
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
-import com.au.module_android.utils.logt
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
@@ -33,13 +34,19 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer")
 
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
-    private val viewModel by unsafeLazy { ViewModelProvider(this)[MyDroidServerViewModel::class.java] }
+    val viewModel by lazy { ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java] }
 
     private val mFileListMgr by unsafeLazy { MyDroidTransferFileListMgr(this) }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        mFileListMgr.initRcv()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setTurnScreenOn(true)
+        }
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         viewModel.ipPortData.observe(this) { pair->
-            logt { "ip port changed $pair" }
             if (pair.second.isEmpty()) {
                 binding.title.text = pair.first
             } else if (viewModel.isSuccessOpenServer) {
@@ -49,15 +56,11 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         connectRegister()
     }
 
     private fun startServer() {
+        logdNoFile { "viewModel11 ${viewModel.ipPortData}" }
         viewModel.startServer{ msg->
             lifecycleScope.launch {
                 ToastBuilder()
@@ -130,20 +133,18 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
                         }
                     }
 
-                    logt { "network callback $sb " + "ipport22 " + viewModel.ipPortData.realValue }
                     viewModel.ipPortData.setValueSafe(
                         sb.toString() to
                                 (viewModel.ipPortData.realValue?.second ?: "")
                     )
                 }
             }
+            val networkRequest = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build()
+            val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            connectivityManager.registerNetworkCallback(networkRequest, mConnectCb!!)
         }
-
-        val networkRequest = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .build()
-        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        connectivityManager.registerNetworkCallback(networkRequest, mConnectCb!!)
     }
 
     private fun connectUnRegister() {

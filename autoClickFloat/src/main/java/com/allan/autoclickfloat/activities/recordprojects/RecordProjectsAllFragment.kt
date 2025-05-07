@@ -21,7 +21,7 @@ class RecordProjectsAllFragment : BindingFragment<RecordProjectsAllFragmentBindi
         RecordOneProjectFragment.startAsEdit(requireActivity(), it.project.projectName, it.project.projectId)
     }
 
-    private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[RecordProjectsAllViewModel::class.java] }
+    private val viewModel by lazy { ViewModelProvider(requireActivity())[RecordProjectsAllViewModel::class.java] }
 
     private var isSelectedRemove = false
     private val redColorList by unsafeLazy {

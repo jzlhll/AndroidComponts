@@ -19,7 +19,6 @@ import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.replaceFragment
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,7 +29,7 @@ import kotlinx.coroutines.delay
  * @description:
  */
 class AllPermissionActivity : BindingActivity<RootActivityBinding>() {
-    private val viewModel by unsafeLazy { ViewModelProvider(this)[OnlyFloatPermissionViewModel::class.java] }
+    private val viewModel by lazy { ViewModelProvider(this)[OnlyFloatPermissionViewModel::class.java] }
 
     private var _permissionsRequestFragment: PermissionsRequestFragment? = null
     private val permissionsRequestFragment: PermissionsRequestFragment

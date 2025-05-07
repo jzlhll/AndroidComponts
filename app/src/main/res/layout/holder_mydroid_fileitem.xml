@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="100dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/ic_shadow_bg"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/downloadBtn"
+        android:tint="@color/color_text_normal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_download"
+        android:contentDescription="导出"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/downloadBtn"
+        app:layout_constraintStart_toStartOf="@id/downloadBtn"
+        app:layout_constraintEnd_toEndOf="@id/downloadBtn"
+        style="@style/StyleFontText"
+        android:textSize="11sp"
+        android:text="导出"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/sharesBtn"
+        android:tint="@color/color_text_normal"
+        android:contentDescription="分享"
+        android:src="@drawable/ic_share"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/downloadBtn"
+        android:layout_marginEnd="18dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toBottomOf="@id/sharesBtn"
+        app:layout_constraintStart_toStartOf="@id/sharesBtn"
+        app:layout_constraintEnd_toEndOf="@id/sharesBtn"
+        style="@style/StyleFontText"
+        android:textSize="11sp"
+        android:text="分享"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/fileNameTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sharesBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fileSizeTv"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="start"
+        tools:text="text ajdkfjfdk dafjkadsfjkasdj ajkdfjkad"
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/fileSizeTv"
+        style="@style/StyleFontSecondTitleText"
+        android:layout_marginStart="20dp"
+        app:layout_constraintEnd_toStartOf="@id/sharesBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@id/md5Tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fileNameTv"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/md5Tv"
+        style="@style/StyleFontSecondTitleText"
+        android:layout_marginStart="20dp"
+        app:layout_constraintEnd_toStartOf="@id/sharesBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fileSizeTv"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
+</androidx.constraintlayout.widget.ConstraintLayout>

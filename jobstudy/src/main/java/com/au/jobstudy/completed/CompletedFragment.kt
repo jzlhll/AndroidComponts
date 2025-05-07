@@ -18,7 +18,7 @@ import com.au.module_android.utils.unsafeLazy
 class CompletedFragment : BindingFragment<FragmentCompletedBinding>() {
     private lateinit var adpater:CompletedAdapter
 
-    private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[CompletedViewModel::class] }
+    private val viewModel by lazy { ViewModelProvider(requireActivity())[CompletedViewModel::class] }
 
     private var loadedLastDay : Int = 0
 

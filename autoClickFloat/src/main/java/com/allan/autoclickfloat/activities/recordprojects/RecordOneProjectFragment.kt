@@ -9,7 +9,6 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingParamsFragment
 import com.au.module_android.utils.gone
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 
 class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentBinding>() {
@@ -29,7 +28,7 @@ class RecordOneProjectFragment : BindingParamsFragment<RecordProjectOneFragmentB
         }
     }
 
-    private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[RecordOneProjectViewModel::class.java] }
+    private val viewModel by lazy { ViewModelProvider(requireActivity())[RecordOneProjectViewModel::class.java] }
 
     private var adapter : RecordOneProjectAdapter? = null
 

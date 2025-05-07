@@ -14,7 +14,6 @@ import com.au.module_android.utils.MediaHelper
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.toastOnTop
@@ -30,7 +29,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
 
     private var isSelectedMode = false
 
-    private val viewModel by unsafeLazy { ViewModelProvider(requireActivity())[LogSystemViewModel::class.java] }
+    private val viewModel by lazy { ViewModelProvider(requireActivity())[LogSystemViewModel::class.java] }
 
     override fun onDestroy() {
         super.onDestroy()
