@@ -29,7 +29,7 @@ import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.launch
 
-@EntryFrgName(priority = 12)
+@EntryFrgName(priority = 12, autoEnter = true)
 class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
     private val viewModel by unsafeLazy { ViewModelProvider(this)[MyDroidServerViewModel::class.java] }

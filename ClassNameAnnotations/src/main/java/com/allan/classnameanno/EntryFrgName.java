@@ -28,4 +28,5 @@ TYPE_USE：java 1.8之后，作用于使用类型的任意语句中
 public @interface EntryFrgName {
     int priority() default 0;
     String customName() default "";
+    boolean autoEnter() default false;
 }

@@ -1,10 +1,12 @@
 package com.allan.androidlearning.transfer
 
 import com.au.module_android.Globals
+import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
+import fi.iki.elonen.NanoHTTPD.newFixedLengthResponse
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream

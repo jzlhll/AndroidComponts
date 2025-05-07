@@ -13,7 +13,7 @@
             };
             
             worker.onerror = (e) => {
-                reject(new Error(`Worker error: ${e.message}`));
+                reject(`Worker error: ${e.message}`);
                 worker.terminate();
             };
             const stream = file.stream();
@@ -28,12 +28,12 @@
                         worker.postMessage({ type: 'FINISH' });
                         reader.releaseLock();
                         break;
-                    } else if (startTs != window.lastStartTsFlagArr.sharedData) {
+                    } else if (startTs != window.lastStartTsFlagArr.startTs) {
                         console.log(file.name + " aborted.");
                         await reader.cancel();
                         reader.releaseLock();
                         worker.terminate(); // 直接终止 Worker
-                        resolve('aborted');
+                        reject('aborted');
                         break;
                     } else {
                         worker.postMessage({ 

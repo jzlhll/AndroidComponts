@@ -115,6 +115,7 @@
 <script src="mydroid-md5generator.js"></script>
 <script src="mydroid-uploadfile.js"></script>
 <script src="spark-md5.min.js"></script>
+<script src="mydroid-utils.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
@@ -169,25 +170,11 @@
         selectedFile = e.dataTransfer.files[0];
         showFileInfo();
     }
-    
-    // 辅助函数：格式化文件大小
-    function myDroidFormatSize(bytes) {
-        const units = ['B', 'KB', 'MB', 'GB'];
-        let size = bytes;
-        let unitIndex = 0;
-
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        return `${size.toFixed(2)} ${units[unitIndex]}`;
-    }
 
     function showFileInfo() {
         const startTs = Date.now();
         window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
-        window.lastStartTsFlagArr.sharedData = startTs;
-        console.log("start show file info startTs: " + startTs);
+        window.lastStartTsFlagArr.startTs = startTs;
 
         // 添加兼容性检查
         if (selectedFile) {
@@ -217,7 +204,7 @@
             spark.append(value.buffer);
         }
         const fileHash = spark.end();
-
+        selectedMd5 = fileHash;
         fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash}`;
     }
 
@@ -235,13 +222,25 @@
         }
         startLoopingCheck(checkCb);
 
-        const fileHash = await streamBasedHashWorker(file, startTs);
-        stopLoopingCheck();
+        let text = "";
+        try {
+            const fileHash = await streamBasedHashWorker(file, startTs);
+            console.log("计算结果:", fileHash);
+            selectedMd5 = fileHash;
+            const nowTs = Date.now();
+            deltaTs = nowTs - startTs;
+            text = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash} 耗时${deltaTs}毫秒。`;
+        } catch (error) {
+            if (error == "aborted") {
+                text = `文件: ${file.name} (${fileSize}) 已终止。`;
+            } else {
+                console.error("发生错误:", error);
+                text = `文件: ${file.name} (${fileSize}) \n${error}。`;
+            }
+        }
 
-        selectedMd5 = fileHash;
-        const nowTs = Date.now();
-        deltaTs = nowTs - startTs;
-        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash} 耗时${deltaTs}毫秒。`;
+        stopLoopingCheck();
+        fileListDiv.textContent = text;
     }
 
     function changeProgressVisible(visible) {
@@ -258,9 +257,24 @@
 
     // 开始上传
     function startUpload() {
-        startUploadFile(selectedFile, selectedMd5, (str, st) => {
-            showStatus(str, st);
-        });
+        startUploadFile(selectedFile, selectedMd5, (uploaded, total, str) => {
+            if (str == "mergeChunksStart") {
+                showStatus("最后的检验中...", "info");
+            } else if(str == "uploadChunk") {
+                const percent = Math.round((uploaded / total) * 100);
+                updateProgress(percent)
+            }
+        })
+            .then(message => {
+                console.log(message);
+                showStatus("文件上传成功!", "success");
+                resetUI(true);
+            })
+            .catch(error => {
+                console.error(error.message);
+                showStatus(error.message, "error");
+                resetUI(false);
+            });
     }
 
     function showStatus(message, type) {
@@ -270,14 +284,17 @@
         statusDiv.style.display = 'block';
 
         setTimeout(() => {
-           statusDiv.style.display = 'none';
+        statusDiv.style.display = 'none';
         }, 3000);
     }
 
     // 重置UI状态
-    function resetUI() {
-        document.getElementById('real-file').value = '';
-        document.getElementById('fileList').textContent = '';
+    function resetUI(isSuccess) {
+        if (isSuccess) {
+            document.getElementById('real-file').value = '';
+            document.getElementById('fileList').textContent = '';
+        }
+
         changeProgressVisible(false);
         updateProgress(0);
     }
@@ -299,7 +316,7 @@
         if (!intervalId) {
             intervalId = setInterval(() => {
             callback();
-            }, 200);
+            }, 300);
         }
     }
 

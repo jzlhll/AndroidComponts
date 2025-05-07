@@ -40,6 +40,12 @@ class MyDroidTempFileManager : TempFileManager {
             chunksDir.mkdirs()
         }
 
+        val fileDirStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_MERGED_DIR
+        val fileDir = File(fileDirStr)
+        if (!fileDir.exists()) {
+            fileDir.mkdirs()
+        }
+
         this.tempFiles = ArrayList<TempFile>()
     }
 

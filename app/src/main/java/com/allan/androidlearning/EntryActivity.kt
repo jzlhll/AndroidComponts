@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Space
+import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
@@ -17,6 +18,8 @@ import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
 import com.au.module_androidui.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
@@ -35,14 +38,24 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
         logd { "goto $goto" }
 
-        EntryList().getEntryList().forEach { fragmentClassTriple ->
-            val btn = MaterialButton(this)
-            btn.text = if(fragmentClassTriple.third != null) fragmentClassTriple.third else fragmentClassTriple.first.simpleName.replace("Fragment", "")
-            btn.onClick {
-                FragmentShellActivity.start(this, fragmentClassTriple.first)
+        EntryList().also {
+            it.getEntryList().forEach { fragmentClassTriple ->
+                val btn = MaterialButton(this)
+                btn.text = if(fragmentClassTriple.third != null) fragmentClassTriple.third else fragmentClassTriple.first.simpleName.replace("Fragment", "")
+                btn.onClick {
+                    FragmentShellActivity.start(this, fragmentClassTriple.first)
+                }
+                binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
             }
-            binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+
+            it.getAutoEnterClass()?.let{ cls->
+                lifecycleScope.launch {
+                    delay(500)
+                    FragmentShellActivity.start(this@EntryActivity, cls)
+                }
+            }
         }
+
 
         binding.buttonsHost.addView(Space(this), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getScreenFullSize().second / 5))
 

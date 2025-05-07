@@ -7,15 +7,20 @@ package com.au.learning.classnamecompiler
  */
 class AllEntryFragmentNamesTemplate : AbsCodeTemplate() {
     private val list = ArrayList<Pair<String, Int>>()
+    private var autoEnterClass:String? = null
 
     /**
      * com.allan.androidlearning.activities.LiveDataFragment::class.java
      */
-    fun insert(javaClass:String, priority: Int, customName:String?) {
+    fun insert(javaClass:String, priority: Int, customName:String?, autoEnter: Boolean) {
         if (customName.isNullOrEmpty()) {
             list.add("list.add(Triple($javaClass::class.java, $priority, null))" to priority)
         } else {
             list.add("list.add(Triple($javaClass::class.java, $priority, \"$customName\"))" to priority)
+        }
+
+        if (autoEnter) {
+            autoEnterClass = "$javaClass::class.java"
         }
     }
 
@@ -26,6 +31,7 @@ class AllEntryFragmentNamesTemplate : AbsCodeTemplate() {
             insertCode.append(it.first).appendLine()
         }
         return codeTemplate.replace("//insert001", insertCode.toString())
+            .replace("//insert002", autoEnterClass ?: "null")
     }
 
     override val codeTemplate = """
@@ -38,6 +44,10 @@ class EntryList {
         val list = ArrayList<Triple<Class<out Fragment>, Int, String?>>()
         //insert001
         return list
+    }
+    
+    fun getAutoEnterClass() : Class<out Fragment>? {
+        return //insert002
     }
 }
     """.trimIndent()
