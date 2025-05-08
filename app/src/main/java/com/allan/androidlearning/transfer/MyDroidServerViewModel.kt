@@ -2,16 +2,22 @@ package com.allan.androidlearning.transfer
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
-import com.au.module_android.Globals
+import androidx.lifecycle.viewModelScope
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.getFileMD5
+import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.logt
+import com.au.module_cached.AppDataStore
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.delay
 import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 
 class MyDroidServerViewModel : ViewModel() {
     init {
@@ -21,7 +27,6 @@ class MyDroidServerViewModel : ViewModel() {
     var isSuccessOpenServer = false
 
     private var httpServer: MyDroidHttpServer? = null
-    val magicCode = String.format("%04d", (Math.random() * 10000 + 1).toInt())
     private var mLastRandomServerPort = 10595
 
     fun findAvailablePort(): Int {
@@ -35,9 +40,11 @@ class MyDroidServerViewModel : ViewModel() {
     }
 
     @MainThread
-    fun startServer(errorCallback:(String)->Unit) {
+    fun startServer(transferInfoCallback:((String)->Unit)?, fileMergedSucCallback:(File)->Unit, errorCallback:(String)->Unit) {
         val p = findAvailablePort()
-        httpServer = MyDroidHttpServer(p, magicCode)
+        httpServer = MyDroidHttpServer(p, fileMergedSucCallback).also {
+            it.transferInfoCallback = transferInfoCallback
+        }
         try {
             logt { "start server with port: $p..." }
             httpServer?.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
@@ -68,7 +75,13 @@ class MyDroidServerViewModel : ViewModel() {
         return "%.2f %s".format(size, units[unitIndex])
     }
 
-    suspend fun loadFileList() : List<MergedFileInfo>{
+    fun loadFileListAsync(cb:(List<MergedFileInfo>)->Unit) {
+        viewModelScope.launchOnThread {
+            cb(loadFileList())
+        }
+    }
+
+    private suspend fun loadFileList() : List<MergedFileInfo>{
         delay(0)
         val nanoMergedDir = File(nanoTempCacheMergedDir())
         val fileList = ArrayList<MergedFileInfo>()
@@ -78,5 +91,31 @@ class MyDroidServerViewModel : ViewModel() {
             }
         }
         return fileList
+    }
+
+    suspend fun loadExportHistory() : String {
+        return AppDataStore.read("mydroidExportHistory", "")
+    }
+
+    suspend fun writeNewExportHistory(info:String) {
+        val old = loadExportHistory()
+        val splits = old.split("\n")
+        val fixOld = if (splits.size > 100) {
+            val cutList = splits.subList(0, 80)
+            cutList.joinToString("\n")
+        } else {
+            old
+        }
+
+        // 获取当前时间戳
+        val currentTimeMillis = System.currentTimeMillis()
+        // 定义时间格式（例如：2023年10月05日 14:30）
+        val formatter = DateTimeFormatter
+            .ofPattern("yyyy年MM月dd日 HH:mm")
+            .withZone(ZoneId.systemDefault()) // 使用系统默认时区
+        // 格式化为字符串
+        val formattedTime = formatter.format(Instant.ofEpochMilli(currentTimeMillis))
+
+        AppDataStore.save("mydroidExportHistory", "($formattedTime) $info\n$fixOld")
     }
 }

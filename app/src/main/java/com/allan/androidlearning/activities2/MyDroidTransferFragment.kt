@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,18 +20,36 @@ import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidServerViewModel
 import com.allan.androidlearning.transfer.MyDroidTransferFileListMgr
 import com.allan.classnameanno.EntryFrgName
+import com.au.module_android.Globals
+import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
+import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.gone
+import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
+import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
 import java.net.Inet4Address
 
 @EntryFrgName(priority = 12)
 class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
+    companion object {
+        var fileExportSuccessCallback : ((String, String)->Unit)? = null
+        var fileExportFailCallback : ((String)->Unit)? = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fileExportSuccessCallback = null
+        fileExportFailCallback = null
+    }
+
     override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer")
 
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
@@ -40,7 +59,26 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
 
     private val mFileListMgr by unsafeLazy { MyDroidTransferFileListMgr(this) }
 
+    lateinit var transferFileListTab: TabLayout.Tab
+    lateinit var exportHistoryTab: TabLayout.Tab
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        fileExportFailCallback = { info->
+            Globals.mainScope.launchOnUi {
+                ToastBuilder().setOnTop().setMessage(info).setIcon("error").toast()
+            }
+        }
+        fileExportSuccessCallback = { info, exportFileStr->
+            Globals.mainScope.launchOnUi {
+                ToastBuilder().setOnTop().setMessage(info.replace("/storage/emulated/0/", "/sdcard/"))
+                    .setIcon("success").toast()
+                mFileListMgr.saveHistory(exportFileStr) {
+                    mFileListMgr.loadFileList()
+                    mFileListMgr.loadHistory(false)
+                }
+            }
+        }
+
         viewModel = ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java]
 
         viewModel.ipPortData.observe(this) { pair->
@@ -53,7 +91,28 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
             }
         }
 
-        mFileListMgr.initRcv()
+        val transferFileList = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.transfer_list), true, 16f)
+        transferFileList.view.onClick {
+            binding.rcv.visible()
+            binding.exportHistoryHost.gone()
+            transferFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
+                tabTv.text = getString(com.allan.androidlearning.R.string.transfer_list)
+            }
+        }
+        transferFileListTab = transferFileList
+        val exportHistory = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.export_history), false, 16f)
+        exportHistory.view.onClick {
+            binding.rcv.gone()
+            binding.exportHistoryHost.visible()
+            exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
+                tabTv.text = getString(com.allan.androidlearning.R.string.export_history)
+            }
+        }
+        exportHistoryTab = exportHistory
+
+        binding.tabLayout.addTab(transferFileList)
+        binding.tabLayout.addTab(exportHistory)
+        binding.tabLayout.initSelectedListener()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             requireActivity().setTurnScreenOn(true)
@@ -61,11 +120,29 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         connectRegister()
+
+        mFileListMgr.initRcv()
+        mFileListMgr.loadFileList()
+        mFileListMgr.loadHistory(true)
     }
 
     private fun startServer() {
         logdNoFile { "viewModel11 ${viewModel.ipPortData}" }
-        viewModel.startServer{ msg->
+        viewModel.startServer(
+            transferInfoCallback = { transferInfo->
+                lifecycleScope.launch {
+                    binding.transferInfo.text = transferInfo
+                }
+            },
+            fileMergedSucCallback = { file->
+                lifecycleScope.launch {
+                    ToastBuilder().setOnFragment(this@MyDroidTransferFragment)
+                        .setMessage("成功收到文件：${file.name} !")
+                        .setIcon("success").toast()
+                }
+                mFileListMgr.loadFileList()
+            }
+        ) { msg->
             lifecycleScope.launch {
                 ToastBuilder()
                     .setOnFragment(this@MyDroidTransferFragment)
@@ -107,12 +184,6 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
-
-        val desc = binding.descTitle.text.toString()
-        if (!desc.contains(" (")) {
-            binding.descTitle.text = binding.descTitle.text.toString() + " (${viewModel.magicCode})"
-        }
-
         if (!viewModel.isSuccessOpenServer && ifGotoMgrAll()) {
             startServer()
         }

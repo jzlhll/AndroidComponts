@@ -1,12 +1,11 @@
 package com.allan.androidlearning.transfer
 
 import com.au.module_android.Globals
-import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
-import fi.iki.elonen.NanoHTTPD.newFixedLengthResponse
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
@@ -16,12 +15,14 @@ interface IChunkMgr {
     fun handleMergeChunk(session: NanoHTTPD.IHTTPSession) : Response
 }
 
-class MyDroidHttpServer(port: Int, val magicCode:String) : NanoHTTPD(port) {
+class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTTPD(port) {
     init {
         tempFileManagerFactory = MyDroidTempFileMgrFactory()
     }
 
-    private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
+    var transferInfoCallback:((String)->Unit)? =null
+
+    private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr(this, fileMergedSucCallback)
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)
@@ -46,7 +47,7 @@ class MyDroidHttpServer(port: Int, val magicCode:String) : NanoHTTPD(port) {
     private fun handleGetRequest(url: String): Response {
         return when {
             // 主页面请求
-            url == "/" -> serveAssetFile("transfer/index.html") {it.replace("MyDroidTransfer%d", "MyDroidTransfer-${magicCode}")}
+            url == "/" -> serveAssetFile("transfer/index.html")
             // JS 文件请求
             url.endsWith(".js") -> {
                 val jsName = url.substring(1)

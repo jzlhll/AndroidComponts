@@ -127,7 +127,7 @@
 
 <body>
 <div class="container">
-    <h1>MyDroidTransfer%d</h1>
+    <h1>MyDroidTransfer</h1>
 
     <div class="form-container">
         <form id="uploadForm" enctype="multipart/form-data">
@@ -334,7 +334,7 @@
                 changeUploadButton(true);
             })
             .catch(error => {
-                console.error(error.message);
+                console.error("error: " + error);
                 showStatus(error.message, "error");
                 resetUI(false);
                 isUploadingFile = false;

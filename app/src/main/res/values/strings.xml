@@ -145,4 +145,9 @@
     <string name="dark">Dark</string>
     <string name="select_manually">Select manually</string>
     <string name="automatic_desc">When enabled, app will switch dark mode on/off to match your system settings.</string>
+
+    <string name="export_history" translatable="false">"导出历史 "</string>
+    <string name="export_history_2" translatable="false">"导出历史*"</string>
+    <string name="transfer_list" translatable="false">"传输列表 "</string>
+    <string name="transfer_list_2" translatable="false">"传输列表*"</string>
 </resources>

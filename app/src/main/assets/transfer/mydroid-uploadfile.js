@@ -1,24 +1,32 @@
 (function() {
     // 上传分片
     async function uploadChunk(formData) {
-        const response = await fetch('/upload-chunk', {
-            method: 'POST',
-            body: formData,
-        });
-        if (!response.ok) throw new Error('上传失败E01 ' + (await response.text()));
+        let response = null;
+        try {
+            response = await fetch('/upload-chunk', {
+                    method: 'POST',
+                    body: formData,
+                });
+        } catch(e) {}
+        if (!response) throw new Error('上传失败E01: 可能手机端不在线。');
+        if (!response.ok) throw new Error('上传失败E02 ' + (await response.text()));
         return await response.json();
     }
 
     // 通知服务器合并分片
     async function mergeChunks(md5, fileName, totalChunks) {
-        const response = await fetch('/merge-chunks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ md5, fileName, totalChunks }),
-        });
-        if (!response.ok) throw new Error('上传失败E02 ' + (await response.text()));
+        let response = null;
+        try {
+            response = await fetch('/merge-chunks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ md5, fileName, totalChunks }),
+            });
+        } catch(e) {}
+        if (!response) throw new Error('上传失败E03: 可能手机端不在线。');
+        if (!response.ok) throw new Error('上传失败E04 ' + (await response.text()));
         return await response.json();
     }
     

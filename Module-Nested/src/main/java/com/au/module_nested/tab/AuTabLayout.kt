@@ -13,6 +13,7 @@ import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.forEachChild
 import com.au.module_android.widget.CustomFontText
 import com.au.module_android.widget.FontMode
+import com.au.module_androidcolor.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -75,27 +76,48 @@ class AuTabLayout : TabLayout {
             tv.text = pages[position].first
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             val colorId = if (viewPage2.currentItem == position)
-                com.au.module_androidcolor.R.color.color_tab_text_select
+                R.color.color_tab_text_select
             else
-                com.au.module_androidcolor.R.color.color_tab_text_no_select
+                R.color.color_tab_text_no_select
 
             tv.setTextColor(ContextCompat.getColor(tv.context, colorId))
             tab.customView = tv
         }.attach()
 
+        initSelectedListener()
+    }
+
+    fun initSelectedListener() {
         addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
                 val v = tab?.customView.asOrNull<TextView>()
-                v?.setTextColor(ContextCompat.getColor(v.context, com.au.module_androidcolor.R.color.color_tab_text_select))
+                v?.setTextColor(ContextCompat.getColor(v.context, R.color.color_tab_text_select))
             }
 
             override fun onTabUnselected(tab: Tab?) {
                 val v = tab?.customView.asOrNull<TextView>()
-                v?.setTextColor(ContextCompat.getColor(v.context, com.au.module_androidcolor.R.color.color_tab_text_no_select))
+                v?.setTextColor(ContextCompat.getColor(v.context, R.color.color_tab_text_no_select))
             }
 
             override fun onTabReselected(tab: Tab?) {
             }
         })
+    }
+
+    fun newTextTab(text:String, initSelect:Boolean, fontSize:Float = 16f) : Tab {
+        val tab = super.newTab()
+        val tv = CustomFontText(context)
+        tv.gravity = Gravity.CENTER
+        tv.fontMode = FontMode.MID
+        tv.text = text
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
+        val colorId = if (initSelect)
+            R.color.color_tab_text_select
+        else
+            R.color.color_tab_text_no_select
+
+        tv.setTextColor(ContextCompat.getColor(tv.context, colorId))
+        tab.customView = tv
+        return tab
     }
 }
