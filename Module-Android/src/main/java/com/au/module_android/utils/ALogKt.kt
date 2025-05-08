@@ -98,14 +98,8 @@ inline fun <THIS : Any> THIS.logdNoFile(tag:String = TAG, crossinline block: (TH
 
 inline fun logt(tag:String = TAG, block:()->String) {
     if(BuildConfig.ENABLE_LOGCAT) {
-        val isMainThread = (Thread.currentThread().id == Looper.getMainLooper().thread.id)
         val str = block()
-        val log = if (isMainThread) {
-            "MainThread: $str"
-        } else {
-            String.format(Locale.ROOT, "SubThread[%02d]: %s", Thread.currentThread().id, str)
-        }
-        Log.d(tag, log)
+        Log.d(tag, ALogJ.logt(str))
     }
 }
 

@@ -1,9 +1,22 @@
 package com.au.module_android.utils;
 
+import android.os.Looper;
+
+import java.util.Locale;
+
 public class ALogJ {
     public static String log(String lvl, String s, Class<?> javaClass) {
         var log = javaClass.toString();
         return lvl + " " + log.substring(log.lastIndexOf('.') + 1) + ": " + s;
+    }
+
+    public static String logt(String s) {
+        var id = Thread.currentThread().getId();
+        if (id == Looper.getMainLooper().getThread().getId()) {
+            return "MainThread: " + s;
+        } else {
+            return String.format(Locale.ROOT, "SubThread[%02d]: %s", id, s);
+        }
     }
 
     public static String log(String lvl, String s, String tag, Class<?> javaClass) {
