@@ -1,14 +1,22 @@
 package com.allan.androidlearning.transfer
 
+import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.json.toJsonString
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoHTTPD.newFixedLengthResponse
+import java.io.File
 
-const val TEMP_CACHE_DIR = "nanoTmp"
-const val TEMP_CACHE_CHUNKS_DIR = "nanoChunksTmp"
-const val TEMP_CACHE_MERGED_DIR = "nanoMerged"
+private const val TEMP_CACHE_DIR = "nanoTmp"
+fun nanoTempCacheDir()  = Globals.goodCacheDir.absolutePath + File.separatorChar + "shared" + File.separatorChar + TEMP_CACHE_DIR
+
+private const val TEMP_CACHE_CHUNKS_DIR = "nanoChunksTmp"
+fun nanoTempCacheChunksDir()  = Globals.goodCacheDir.absolutePath + File.separatorChar + "shared" + File.separatorChar + TEMP_CACHE_CHUNKS_DIR
+
+private const val TEMP_CACHE_MERGED_DIR = "nanoMerged"
+fun nanoTempCacheMergedDir()  = Globals.goodCacheDir.absolutePath + File.separatorChar + "shared" + File.separatorChar + TEMP_CACHE_MERGED_DIR
+
 const val MIME_TYPE_JSON = "application/json; charset=UTF-8"
 
 const val CODE_SUC = "0"

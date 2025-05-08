@@ -34,17 +34,14 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer")
 
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
-    val viewModel by lazy { ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java] }
+//    private val viewModel by lazy { ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java] }
+//    val viewModel: MyDroidServerViewModel by activityViewModels()
+    lateinit var viewModel: MyDroidServerViewModel
 
     private val mFileListMgr by unsafeLazy { MyDroidTransferFileListMgr(this) }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        mFileListMgr.initRcv()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        viewModel = ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java]
 
         viewModel.ipPortData.observe(this) { pair->
             if (pair.second.isEmpty()) {
@@ -55,6 +52,13 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
                 binding.title.text = pair.first + ":" + pair.second
             }
         }
+
+        mFileListMgr.initRcv()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setTurnScreenOn(true)
+        }
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         connectRegister()
     }
@@ -73,7 +77,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     private fun ifGotoMgrAll() : Boolean{
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val ex = Environment.isExternalStorageManager()
             if (!ex) {
                 ConfirmCenterDialog.show(childFragmentManager,

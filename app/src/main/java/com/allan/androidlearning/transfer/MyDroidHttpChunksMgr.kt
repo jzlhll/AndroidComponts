@@ -1,6 +1,5 @@
 package com.allan.androidlearning.transfer
 
-import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.ALogJ
 import com.au.module_android.utils.getFileMD5
@@ -61,7 +60,7 @@ class MyDroidHttpChunksMgr : IChunkMgr{
             //logdNoFile { "chunk: $fileName $md5 $chunkIndex/$totalChunks chunk:$tmpFileStr ${tmpFile.length()}" }
 
             // 3. 将临时文件转存 否则框架立刻clear掉了。
-            val chunkTmpFileStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_CHUNKS_DIR + File.separatorChar + tmpFile.name
+            val chunkTmpFileStr = nanoTempCacheChunksDir() + File.separatorChar + tmpFile.name
             val chunkTmpFile = File(chunkTmpFileStr)
             if (chunkTmpFile.exists()) {
                 chunkTmpFile.delete()
@@ -101,7 +100,7 @@ class MyDroidHttpChunksMgr : IChunkMgr{
         if (chunkInfoList.size != totalChunks) {
             return ResultBean<ChunkInfo>(CODE_FAIL_MERGE_CHUNK, "Chunks number not match.", null).jsonResponse(Status.OK)
         }
-        val outputFileStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_MERGED_DIR + File.separatorChar + fileName
+        val outputFileStr = nanoTempCacheMergedDir() + File.separatorChar + fileName
         val outputFile = File(outputFileStr)
         if (outputFile.exists()) {
             outputFile.delete()

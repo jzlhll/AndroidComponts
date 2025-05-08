@@ -14,6 +14,9 @@ import java.io.IOException
 import java.net.ServerSocket
 
 class MyDroidServerViewModel : ViewModel() {
+    init {
+        logt { "MyDroidServerViewModel init" }
+    }
     val ipPortData = NoStickLiveData<Pair<String, String>>()
     var isSuccessOpenServer = false
 
@@ -67,7 +70,7 @@ class MyDroidServerViewModel : ViewModel() {
 
     suspend fun loadFileList() : List<MergedFileInfo>{
         delay(0)
-        val nanoMergedDir = File(Globals.goodCacheDir, TEMP_CACHE_MERGED_DIR)
+        val nanoMergedDir = File(nanoTempCacheMergedDir())
         val fileList = ArrayList<MergedFileInfo>()
         if (nanoMergedDir.exists()) {
             nanoMergedDir.listFiles()?.forEach {

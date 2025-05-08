@@ -37,7 +37,6 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        super.onBindingCreated(savedInstanceState)
         FileLog.ignoreWrite = true
         this.setTitle("日志系统")
 

@@ -1,7 +1,5 @@
 package com.allan.androidlearning.transfer
 
-import com.au.module_android.Globals
-import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.unsafeLazy
 import fi.iki.elonen.NanoHTTPD.DefaultTempFile
 import fi.iki.elonen.NanoHTTPD.TempFile
@@ -25,23 +23,20 @@ class MyDroidTempFileManager : TempFileManager {
     }
 
     init {
-        val tmpDirStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_DIR
-        this.tmpdir = File(tmpDirStr)
+        this.tmpdir = File(nanoTempCacheDir())
         //logdNoFile { "$addrTag make tmp dir $tmpDirStr" }
         if (!tmpdir.exists()) {
             tmpdir.mkdirs()
         }
 
         //追加代码将转移目录也创建好
-        val chunksDirStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_CHUNKS_DIR
-        val chunksDir = File(chunksDirStr)
+        val chunksDir = File(nanoTempCacheChunksDir())
         //logdNoFile { "$addrTag make chunks Dir $chunksDirStr" }
         if (!chunksDir.exists()) {
             chunksDir.mkdirs()
         }
 
-        val fileDirStr = Globals.goodCacheDir.absolutePath + File.separatorChar + TEMP_CACHE_MERGED_DIR
-        val fileDir = File(fileDirStr)
+        val fileDir = File(nanoTempCacheMergedDir())
         if (!fileDir.exists()) {
             fileDir.mkdirs()
         }

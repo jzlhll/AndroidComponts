@@ -9,7 +9,7 @@ import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
 class MyDroidTransferFileListMgr(val f: MyDroidTransferFragment) {
-    private val adapter = MyDroidTransferFileListAdapter()
+    val adapter = MyDroidTransferFileListAdapter()
 
     fun initRcv() {
         f.apply {
@@ -17,12 +17,12 @@ class MyDroidTransferFileListMgr(val f: MyDroidTransferFragment) {
             binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
             binding.rcv.setHasFixedSize(true)
             binding.rcv.addItemDecoration(VertPaddingItemDecoration(0, 0, 2.dp))
-        }
 
-        f.lifecycleScope.launchOnThread {
-            val fileList = f.viewModel.loadFileList()
-            f.lifecycleScope.launch {
-                adapter.submitList(fileList, false)
+            lifecycleScope.launchOnThread {
+                val fileList = f.viewModel.loadFileList()
+                lifecycleScope.launch {
+                    adapter.submitList(fileList, false)
+                }
             }
         }
     }
