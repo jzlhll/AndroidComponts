@@ -15,6 +15,16 @@
         android:layout_height="0dp"/>
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/ic_filetype_archive"
+        android:layout_width="33dp"
+        android:layout_height="33dp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/downloadBtn"
         android:tint="@color/color_text_normal"
         android:layout_marginBottom="12dp"
@@ -61,10 +71,10 @@
         android:layout_height="wrap_content"/>
 
     <com.au.module_android.widget.CustomFontText
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="4dp"
         android:layout_marginEnd="12dp"
         android:id="@+id/fileNameTv"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintEnd_toStartOf="@id/sharesBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fileSizeTv"
@@ -79,30 +89,30 @@
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/fileSizeTv"
+        android:layout_marginStart="4dp"
         style="@style/StyleFontSecondTitleText"
-        android:layout_marginStart="20dp"
         app:layout_constraintEnd_toStartOf="@id/sharesBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="13sp"
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@id/md5Tv"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toBottomOf="@id/fileNameTv"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/md5Tv"
+        android:layout_marginStart="4dp"
         style="@style/StyleFontSecondTitleText"
-        android:layout_marginStart="20dp"
         app:layout_constraintEnd_toStartOf="@id/sharesBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="13sp"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toBottomOf="@id/fileSizeTv"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />

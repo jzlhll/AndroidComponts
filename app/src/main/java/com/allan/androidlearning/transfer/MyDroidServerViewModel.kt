@@ -90,6 +90,7 @@ class MyDroidServerViewModel : ViewModel() {
                 fileList.add(MergedFileInfo(it, getFileMD5(it.absolutePath), formatSize(it.length())))
             }
         }
+        fileList.sortByDescending { it.file.lastModified() }
         return fileList
     }
 
