@@ -24,7 +24,6 @@ fun shareFile(context: Context, file: File?) {
             // "项目包名.fileprovider"即是在清单文件中配置的authorities
             uri = FileProvider.getUriForFile(context, context.packageName + ".provider", file)
             // 给目标应用一个临时授权
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         } else {
             uri = Uri.fromFile(file)
         }
