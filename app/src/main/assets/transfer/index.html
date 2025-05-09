@@ -104,6 +104,7 @@
 
         #uploadProgress {
             height: 100%;
+            width : 0%;
             background: #3498db;
             border-radius: 4px;
             transition: width 0.3s ease;
@@ -167,7 +168,8 @@
     let selectedFile = null; // 存储选择的文件
     let selectedMd5 = null; //文件的md5
 
-    let alreadyFilesInfo = "🗃️ 已上传文件列表\n"; //已经发送的文件s
+    const ALREADY_TITLE = "🗃️ 已上传文件列表\n\n";
+    let alreadyFilesInfo = ""; //已经发送的文件s
 
     let isUploadingFile = false; //正在上传
 
@@ -362,7 +364,7 @@
             document.getElementById('fileList').textContent = '';
 
             const fileSize = myDroidFormatSize(selectedFile.size);
-            alreadyFilesInfo = alreadyFilesInfo + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n\n";
+            alreadyFilesInfo = ALREADY_TITLE + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n" + alreadyFilesInfo;
             document.getElementById('alreadyFileList').textContent = alreadyFilesInfo;
             selectedFile = null;
             selectedMd5 = null;
@@ -370,8 +372,8 @@
             showAlreadyFileList();
         }
 
-        changeProgressVisible(false);
         updateProgress(0);
+        changeProgressVisible(false);
     }
 
     function updateProgress(percent) {

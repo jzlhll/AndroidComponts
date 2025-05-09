@@ -1,17 +1,18 @@
 package com.allan.androidlearning.transfer
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import com.allan.androidlearning.activities2.MyDroidTransferFragment
 import com.allan.androidlearning.databinding.HolderMydroidFileitemBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.utilsmedia.MediaHelper
-import com.au.module_android.utilsmedia.exportFileToDownload
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
 import com.au.module_android.utilsmedia.ContentUriRealPathType
+import com.au.module_android.utilsmedia.MediaHelper
+import com.au.module_android.utilsmedia.exportFileToDownload
 import com.au.module_android.utilsmedia.getRealPath
 import com.au.module_android.utilsmedia.saveFileToPublicDirectory
 import com.au.module_android.utilsmedia.shareFile
@@ -110,11 +111,11 @@ class MyDroidTransferViewHolder(binding: HolderMydroidFileitemBinding) : BindVie
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun bindData(bean: MergedFileInfo) {
         super.bindData(bean)
         binding.fileNameTv.text = bean.file.name
-        binding.fileSizeTv.text = bean.fileSizeInfo
-        binding.md5Tv.text = bean.md5
+        binding.fileSizeAndMD5Tv.text = bean.md5 + "   " + bean.fileSizeInfo
         binding.icon.setImageResource(getIcon(bean.file.name))
     }
 }

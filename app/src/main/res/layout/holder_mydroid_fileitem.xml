@@ -77,7 +77,7 @@
         app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintEnd_toStartOf="@id/sharesBtn"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fileSizeTv"
+        app:layout_constraintBottom_toTopOf="@id/fileSizeAndMD5Tv"
         app:layout_constraintVertical_chainStyle="packed"
         android:textSize="16sp"
         android:maxLines="1"
@@ -88,32 +88,19 @@
         android:layout_height="wrap_content" />
 
     <com.au.module_android.widget.CustomFontText
-        android:id="@+id/fileSizeTv"
+        android:id="@+id/fileSizeAndMD5Tv"
         android:layout_marginStart="4dp"
         style="@style/StyleFontSecondTitleText"
         app:layout_constraintEnd_toStartOf="@id/sharesBtn"
+        android:layout_marginEnd="12dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="13sp"
-        android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@id/md5Tv"
+        android:maxLines="3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toBottomOf="@id/fileNameTv"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
 
-    <com.au.module_android.widget.CustomFontText
-        android:id="@+id/md5Tv"
-        android:layout_marginStart="4dp"
-        style="@style/StyleFontSecondTitleText"
-        app:layout_constraintEnd_toStartOf="@id/sharesBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/icon"
-        app:layout_constraintTop_toBottomOf="@id/fileSizeTv"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
 </androidx.constraintlayout.widget.ConstraintLayout>
