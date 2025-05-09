@@ -28,7 +28,7 @@ import com.au.module_android.permissions.activity.ActivityForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
-import com.au.module_android.utils.MediaHelper
+import com.au.module_android.utilsmedia.MediaHelper
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.launchOnUi

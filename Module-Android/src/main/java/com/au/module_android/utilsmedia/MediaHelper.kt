@@ -1,15 +1,12 @@
-package com.au.module_android.utils
+package com.au.module_android.utilsmedia
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import android.webkit.MimeTypeMap
-import androidx.core.content.FileProvider
-import java.io.File
 
 /**
  * @author au
@@ -50,13 +47,15 @@ class MediaHelper {
     enum class MediaType {
         Other,
         Image,
-        Video
+        Video,
+        Audio,
     }
 
     companion object {
         /**
          * 转变为 分钟：秒。如果超过99分钟，就是99分钟。
          */
+        @SuppressLint("DefaultLocale")
         fun convertMillisToMMSS(ts: Long): String {
             var minutes = (ts / (1000 * 60)).toInt()
             val seconds = ((ts / 1000) % 60).toInt()
@@ -67,27 +66,62 @@ class MediaHelper {
             return String.format("%02d:%02d", minutes, seconds)
         }
 
-        private fun isImageFileSimple(extension: String): Boolean {
-            val imageExtensions = listOf("jpg", "jpeg", "png", "bmp", "webp", "heic", "heif", "tiff") //no gif
+        fun isImageFileSimple(extension: String): Boolean {
+            val imageExtensions = listOf("jpg", "jpeg", "png", "bmp", "webp", "heic", "heif", "tiff", "gif", "svg")
             return extension in imageExtensions
         }
 
-        private fun isVideoFileSimple(extension: String): Boolean {
+        fun isVideoFileSimple(extension: String): Boolean {
             val videoExtensions = listOf("mp4", "mov", "flv", "mkv", "webm", "m4v", "avi", "wmv", "3gp",)
             return extension in videoExtensions
         }
 
+        fun isAudioFileSimple(extension:String) : Boolean {
+            val audioExtensions = listOf("mp3", "wav", "ogg", "aac", "flac", "wma", "m4a", "amr", "aiff", "ape", "wv", "mid", "midi")
+            return extension in audioExtensions
+        }
+
+        /**
+         * 根据文件路径，其实就是后缀，获取MimeType
+         */
         fun getMimeTypePath(filePath: String): String {
             val extension = filePath.substring(filePath.lastIndexOf(".") + 1).lowercase()
             return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
         }
 
+        /**
+         * 根据url，获取MimeType
+         */
         fun getMimeTypeUrl(url: String): String {
             val extension = MimeTypeMap.getFileExtensionFromUrl(url)
             return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
         }
+
+        fun mediaTypeOfMimeType(mimeType:String) : MediaType{
+            if (mimeType.contains("video")) {
+                return MediaType.Video
+            } else if (mimeType.contains("image")) {
+                return MediaType.Image
+            } else if (mimeType.contains("audio")) {
+                return MediaType.Audio
+            }
+            return MediaType.Other
+        }
+
+        /**
+         * 直接根据后缀，来判断类型。推荐使用。
+         * @param filePath 文件路径
+         * @return MediaType 都会有
+         */
+        fun mediaTypeOfFilePath(filePath:String) : MediaType {
+            return mediaTypeOfMimeType(getMimeTypePath(filePath))
+        }
     }
 
+    /**
+     * 使用系统方法获取 video/audio Url时长
+     * @return 时长，毫秒
+     */
     fun getDurationNormally(context: Context, uri: Uri): Long {
         var duration: Long = 0
         val retriever = MediaMetadataRetriever()
@@ -103,6 +137,10 @@ class MediaHelper {
         return duration
     }
 
+    /**
+     * 使用系统方法获取video/audio 时长
+     * @return 时长，毫秒
+     */
     fun getDurationNormally(path: String?): Long {
         var duration: Long = 0
         val retriever = MediaMetadataRetriever()
@@ -121,9 +159,10 @@ class MediaHelper {
     }
 
     /**
-     * 用这个方法准确点
-     * 获取视频/音频时长,这里获取的是毫秒
+     * 使用mediaPlayer准备的方式，来获取时长，据说更加精准。
+     * @return 时长，毫秒
      */
+    @Deprecated( "getDurationNormally(path)")
     fun getDurationComplexly(path: String?): Long {
         val mediaPlayer = MediaPlayer()
         try {
@@ -140,8 +179,11 @@ class MediaHelper {
     }
 
     /**
-     * 通过MediaMetadataRetriever来解析
+     * 通过系统retriever解析。获取具体的类型文件。不太推荐使用。
+     * @param filePath 本函数预设filePath是一个媒体文件。只是不知道具体格式。
+     * @return MediaType 只会是video/audio/other未知。
      */
+    @Deprecated("mediaTypeOfFilePath / mediaTypeOfMimeType")
     fun mediaTypeOf(filePath:String) : MediaType {
         var time = System.currentTimeMillis()
         var mimeType:String? = null
@@ -159,50 +201,14 @@ class MediaHelper {
             val extension = filePath.substring(filePath.lastIndexOf(".") + 1).lowercase()
             if(isImageFileSimple(extension)) return MediaType.Image
             if(isVideoFileSimple(extension)) return MediaType.Video
-            Log.d("allan", "is imageFile time: $time")
+            Log.d("MediaHelper", "is imageFile time: $time")
             return MediaType.Other
         }
 
         val r1 = mimeType.startsWith("image/")
         val r2 = mimeType.startsWith("video/")
         time = System.currentTimeMillis() - time
-        Log.d("allan", "is imageFile time: $time")
+        Log.d("MediaHelper", "is imageFile time: $time")
         return if(r1) MediaType.Image else (if(r2) MediaType.Video else MediaType.Other)
     }
-
-    /**
-     *
-     */
-    fun mediaTypeOf2(filePath:String) : MediaType {
-        val type = getMimeTypePath(filePath)
-        if (type.contains("video")) {
-            return MediaType.Video
-        } else if (type.contains("image")) {
-            return MediaType.Image
-        }
-        return MediaType.Other
-    }
-
-    fun shareFile(context: Context, file: File?) {
-        if (file != null && file.exists()) {
-            val share = Intent(Intent.ACTION_SEND)
-            val uri: Uri?
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                // "项目包名.fileprovider"即是在清单文件中配置的authorities
-                uri = FileProvider.getUriForFile(context, context.packageName + ".provider", file)
-                // 给目标应用一个临时授权
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            } else {
-                uri = Uri.fromFile(file)
-            }
-
-            share.putExtra(Intent.EXTRA_STREAM, uri)
-            share.type = getMimeTypePath(file.absolutePath) // 此处可发送多种文件
-            share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            context.startActivityFix(Intent.createChooser(share, "分享文件"))
-        }
-    }
-
 }

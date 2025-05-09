@@ -40,7 +40,7 @@ import java.net.Inet4Address
 @EntryFrgName(priority = 12)
 class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     companion object {
-        var fileExportSuccessCallback : ((String, String)->Unit)? = null
+        var fileExportSuccessCallback : ((info:String, exportFileStr:String)->Unit)? = null
         var fileExportFailCallback : ((String)->Unit)? = null
     }
 

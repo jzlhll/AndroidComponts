@@ -12,12 +12,13 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logd
+import com.au.module_android.utilsmedia.UriHelper
 import com.au.module_imagecompressed.CameraPermissionHelp
 import com.au.module_imagecompressed.LubanCompress
 import com.au.module_imagecompressed.MultiPhotoPickerContractResult
 import com.au.module_imagecompressed.compatMultiPhotoPickerForResult
+import com.au.module_imagecompressed.imageFileConvertToUriWrap
 import com.au.module_imagecompressed.photoPickerForResult
-import com.au.module_imagecompressed.util.UriUtil
 import java.io.File
 
 @EntryFrgName
@@ -48,7 +49,7 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
                                     ignoreError {
                                         val resultFile = File(r)
                                         val resultUri = resultFile.toUri()
-                                        val cvtUri = UriUtil(resultUri, Globals.app.contentResolver).myFileConvertToUriWrap()
+                                        val cvtUri = UriHelper(resultUri, Globals.app.contentResolver).imageFileConvertToUriWrap()
                                         logd { "cvtUri $cvtUri" }
                                     }
                                 }.compress(requireContext(), file.toUri()) //必须是file的scheme。那个FileProvider提供的则不行。

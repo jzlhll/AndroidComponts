@@ -1,4 +1,4 @@
-package com.au.module_imagecompressed.util
+package com.au.module_android.utilsmedia
 
 import android.webkit.MimeTypeMap
 

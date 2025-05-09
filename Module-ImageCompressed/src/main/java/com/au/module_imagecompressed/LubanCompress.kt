@@ -2,7 +2,7 @@ package com.au.module_imagecompressed
 
 import android.content.Context
 import android.net.Uri
-import com.au.module_imagecompressed.util.isPicNeedCompress
+import com.au.module_android.utilsmedia.isPicNeedCompress
 import top.zibin.luban.Luban
 import top.zibin.luban.OnNewCompressListener
 import java.io.File

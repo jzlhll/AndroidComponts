@@ -78,17 +78,19 @@ class Processor : AbstractProcessor() {
             }
 
             val code = names.end()
-            processingEnv.filer?.let {
-                try {
-                    // 创建一个JavaFileObject来表示要生成的文件
-                    val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntryList", null)
-                    sourceFile.openWriter().use { writer ->
-                        // 写入Java（或Kotlin）代码
-                        writer.write(code)
-                        writer.flush()
+            processingEnv?.let { env->
+                env.filer?.let {
+                    try {
+                        // 创建一个JavaFileObject来表示要生成的文件
+                        val sourceFile: JavaFileObject = it.createSourceFile("com.allan.androidlearning.EntryList", null)
+                        sourceFile.openWriter().use { writer ->
+                            // 写入Java（或Kotlin）代码
+                            writer.write(code)
+                            writer.flush()
+                        }
+                    } catch (e: IOException) {
+                        env.messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate file: " + e.message)
                     }
-                } catch (e: IOException) {
-                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate file: " + e.message)
                 }
             }
         }

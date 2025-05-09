@@ -10,7 +10,7 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.FileLog
-import com.au.module_android.utils.MediaHelper
+import com.au.module_android.utilsmedia.MediaHelper
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread

@@ -10,7 +10,7 @@ import androidx.annotation.Keep
  * 不能拿这个去做gson。需要转换后才能处理。
  */
 @Keep
-data class UriWrap(var uri:Uri,
+data class UriWrap(var uri: Uri,
                    val totalNum:Int,
                    var fileSize:Long,
                    val isImage:Boolean,
@@ -23,20 +23,4 @@ data class UriWrap(var uri:Uri,
     }
 
     fun toUriStrWrap() = UriStrWrap(uri.toString(), totalNum, fileSize, isImage, beLimitedSize, beCopied, mime, fileName)
-}
-
-@Keep
-data class UriStrWrap(var uriStr:String,
-                   val totalNum:Int,
-                   var fileSize:Long,
-                   val isImage:Boolean,
-                   var beLimitedSize:Boolean = false,
-                   var beCopied:Boolean = false,
-                   var mime:String,
-                   var fileName:String) {
-    override fun toString(): String {
-        return "$uriStr, $fileName, $fileSize, $mime beCopied $beCopied beLimitedSize $beLimitedSize"
-    }
-
-    fun toUriWrap() = UriWrap(Uri.parse(uriStr), totalNum, fileSize, isImage, beLimitedSize, beCopied, mime, fileName)
 }

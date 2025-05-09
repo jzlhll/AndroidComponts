@@ -1,4 +1,4 @@
-package com.au.module_imagecompressed.util
+package com.au.module_android.utilsmedia
 
 import android.content.ContentResolver
 import android.content.res.AssetFileDescriptor
@@ -15,58 +15,11 @@ import androidx.annotation.WorkerThread
 import androidx.core.net.toFile
 import com.au.module_android.Globals
 import com.au.module_android.utils.logt
-import com.au.module_imagecompressed.CropCircleImageFragment.Companion.DIR_CROP
-import com.au.module_imagecompressed.util.getUriMimeType
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-
-private const val SUB_CACHE_DIR = "luban_disk_cache"
-private const val COPY_FILE_PREFIX = "copy_"
-
-fun clearLubanAndCropCache(clearLubanCompress:Boolean = true, clearUCrop:Boolean = true) {
-    if (clearLubanCompress) {
-        try {
-            val cmpImagesPath = File(Globals.app.cacheDir.absolutePath + "/$SUB_CACHE_DIR")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-
-        try {
-            val cmpImagesPath = File(Globals.app.externalCacheDir?.absolutePath + "/$SUB_CACHE_DIR")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    if (clearUCrop) {
-        try {
-            val cmpImagesPath = File(Globals.app.cacheDir.absolutePath + "/$DIR_CROP")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-
-        try {
-            val cmpImagesPath = File(Globals.app.externalCacheDir?.absolutePath + "/$DIR_CROP")
-            cmpImagesPath.listFiles()?.forEach {
-                it.delete()
-            }
-        } catch (e:Exception) {
-            e.printStackTrace()
-        }
-    }
-}
 
 fun isUrlHasImage(url: String): Boolean {
     val lowUrl = url.lowercase()
@@ -85,6 +38,7 @@ fun isHasHttp(path: String): Boolean {
 
 fun isPicNeedCompress(path:String) = isUrlHasImage(path) && !isHasHttp(path)
 
+
 /**
  * 将Uri识别，拷贝到本地cache；如果param有传参，则会进行转换拷贝。
  *
@@ -93,8 +47,12 @@ fun isPicNeedCompress(path:String) = isUrlHasImage(path) && !isHasHttp(path)
  * 本函数会耗时。自行放到scope中运行。
  */
 @WorkerThread
-fun Uri.copyToCacheConvert(cr:ContentResolver, param:String? = URI_COPY_PARAM_HEIC_TO_JPG, size:LongArray? = null) : Uri{
-    val file = this.copyToCacheFile(cr, param, size)
+fun Uri.copyToCacheConvert(cr:ContentResolver,
+                           param:String? = URI_COPY_PARAM_HEIC_TO_JPG,
+                           subCacheDir:String,
+                           copyFilePrefix:String = "copy_",
+                           size:LongArray? = null) : Uri{
+    val file = this.copyToCacheFile(cr, param, subCacheDir, copyFilePrefix, size)
     return if (file == null) {
         this //被limit或者size为0
     } else {
@@ -103,35 +61,36 @@ fun Uri.copyToCacheConvert(cr:ContentResolver, param:String? = URI_COPY_PARAM_HE
 }
 
 /**
- * 将List<Uri>遍历识别，全部拷贝到本地cache；如果param有传参，则会进行转换拷贝。
+ * 经过研究，android对于content uri想要使用File最好的办法，就是拷贝到自己的目录下。
+ * 才是最保险的，而且不需要考虑权限问题。
  *
  * 不管是不是图片是不是进行转换，都会拷贝（file型的uri除外）。
  *
- * 本函数会耗时。自行放到scope中运行。
+ * 自行考虑放到Scope中运行。可能会耗时比较多，比如拷贝视频。
+ *
+ * @param param 参考URI_COPY_PARAM_XXX
+ *
+ * @return 不太可能是空。
  */
 @WorkerThread
-fun List<Uri>.copyToCacheConvert(cr:ContentResolver, param:String? = URI_COPY_PARAM_HEIC_TO_JPG) : List<Uri> {
-    return this.map { uri-> uri.copyToCacheConvert(cr, param) }
-}
-
-const val URI_COPY_PARAM_HEIC_TO_JPG = "only_heic_convert_to_jpg"
-const val URI_COPY_PARAM_HEIC_TO_PNG = "only_heic_convert_to_png"
-const val URI_COPY_PARAM_ANY_TO_JPG = "any_convert_to_jpg"
-
-private fun isSupportConvertImage(extension: String): Boolean {
-    val imageExtensions = listOf("jpg", "jpeg", "png", "heic")
-    return extension in imageExtensions
-}
-
-fun Uri.copyToCacheFileSchemeFile(size:LongArray? = null): File? {
-    val file = this.path?.let { File(it) }
-    if (file != null) {
-        size?.set(0, file.length())
+fun Uri.copyToCacheFile(cr: ContentResolver, param:String? = null,
+                        subCacheDir:String,
+                        copyFilePrefix:String = "copy_",
+                        size:LongArray? = null): File? {
+    var file: File? = null
+    if (this.scheme == ContentResolver.SCHEME_FILE) {
+        file = copyToCacheFileSchemeFile(size)
+    } else if (this.scheme == ContentResolver.SCHEME_CONTENT) {
+        file = copyToCacheFileSchemeContent(cr, param, subCacheDir, copyFilePrefix, size)
     }
     return file
 }
 
-fun Uri.copyToCacheFileSchemeContent(cr: ContentResolver, param:String? = null, size:LongArray? = null) : File? {
+private fun Uri.copyToCacheFileSchemeContent(cr: ContentResolver,
+                                             param:String? = null,
+                                             subCacheDir:String,
+                                             copyFilePrefix:String = "copy_",
+                                             size:LongArray? = null) : File? {
     val cacheDir = Globals.goodCacheDir
     val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(getUriMimeType(cr))?.lowercase()
     val isSourceHeic = extension == "heic"
@@ -157,14 +116,48 @@ fun Uri.copyToCacheFileSchemeContent(cr: ContentResolver, param:String? = null, 
         }
     }
 
-    val displayName = COPY_FILE_PREFIX + System.currentTimeMillis() + "_" + (Math.random() * 1000).toInt().toString() + "." + cvtExtension
-    val subDirFile = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR")
+    val displayName = copyFilePrefix + System.currentTimeMillis() + "_" + (Math.random() * 1000).toInt().toString() + "." + cvtExtension
+    val subDirFile = File(cacheDir.absolutePath + "/$subCacheDir")
     if (!subDirFile.exists()) {
         subDirFile.mkdirs()
     }
-    val cache = File(cacheDir.absolutePath + "/$SUB_CACHE_DIR", displayName)
+    val cache = File(cacheDir.absolutePath + "/$subCacheDir", displayName)
     val file = cache
     copyFromCr(cr, cache, param, extension, isSourceHeic, size)
+    return file
+}
+
+/**
+ * 获取content uri的mimeType
+ */
+fun Uri.getUriMimeType(cr: ContentResolver?) : String {
+    if (scheme == "file") {
+        val extension = this.toFile().extension.lowercase()
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
+    } else {
+        require(cr != null)
+        var mimeType = cr.getType(this)
+        if (mimeType == null) {
+            // 如果无法直接获取MIME类型，则从Uri中读取
+            cr.query(this, null, null, null, null)?.use { cursor->
+                val mimeTypeIndex = cursor.getColumnIndex("mime_type")
+                if (mimeTypeIndex != -1 && cursor.moveToFirst()) {
+                    mimeType = cursor.getString(mimeTypeIndex)
+                }
+            }
+        }
+        return mimeType ?: "*/*"
+    }
+}
+
+/**
+ * 本身就是一个File，哪怕是系统路径都是可以直接读取。
+ */
+private fun Uri.copyToCacheFileSchemeFile(size:LongArray? = null): File? {
+    val file = this.path?.let { File(it) }
+    if (file != null) {
+        size?.set(0, file.length())
+    }
     return file
 }
 
@@ -219,75 +212,9 @@ private fun Uri.copyFromCr(
     }
 }
 
-/**
- * 经过研究，android对于content uri想要使用File最好的办法，就是拷贝到自己的目录下。
- * 才是最保险的，而且不需要考虑权限问题。
- *
- * 不管是不是图片是不是进行转换，都会拷贝（file型的uri除外）。
- *
- * 自行考虑放到Scope中运行。可能会耗时比较多，比如拷贝视频。
- *
- * @param param 参考URI_COPY_PARAM_XXX
- *
- * @return 不太可能是空。
- */
-@WorkerThread
-fun Uri.copyToCacheFile(cr: ContentResolver, param:String? = null, size:LongArray? = null): File? {
-    var file: File? = null
-    if (this.scheme == ContentResolver.SCHEME_FILE) {
-        file = copyToCacheFileSchemeFile(size)
-    } else if (this.scheme == ContentResolver.SCHEME_CONTENT) {
-        file = copyToCacheFileSchemeContent(cr, param, size)
-    }
-    return file
-}
-
-@Throws(IOException::class)
-fun copyFile(
-    inputStream: InputStream,
-    out: OutputStream
-): Long {
-    var progress: Long = 0
-    val buffer = ByteArray(8192)
-
-    var t: Int
-    while ((inputStream.read(buffer).also { t = it }) != -1) {
-        out.write(buffer, 0, t)
-        progress += t.toLong()
-    }
-    return progress
-}
-
-//将图片转码
-@Throws(Exception::class)
-fun copyImageAndCvtTo(inputStream: InputStream, outputStream: FileOutputStream, fmt:String) {
-    val options = BitmapFactory.Options()
-    options.inJustDecodeBounds = false
-    val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
-    bitmap?.compress(if(fmt == "png") Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG, 100, outputStream)
-}
-
-/**
- * 获取content uri的mimeType
- */
-fun Uri.getUriMimeType(cr: ContentResolver?) : String {
-    if (scheme == "file") {
-        val extension = this.toFile().extension.lowercase()
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-    } else {
-        require(cr != null)
-        var mimeType = cr.getType(this)
-        if (mimeType == null) {
-            // 如果无法直接获取MIME类型，则从Uri中读取
-            cr.query(this, null, null, null, null)?.use { cursor->
-                val mimeTypeIndex = cursor.getColumnIndex("mime_type")
-                if (mimeTypeIndex != -1 && cursor.moveToFirst()) {
-                    mimeType = cursor.getString(mimeTypeIndex)
-                }
-            }
-        }
-        return mimeType ?: "*/*"
-    }
+private fun isSupportConvertImage(extension: String): Boolean {
+    val imageExtensions = listOf("jpg", "jpeg", "png", "heic")
+    return extension in imageExtensions
 }
 
 /**
@@ -364,6 +291,50 @@ fun Uri.length(cr: ContentResolver, schemeForce:String? = null) : Long {
     }
 
     return resultLength
+}
+
+/**
+ * 将List<Uri>遍历识别，全部拷贝到本地cache；如果param有传参，则会进行转换拷贝。
+ *
+ * 不管是不是图片是不是进行转换，都会拷贝（file型的uri除外）。
+ *
+ * 本函数会耗时。自行放到scope中运行。
+ */
+@WorkerThread
+fun List<Uri>.copyToCacheConvert(cr:ContentResolver,
+                                 subCacheDir:String,
+                                 copyFilePrefix:String = "copy_",
+                                 param:String? = URI_COPY_PARAM_HEIC_TO_JPG) : List<Uri> {
+    return this.map { uri-> uri.copyToCacheConvert(cr, param, subCacheDir, copyFilePrefix) }
+}
+
+const val URI_COPY_PARAM_HEIC_TO_JPG = "only_heic_convert_to_jpg"
+const val URI_COPY_PARAM_HEIC_TO_PNG = "only_heic_convert_to_png"
+const val URI_COPY_PARAM_ANY_TO_JPG = "any_convert_to_jpg"
+
+@Throws(IOException::class)
+fun copyFile(
+    inputStream: InputStream,
+    out: OutputStream
+): Long {
+    var progress: Long = 0
+    val buffer = ByteArray(8192)
+
+    var t: Int
+    while ((inputStream.read(buffer).also { t = it }) != -1) {
+        out.write(buffer, 0, t)
+        progress += t.toLong()
+    }
+    return progress
+}
+
+//将图片转码
+@Throws(Exception::class)
+fun copyImageAndCvtTo(inputStream: InputStream, outputStream: FileOutputStream, fmt:String) {
+    val options = BitmapFactory.Options()
+    options.inJustDecodeBounds = false
+    val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+    bitmap?.compress(if(fmt == "png") Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG, 100, outputStream)
 }
 
 //

@@ -156,7 +156,7 @@ object CheckConsts {
 
         if (BuildConfig.DEBUG) {
             curWeekWorksCompleted?.forEach {
-                logd { "curWeekWorksCompleted workid ${it.dayWorkId}" }
+                logd { "curWeekWorksCompleted workid" }
             }
         }
 

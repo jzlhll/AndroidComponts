@@ -1,11 +1,11 @@
 package com.au.module_okhttp.creator
 
+import com.au.module_android.json.fromJson
 import com.au.module_android.utils.awaitOnIoThread
-import com.au.module_android.utils.parseJson
-import com.au.module_okhttp.exceptions.AuNoNetworkException
-import com.au.module_okhttp.exceptions.AuResponseErrorException
 import com.au.module_okhttp.OkhttpGlobal.okHttpClient
 import com.au.module_okhttp.beans.ParamsStrRequestBody
+import com.au.module_okhttp.exceptions.AuNoNetworkException
+import com.au.module_okhttp.exceptions.AuResponseErrorException
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -79,7 +79,7 @@ inline fun <reified T> Response.parseJson() : T {
             if (bodyStr.isNullOrBlank()) {
                 throw AuResponseErrorException(this.code, this.message)
             } else {
-                bodyStr.parseJson<T>()
+                bodyStr.fromJson<T>() as T
             }
         }
     }
