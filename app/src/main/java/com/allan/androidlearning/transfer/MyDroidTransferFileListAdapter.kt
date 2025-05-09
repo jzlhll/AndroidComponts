@@ -58,12 +58,13 @@ class MyDroidTransferViewHolder(binding: HolderMydroidFileitemBinding) : BindVie
 
         val pair = uri?.getRealPath(Globals.app)
         if (pair != null) {
+            val p = pair.first.replace("/storage/emulated/0/", "/sdcard/")
             when (pair.second) {
                 ContentUriRealPathType.RelativePath -> {
-                    MyDroidTransferFragment.fileExportSuccessCallback?.invoke("转存到${pair.first}成功！", pair.first)
+                    MyDroidTransferFragment.fileExportSuccessCallback?.invoke("转存到${pair.first}成功！", "/sdcard/$p")
                 }
                 ContentUriRealPathType.FullPath -> {
-                    MyDroidTransferFragment.fileExportSuccessCallback?.invoke("转存到${pair.first}成功！", pair.first)
+                    MyDroidTransferFragment.fileExportSuccessCallback?.invoke("转存到${pair.first}成功！", p)
                 }
             }
         } else {

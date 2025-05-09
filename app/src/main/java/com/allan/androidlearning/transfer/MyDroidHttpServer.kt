@@ -1,7 +1,10 @@
 package com.allan.androidlearning.transfer
 
+import android.os.Handler
+import android.os.HandlerThread
 import com.au.module_android.Globals
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utilsmedia.getExternalFreeSpace
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
@@ -15,9 +18,26 @@ interface IChunkMgr {
     fun handleMergeChunk(session: NanoHTTPD.IHTTPSession) : Response
 }
 
-class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTTPD(port) {
+interface IMyDroidHttpServer {
+    /**
+     * 启动一些周期性活动。
+     */
+    fun startPeriodWork()
+}
+
+class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTTPD(port), IMyDroidHttpServer {
+    private val handleThread: HandlerThread
+    private val handle: Handler
+
+    private val periodSpaceTime = 5 * 60 * 1000L
+    private var mPeriodSpaceRun: Runnable = Runnable {
+    }
+
     init {
         tempFileManagerFactory = MyDroidTempFileMgrFactory()
+        handleThread = HandlerThread("MyDroidHttpServer")
+        handleThread.start()
+        handle = Handler(handleThread.looper)
     }
 
     var transferInfoCallback:((String)->Unit)? =null
@@ -68,6 +88,9 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
         if (session.uri == "/merge-chunks") {
             return chunksMgr.handleMergeChunk(session)
         }
+        if (session.uri == "/read-left-space") {
+            return newFixedLengthResponse(Status.OK, "text/plain", getExternalFreeSpace(Globals.app))
+        }
         return newFixedLengthResponse("Invalid request from AppServer")
     }
 
@@ -91,5 +114,16 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
         } catch (_: IOException) {
             return newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "404 Not Found")
         }
+    }
+
+    override fun startPeriodWork() {
+//        handle.removeCallbacks(mPeriodSpaceRun)
+//        handle.post(mPeriodSpaceRun)
+    }
+
+    override fun stop() {
+        handle.removeCallbacksAndMessages(null)
+        handleThread.quit()
+        super.stop()
     }
 }

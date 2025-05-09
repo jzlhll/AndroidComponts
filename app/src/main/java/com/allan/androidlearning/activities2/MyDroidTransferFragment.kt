@@ -31,6 +31,7 @@ import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
+import com.au.module_android.utilsmedia.getExternalFreeSpace
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
@@ -63,6 +64,9 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     lateinit var exportHistoryTab: TabLayout.Tab
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        val fmt = getString(com.allan.androidlearning.R.string.not_close_window)
+        binding.descTitle.text = String.format(fmt, "\n存储剩余：" + getExternalFreeSpace(requireActivity()))
+
         fileExportFailCallback = { info->
             Globals.mainScope.launchOnUi {
                 ToastBuilder().setOnTop().setMessage(info).setIcon("error").toast()

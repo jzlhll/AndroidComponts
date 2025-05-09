@@ -150,4 +150,5 @@
     <string name="export_history_2" translatable="false">"导出历史*"</string>
     <string name="transfer_list" translatable="false">"传输列表 "</string>
     <string name="transfer_list_2" translatable="false">"传输列表*"</string>
+    <string name="not_close_window" translatable="false">保持在该界面，不熄屏 %s</string>
 </resources>

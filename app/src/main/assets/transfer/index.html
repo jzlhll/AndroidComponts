@@ -114,6 +114,38 @@
             margin: 50px 0 20px 0;
             border-top: 1px solid #ddd;
         }
+
+        #overlayView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #overlayView-content {
+            text-align: center;
+            padding: 30px;
+            max-width: 80%;
+        }
+
+        #overlayView h2 {
+            color: #ff4444;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #overlayView p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
     </style>
     <title></title>
 </head>
@@ -122,6 +154,7 @@
 <script src="mydroid-uploadfile.js"></script>
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
+<script src="mydroid-heartbit.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
@@ -129,7 +162,9 @@
 <body>
 <div class="container">
     <h1>MyDroidTransfer</h1>
-
+    <p id="subtitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 30px;">
+        局域网fast传输
+    </p>
     <div class="form-container">
         <form id="uploadForm" enctype="multipart/form-data">
             <div class="upload-section">
@@ -164,6 +199,14 @@
     </div>
 </div>
 
+<!-- 错误遮罩层 -->
+<div id="overlayView">
+    <div id="overlayView-content">
+        <h2>⚠️ 连接已断开</h2>
+        <p id="overlayView-message">请检查手机地址和端口，重新连接。</p>
+    </div>
+</div>
+
 <script>
     let selectedFile = null; // 存储选择的文件
     let selectedMd5 = null; //文件的md5
@@ -172,6 +215,23 @@
     let alreadyFilesInfo = ""; //已经发送的文件s
 
     let isUploadingFile = false; //正在上传
+
+    function updateSubtitle(newText) {
+        const subtitleElement = document.getElementById('subtitle');
+        if (subtitleElement) {
+            subtitleElement.textContent = newText;
+        }
+    }
+
+    window.updateSubtitle = updateSubtitle;
+    startHeartbeat();
+
+    function showConnectionError(message) {
+        const overlay = document.getElementById('overlayView');
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // 禁止页面滚动
+    }
+    window.showConnectionError = showConnectionError;
 
     function requireNotUploading(continueCallback) {
         if (isUploadingFile) {

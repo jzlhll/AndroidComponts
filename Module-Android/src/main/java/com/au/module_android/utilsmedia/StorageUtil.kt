@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.StatFs
 import android.provider.MediaStore
 import com.au.module_android.Globals
 import com.au.module_android.permissions.hasPermission
@@ -261,4 +262,32 @@ private fun getOldSdkPath(
         file.createNewFile()
     }
     return file.absolutePath
+}
+
+private fun formatBytes(bytes: Long): String {
+    val units = arrayOf("B", "KB", "MB", "GB", "TB")
+    var value = bytes.toDouble()
+    var unitIndex = 0
+
+    while (value > 1024 && unitIndex < units.size - 1) {
+        value /= 1024
+        unitIndex++
+    }
+    return "%.2f %s".format(value, units[unitIndex])
+}
+
+fun getInternalFreeSpace(): String {
+    val path = Environment.getDataDirectory()
+    val stat = StatFs(path.path)
+    return formatBytes(stat.availableBytes)
+}
+
+fun getExternalFreeSpace(context: Context): String {
+    val externalDirs = context.getExternalFilesDirs(null)
+    if (externalDirs.isEmpty()) return "--"
+
+    // 取第一个外部存储路径（通常是主SD卡）
+    val path = externalDirs[0]?.parentFile ?: return "--"
+    val stat = StatFs(path.path)
+    return formatBytes(stat.availableBytes)
 }

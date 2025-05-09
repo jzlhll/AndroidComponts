@@ -9,7 +9,7 @@
         app:layout_constraintTop_toTopOf="parent"
         style="@style/StyleFontSecondTitleText"
         android:textSize="13sp"
-        android:text="保持在该界面，不熄屏"
+        tools:text="保持在该界面，不熄屏"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
