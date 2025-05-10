@@ -47,11 +47,7 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)
         if (session.method == Method.OPTIONS) {
-            val response = newFixedLengthResponse(Response.Status.OK, "text/plain", "")
-            response.addHeader("Access-Control-Allow-Origin", "*")
-            response.addHeader("Access-Control-Allow-Methods", "GET, POST")
-            response.addHeader("Access-Control-Allow-Headers", "Content-Type")
-            return response
+            return handleOptionRequest()
         }
 
         val ct = ContentType(session.headers["content-type"]).tryUTF8()
@@ -62,6 +58,23 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
             Method.POST -> handlePostRequest(session)
             else -> newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404")
         }
+    }
+
+    /*
+     response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept, token, Authorization, " +
+         "X-Auth-Token,X-XSRF-TOKEN,Access-Control-Allow-Headers");
+ response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEAD");
+ response.addHeader("Access-Control-Allow-Credentials", "true");
+ response.addHeader("Access-Control-Allow-Origin", "*");
+ response.addHeader("Access-Control-Max-Age", "" + 42 * 60 * 60);
+     */
+
+    private fun handleOptionRequest(): Response {
+        val response = newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, "")
+        response.addHeader("Access-Control-Allow-Origin", "*")
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST")
+        response.addHeader("Access-Control-Allow-Headers", "Content-Type")
+        return response
     }
 
     private fun handleGetRequest(url: String): Response {
@@ -76,7 +89,7 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
             }
             else -> {
                 logdNoFile { "handle get request $url" }
-                newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "404 Not Found")
+                newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")
             }
         }
     }
@@ -89,7 +102,7 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
             return chunksMgr.handleMergeChunk(session)
         }
         if (session.uri == "/read-left-space") {
-            return newFixedLengthResponse(Status.OK, "text/plain", getExternalFreeSpace(Globals.app))
+            return newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, getExternalFreeSpace(Globals.app))
         }
         return newFixedLengthResponse("Invalid request from AppServer")
     }
@@ -112,7 +125,7 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
             logdNoFile { "server Js File read success $jsAssetFile." }
             return response
         } catch (_: IOException) {
-            return newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "404 Not Found")
+            return newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")
         }
     }
 

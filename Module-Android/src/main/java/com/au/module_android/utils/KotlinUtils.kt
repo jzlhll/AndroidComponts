@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
+import android.os.Parcelable
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -80,4 +81,18 @@ inline fun <reified T : Serializable> Bundle.serializableCompat(key: String): T?
 inline fun <reified T : Serializable> Intent.serializableExtraCompat(key: String): T? = when {
     VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
     else -> getSerializableExtra(key) as? T
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableArrayExtraCompat(key: String): Array<T>? {
+    if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return getParcelableArrayExtra<T>(key, T::class.java)
+    }
+    return getParcelableArrayExtra(key) as? Array<T>
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableExtraCompat(key: String): T? {
+    if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return getParcelableExtra<T>(key, T::class.java)
+    }
+    return getParcelableExtra(key) as? T
 }

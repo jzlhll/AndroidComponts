@@ -13,6 +13,9 @@ import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.parcelableArrayExtraCompat
+import com.au.module_android.utils.parcelableExtraCompat
+import com.au.module_android.utils.serializableExtraCompat
 
 class ShareReceiverActivity : ViewActivity() {
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -28,18 +31,19 @@ class ShareReceiverActivity : ViewActivity() {
         when (intent?.action) {
             Intent.ACTION_SEND -> {
                 // 处理单文件分享
-                val uri = intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+                val uri: Uri? = intent.parcelableExtraCompat(Intent.EXTRA_STREAM)
                 logdNoFile { "uri $uri" }
                 if (uri != null) handleSharedUri(listOf(uri))
             }
 
             Intent.ACTION_SEND_MULTIPLE -> {
                 // 处理多文件分享
-                val uris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
-                uris?.forEach { uri ->
-                    logdNoFile { "uris uri $uri" }
+                intent.parcelableArrayExtraCompat<Uri>(Intent.EXTRA_STREAM)?.let { uris->
+                    uris.forEach { uri ->
+                        logdNoFile { "uris uri $uri" }
+                    }
+                    handleSharedUri(ArrayList<Uri>().also { it.addAll(uris) })
                 }
-                uris?.let { handleSharedUri(it) }
             }
         }
 
@@ -56,7 +60,8 @@ class ShareReceiverActivity : ViewActivity() {
         val activityCount = Globals.activityList.size
         if (activityCount > 0) {
             //已经存在；直接发送
-            val found = Globals.activityList.find { it.asOrNull<FragmentShellActivity>()?.fragmentClass == MyDroidTransferFragment::class.java }
+            val found = Globals.activityList.find {
+                it.asOrNull<FragmentShellActivity>()?.fragmentClass == MyDroidTransferFragment::class.java }
             if (found != null) {
             } else {
                 FragmentShellActivity.start(this, MyDroidTransferFragment::class.java, Bundle().also {

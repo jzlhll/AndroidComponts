@@ -51,7 +51,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
         fileExportFailCallback = null
     }
 
-    override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer")
+    override fun toolbarInfo() = ToolbarInfo("MyDroidTransfer (接收)")
 
     private var mConnectCb:ConnectivityManager.NetworkCallback? = null
 //    private val viewModel by lazy { ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java] }
