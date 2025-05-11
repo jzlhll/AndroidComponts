@@ -1,12 +1,12 @@
 (function() {
     let wsCntCount = 0;
-    let wsCntInterval = 3 * 1000;
+    let wsCntInterval = 1000;
     let wsCntIntervalId = null;
 
     // 停止定时器
     function stopWebSocketInterval() {
-        console.log('停止start WebSocket ConnectInterval');
         if (wsCntIntervalId) {
+            console.log('停止start WebSocket ConnectInterval');
             clearInterval(wsCntIntervalId);
             wsCntIntervalId = null;
         }
@@ -15,7 +15,7 @@
     function setupSocketFileList(ipPort) {
         try{
             // 创建 WebSocket 连接 (ws:// 或 wss://)
-            const socket = new WebSocket(`ws://${ipPort}/fileList`);
+            const socket = new WebSocket(`ws://${ipPort}/ws-test`);
             // 监听连接打开事件
             socket.onopen = (event) => {
                 console.log('WebSocket 连接已建立');
@@ -25,13 +25,19 @@
     
             // 接收消息
             socket.onmessage = (event) => {
-                console.log('收到消息:', event.data);
-                // 处理数据（JSON 示例）
-                try {
-                    const jsonData = JSON.parse(event.data);
-                    //handleMessage(jsonData);
-                } catch (e) {
-                    console.error('WebSocket 消息解析失败', e);
+                //通过每次接收leftSpace来当做ping/pong
+                const jsonData = JSON.parse(event.data);
+                const data = jsonData.data;
+                if (data.startsWith('leftSpace:')) {
+                    const result = data.slice(10); // "leftSpace:" 长度是 10
+                    updateSubtitle("Fast局域网传输工具\n手机剩余空间：" + result);
+                } else {
+                    // 处理数据（JSON 示例）
+                    try {
+                        //handleMessage(jsonData);
+                    } catch (e) {
+                        console.error('WebSocket 消息解析失败', e);
+                    }
                 }
             };
     
@@ -43,23 +49,24 @@
             // 连接关闭
             socket.onclose = (event) => {
                 console.log('WebSocket 连接关闭 todo 占据关闭:', event.code, event.reason);
-                startHeartbeat();
                 //if (!event.wasClean) {
                     // 非正常关闭时尝试重连
                     //reconnect();
                 //}
+                showConnectionError();
             };
 
             return true;
         } catch(e) {
             console.error("create websocket error", e);
+            showConnectionError();
         }
         
         return false;
     }
 
     async function startWebSocket() {
-        wsCntInterval = 60 * 1000;
+        wsCntInterval = 5 * 1000;
         wsCntCount++;
         console.log(`start WebSocket 循环执行次数: ${wsCntCount}`);
         let response = null;

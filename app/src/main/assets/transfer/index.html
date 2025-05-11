@@ -154,7 +154,6 @@
 <script src="mydroid-uploadfile.js"></script>
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
-<script src="mydroid-heartbeat.js"></script>
 <script src="mydroid-websockets.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
@@ -225,7 +224,6 @@
     }
 
     window.updateSubtitle = updateSubtitle;
-    startHeartbeat();
     startWsConnect();
 
     function showConnectionError(message) {

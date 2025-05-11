@@ -8,7 +8,6 @@ import com.allan.androidlearning.transfer.benas.WebSocketIpPortResponseInfo
 import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.logdNoFile
-import com.au.module_android.utilsmedia.getExternalFreeSpace
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
@@ -104,7 +103,6 @@ class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>,
         return when (session.uri) {
             "/upload-chunk" -> chunksMgr.handleUploadChunk(session)
             "/merge-chunks" -> chunksMgr.handleMergeChunk(session)
-            "/read-left-space" -> newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, getExternalFreeSpace(Globals.app))
             "/read-websocket-ip-port" -> getWebsocketIpPort()
             else -> newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
         }

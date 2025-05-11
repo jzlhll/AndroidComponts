@@ -11,9 +11,8 @@ import java.util.concurrent.Executors
 
 class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
     companion object {
-        const val HEARTBEAT_INTERVAL: Long = 2 * 60 * 1000
-        const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 30 * 1000
-        val PING_PAYLOAD = "p".toByteArray()
+        const val HEARTBEAT_INTERVAL: Long = 45 * 1000
+        const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 15 * 1000
     }
 
     private val executor = Executors.newSingleThreadExecutor()

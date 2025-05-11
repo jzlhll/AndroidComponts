@@ -1,7 +1,11 @@
 package com.allan.androidlearning.transfer
 
+import com.au.module_android.Globals
+import com.au.module_android.api.ResultBean
+import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.unsafeLazy
+import com.au.module_android.utilsmedia.getExternalFreeSpace
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
 import fi.iki.elonen.NanoWSD.WebSocketFrame
@@ -9,7 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-open class MyDroidWebSocket(val httpSession: NanoHTTPD.IHTTPSession, var httpServer: MyDroidWebSocketServer) : NanoWSD.WebSocket(httpSession) {
+open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession, var httpServer: MyDroidWebSocketServer) : NanoWSD.WebSocket(httpSession) {
     private val cTag by unsafeLazy {
         val str = this@MyDroidWebSocket.toString()
         str.substring(str.indexOf("@") + 1)
@@ -24,11 +28,13 @@ open class MyDroidWebSocket(val httpSession: NanoHTTPD.IHTTPSession, var httpSer
             while (isActive) {
                 logdNoFile { "$cTag heartbeat!" }
                 try {
-                    ping(MyDroidWebSocketServer.PING_PAYLOAD)
+                    //ping(MyDroidWebSocketServer.PING_PAYLOAD)
+                    val leftSpace = getExternalFreeSpace(Globals.app)
+                    send(ResultBean(CODE_SUC, "", "leftSpace:$leftSpace").toJsonString())
+                    delay(MyDroidWebSocketServer.HEARTBEAT_INTERVAL)
                 } catch (e: IOException) {
                     onException(e)
                 }
-                delay(MyDroidWebSocketServer.HEARTBEAT_INTERVAL)
             }
         }
     }
