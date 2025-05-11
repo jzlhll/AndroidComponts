@@ -16,10 +16,15 @@
     window.myDroidTraverse = function myDroidTraverse(obj) {
         for (const key in obj) {
             if (typeof obj[key] === 'object') {
+                console.log(`${key}--`);
                 myDroidTraverse(obj[key]);
             } else {
                 console.log(`${key}: ${obj[key]}`);
             }
         }
+    }
+
+    window.isValidString = function isValidString(value) {
+        return typeof value === 'string' && value.length > 0;
     }
 })();

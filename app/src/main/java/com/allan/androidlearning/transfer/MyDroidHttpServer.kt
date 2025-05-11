@@ -2,7 +2,11 @@ package com.allan.androidlearning.transfer
 
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.lifecycle.LiveData
+import com.allan.androidlearning.transfer.benas.IpInfo
+import com.allan.androidlearning.transfer.benas.WebSocketIpPortResponseInfo
 import com.au.module_android.Globals
+import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utilsmedia.getExternalFreeSpace
 import fi.iki.elonen.NanoHTTPD
@@ -25,7 +29,9 @@ interface IMyDroidHttpServer {
     fun startPeriodWork()
 }
 
-class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTTPD(port), IMyDroidHttpServer {
+class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>,
+                        httpPort: Int,
+                        fileMergedSucCallback:(File)->Unit) : NanoHTTPD(httpPort), IMyDroidHttpServer {
     private val handleThread: HandlerThread
     private val handle: Handler
 
@@ -95,16 +101,26 @@ class MyDroidHttpServer(port: Int, fileMergedSucCallback:(File)->Unit) : NanoHTT
     }
 
     private fun handlePostRequest(session: IHTTPSession): Response {
-        if (session.uri == "/upload-chunk") {
-            return chunksMgr.handleUploadChunk(session)
+        return when (session.uri) {
+            "/upload-chunk" -> chunksMgr.handleUploadChunk(session)
+            "/merge-chunks" -> chunksMgr.handleMergeChunk(session)
+            "/read-left-space" -> newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, getExternalFreeSpace(Globals.app))
+            "/read-websocket-ip-port" -> getWebsocketIpPort()
+            else -> newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
         }
-        if (session.uri == "/merge-chunks") {
-            return chunksMgr.handleMergeChunk(session)
+    }
+
+    private fun getWebsocketIpPort() : Response{
+        val ip = ipPortLiveData.value?.ip
+        val wsPort = ipPortLiveData.value?.webSocketPort
+
+        return if (ip != null && wsPort != null) {
+            val info = WebSocketIpPortResponseInfo(ip, wsPort)
+            logdNoFile { "get websocket ipPort $info" }
+            ResultBean<WebSocketIpPortResponseInfo>(CODE_SUC, "Success!", info).okJsonResponse()
+        } else {
+            newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
         }
-        if (session.uri == "/read-left-space") {
-            return newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, getExternalFreeSpace(Globals.app))
-        }
-        return newFixedLengthResponse("Invalid request from AppServer")
     }
 
     private fun serveAssetFile(assetFile: String, replacementBlock:((String)->String) = { it }) : Response {

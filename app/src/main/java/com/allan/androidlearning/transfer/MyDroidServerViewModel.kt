@@ -3,6 +3,9 @@ package com.allan.androidlearning.transfer
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.allan.androidlearning.transfer.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
+import com.allan.androidlearning.transfer.benas.IpInfo
+import com.allan.androidlearning.transfer.benas.MergedFileInfo
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.getFileMD5
 import com.au.module_android.utils.launchOnThread
@@ -18,23 +21,39 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-
 class MyDroidServerViewModel : ViewModel() {
     init {
         logt { "MyDroidServerViewModel init" }
     }
-    val ipPortData = NoStickLiveData<Pair<String, String>>()
+
+    /**
+     * first是IP。second是Port。Third是websocket Port。
+     */
+    val ipPortData = NoStickLiveData<IpInfo>()
     var isSuccessOpenServer = false
 
-    private var httpServer: MyDroidHttpServer? = null
-    private var mLastRandomServerPort = 10595
+    private var httpServer: MyDroidHttpServer?= null
+    private var websocketServer: MyDroidWebSocketServer?= null
+
+    private var mLastHttpServerPort = 10595
+    private var mLastWsServerPort = 15595
 
     fun findAvailablePort(): Int {
-        while (mLastRandomServerPort < 65535) {
+        while (mLastHttpServerPort < 65535) {
             try {
-                ServerSocket(mLastRandomServerPort).close()
-                return mLastRandomServerPort
-            } catch (_: IOException) { mLastRandomServerPort++ }
+                ServerSocket(mLastHttpServerPort).close()
+                return mLastHttpServerPort
+            } catch (_: IOException) { mLastHttpServerPort++ }
+        }
+        return -1
+    }
+
+    fun findAvailableWsPort(): Int {
+        while (mLastWsServerPort < 65535) {
+            try {
+                ServerSocket(mLastWsServerPort).close()
+                return mLastWsServerPort
+            } catch (_: IOException) { mLastWsServerPort++ }
         }
         return -1
     }
@@ -42,18 +61,25 @@ class MyDroidServerViewModel : ViewModel() {
     @MainThread
     fun startServer(transferInfoCallback:((String)->Unit)?, fileMergedSucCallback:(File)->Unit, errorCallback:(String)->Unit) {
         val p = findAvailablePort()
-        httpServer = MyDroidHttpServer(p, fileMergedSucCallback).also {
+        val wsPort = findAvailableWsPort()
+        httpServer = MyDroidHttpServer(ipPortData, p, fileMergedSucCallback).also {
             it.transferInfoCallback = transferInfoCallback
         }
+        websocketServer = MyDroidWebSocketServer(wsPort)
+
         try {
-            logt { "start server with port: $p..." }
+            logt { "start server with port: $p, wsPort: $wsPort" }
             httpServer?.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+            websocketServer?.start(WEBSOCKET_READ_TIMEOUT.toInt(), false)
+
             isSuccessOpenServer = true
-            val ip = ipPortData.realValue?.first ?: ""
-            val target = ip to "" + p
-            ipPortData.setValueSafe(target)
+            val realValue = ipPortData.realValue ?: IpInfo("", null, null)
+            realValue.httpPort = p
+            realValue.webSocketPort = wsPort
+            logt { "start server and websocket success and setPort $realValue" }
+            ipPortData.setValueSafe(realValue)
         } catch (e: IOException) {
-            val msg = "Port $p occupied ${e.message}"
+            val msg = "Port $p WsPort $wsPort occupied ${e.message}"
             loge { msg }
             errorCallback(msg)
         }
@@ -61,6 +87,7 @@ class MyDroidServerViewModel : ViewModel() {
 
     fun stopServer() {
         httpServer?.closeAllConnections()
+        websocketServer?.closeAllConnections()
     }
 
     fun formatSize(bytes: Long): String {

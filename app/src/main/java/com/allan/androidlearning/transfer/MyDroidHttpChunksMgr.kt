@@ -1,5 +1,6 @@
 package com.allan.androidlearning.transfer
 
+import com.allan.androidlearning.transfer.benas.ChunkInfo
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.ALogJ
 import com.au.module_android.utils.getFileMD5

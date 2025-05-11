@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import com.allan.androidlearning.activities2.MyDroidTransferFragment
 import com.allan.androidlearning.databinding.HolderMydroidFileitemBinding
+import com.allan.androidlearning.transfer.benas.MergedFileInfo
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ignoreError

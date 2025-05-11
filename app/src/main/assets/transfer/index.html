@@ -154,7 +154,8 @@
 <script src="mydroid-uploadfile.js"></script>
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
-<script src="mydroid-heartbit.js"></script>
+<script src="mydroid-heartbeat.js"></script>
+<script src="mydroid-websockets.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
@@ -225,6 +226,7 @@
 
     window.updateSubtitle = updateSubtitle;
     startHeartbeat();
+    startWsConnect();
 
     function showConnectionError(message) {
         const overlay = document.getElementById('overlayView');

@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidServerViewModel
 import com.allan.androidlearning.transfer.MyDroidTransferFileListMgr
+import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -85,13 +86,13 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
 
         viewModel = ViewModelProvider(requireActivity())[MyDroidServerViewModel::class.java]
 
-        viewModel.ipPortData.observe(this) { pair->
-            if (pair.second.isEmpty()) {
-                binding.title.text = pair.first
+        viewModel.ipPortData.observe(this) { info->
+            if (info.httpPort == null) {
+                binding.title.text = info.ip
             } else if (viewModel.isSuccessOpenServer) {
-                binding.title.text = "局域网内访问：" + pair.first + ":" + pair.second
+                binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
             } else {
-                binding.title.text = pair.first + ":" + pair.second
+                binding.title.text = info.ip + ":" + info.httpPort
             }
         }
 
@@ -131,7 +132,7 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     private fun startServer() {
-        logdNoFile { "viewModel11 ${viewModel.ipPortData}" }
+        logdNoFile { "viewModel11 ${viewModel.ipPortData.realValue}" }
         viewModel.startServer(
             transferInfoCallback = { transferInfo->
                 lifecycleScope.launch {
@@ -212,10 +213,9 @@ class MyDroidTransferFragment : BindingFragment<FragmentMyDroidBinding>() {
                         }
                     }
 
-                    viewModel.ipPortData.setValueSafe(
-                        sb.toString() to
-                                (viewModel.ipPortData.realValue?.second ?: "")
-                    )
+                    val realValue = viewModel.ipPortData.realValue ?: IpInfo("", null, null)
+                    realValue.ip = sb.toString()
+                    viewModel.ipPortData.setValueSafe(realValue)
                 }
             }
             val networkRequest = NetworkRequest.Builder()
