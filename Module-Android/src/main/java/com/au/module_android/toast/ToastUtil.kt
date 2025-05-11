@@ -266,7 +266,7 @@ abstract class AbsToastBuilder {
     }
 
     fun toast() : View? {
-        if (decorView == null) {
+        if (mLaterTs == 0L && decorView == null) {
             return null
         }
         return toastPopup()
