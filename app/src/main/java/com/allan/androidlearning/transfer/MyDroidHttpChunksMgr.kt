@@ -4,7 +4,6 @@ import com.allan.androidlearning.transfer.benas.ChunkInfo
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.ALogJ
 import com.au.module_android.utils.getFileMD5
-import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logt
 import fi.iki.elonen.NanoHTTPD.IHTTPSession
@@ -13,7 +12,7 @@ import fi.iki.elonen.NanoHTTPD.Response.Status
 import org.json.JSONObject
 import java.io.File
 
-class MyDroidHttpChunksMgr(val server: MyDroidHttpServer, private val fileMergedSucCallback:(File)->Unit) : IChunkMgr{
+class MyDroidHttpChunksMgr() : IChunkMgr{
     val filesMap = HashMap<String, String>() // 存放临时文件路径
 
     /**
@@ -21,6 +20,10 @@ class MyDroidHttpChunksMgr(val server: MyDroidHttpServer, private val fileMerged
      */
     val fileChunkInfosMap = HashMap<String, ArrayList<ChunkInfo>>()
     val fileChunkLock = Any()
+    
+    private fun transferInfoCallback(info:String) {
+        MyDroidGlobalService.onTransferInfoData.setValueSafe(info)
+    }
 
     private fun addChunkInfo(chunkInfo: ChunkInfo) {
         synchronized(fileChunkLock) {
@@ -73,13 +76,13 @@ class MyDroidHttpChunksMgr(val server: MyDroidHttpServer, private val fileMerged
             val chunkInfo = ChunkInfo(fileName, chunkIndex, totalChunks, md5, chunkTmpFile)
             addChunkInfo(chunkInfo)
 
-            server.transferInfoCallback?.invoke("$fileName: $shortMd5 $chunkIndex/$totalChunks")
+            transferInfoCallback("$fileName: $shortMd5 $chunkIndex/$totalChunks")
 
             return ResultBean(CODE_SUC,
                 "$fileName Chunk $chunkIndex/$totalChunks received success.", chunkInfo).okJsonResponse()
         } catch (e: Exception) {
             logd { ALogJ.ex(e) }
-            server.transferInfoCallback?.invoke("$fileName Chunk $chunkIndex/$totalChunks received failed!")
+            transferInfoCallback("$fileName Chunk $chunkIndex/$totalChunks received failed!")
             return ResultBean<ChunkInfo>(
                 CODE_FAIL_RECEIVER_CHUNK,
                 "$fileName Chunk $chunkIndex/$totalChunks received failed!",
@@ -100,15 +103,15 @@ class MyDroidHttpChunksMgr(val server: MyDroidHttpServer, private val fileMerged
         }
         logt { "handle Merge Chunk $fileName , $md5 , totalChunks:$totalChunks" }
 
-        server.transferInfoCallback?.invoke("$fileName: $shortMd5 $totalChunks 合并中...")
+        transferInfoCallback("$fileName: $shortMd5 $totalChunks 合并中...")
         val chunkInfoList = removeChunkInfoList(fileName)
         if (chunkInfoList == null) {
-            server.transferInfoCallback?.invoke("$fileName: $shortMd5 No chunks?")
+            transferInfoCallback("$fileName: $shortMd5 No chunks?")
             return ResultBean<ChunkInfo>(CODE_FAIL_MERGE_CHUNK, "No chunks?", null).jsonResponse(Status.OK)
         }
         chunkInfoList.sortBy { it.chunkIndex }
         if (chunkInfoList.size != totalChunks) {
-            server.transferInfoCallback?.invoke("$fileName: $shortMd5 Chunks number not match.")
+            transferInfoCallback("$fileName: $shortMd5 Chunks number not match.")
             return ResultBean<ChunkInfo>(CODE_FAIL_MERGE_CHUNK, "Chunks number not match.", null).jsonResponse(Status.OK)
         }
         val outputFileStr = nanoTempCacheMergedDir() + File.separatorChar + fileName
@@ -132,16 +135,14 @@ class MyDroidHttpChunksMgr(val server: MyDroidHttpServer, private val fileMerged
         // MD5 校验（需自行实现校验逻辑）
         val fileMd5 = getFileMD5(outputFile.absolutePath)
         if (fileMd5 == md5) {
-            ignoreError {
-                fileMergedSucCallback(outputFile)
-            }
+            MyDroidGlobalService.onFileMergedData.setValueSafe(outputFile)
 
-            server.transferInfoCallback?.invoke("$fileName: $shortMd5 传输成功，md5检验通过！")
+            transferInfoCallback("$fileName: $shortMd5 传输成功，md5检验通过！")
             return ResultBean<ChunkInfo>(CODE_SUC,
                 "文件合并完成且校验通过", null).okJsonResponse()
         } else {
             outputFile.delete()
-            server.transferInfoCallback?.invoke("$fileName: $shortMd5 md5 check failed.")
+            transferInfoCallback("$fileName: $shortMd5 md5 check failed.")
             return ResultBean<ChunkInfo>(CODE_FAIL_MD5_CHECK,
                 "MD5校验失败", null).okJsonResponse()
         }

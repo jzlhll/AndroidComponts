@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.au.module_android.widget.CustomFontText
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/endGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.BgBuildLinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:backgroundNormal="@color/color_normal_block2"
+        app:cornerRadius="24dp"
+        app:layout_constraintEnd_toEndOf="@id/endGuide"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/startGuide"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.au.module_android.widget.CustomButton
+            android:elevation="4dp"
+            android:id="@+id/sendLogicBtn"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="文件接收"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            app:backgroundNormal="@color/logic_receiver"
+            app:cornerRadius="16dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:elevation="4dp"
+            android:id="@+id/receiveLogicBtn"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="文件发送"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            app:backgroundNormal="@color/logic_send"
+            app:cornerRadius="16dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:elevation="4dp"
+            android:id="@+id/middleLogicBtn"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="中转站"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            app:backgroundNormal="@color/logic_middle"
+            app:cornerRadius="16dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"/>
+    </com.au.module_android.widget.BgBuildLinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

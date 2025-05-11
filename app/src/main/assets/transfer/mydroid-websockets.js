@@ -3,6 +3,16 @@
     let wsCntInterval = 1000;
     let wsCntIntervalId = null;
 
+    let mRandom8bitName = null;
+    function getRandomName() {
+        if (mRandom8bitName) {
+            return mRandom8bitName;
+        }
+        const n = generateUUID();
+        mRandom8bitName = n.substring(0, 6);
+        return mRandom8bitName;
+    }
+
     // 停止定时器
     function stopWebSocketInterval() {
         if (wsCntIntervalId) {
@@ -20,7 +30,7 @@
             socket.onopen = (event) => {
                 console.log('WebSocket 连接已建立');
                 // 发送初始数据
-                socket.send('客户端就绪');
+                socket.send('websocket client init:' + getRandomName());
             };
     
             // 接收消息

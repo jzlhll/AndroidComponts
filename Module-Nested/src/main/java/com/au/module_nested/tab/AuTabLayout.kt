@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -30,6 +31,12 @@ class AuTabLayout : TabLayout {
         attrs,
         defStyleAttr
     )
+
+    @ColorRes
+    var tabNotSelectColor:Int = R.color.color_tab_text_no_select
+    
+    @ColorRes
+    var tabSelectTextColor:Int = R.color.color_tab_text_select
 
     inline fun attachViewPager2(
         viewPage2: ViewPager2,
@@ -76,9 +83,9 @@ class AuTabLayout : TabLayout {
             tv.text = pages[position].first
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             val colorId = if (viewPage2.currentItem == position)
-                R.color.color_tab_text_select
+                tabSelectTextColor
             else
-                R.color.color_tab_text_no_select
+                tabNotSelectColor
 
             tv.setTextColor(ContextCompat.getColor(tv.context, colorId))
             tab.customView = tv
@@ -91,12 +98,12 @@ class AuTabLayout : TabLayout {
         addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
                 val v = tab?.customView.asOrNull<TextView>()
-                v?.setTextColor(ContextCompat.getColor(v.context, R.color.color_tab_text_select))
+                v?.setTextColor(ContextCompat.getColor(v.context, tabSelectTextColor))
             }
 
             override fun onTabUnselected(tab: Tab?) {
                 val v = tab?.customView.asOrNull<TextView>()
-                v?.setTextColor(ContextCompat.getColor(v.context, R.color.color_tab_text_no_select))
+                v?.setTextColor(ContextCompat.getColor(v.context, tabNotSelectColor))
             }
 
             override fun onTabReselected(tab: Tab?) {
@@ -112,9 +119,9 @@ class AuTabLayout : TabLayout {
         tv.text = text
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
         val colorId = if (initSelect)
-            R.color.color_tab_text_select
+            tabSelectTextColor
         else
-            R.color.color_tab_text_no_select
+            tabNotSelectColor
 
         tv.setTextColor(ContextCompat.getColor(tv.context, colorId))
         tab.customView = tv

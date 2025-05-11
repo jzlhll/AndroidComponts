@@ -19,7 +19,23 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
     private val singleThreadDispatcher = executor.asCoroutineDispatcher()
     val heartbeatScope = CoroutineScope(singleThreadDispatcher)
 
-    val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
+    private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
+
+    fun addIntoConnections(websocket:MyDroidWebSocket) {
+        connections.add(websocket)
+    }
+
+    fun removeFromConnections(websocket: MyDroidWebSocket) {
+        connections.remove(websocket)
+    }
+
+    fun getAllClientsInfo() : String {
+        val sb = StringBuilder()
+        connections.forEach {
+            sb.append(it.remoteIpStr).append("@").append(it.clientRandomCode)
+        }
+        return sb.toString()
+    }
 
     override fun openWebSocket(handshake: IHTTPSession): WebSocket {
         var uri = handshake.uri

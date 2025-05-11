@@ -28,9 +28,7 @@ interface IMyDroidHttpServer {
     fun startPeriodWork()
 }
 
-class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>,
-                        httpPort: Int,
-                        fileMergedSucCallback:(File)->Unit) : NanoHTTPD(httpPort), IMyDroidHttpServer {
+class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>, httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
     private val handleThread: HandlerThread
     private val handle: Handler
 
@@ -45,9 +43,7 @@ class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>,
         handle = Handler(handleThread.looper)
     }
 
-    var transferInfoCallback:((String)->Unit)? =null
-
-    private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr(this, fileMergedSucCallback)
+    private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)

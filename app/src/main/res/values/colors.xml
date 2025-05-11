@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="logic_receiver">#9D2929</color>
+    <color name="logic_send">#3D7C42</color>
+    <color name="logic_middle">#246257</color>
 </resources>

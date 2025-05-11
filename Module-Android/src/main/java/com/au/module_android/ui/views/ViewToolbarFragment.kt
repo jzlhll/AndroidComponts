@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.CallSuper
+import com.au.module_android.R
 import com.au.module_android.ui.ToolbarManager
 import com.au.module_android.ui.base.AbsFragment
 import com.au.module_android.ui.base.IUi
@@ -44,8 +45,8 @@ abstract class ViewToolbarFragment : AbsFragment(), IUi, IHasToolbar {
         val info = toolbarInfo()
         if (info != null) {
             if(info.title != null) requireActivity().title = info.title //before create toolbar
-
-            val vb = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon)
+            val bgColor = info.backgroundColor ?: R.color.color_toolbar_background
+            val vb = createToolbarLayout(layoutInflater.context, v, info.hasBackIcon, bgColor)
 
             _realRoot = vb.root
             _toolbar = vb.toolbar

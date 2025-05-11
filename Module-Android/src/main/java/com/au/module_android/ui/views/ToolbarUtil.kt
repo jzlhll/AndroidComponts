@@ -12,18 +12,22 @@ import com.au.module_android.databinding.ToolbarActivityLayoutBinding
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.widget.CustomToolbar
 
-internal fun createToolbarLayout(context: Context, contentView:View, hasNavIcon: Boolean) : ToolbarActivityLayoutBinding {
+internal fun createToolbarLayout(context: Context, contentView:View,
+                                 hasNavIcon: Boolean,
+                                 backgroundColor:Int = R.color.color_toolbar_background) : ToolbarActivityLayoutBinding {
     val vb = ToolbarActivityLayoutBinding.inflate(LayoutInflater.from(context))
     val rl = vb.root
     val toolbar = vb.toolbar
     rl.addView(contentView, RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT).also {
         it.addRule(RelativeLayout.BELOW, toolbar.id)
     })
-    initToolBar(context, toolbar, hasNavIcon)
+    initToolBar(context, toolbar, hasNavIcon, backgroundColor)
     return vb
 }
 
-fun initToolBar(context: Context, toolbar: CustomToolbar, hasNavIcon:Boolean) {
+fun initToolBar(context: Context, toolbar: CustomToolbar,
+                hasNavIcon:Boolean,
+                backgroundColor:Int = R.color.color_toolbar_background) {
     if (context !is AppCompatActivity) throw RuntimeException()
     toolbar.apply {
         if (context.supportActionBar == null) {
@@ -31,7 +35,7 @@ fun initToolBar(context: Context, toolbar: CustomToolbar, hasNavIcon:Boolean) {
         }
         //设置标题居中
         isTitleCentered = true
-        setBackgroundResource(R.color.color_toolbar_background)
+        setBackgroundResource(backgroundColor)
         if (hasNavIcon) {
             val drawable = ContextCompat.getDrawable(context, com.au.module_androidcolor.R.drawable.toolbarLogo)
             navigationIcon = drawable
