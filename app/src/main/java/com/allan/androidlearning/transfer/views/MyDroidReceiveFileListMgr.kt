@@ -14,8 +14,8 @@ import com.au.module_android.utils.launchOnThread
 import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
-class MyDroidTransferFileListMgr(val f: MyDroidReceiverFragment) {
-    val adapter = MyDroidTransferFileListAdapter(f)
+class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
+    val adapter = MyDroidReceiveFileListAdapter(f)
 
     fun initRcv() {
         f.apply {

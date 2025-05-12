@@ -13,12 +13,12 @@ import com.au.module_android.utilsmedia.shareFile
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
-class MyDroidTransferViewHolder(binding: HolderMydroidFileitemBinding) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
+class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
     init {
         binding.downloadBtn.onClick {
             val d = currentData ?: return@onClick
             val file = d.file
-            val fragmentMgr = (bindingAdapter as MyDroidTransferFileListAdapter).f.childFragmentManager
+            val fragmentMgr = (bindingAdapter as MyDroidReceiveFileListAdapter).f.childFragmentManager
 
             FragmentBottomSheetDialog.show<ExportSelectActionDialog>(fragmentMgr, bundleOf("file" to file))
         }
