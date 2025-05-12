@@ -40,7 +40,7 @@
 
         <com.au.module_android.widget.CustomButton
             android:elevation="4dp"
-            android:id="@+id/sendLogicBtn"
+            android:id="@+id/receiveFileLogicBtn"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginHorizontal="24dp"
@@ -54,7 +54,7 @@
 
         <com.au.module_android.widget.CustomButton
             android:elevation="4dp"
-            android:id="@+id/receiveLogicBtn"
+            android:id="@+id/sendFileLogicBtn"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginHorizontal="24dp"

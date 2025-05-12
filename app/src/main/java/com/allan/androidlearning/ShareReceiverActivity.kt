@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.allan.androidlearning.activities2.MyDroidTransferFragment
+import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
 import com.au.module_android.Globals
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.views.ViewActivity
@@ -15,7 +15,6 @@ import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.parcelableArrayExtraCompat
 import com.au.module_android.utils.parcelableExtraCompat
-import com.au.module_android.utils.serializableExtraCompat
 
 class ShareReceiverActivity : ViewActivity() {
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -61,10 +60,10 @@ class ShareReceiverActivity : ViewActivity() {
         if (activityCount > 0) {
             //已经存在；直接发送
             val found = Globals.activityList.find {
-                it.asOrNull<FragmentShellActivity>()?.fragmentClass == MyDroidTransferFragment::class.java }
+                it.asOrNull<FragmentShellActivity>()?.fragmentClass == MyDroidReceiverFragment::class.java }
             if (found != null) {
             } else {
-                FragmentShellActivity.start(this, MyDroidTransferFragment::class.java, Bundle().also {
+                FragmentShellActivity.start(this, MyDroidReceiverFragment::class.java, Bundle().also {
                     it.putParcelableArray("receiverUri", uri.toTypedArray())
                 })
             }
