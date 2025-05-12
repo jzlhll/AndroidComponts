@@ -94,12 +94,16 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         }
 
         MyDroidGlobalService.ipPortData.observe(this) { info->
-            if (info.httpPort == null) {
-                binding.title.text = info.ip
-            } else if (MyDroidGlobalService.isSuccessOpenServer) {
-                binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
+            if (info == null || info.ip.isEmpty()) {
+                binding.title.text = "请连接WI-FI或者开启热点"
             } else {
-                binding.title.text = info.ip + ":" + info.httpPort
+                if (info.httpPort == null) {
+                    binding.title.text = info.ip
+                } else if (MyDroidGlobalService.isSuccessOpenServer) {
+                    binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
+                } else {
+                    binding.title.text = info.ip + ":" + info.httpPort
+                }
             }
         }
 

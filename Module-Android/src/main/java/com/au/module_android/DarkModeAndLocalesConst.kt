@@ -130,10 +130,10 @@ object DarkModeAndLocalesConst {
     private fun createConfigContext(context: Context?, uiModeFollowSys:Boolean, localFollowSys:Boolean, fromTag:String = "") : Context? {
         context ?: return null
         val configuration = Configuration(Resources.getSystem().configuration) //一定要拷贝一份，避免污染getSystem
-        logdNoFile(tag = TAG) { "----$fromTag----create Config Context: " +
-                "cloned: ${configuration.uiMode} ${configuration.locales.get(0)} " +
-                "sys: " + Resources.getSystem().configuration.uiMode + " " + Resources.getSystem().configuration.locales.get(0)
-        }
+//        logdNoFile(tag = TAG) { "----$fromTag----create Config Context: " +
+//                "cloned: ${configuration.uiMode} ${configuration.locales.get(0)} " +
+//                "sys: " + Resources.getSystem().configuration.uiMode + " " + Resources.getSystem().configuration.locales.get(0)
+//        }
 
         if (!localFollowSys) {
             val localeKey = spCurrentLocaleKey(context)
@@ -152,7 +152,7 @@ object DarkModeAndLocalesConst {
             }
         }
 
-        logdNoFile(tag = TAG) { "---created Config Context: new is: ${configuration.uiMode} ${configuration.locales.get(0)}" }
+        //logdNoFile(tag = TAG) { "---created Config Context: new is: ${configuration.uiMode} ${configuration.locales.get(0)}" }
         return context.createConfigurationContext(configuration)
     }
 

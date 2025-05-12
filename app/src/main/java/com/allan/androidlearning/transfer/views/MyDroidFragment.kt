@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.classnameanno.EntryFrgName
@@ -13,11 +15,18 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.startActivityFix
+import com.au.module_android.utils.visible
+import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @EntryFrgName(priority = 12)
 class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
+    var waitDialog:ConfirmBottomSingleDialog? = null
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.receiveFileLogicBtn.onClick {
             if (ifGotoMgrAll()) {
@@ -34,7 +43,49 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
         }
 
         MyDroidGlobalService.ipPortData.observe(this) {
-            binding.title.text = it.ip + ":" + it.httpPort
+            if (it == null || it.ip.isEmpty()) {
+                binding.title.text = "请连接WI-FI或者开启热点"
+                if (waitDialog == null) {
+                    ConfirmBottomSingleDialog.show(childFragmentManager, "提示",
+                        "即将退出，请连接WI-FI或者开启热点，然后重新进入。",
+                        "OK",
+                        true) { d->
+                        clickOnWaitDialogOk()
+                    }.also { d->
+                        d.isCancelable = false
+                        waitDialog = d
+                    }
+                }
+            } else {
+                binding.title.text = it.ip + ":" + it.httpPort
+                binding.logicBtnsHost.visible()
+                binding.loading.gone()
+                waitDialog?.dismissAllowingStateLoss()
+                waitDialog = null
+            }
+        }
+    }
+
+    private var isWaitOpenWifiOrAp = false
+
+    private fun clickOnWaitDialogOk() {
+        isWaitOpenWifiOrAp = true
+        lifecycleScope.launch {
+            var count = 0
+            while (count++ < 10) {
+                MyDroidGlobalService.getIpAddressAndStartServer()
+                delay(250)
+                waitDialog?.dismissAllowingStateLoss()
+                waitDialog = null
+
+                if (!binding.loading.isVisible) {
+                    break
+                }
+            }
+
+            if (binding.loading.isVisible) {
+                requireActivity().finishAfterTransition()
+            }
         }
     }
 

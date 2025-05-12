@@ -37,13 +37,25 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
     final override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
 
+    /**
+     * 当第一个感兴趣的，onStart触发。后续onStart不触发。
+     */
     abstract fun onLifeOpen()
 
+    /**
+     * 每次有任意一个感兴趣的activity的onStart触发，都会触发。在onLifeOpen之前执行。
+     */
+    abstract fun onLifeOpenEach()
+
+    /**
+     * 当所有感兴趣的activity都onStop，才会触发。
+     */
     abstract fun onLifeClose()
 
     final override fun onActivityStarted(activity: Activity) {
         if (isLifeActivity(activity)) {
             lifeCount++
+            onLifeOpenEach()
             if (lifeCount == 1) {
                 onLifeOpen()
             }
@@ -54,8 +66,9 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
         if (isLifeActivity(activity)) {
             lifeCount--
             if (lifeCount == 0) {
-                scope.cancel()
                 onLifeClose()
+
+                scope.cancel()
             }
         }
     }

@@ -1,9 +1,7 @@
 package com.au.module_android.utils
 
-import android.os.Looper
 import android.util.Log
 import com.au.module_android.BuildConfig
-import java.util.Locale
 
 const val TAG:String = "au"
 var ALWAYS_FILE_LOG = BuildConfig.ENABLE_FILE_LOG_DEFAULT

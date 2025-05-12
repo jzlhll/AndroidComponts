@@ -29,7 +29,7 @@ interface IMyDroidHttpServer {
     fun startPeriodWork()
 }
 
-class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>, httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
+class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo?>, httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
     private val handleThread: HandlerThread
     private val handle: Handler
 
@@ -112,7 +112,7 @@ class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>, httpPort: Int) : N
         return if (ip != null && wsPort != null) {
             val info = WebSocketIpPortResponseInfo(ip, wsPort)
             logdNoFile { "get websocket ipPort $info" }
-            ResultBean<WebSocketIpPortResponseInfo>(CODE_SUC, "Success!", info).okJsonResponse()
+            ResultBean(CODE_SUC, "Success!", info).okJsonResponse()
         } else {
             newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
         }
@@ -146,6 +146,7 @@ class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo>, httpPort: Int) : N
     }
 
     override fun stop() {
+        logdNoFile { "stop all." }
         handle.removeCallbacksAndMessages(null)
         handleThread.quit()
         super.stop()
