@@ -50,7 +50,9 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
                         "即将退出，请连接WI-FI或者开启热点，然后重新进入。",
                         "OK",
                         true) { d->
-                        clickOnWaitDialogOk()
+                        waitDialog?.dismissAllowingStateLoss()
+                        waitDialog = null
+                        requireActivity().finishAfterTransition()
                     }.also { d->
                         d.isCancelable = false
                         waitDialog = d
@@ -62,29 +64,6 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
                 binding.loading.gone()
                 waitDialog?.dismissAllowingStateLoss()
                 waitDialog = null
-            }
-        }
-    }
-
-    private var isWaitOpenWifiOrAp = false
-
-    private fun clickOnWaitDialogOk() {
-        isWaitOpenWifiOrAp = true
-        lifecycleScope.launch {
-            var count = 0
-            while (count++ < 10) {
-                MyDroidGlobalService.getIpAddressAndStartServer()
-                delay(250)
-                waitDialog?.dismissAllowingStateLoss()
-                waitDialog = null
-
-                if (!binding.loading.isVisible) {
-                    break
-                }
-            }
-
-            if (binding.loading.isVisible) {
-                requireActivity().finishAfterTransition()
             }
         }
     }

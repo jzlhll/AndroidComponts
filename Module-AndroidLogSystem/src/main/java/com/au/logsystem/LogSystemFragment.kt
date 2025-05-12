@@ -10,11 +10,11 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.FileLog
-import com.au.module_android.utilsmedia.MediaHelper
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.invisible
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.visible
+import com.au.module_android.utilsmedia.shareFile
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.toastOnTop
 import kotlinx.coroutines.delay
@@ -48,7 +48,7 @@ class LogSystemFragment : BindingFragment<FragmentLogSystemBinding>(), LogViewAc
             binding.progressPercentText.text = "" + it.progress + "%"
             binding.progressText.text = it.info
             if (it.progress == 100 && it.file != null) {
-                MediaHelper().shareFile(requireContext(), it.file)
+                shareFile(requireContext(), it.file)
             }
         }
 

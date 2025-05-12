@@ -70,6 +70,7 @@ dependencies {
     implementation project(":Module-ImageCompressed")
     //my apt
     implementation project(':ClassNameAnnotations')
+    implementation project(':Module-AndroidLogSystem')
     ksp project(':ClassNameAnnotations-ksp')
 //    kapt project(':ClassNameAnnotations-compiler')
 }

@@ -1,6 +1,11 @@
 package com.allan.androidlearning.transfer
 
 import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import androidx.annotation.MainThread
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
@@ -8,6 +13,7 @@ import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
 import com.allan.androidlearning.transfer.views.MyDroidFragment
 import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
+import com.au.module_android.Globals
 import com.au.module_android.init.InterestActivityCallbacks
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
@@ -112,6 +118,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     }
 
     override fun onLifeOpen() {
+        netRegister()
     }
 
     override fun onLifeOpenEach() {
@@ -123,9 +130,10 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         logdNoFile { "on life close." }
         stopServer()
         ipPortData.setValueSafe(null)
+        netUnregister()
     }
 
-    fun getIpAddressAndStartServer() {
+    private fun getIpAddressAndStartServer() {
         if (getIpAddress()) {
             if (!isSuccessOpenServer) {
                 logdNoFile { "viewModel11 ${ipPortData.realValue}" }
@@ -141,6 +149,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             }
         }
     }
+
     private fun getIpAddress() : Boolean {
         try {
             val interfaces = NetworkInterface.getNetworkInterfaces()
@@ -165,5 +174,30 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         }
         ipPortData.setValueSafe(null)
         return false
+    }
+
+    private val netObserver = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            // 网络可用
+            getIpAddressAndStartServer()
+        }
+        override fun onLost(network: Network) {
+            // 网络丢失
+            stopServer()
+        }
+    }
+
+    private fun netRegister() {
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        val manager = Globals.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        manager.registerNetworkCallback(request, netObserver)
+    }
+
+    private fun netUnregister() {
+        val manager = Globals.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        manager.unregisterNetworkCallback(netObserver)
     }
 }
