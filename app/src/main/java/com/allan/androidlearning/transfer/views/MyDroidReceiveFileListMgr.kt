@@ -33,7 +33,7 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
                 adapter.submitList(fileList, false)
 
                 if (!f.binding.rcv.isVisible) {
-                    f.transferFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
+                    f.receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
                         tabTv.text = f.getString(R.string.transfer_list_2)
                     }
                 }

@@ -9,6 +9,7 @@ import com.allan.androidlearning.transfer.MyDroidGlobalService.isSuccessOpenServ
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.launch
@@ -18,10 +19,12 @@ import java.net.NetworkInterface
 class MyDroidNetworkObserver : IInterestLife {
     private val netObserver = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
+            logdNoFile { "network on Available" }
             // 网络可用
             getIpAddressAndStartServer()
         }
         override fun onLost(network: Network) {
+            logdNoFile { "network on Lost" }
             // 网络丢失
             MyDroidGlobalService.stopServer()
         }
@@ -75,7 +78,7 @@ class MyDroidNetworkObserver : IInterestLife {
 
     fun getIpAddressAndStartServer() {
         val ip = getIpAddress()
-        val ipPortData = MyDroidGlobalService.ipPortOrigData
+        val ipPortData = MyDroidGlobalService.ipPortData
         if (ip.isNullOrEmpty()) {
             ipPortData.setValueSafe(null)
         } else {
@@ -83,7 +86,6 @@ class MyDroidNetworkObserver : IInterestLife {
             v.ip = ip
             logt { "get IpAddress set ip portData $v" }
             ipPortData.setValueSafe(v)
-            MyDroidGlobalService.ipPortOrigData.setValueSafe(v)
 
             if (!isSuccessOpenServer) {
                 MyDroidGlobalService.startServer{ msg->

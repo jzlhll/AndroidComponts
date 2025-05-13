@@ -23,22 +23,17 @@ import java.io.IOException
 import java.net.ServerSocket
 
 object MyDroidGlobalService : InterestActivityCallbacks() {
-    private val _onTransferInfoData = NoStickLiveData<String>()
     /**
      * 传输的信息，类似log。
      */
-    val onTransferInfoData : LiveData<String> = _onTransferInfoData
+    val onTransferInfoData = NoStickLiveData<String>()
 
-    private val _onFileMergedData = NoStickLiveData<File>()
-    val onFileMergedData: LiveData<File> = _onFileMergedData
+    val onFileMergedData = NoStickLiveData<File>()
 
-    private val _ipPortData = NoStickLiveData<IpInfo?>()
-    val ipPortOrigData: NoStickLiveData<IpInfo?>
-        get() = _ipPortData
     /**
      * first是IP。second是Port。Third是websocket Port。
      */
-    val ipPortData: LiveData<IpInfo?> = _ipPortData
+    val ipPortData = NoStickLiveData<IpInfo?>()
 
     var fileExportSuccessCallbacks = ArrayList<((info:String, exportFileStr:String)->Unit)>()
     var fileExportFailCallbacks = ArrayList<((String)->Unit)>()
@@ -84,11 +79,11 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             websocketServer?.start(WEBSOCKET_READ_TIMEOUT.toInt(), false)
 
             isSuccessOpenServer = true
-            val realValue = _ipPortData.realValue ?: IpInfo("", null, null)
+            val realValue = ipPortData.realValue ?: IpInfo("", null, null)
             realValue.httpPort = p
             realValue.webSocketPort = wsPort
             logt { "start server and websocket success and setPort $realValue" }
-            _ipPortData.setValueSafe(realValue)
+            ipPortData.setValueSafe(realValue)
         } catch (e: IOException) {
             val msg = "Port $p WsPort $wsPort occupied ${e.message}"
             loge { msg }
@@ -106,7 +101,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     //////////////////////////life////
 
     private val lifeObservers = ArrayList<IInterestLife>().apply {
-        addObserverEarly(MyDroidNetworkObserver())
+        add(MyDroidNetworkObserver())
     }
 
     override fun isLifeActivity(activity: Activity): Boolean {
@@ -136,7 +131,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     override fun onLifeClose() {
         logdNoFile { "on life close." }
         stopServer()
-        _ipPortData.setValueSafe(null)
+        ipPortData.setValueSafe(null)
         for (life in lifeObservers) {
             life.onLifeClose()
         }

@@ -1,5 +1,6 @@
 package com.allan.androidlearning.transfer.nanohttp
 
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -21,26 +22,36 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
 
     private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
 
+    /**
+     * 用于通知界面更新。告知有多少通过WS接入的client。
+     */
+    val clientListLiveData = NoStickLiveData<List<String>>()
+
     fun addIntoConnections(websocket:MyDroidWebSocket) {
         connections.add(websocket)
+        triggerConnectionsList()
     }
 
     fun removeFromConnections(websocket: MyDroidWebSocket) {
         connections.remove(websocket)
+        triggerConnectionsList()
     }
 
-    fun getAllClientsInfo() : String {
-        val sb = StringBuilder()
+    /**
+     * 触达一下。
+     */
+    fun triggerConnectionsList() {
+        val list = ArrayList<String>()
         connections.forEach {
-            sb.append(it.remoteIpStr).append("@").append(it.clientRandomCode)
+            list.add(it.remoteIpStr + "@" + it.clientTellName)
         }
-        return sb.toString()
+        clientListLiveData.setValueSafe(list)
     }
 
     override fun openWebSocket(handshake: IHTTPSession): WebSocket {
-        var uri = handshake.uri
+        val uri = handshake.uri
         logdNoFile { "open web Socket handshake uri: $uri" }
-        uri = uri.replaceFirst("/", "", true)
+        //uri = uri.replaceFirst("/", "", true)
         return MyDroidWebSocket(handshake, this)
     }
 

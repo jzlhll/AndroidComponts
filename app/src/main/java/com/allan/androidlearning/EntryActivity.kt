@@ -56,7 +56,6 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
             }
         }
 
-
         binding.buttonsHost.addView(Space(this), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getScreenFullSize().second / 5))
 
         if (goto == "LiveData") {
@@ -66,7 +65,6 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
         }
     }
 }
-
 
 object NetworkHelperToastMgr {
     private var toastRun:Runnable = Runnable {

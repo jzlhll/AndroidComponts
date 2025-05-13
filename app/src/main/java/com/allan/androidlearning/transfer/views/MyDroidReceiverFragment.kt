@@ -78,7 +78,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         MyDroidGlobalService.fileExportFailCallbacks.add(fileExportFailCallback)
         MyDroidGlobalService.fileExportSuccessCallbacks.add(fileExportSuccessCallback)
 
-        MyDroidGlobalService.onTransferInfoData.observe(this) { info->
+        MyDroidGlobalService.onTransferInfoData.observeUnStick(this) { info->
             binding.transferInfo.text = info
         }
         MyDroidGlobalService.onFileMergedData.observe(this) { file->
