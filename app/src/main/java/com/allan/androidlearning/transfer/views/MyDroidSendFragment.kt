@@ -9,13 +9,14 @@ import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
 import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
-import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
+import com.au.module_android.utils.visible
 
 class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
 
@@ -25,14 +26,26 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         }
 
         MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
-            clientList.forEachIndexed { index, string ->
-                logdNoFile { "client List[$index] = $string" }
+            for (clientBinding in sendClientBindings) {
+                clientBinding.root.gone()
+            }
+
+            clientList.forEachIndexed { index, clientInfo ->
+                logdNoFile { "client List[$index] = $clientInfo" }
                 val item = clientItem(index)
-                item.title.text = string
+                item.title.text = clientInfo.ip + "@" + clientInfo.name
                 item.icon.background = ViewBackgroundBuilder()
-                    .setBackground(requireContext().getColor(R.color.client_send_1 + index))
+                    .setBackground(requireContext().getColor(clientInfo.colorIcon))
                     .setCornerRadius(32f.dp)
                     .build()
+                if (!item.root.isAttachedToWindow) {
+                    binding.clientsHost.addView(item.root)
+                }
+                item.root.visible()
+            }
+
+            sendClientBindings.forEachIndexed { index, binding ->
+                binding.check.isChecked = index == 0
             }
         }
 

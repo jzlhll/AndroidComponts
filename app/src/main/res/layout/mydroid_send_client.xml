@@ -14,7 +14,7 @@
         android:layout_height="24dp"/>
 
     <com.au.module_android.widget.CustomFontText
-        style="@style/StyleMinText"
+        style="@style/StyleFontText"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:layout_marginStart="12dp"
@@ -22,7 +22,7 @@
         android:maxLines="1"
         tools:text="00:00"
         android:layout_width="0dp"
-        android:layout_height="36dp" />
+        android:layout_height="52dp" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/check"

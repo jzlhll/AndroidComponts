@@ -2,13 +2,12 @@ package com.allan.androidlearning.transfer
 
 import android.app.Activity
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
+import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
-import com.allan.androidlearning.transfer.views.MyDroidFragment
 import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
 import com.allan.androidlearning.transfer.views.MyDroidSendFragment
 import com.au.module_android.init.IInterestLife
@@ -28,7 +27,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     /**
      * 用于通知界面更新。告知有多少通过WS接入的client。
      */
-    val clientListLiveData = NoStickLiveData<List<String>>()
+    val clientListLiveData = NoStickLiveData<List<WebSocketClientInfo>>()
 
     /**
      * 当前的模式

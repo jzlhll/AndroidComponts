@@ -1,7 +1,8 @@
 package com.allan.androidlearning.transfer.nanohttp
 
+import androidx.annotation.ColorRes
 import com.allan.androidlearning.transfer.MyDroidGlobalService
-import com.au.module_android.simplelivedata.NoStickLiveData
+import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -13,8 +14,11 @@ import java.util.concurrent.Executors
 
 class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
     companion object {
-        const val HEARTBEAT_INTERVAL: Long = 45 * 1000
+        const val HEARTBEAT_INTERVAL: Long = 60 * 1000
         const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 15 * 1000
+
+        const val PING_PAYLOAD_TEXT = "p"
+        val PING_PAYLOAD = PING_PAYLOAD_TEXT.toByteArray()
     }
 
     private val executor = Executors.newSingleThreadExecutor()
@@ -22,6 +26,25 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
     val heartbeatScope = CoroutineScope(singleThreadDispatcher)
 
     private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
+
+    private var currentColorIconIndex = 0
+    private val colorIconList = listOf(
+        com.allan.androidlearning.R.color.client_send_1,
+        com.allan.androidlearning.R.color.client_send_2,
+        com.allan.androidlearning.R.color.client_send_3,
+        com.allan.androidlearning.R.color.client_send_4,
+        com.allan.androidlearning.R.color.client_send_5,
+        )
+
+    @ColorRes
+    private fun nextColorIcon() : Int{
+        return if(currentColorIconIndex >= colorIconList.size) {
+            currentColorIconIndex = 0
+            colorIconList[currentColorIconIndex]
+        } else {
+            colorIconList[currentColorIconIndex++]
+        }
+    }
 
     fun addIntoConnections(websocket:MyDroidWebSocket) {
         connections.add(websocket)
@@ -37,18 +60,20 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
      * 触达一下。
      */
     fun triggerConnectionsList() {
-        val list = ArrayList<String>()
+        val list = ArrayList<WebSocketClientInfo>()
         connections.forEach {
-            list.add(it.remoteIpStr + "@" + it.clientTellName)
+            list.add(WebSocketClientInfo(it.remoteIpStr ?: "--", it.clientTellName, it.openTs, it.colorIcon))
         }
+        list.sortByDescending { it.enterTs }
         MyDroidGlobalService.clientListLiveData.setValueSafe(list)
     }
 
     override fun openWebSocket(handshake: IHTTPSession): WebSocket {
         val uri = handshake.uri
-        logdNoFile { "open web Socket handshake uri: $uri" }
+        val nextColorIcon = nextColorIcon()
+        logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
-        return MyDroidWebSocket(handshake, this)
+        return MyDroidWebSocket(handshake, this, nextColorIcon())
     }
 
     public override fun serveHttp(session: IHTTPSession): Response {

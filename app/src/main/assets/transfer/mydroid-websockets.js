@@ -42,9 +42,10 @@
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
                 if (data.leftSpace) {
-                    updateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
+                    myHtmlUpdateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
                 } if (data.myDroidMode) {
-                    updateBigTitle(data.myDroidMode + "@" + data.clientName);
+                    const ip = data.ip
+                    myHtmlUpdateBigTitle(data.myDroidMode, ip + "@" + data.clientName);
                 } else {
                     // 处理数据（JSON 示例）
                     try {
@@ -67,13 +68,13 @@
                     // 非正常关闭时尝试重连
                     //reconnect();
                 //}
-                showConnectionError();
+                myHtmlShowConnectError();
             };
 
             return true;
         } catch(e) {
             console.error("create websocket error", e);
-            showConnectionError();
+            myHtmlShowConnectError();
         }
         
         return false;
@@ -94,7 +95,7 @@
             });
         } catch(e) {
             console.error("read websocket ip port error!", e);
-            showConnectionError();
+            myHtmlShowConnectError();
             shouldStopInterval = true;
         }
 

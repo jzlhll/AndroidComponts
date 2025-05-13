@@ -218,21 +218,18 @@
 
     let isUploadingFile = false; //正在上传
 
-    function updateSubtitle(newText) {
+    window.myHtmlUpdateSubtitle = function(newText) {
         const subtitleElement = document.getElementById('subtitle');
         if (subtitleElement) {
             subtitleElement.textContent = newText;
         }
     }
 
-    window.updateSubtitle = updateSubtitle;
-
-    function showConnectionError(message) {
+    window.myHtmlShowConnectError = function(message) {
         const overlay = document.getElementById('overlayView');
         overlay.style.display = 'flex';
         document.body.style.overflow = 'hidden'; // 禁止页面滚动
     }
-    window.showConnectionError = showConnectionError;
 
     function requireNotUploading(continueCallback) {
         if (isUploadingFile) {
@@ -257,6 +254,11 @@
             selectedFile = e.dataTransfer.files[0];
             showFileInfo();
         });
+    }
+    
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('dropZone').classList.add('dragover');
     }
 
     function showFileInfo() {
@@ -331,16 +333,11 @@
         fileListDiv.textContent = text;
     }
 
-    function changeProgressVisible(visible) {
+    window.myHtmlChangeProgressVisible = function(visible) {
         if(visible) 
             document.querySelector('.progress-container').style.display = 'block';
         else 
             document.querySelector('.progress-container').style.display = 'none';
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        document.getElementById('dropZone').classList.add('dragover');
     }
 
     // 显示文件列表区域的函数
@@ -434,7 +431,7 @@
         }
 
         updateProgress(0);
-        changeProgressVisible(false);
+        myHtmlChangeProgressVisible(false);
     }
 
     function updateProgress(percent) {
@@ -466,8 +463,8 @@
         }
     }
 
-    window.updateBigTitle = function(title) {
-        document.getElementById('bigTitle').textContent = title;
+    window.myHtmlUpdateBigTitle = function(mode, ipAndRandomCode) {
+        document.getElementById('bigTitle').textContent = `${ipAndRandomCode} (${mode})`;
     };
 
     ////////run init functions//////

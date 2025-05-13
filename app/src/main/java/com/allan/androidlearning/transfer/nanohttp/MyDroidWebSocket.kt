@@ -22,28 +22,40 @@ import org.json.JSONObject
 import java.io.IOException
 
 open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
-                            var server: MyDroidWebSocketServer) : NanoWSD.WebSocket(httpSession) {
+                            var server: MyDroidWebSocketServer,
+                            val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
+    val remoteIpStr: String? = httpSession.remoteIpAddress
+
+    var openTs:Long = System.currentTimeMillis()
+
     private val cTag by unsafeLazy {
         val str = this@MyDroidWebSocket.toString()
-        str.substring(str.indexOf("@") + 1)
+        remoteIpStr + "@" + str.substring(str.indexOf("@") + 1)
     }
 
-    val remoteIpStr: String? = httpSession.remoteIpAddress
     var clientTellName = "--"
 
     private var isActive = true
 
     override fun onOpen() {
         logdNoFile { "$cTag on open:" }
+        openTs = System.currentTimeMillis() //必须在前面
         server.addIntoConnections(this)
 
         server.heartbeatScope.launch {
+            var leftSpaceCount = 0
             while (isActive) {
                 logdNoFile { "$cTag heartbeat!" }
+                leftSpaceCount++
                 try {
                     //ping(MyDroidWebSocketServer.PING_PAYLOAD)
-                    val leftSpace = getExternalFreeSpace(Globals.app)
-                    send(ResultBean(CODE_SUC, "success!", LeftSpaceResult(leftSpace)).toJsonString())
+                    if (leftSpaceCount % 3 == 0) { //隔久一点再告知leftSpace
+                        val leftSpace = getExternalFreeSpace(Globals.app)
+                        send(ResultBean(CODE_SUC, "success!", LeftSpaceResult(leftSpace)).toJsonString())
+                    }
+
+                    //心跳 websocket必须ping。浏览器则自动实现了pong。
+                    ping(MyDroidWebSocketServer.PING_PAYLOAD)
                     delay(MyDroidWebSocketServer.HEARTBEAT_INTERVAL)
                 } catch (e: IOException) {
                     onException(e)
@@ -68,16 +80,18 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             server.triggerConnectionsList()
             //通过later则不需要注意线程
             ToastBuilder().setMessage("一个新的网页接入！$remoteIpStr@$targetName").setIcon("success").setOnTopLater(200).toast()
-
             val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
-            val ret = ResultBean(CODE_SUC, "success!", MyDroidModeResult(mode, targetName))
+            val ret = ResultBean(CODE_SUC, "success!", MyDroidModeResult(mode, remoteIpStr, targetName))
             send(ret.toJsonString())
         }
         message.setUnmasked()
     }
 
     override fun onPong(pong: WebSocketFrame) {
-        logdNoFile { "$cTag on Pong: " }
+        logdNoFile { "$cTag on Pong: " + pong.textPayload }
+        if (pong.textPayload != MyDroidWebSocketServer.PING_PAYLOAD_TEXT) {
+            onException(IOException("WS: pong is not same!"))
+        }
     }
 
     override fun onException(exception: IOException) {

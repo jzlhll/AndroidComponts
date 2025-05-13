@@ -51,7 +51,7 @@
         }
     
         const fileName = file.name;
-        changeProgressVisible(true);
+        myHtmlChangeProgressVisible(true);
         // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
         const fileSize = file.size;
         const chunkSize = getChunkSize(fileSize);

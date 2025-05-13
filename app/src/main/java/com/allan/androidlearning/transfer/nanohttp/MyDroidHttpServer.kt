@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.WebSocketIpPortResponseInfo
 import com.allan.androidlearning.transfer.okJsonResponse
 import com.au.module_android.Globals
@@ -31,10 +32,6 @@ interface IMyDroidHttpServer {
 class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
     private val handleThread: HandlerThread
     private val handle: Handler
-
-    private val periodSpaceTime = 5 * 60 * 1000L
-    private var mPeriodSpaceRun: Runnable = Runnable {
-    }
 
     init {
         tempFileManagerFactory = MyDroidTempFileMgrFactory()
@@ -81,7 +78,14 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     private fun handleGetRequest(url: String): Response {
         return when {
             // 主页面请求
-            url == "/" -> serveAssetFile("transfer/index.html")
+            url == "/" -> {
+                //todo 增加middle页面
+                if (MyDroidGlobalService.myDroidModeData.realValue == MyDroidMode.Send) {
+                    serveAssetFile("transfer/send.html")
+                } else {
+                    serveAssetFile("transfer/receiver.html")
+                }
+            }
             // JS 文件请求
             url.endsWith(".js") -> {
                 val jsName = url.substring(1)

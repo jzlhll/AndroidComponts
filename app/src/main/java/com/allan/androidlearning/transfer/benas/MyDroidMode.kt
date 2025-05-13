@@ -6,6 +6,9 @@ enum class MyDroidMode {
     Middle
 }
 
+/**
+ * 这是翻译给前端用的
+ */
 fun MyDroidMode.toCNName() : String {
     return when(this) {
         MyDroidMode.Receiver -> "发送给手机"
