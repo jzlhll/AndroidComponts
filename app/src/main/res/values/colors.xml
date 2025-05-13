@@ -6,4 +6,8 @@
     <color name="logic_receiver">#9D2929</color>
     <color name="logic_send">#3D7C42</color>
     <color name="logic_middle">#246257</color>
+
+    <color name="client_send_1">#3D7C42</color>
+    <color name="client_send_2">#3D7C42</color>
+    <color name="client_send_3">#3D7C42</color>
 </resources>

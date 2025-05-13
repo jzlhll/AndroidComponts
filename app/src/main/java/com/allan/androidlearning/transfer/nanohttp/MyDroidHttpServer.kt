@@ -2,9 +2,8 @@ package com.allan.androidlearning.transfer.nanohttp
 
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.lifecycle.LiveData
 import com.allan.androidlearning.transfer.CODE_SUC
-import com.allan.androidlearning.transfer.benas.IpInfo
+import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.WebSocketIpPortResponseInfo
 import com.allan.androidlearning.transfer.okJsonResponse
 import com.au.module_android.Globals
@@ -29,7 +28,7 @@ interface IMyDroidHttpServer {
     fun startPeriodWork()
 }
 
-class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo?>, httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
+class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
     private val handleThread: HandlerThread
     private val handle: Handler
 
@@ -106,8 +105,9 @@ class MyDroidHttpServer(val ipPortLiveData: LiveData<IpInfo?>, httpPort: Int) : 
     }
 
     private fun getWebsocketIpPort() : Response{
-        val ip = ipPortLiveData.value?.ip
-        val wsPort = ipPortLiveData.value?.webSocketPort
+        val data = MyDroidGlobalService.ipPortData
+        val ip = data.value?.ip
+        val wsPort = data.value?.webSocketPort
 
         return if (ip != null && wsPort != null) {
             val info = WebSocketIpPortResponseInfo(ip, wsPort)

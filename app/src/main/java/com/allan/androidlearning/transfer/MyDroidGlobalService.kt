@@ -1,54 +1,44 @@
 package com.allan.androidlearning.transfer
 
 import android.app.Activity
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
 import com.allan.androidlearning.transfer.views.MyDroidFragment
 import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
-import com.au.module_android.Globals
+import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.logt
-import com.au.module_androidui.toast.ToastBuilder
 import fi.iki.elonen.NanoHTTPD
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
-import java.net.Inet4Address
-import java.net.NetworkInterface
 import java.net.ServerSocket
 
-
 object MyDroidGlobalService : InterestActivityCallbacks() {
-    val clientsChangeData = NoStickLiveData<Unit>()
-
-    private val logicFragments = listOf<Class<*>>(
-        MyDroidFragment::class.java,
-        MyDroidReceiverFragment::class.java,
-//        MyDroidTransferFragment::class.java,
-    )
+    private val _onTransferInfoData = NoStickLiveData<String>()
     /**
      * 传输的信息，类似log。
      */
-    val onTransferInfoData = NoStickLiveData<String>()
+    val onTransferInfoData : LiveData<String> = _onTransferInfoData
 
-    val onFileMergedData = NoStickLiveData<File>()
+    private val _onFileMergedData = NoStickLiveData<File>()
+    val onFileMergedData: LiveData<File> = _onFileMergedData
 
+    private val _ipPortData = NoStickLiveData<IpInfo?>()
+    val ipPortOrigData: NoStickLiveData<IpInfo?>
+        get() = _ipPortData
     /**
      * first是IP。second是Port。Third是websocket Port。
      */
-    val ipPortData = NoStickLiveData<IpInfo?>()
+    val ipPortData: LiveData<IpInfo?> = _ipPortData
 
     var fileExportSuccessCallbacks = ArrayList<((info:String, exportFileStr:String)->Unit)>()
     var fileExportFailCallbacks = ArrayList<((String)->Unit)>()
@@ -82,23 +72,23 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     }
 
     @MainThread
-    private fun startServer(errorCallback:(String)->Unit) {
+    fun startServer(errorCallback:(String)->Unit) {
         val p = findAvailablePort()
         val wsPort = findAvailableWsPort()
-        httpServer = MyDroidHttpServer(ipPortData, p)
+        httpServer = MyDroidHttpServer(p)
         websocketServer = MyDroidWebSocketServer(wsPort)
+        logd { "start server with port: $p, wsPort: $wsPort" }
 
         try {
-            logt { "start server with port: $p, wsPort: $wsPort" }
             httpServer?.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
             websocketServer?.start(WEBSOCKET_READ_TIMEOUT.toInt(), false)
 
             isSuccessOpenServer = true
-            val realValue = ipPortData.realValue ?: IpInfo("", null, null)
+            val realValue = _ipPortData.realValue ?: IpInfo("", null, null)
             realValue.httpPort = p
             realValue.webSocketPort = wsPort
             logt { "start server and websocket success and setPort $realValue" }
-            ipPortData.setValueSafe(realValue)
+            _ipPortData.setValueSafe(realValue)
         } catch (e: IOException) {
             val msg = "Port $p WsPort $wsPort occupied ${e.message}"
             loge { msg }
@@ -106,98 +96,56 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         }
     }
 
-    private fun stopServer() {
+    fun stopServer() {
+        logd { ">>>stop server." }
         httpServer?.closeAllConnections()
         websocketServer?.closeAllConnections()
-
         isSuccessOpenServer = false
+    }
+
+    //////////////////////////life////
+
+    private val lifeObservers = ArrayList<IInterestLife>().apply {
+        addObserverEarly(MyDroidNetworkObserver())
     }
 
     override fun isLifeActivity(activity: Activity): Boolean {
         return activity is FragmentShellActivity && logicFragments.contains(activity.fragmentClass)
     }
 
+    /**
+     * 不做内部list保险。请在application或者最早接入的地方接入。
+     */
+    fun addObserverEarly(interestLife: IInterestLife) {
+        if(!lifeObservers.contains(interestLife)) lifeObservers.add(interestLife)
+    }
+
     override fun onLifeOpen() {
-        netRegister()
+        for (life in lifeObservers) {
+            life.onLifeOpen()
+        }
     }
 
     override fun onLifeOpenEach() {
         logdNoFile { "on life open each" }
-        getIpAddressAndStartServer()
+        for (life in lifeObservers) {
+            life.onLifeOpenEach()
+        }
     }
 
     override fun onLifeClose() {
         logdNoFile { "on life close." }
         stopServer()
-        ipPortData.setValueSafe(null)
-        netUnregister()
-    }
-
-    private fun getIpAddressAndStartServer() {
-        if (getIpAddress()) {
-            if (!isSuccessOpenServer) {
-                logdNoFile { "viewModel11 ${ipPortData.realValue}" }
-                startServer{ msg->
-                    scope.launch {
-                        ToastBuilder()
-                            .setOnTop()
-                            .setIcon("error")
-                            .setMessage(msg)
-                            .toast()
-                    }
-                }
-            }
+        _ipPortData.setValueSafe(null)
+        for (life in lifeObservers) {
+            life.onLifeClose()
         }
     }
 
-    private fun getIpAddress() : Boolean {
-        try {
-            val interfaces = NetworkInterface.getNetworkInterfaces()
-            while (interfaces.hasMoreElements()) {
-                val netInterface = interfaces.nextElement()
-                if (netInterface.displayName.equals("wlan0") || netInterface.name.startsWith("ap")) {
-                    for (addr in netInterface.getInterfaceAddresses()) {
-                        val inetAddr = addr.address
-                        if (inetAddr is Inet4Address) {
-                            val ip = inetAddr.hostAddress ?: "0.0.0.0"
-                            val realValue = ipPortData.realValue ?: IpInfo("", null, null)
-                            realValue.ip = ip
-                            logt { "get IpAddress set ip portData $realValue" }
-                            ipPortData.setValueSafe(realValue)
-                            return true
-                        }
-                    }
-                }
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        ipPortData.setValueSafe(null)
-        return false
-    }
+    private val logicFragments = listOf<Class<*>>(
+        MyDroidFragment::class.java,
+        MyDroidReceiverFragment::class.java,
+//        MyDroidTransferFragment::class.java,
+    )
 
-    private val netObserver = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            // 网络可用
-            getIpAddressAndStartServer()
-        }
-        override fun onLost(network: Network) {
-            // 网络丢失
-            stopServer()
-        }
-    }
-
-    private fun netRegister() {
-        val request = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
-
-        val manager = Globals.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        manager.registerNetworkCallback(request, netObserver)
-    }
-
-    private fun netUnregister() {
-        val manager = Globals.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        manager.unregisterNetworkCallback(netObserver)
-    }
 }
