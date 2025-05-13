@@ -1,33 +1,43 @@
-package com.allan.androidlearning.transfer
+package com.allan.androidlearning.transfer.views
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import com.allan.androidlearning.transfer.MyDroidGlobalService.isSuccessOpenServer
-import com.allan.androidlearning.transfer.benas.IpInfo
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
+import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logdNoFile
-import com.au.module_android.utils.logt
-import com.au.module_androidui.toast.ToastBuilder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.Inet4Address
 import java.net.NetworkInterface
 
-class MyDroidNetworkObserver : IInterestLife {
+class MyDroidSendViewModel() : ViewModel() {
+    val ipData = NoStickLiveData<String?>()
+
     private val netObserver = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             logdNoFile { "network on Available" }
             // 网络可用
-            getIpAddressAndStartServer()
+            ipData.setValueSafe(getIpAddress())
         }
         override fun onLost(network: Network) {
             logdNoFile { "network on Lost" }
-            MyDroidGlobalService.ipPortData.setValueSafe(null)
-            // 网络丢失
-            MyDroidGlobalService.stopServer()
+            ipData.setValueSafe(null)
+        }
+
+        override fun onUnavailable() {
+            super.onUnavailable()
+            logdNoFile { "network on Unavailable" }
+        }
+
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            super.onCapabilitiesChanged(network, networkCapabilities)
+            logdNoFile { "network no cap changed" }
         }
     }
 
@@ -45,18 +55,20 @@ class MyDroidNetworkObserver : IInterestLife {
         manager.unregisterNetworkCallback(netObserver)
     }
 
-    override fun onLifeOpen() {
+    init {
         netRegister()
+        viewModelScope.launch {
+            delay(2000)
+            ipData.setValueSafe(getIpAddress())
+        }
     }
 
-    override fun onLifeOpenEach() {
-    }
-
-    override fun onLifeClose() {
+    override fun onCleared() {
+        super.onCleared()
         netUnregister()
     }
 
-    fun getIpAddress() : String? {
+    private fun getIpAddress() : String? {
         try {
             val interfaces = NetworkInterface.getNetworkInterfaces()
             while (interfaces.hasMoreElements()) {
@@ -75,30 +87,5 @@ class MyDroidNetworkObserver : IInterestLife {
             e.printStackTrace()
         }
         return null
-    }
-
-    fun getIpAddressAndStartServer() {
-        val ip = getIpAddress()
-        val ipPortData = MyDroidGlobalService.ipPortData
-        if (ip.isNullOrEmpty()) {
-            ipPortData.setValueSafe(null)
-        } else {
-            val v = ipPortData.realValue ?: IpInfo("", null, null)
-            v.ip = ip
-            logt { "get IpAddress set ip portData $v" }
-            ipPortData.setValueSafe(v)
-
-            if (!isSuccessOpenServer) {
-                MyDroidGlobalService.startServer{ msg->
-                     MyDroidGlobalService.scope.launch {
-                        ToastBuilder()
-                            .setOnTop()
-                            .setIcon("error")
-                            .setMessage(msg)
-                            .toast()
-                    }
-                }
-            }
-        }
     }
 }

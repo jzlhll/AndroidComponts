@@ -3,6 +3,7 @@ package com.au.module_android.init
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 
@@ -14,7 +15,10 @@ import kotlinx.coroutines.cancel
  * 适用于有多个界面共享某个逻辑的场景。
  */
 abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallbacks, IInterestLife{
-    val scope = MainScope()
+    private var mScope:CoroutineScope? = null
+    val scope : CoroutineScope
+        get() = mScope!!
+
     private var lifeCount = 0
 
     /**
@@ -42,6 +46,7 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
             lifeCount++
             onLifeOpenEach()
             if (lifeCount == 1) {
+                mScope = MainScope()
                 onLifeOpen()
             }
         }
@@ -52,8 +57,8 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
             lifeCount--
             if (lifeCount == 0) {
                 onLifeClose()
-
-                scope.cancel()
+                mScope?.cancel()
+                mScope = null
             }
         }
     }

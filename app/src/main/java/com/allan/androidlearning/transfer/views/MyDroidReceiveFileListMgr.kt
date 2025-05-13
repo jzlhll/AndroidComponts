@@ -11,6 +11,7 @@ import com.au.module_android.Globals
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
@@ -27,8 +28,10 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
     }
 
     fun loadFileList() {
+        logd { "load file list0" }
         MyDroidGlobalService.scope.launchOnThread {
             val fileList = MyDroidMess().loadFileList()
+            logd { "load file list1" }
             f.lifecycleScope.launch {
                 adapter.submitList(fileList, false)
 

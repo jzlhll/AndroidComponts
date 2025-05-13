@@ -161,8 +161,10 @@
 
 <body>
 <div class="container">
-    <h1>MyDroidTransfer</h1>
-    <p id="subtitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 30px;">
+    <h1>MyDroid工具集</h1>
+    <p id="bigTitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 22px;">
+    </p>
+    <p id="subtitle" style="text-align: center; color: #95a5a6; font-size: 1.0em; margin-top: -20px; margin-bottom: 30px;">
         局域网fast传输
     </p>
     <div class="form-container">
@@ -224,7 +226,6 @@
     }
 
     window.updateSubtitle = updateSubtitle;
-    startWsConnect();
 
     function showConnectionError(message) {
         const overlay = document.getElementById('overlayView');
@@ -464,6 +465,13 @@
             intervalId = null;
         }
     }
+
+    window.updateBigTitle = function(title) {
+        document.getElementById('bigTitle').textContent = title;
+    };
+
+    ////////run init functions//////
+    startWsConnect();
 </script>
 </body>
 </html>

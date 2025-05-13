@@ -4,11 +4,13 @@ import android.app.Activity
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import com.allan.androidlearning.transfer.benas.IpInfo
+import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
 import com.allan.androidlearning.transfer.views.MyDroidFragment
 import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
+import com.allan.androidlearning.transfer.views.MyDroidSendFragment
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
 import com.au.module_android.simplelivedata.NoStickLiveData
@@ -23,6 +25,16 @@ import java.io.IOException
 import java.net.ServerSocket
 
 object MyDroidGlobalService : InterestActivityCallbacks() {
+    /**
+     * 用于通知界面更新。告知有多少通过WS接入的client。
+     */
+    val clientListLiveData = NoStickLiveData<List<String>>()
+
+    /**
+     * 当前的模式
+     */
+    val myDroidModeData = NoStickLiveData<MyDroidMode>()
+
     /**
      * 传输的信息，类似log。
      */
@@ -41,7 +53,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     var isSuccessOpenServer = false
 
     private var httpServer: MyDroidHttpServer?= null
-    private var websocketServer: MyDroidWebSocketServer?= null
+    var websocketServer: MyDroidWebSocketServer?= null
 
     private var mLastHttpServerPort = 10595
     private var mLastWsServerPort = 15595
@@ -104,10 +116,6 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         add(MyDroidNetworkObserver())
     }
 
-    override fun isLifeActivity(activity: Activity): Boolean {
-        return activity is FragmentShellActivity && logicFragments.contains(activity.fragmentClass)
-    }
-
     /**
      * 不做内部list保险。请在application或者最早接入的地方接入。
      */
@@ -137,10 +145,13 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         }
     }
 
+    override fun isLifeActivity(activity: Activity): Boolean {
+        return activity is FragmentShellActivity && logicFragments.contains(activity.fragmentClass)
+    }
+
     private val logicFragments = listOf<Class<*>>(
-        MyDroidFragment::class.java,
         MyDroidReceiverFragment::class.java,
-//        MyDroidTransferFragment::class.java,
+        MyDroidSendFragment::class.java,
     )
 
 }

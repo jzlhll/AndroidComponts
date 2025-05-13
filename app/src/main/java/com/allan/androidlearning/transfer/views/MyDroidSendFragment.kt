@@ -6,19 +6,34 @@ import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
+import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.dp
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
-import com.au.module_android.utilsmedia.getExternalFreeSpace
 
-@EntryFrgName(priority = 12)
 class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().finishAfterTransition()
+        }
+
+        MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
+            clientList.forEachIndexed { index, string ->
+                logdNoFile { "client List[$index] = $string" }
+                val item = clientItem(index)
+                item.title.text = string
+                item.icon.background = ViewBackgroundBuilder()
+                    .setBackground(requireContext().getColor(R.color.client_send_1 + index))
+                    .setCornerRadius(32f.dp)
+                    .build()
+            }
         }
 
         requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
@@ -56,4 +71,20 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
+    override fun onStart() {
+        MyDroidGlobalService.myDroidModeData.setValueSafe(MyDroidMode.Send)
+        super.onStart()
+    }
+
+    private val sendClientBindings = mutableListOf<MydroidSendClientBinding>()
+    private fun clientItem(index:Int) : MydroidSendClientBinding{
+        var binding = sendClientBindings.getOrNull(index)
+        if (binding != null) {
+            return binding
+        }
+
+        binding = MydroidSendClientBinding.inflate(layoutInflater)
+        sendClientBindings.add(binding)
+        return binding
+    }
 }

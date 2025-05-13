@@ -8,6 +8,8 @@
     <color name="logic_middle">#246257</color>
 
     <color name="client_send_1">#3D7C42</color>
-    <color name="client_send_2">#3D7C42</color>
-    <color name="client_send_3">#3D7C42</color>
+    <color name="client_send_2">#439999</color>
+    <color name="client_send_3">#4F84CD</color>
+    <color name="client_send_4">#895DF8</color>
+    <color name="client_send_5">#CEBE55</color>
 </resources>

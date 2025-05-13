@@ -4,7 +4,7 @@
     let wsCntIntervalId = null;
 
     let mRandom8bitName = null;
-    function getRandomName() {
+    window.getRandomWSName = function() {
         if (mRandom8bitName) {
             return mRandom8bitName;
         }
@@ -30,17 +30,21 @@
             socket.onopen = (event) => {
                 console.log('WebSocket 连接已建立');
                 // 发送初始数据
-                socket.send('websocket client init:' + getRandomName());
+                const wsName = getRandomWSName();
+                const wsInit = { "wsInit": wsName };
+                socket.send(JSON.stringify(wsInit));
             };
     
             // 接收消息
             socket.onmessage = (event) => {
                 //通过每次接收leftSpace来当做ping/pong
+                console.log("on messagae: " + event.data);
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
-                if (data.startsWith('leftSpace:')) {
-                    const result = data.slice(10); // "leftSpace:" 长度是 10
-                    updateSubtitle("Fast局域网传输工具\n手机剩余空间：" + result);
+                if (data.leftSpace) {
+                    updateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
+                } if (data.myDroidMode) {
+                    updateBigTitle(data.myDroidMode + "@" + data.clientName);
                 } else {
                     // 处理数据（JSON 示例）
                     try {

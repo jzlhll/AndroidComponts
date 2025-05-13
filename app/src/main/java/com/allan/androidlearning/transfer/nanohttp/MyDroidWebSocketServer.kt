@@ -1,5 +1,6 @@
 package com.allan.androidlearning.transfer.nanohttp
 
+import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
@@ -22,11 +23,6 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
 
     private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
 
-    /**
-     * 用于通知界面更新。告知有多少通过WS接入的client。
-     */
-    val clientListLiveData = NoStickLiveData<List<String>>()
-
     fun addIntoConnections(websocket:MyDroidWebSocket) {
         connections.add(websocket)
         triggerConnectionsList()
@@ -45,7 +41,7 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
         connections.forEach {
             list.add(it.remoteIpStr + "@" + it.clientTellName)
         }
-        clientListLiveData.setValueSafe(list)
+        MyDroidGlobalService.clientListLiveData.setValueSafe(list)
     }
 
     override fun openWebSocket(handshake: IHTTPSession): WebSocket {

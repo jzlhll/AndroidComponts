@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
@@ -17,33 +17,33 @@ import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.startActivityFix
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @EntryFrgName(priority = 12)
 class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
     var waitDialog:ConfirmBottomSingleDialog? = null
 
+    val viewModel by unsafeLazy {
+        ViewModelProvider(this)[MyDroidSendViewModel::class.java]
+    }
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.receiveFileLogicBtn.onClick {
-            if (ifGotoMgrAll()) {
-                FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
-            }
+            FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
         }
         binding.sendFileLogicBtn.onClick {
-            if (ifGotoMgrAll()) {
-                //FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
-            }
+            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
         }
         binding.middleLogicBtn.onClick {
 
         }
 
-        MyDroidGlobalService.ipPortData.observe(this) {
-            if (it == null || it.ip.isEmpty()) {
+        viewModel.ipData.observe(this) { ip->
+            if (ip.isNullOrEmpty()) {
                 binding.title.text = "请连接WI-FI或者开启热点"
                 if (waitDialog == null) {
                     ConfirmBottomSingleDialog.show(childFragmentManager, "提示",
@@ -59,7 +59,7 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
                     }
                 }
             } else {
-                binding.title.text = it.ip + ":" + it.httpPort
+                binding.title.text = ip
                 binding.logicBtnsHost.visible()
                 binding.loading.gone()
                 waitDialog?.dismissAllowingStateLoss()

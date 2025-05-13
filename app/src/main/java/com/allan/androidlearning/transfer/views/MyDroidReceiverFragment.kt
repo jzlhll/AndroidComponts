@@ -9,22 +9,25 @@ import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
+import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
+import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.launchOnUi
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.getExternalFreeSpace
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-@EntryFrgName(priority = 12)
 class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     private val mFileListMgr by unsafeLazy { MyDroidReceiveFileListMgr(this) }
 
@@ -56,13 +59,12 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         MyDroidGlobalService.fileExportSuccessCallbacks.remove(fileExportSuccessCallback)
     }
 
-    override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.toolbar.setNavigationOnClickListener {
-            requireActivity().finishAfterTransition()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setTurnScreenOn(true)
         }
-
-        binding.tabLayout.tabSelectTextColor = R.color.logic_receiver
-        binding.tabLayout.tabNotSelectColor = com.au.module_androidcolor.R.color.color_text_desc
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
@@ -72,11 +74,16 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             insets
         }
 
-        val fmt = getString(R.string.not_close_window)
-        binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
-
         MyDroidGlobalService.fileExportFailCallbacks.add(fileExportFailCallback)
         MyDroidGlobalService.fileExportSuccessCallbacks.add(fileExportSuccessCallback)
+    }
+
+    override fun onBindingCreated(savedInstanceState: Bundle?) {
+        binding.tabLayout.tabSelectTextColor = R.color.logic_receiver
+        binding.tabLayout.tabNotSelectColor = com.au.module_androidcolor.R.color.color_text_desc
+
+        val fmt = getString(R.string.not_close_window)
+        binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
 
         MyDroidGlobalService.onTransferInfoData.observeUnStick(this) { info->
             binding.transferInfo.text = info
@@ -104,37 +111,53 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             }
         }
 
-        val transferFileList = binding.tabLayout.newTextTab(getString(R.string.transfer_list), true, 16f)
-        transferFileList.view.onClick {
-            binding.rcv.visible()
-            binding.exportHistoryHost.gone()
-            receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
-                tabTv.text = getString(R.string.transfer_list)
+        MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
+            logdNoFile {
+                ">>client List:" + clientList.toJsonString()
             }
         }
-        receivedFileListTab = transferFileList
-        val exportHistory = binding.tabLayout.newTextTab(getString(R.string.export_history), false, 16f)
-        exportHistory.view.onClick {
-            binding.rcv.gone()
-            binding.exportHistoryHost.visible()
-            exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
-                tabTv.text = getString(R.string.export_history)
+
+        initLater()
+    }
+
+    override fun onStart() {
+        MyDroidGlobalService.myDroidModeData.setValueSafe(MyDroidMode.Receiver)
+        super.onStart()
+    }
+
+    private fun initLater() {
+        Globals.mainHandler.post {
+            val transferFileList = binding.tabLayout.newTextTab(getString(R.string.transfer_list), true, 16f)
+            transferFileList.view.onClick {
+                binding.rcv.visible()
+                binding.exportHistoryHost.gone()
+                receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
+                    tabTv.text = getString(R.string.transfer_list)
+                }
+            }
+            receivedFileListTab = transferFileList
+            val exportHistory = binding.tabLayout.newTextTab(getString(R.string.export_history), false, 16f)
+            exportHistory.view.onClick {
+                binding.rcv.gone()
+                binding.exportHistoryHost.visible()
+                exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
+                    tabTv.text = getString(R.string.export_history)
+                }
+            }
+            exportHistoryTab = exportHistory
+
+            binding.tabLayout.addTab(transferFileList)
+            binding.tabLayout.addTab(exportHistory)
+            binding.tabLayout.initSelectedListener()
+
+            mFileListMgr.initRcv()
+            mFileListMgr.loadFileList()
+            mFileListMgr.loadHistory(true)
+
+            binding.toolbar.setNavigationOnClickListener {
+                requireActivity().finishAfterTransition()
             }
         }
-        exportHistoryTab = exportHistory
-
-        binding.tabLayout.addTab(transferFileList)
-        binding.tabLayout.addTab(exportHistory)
-        binding.tabLayout.initSelectedListener()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        mFileListMgr.initRcv()
-        mFileListMgr.loadFileList()
-        mFileListMgr.loadHistory(true)
     }
 
 }
