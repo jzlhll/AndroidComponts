@@ -38,22 +38,9 @@
             // 接收消息
             socket.onmessage = (event) => {
                 //通过每次接收leftSpace来当做ping/pong
-                console.log("on messagae: " + event.data);
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
-                if (data.leftSpace) {
-                    myHtmlUpdateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
-                } if (data.myDroidMode) {
-                    const ip = data.ip
-                    myHtmlUpdateBigTitle(data.myDroidMode, ip + "@" + data.clientName);
-                } else {
-                    // 处理数据（JSON 示例）
-                    try {
-                        //handleMessage(jsonData);
-                    } catch (e) {
-                        console.error('WebSocket 消息解析失败', e);
-                    }
-                }
+                parseMessage(data);
             };
     
             // 错误处理
@@ -78,6 +65,28 @@
         }
         
         return false;
+    }
+
+    function parseMessage(data) {
+        if (data.leftSpace) {
+            myHtmlUpdateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
+        } if (data.myDroidMode) {
+            const ip = data.ip;
+            myHtmlUpdateBigTitle(data.myDroidMode, ip + "@" + data.clientName);
+        } else if (data.urlRealInfoHtmlList) {
+            console.log("data urlReaultInfos " + data.urlRealInfoHtmlList);
+            if (window.onUrlRealInfoHtmlListReceiver) {
+                window.onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);
+            }
+        } else {
+            // 处理数据（JSON 示例）
+            console.log("on messagae other: " + data);
+            try {
+                //handleMessage(jsonData);
+            } catch (e) {
+                console.error('WebSocket 消息解析失败', e);
+            }
+        }
     }
 
     async function startWebSocket() {

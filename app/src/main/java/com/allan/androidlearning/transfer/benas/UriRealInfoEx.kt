@@ -29,7 +29,8 @@ data class UriRealInfoEx(val uri: Uri, val name:String? = null,
     }
 
     fun copyToHtml() : UriRealInfoHtml {
-        return UriRealInfoHtml(uri.toString(), goodName(), fileSizeStr)
+        val base64Str = java.util.Base64.getEncoder().encodeToString(uri.toString().toByteArray())
+        return UriRealInfoHtml(base64Str, goodName(), fileSizeStr)
     }
 }
 
@@ -37,4 +38,4 @@ data class UriRealInfoEx(val uri: Uri, val name:String? = null,
  * 转变成传输给前端的对象
  */
 @Keep
-data class UriRealInfoHtml(val uriStr:String, val name:String?, val fileSizeStr: String)
+data class UriRealInfoHtml(val uriStrBase64:String, val name:String?, val fileSizeStr: String)
