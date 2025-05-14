@@ -5,7 +5,7 @@ import android.os.HandlerThread
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
-import com.allan.androidlearning.transfer.benas.WebSocketIpPortResponseInfo
+import com.allan.androidlearning.transfer.htmlbeans.IpPortResult
 import com.allan.androidlearning.transfer.okJsonResponse
 import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
@@ -114,7 +114,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
         val wsPort = data.value?.webSocketPort
 
         return if (ip != null && wsPort != null) {
-            val info = WebSocketIpPortResponseInfo(ip, wsPort)
+            val info = IpPortResult(ip, wsPort)
             logdNoFile { "get websocket ipPort $info" }
             ResultBean(CODE_SUC, "Success!", info).okJsonResponse()
         } else {

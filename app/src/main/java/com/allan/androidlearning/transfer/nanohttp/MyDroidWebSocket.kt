@@ -3,12 +3,12 @@ package com.allan.androidlearning.transfer.nanohttp
 import androidx.lifecycle.Observer
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
-import com.allan.androidlearning.transfer.benas.FileListForHtmlResult
-import com.allan.androidlearning.transfer.benas.LeftSpaceResult
-import com.allan.androidlearning.transfer.benas.MyDroidModeResult
+import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
 import com.allan.androidlearning.transfer.benas.toCNName
+import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
+import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
 import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.json.toJsonString

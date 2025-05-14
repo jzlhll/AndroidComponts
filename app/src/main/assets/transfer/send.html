@@ -103,6 +103,70 @@
             font-size: 18px;
             margin-bottom: 30px;
         }
+
+        #file-list-container {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: white;
+            margin: 16px 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        #file-list-container table {
+            width: 100%;
+            table-layout: fixed; /* 固定列宽分配 */
+            border-collapse: collapse;
+        }
+
+        #file-list-container th,
+        #file-list-container td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        #file-list-container th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* 列宽分配 */
+        #file-list-container td:nth-child(1) { width: 60%; } /* 文件名列 */
+        #file-list-container td:nth-child(2) { width: 20%; min-width: 80px; } /* 大小列 */
+        #file-list-container td:nth-child(3) { width: 20%; min-width: 100px; } /* 操作列 */
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            #file-list-container td:nth-child(1) { width: 50%; }
+            #file-list-container td:nth-child(2),
+            #file-list-container td:nth-child(3) { width: 25%; }
+
+            #file-list-container th,
+            #file-list-container td {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* 互动效果 */
+        #file-list-container tr:hover td {
+            background: #f5f5f5;
+        }
+
+        /* 下载链接美化 */
+        .download-link {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.2s;
+            white-space: nowrap; /* 防止换行 */
+        }
+
+        .download-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -117,13 +181,16 @@
     <div class="container">
         <h1>MyDroid工具集</h1>
         <p id="bigTitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 22px;">
-        <div class="info-row">
-            <div id="receiverUrl"></div>
-        </div>
-
-        <button class="custom-button">
-            📥 下载
-        </button>
+        <table id="file-list-container">
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th>大小</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="file-list-body"></tbody>
+        </table>
     </div>
 
     <!-- 错误遮罩层 -->
@@ -147,6 +214,31 @@
         
         window.myHtmlUpdateBigTitle = function(mode, ipAndRandomCode) {
             document.getElementById('bigTitle').textContent =  `${ipAndRandomCode} (${mode})`;
+        };
+
+        // 接收并显示数据的JS函数
+        window.displayFileList = function displayFileList(uriRealInfoHtmlList) {
+            const tbody = document.getElementById('file-list-body');
+            tbody.innerHTML = '';
+
+            uriRealInfoHtmlList.forEach(item => {
+                const row = `
+                    <tr>
+                        <td>
+                            <div class="file-name">${item.name || '未命名文件'}</div>
+                        </td>
+                        <td>${item.fileSizeStr}</td>
+                        <td>
+                            <a class="download-link"
+                               href="data:application/octet-stream;base64,${item.uriStrBase64}"
+                               download="${item.name || 'download'}">
+                                下载
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
         };
         
         ////////run init functions//////

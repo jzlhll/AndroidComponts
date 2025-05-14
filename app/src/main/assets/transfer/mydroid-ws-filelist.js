@@ -3,5 +3,6 @@
      window.onUrlRealInfoHtmlListReceiver = function(urlRealInfoHtmlList) {
         console.log("receiver urlRealInfos");
         console.log(urlRealInfoHtmlList);
+        displayFileList(urlRealInfoHtmlList);
      }
 })();
