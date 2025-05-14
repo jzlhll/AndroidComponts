@@ -87,7 +87,14 @@ inline fun <reified T : Parcelable> Intent.parcelableArrayExtraCompat(key: Strin
     if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         return getParcelableArrayExtra<T>(key, T::class.java)
     }
-    return getParcelableArrayExtra(key) as? Array<T>
+    return getParcelableArrayExtra(key) as Array<T>?
+}
+
+inline fun <reified T : Parcelable> Intent.parcelableArrayListExtraCompat(key: String): ArrayList<T>? {
+    if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return getParcelableArrayListExtra<T>(key, T::class.java)
+    }
+    return getParcelableArrayListExtra(key)
 }
 
 inline fun <reified T : Parcelable> Intent.parcelableExtraCompat(key: String): T? {

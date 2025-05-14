@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationChannelCompat
@@ -27,14 +26,20 @@ class NotificationUtil(private val context:Context = Globals.app) {
          * 在适当的时机调用弹出系统请求权限。android12以下不需要调用。
          * @param permissionHelper 通过createPostNotificationPermissionResult创建而来。
          */
-        fun onceRequestPermission(permissionHelper: IOnePermissionResult) { //可以做下cache保存。避免多次请求。
+        fun requestPermission(permissionHelper: IOnePermissionResult, continueWork:()->Unit = {}) { //可以做下cache保存。避免多次请求。
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val notify = NotificationUtil()
-                if ((!notify.isEnabled() || !notify.isCanNotify)) {
+                val isEnable = notify.isEnabled()
+                val isCanNotify = notify.isCanNotify
+                if (!isEnable || !isCanNotify) {
                     notify.safeRun(permissionHelper) {
-                        logd { "Notification Util permission run success." }
+                        continueWork()
                     }
+                } else {
+                    continueWork()
                 }
+            } else {
+                continueWork()
             }
         }
 

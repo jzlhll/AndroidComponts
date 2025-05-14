@@ -1,12 +1,18 @@
 package com.allan.androidlearning.transfer
 
+import androidx.annotation.DrawableRes
+import com.allan.androidlearning.R
 import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utilsmedia.MediaHelper
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoHTTPD.newFixedLengthResponse
 import java.io.File
+
+const val KEY_START_TYPE = "entry_start_type"
+const val MY_DROID_SHARE_IMPORT_URIS = "myDroidShareReceiverUris"
 
 private const val TEMP_CACHE_DIR = "nanoTmp"
 fun nanoTempCacheDir()  = Globals.goodCacheDir.absolutePath + File.separatorChar + "shared" + File.separatorChar + TEMP_CACHE_DIR
@@ -47,4 +53,33 @@ fun ResultBean<*>.jsonResponse(status: Response.IStatus) : Response{
         MIME_TYPE_JSON,
         this.toJsonString()
     )
+}
+
+
+@DrawableRes
+fun getIcon(fileName: String?): Int {
+    // 提取文件后缀并转为小写（处理无后缀的情况）
+    val extension = fileName?.substringAfterLast('.', "")?.lowercase() ?: ""
+    return when (extension) {
+        // 文本/文档类型
+        "doc", "docx" -> R.drawable.ic_filetype_doc
+        "xls", "xlsx" -> R.drawable.ic_filetype_xls
+        "pdf" -> R.drawable.ic_filetype_pdf
+        "txt", "log", "md" -> R.drawable.ic_filetype_text
+        // 压缩包类型
+        "zip", "rar", "tar", "gz", "7z" -> R.drawable.ic_filetype_archive
+        // 代码文件类型（可选扩展）
+        "java", "kt", "py", "js", "html", "css" -> R.drawable.ic_filetype_code
+        // 其他类型
+        else ->
+            if (MediaHelper.isImageFileSimple(extension)) {
+                R.drawable.ic_filetype_image
+            } else if (MediaHelper.isAudioFileSimple(extension)) {
+                R.drawable.ic_filetype_audio
+            } else if (MediaHelper.isVideoFileSimple(extension)) {
+                R.drawable.ic_filetype_video
+            } else {
+                R.drawable.ic_filetype_other
+            }
+    }
 }

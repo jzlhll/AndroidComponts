@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="4dp"
-        android:text="Sorry it is crashed!\nYou can screenshot this and feedback!"
+        android:text="Sorry it is crashed!\nScreenshot and feedback!"
         android:textSize="16sp"
         android:textStyle="bold" />
 

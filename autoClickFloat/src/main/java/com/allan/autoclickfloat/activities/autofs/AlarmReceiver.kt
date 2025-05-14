@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import com.au.module_android.ui.FragmentShellActivity
+import com.au.module_android.utils.findLaunchActivity
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.startActivityFix
@@ -13,7 +14,7 @@ import kotlin.math.abs
 class AlarmReceiver : BroadcastReceiver() {
     companion object {
         fun start(context: Context) {
-            val pair = AutoFsObj.findLaunchActivity(context)
+            val pair = findLaunchActivity(context)
             if (!pair.second) {
                 context.startActivityFix(pair.first.also {
                     it.putExtra("alarm", "alarmIsComingWhenNoStartActivity")

@@ -37,7 +37,7 @@ class NotifyFragment : ViewFragment() {
     val permissionUtil = NotificationUtil.createPostNotificationPermissionResult(this)
 
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        NotificationUtil.onceRequestPermission(permissionUtil)
+        NotificationUtil.requestPermission(permissionUtil)
 
         return LinearLayout(inflater.context).also {
             it.addView(Button(inflater.context).also {

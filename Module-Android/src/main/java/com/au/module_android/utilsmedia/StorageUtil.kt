@@ -264,7 +264,7 @@ private fun getOldSdkPath(
     return file.absolutePath
 }
 
-private fun formatBytes(bytes: Long): String {
+fun formatBytes(bytes: Long): String {
     val units = arrayOf("B", "KB", "MB", "GB", "TB")
     var value = bytes.toDouble()
     var unitIndex = 0

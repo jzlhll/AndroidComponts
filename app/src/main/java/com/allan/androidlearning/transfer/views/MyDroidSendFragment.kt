@@ -9,6 +9,7 @@ import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
 import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
@@ -19,11 +20,14 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
 
 class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
+    private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().finishAfterTransition()
         }
+
+        parseEntryFileList()
 
         MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
             for (clientBinding in sendClientBindings) {
@@ -61,7 +65,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         binding.descTitle.text = String.format(fmt, "")
 
         MyDroidGlobalService.onTransferInfoData.observeUnStick(this) { info->
-            binding.transferInfo.text = info
+            //todo
         }
 
         MyDroidGlobalService.ipPortData.observe(this) { info->
@@ -87,6 +91,19 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     override fun onStart() {
         MyDroidGlobalService.myDroidModeData.setValueSafe(MyDroidMode.Send)
         super.onStart()
+    }
+
+    fun parseEntryFileList() {
+        val entryList = MyDroidGlobalService.shareReceiverUriMap.realValue?.values
+        entryFileList = entryList?.map {
+            UriRealInfoEx.copyFrom(it)
+        } ?: listOf()
+
+        val sb = StringBuilder()
+        entryFileList.forEach {
+            sb.append(it.goodName()).append("(").append(it.fileSizeStr).append(")").append("\n")
+        }
+        binding.transferInfo.text =  "传输列表:\n" + sb
     }
 
     private val sendClientBindings = mutableListOf<MydroidSendClientBinding>()

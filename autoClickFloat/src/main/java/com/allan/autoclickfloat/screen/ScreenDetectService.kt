@@ -41,7 +41,7 @@ class ScreenDetectService : AutoStopService() {
 
             }
             "stop" -> {
-                stopWrapSelf()
+                forceStop()
                 ScreenDetectConst.getInstance().onDestroy()
             }
         }

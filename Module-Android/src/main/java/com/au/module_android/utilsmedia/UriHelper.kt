@@ -69,6 +69,31 @@ enum class ContentUriRealPathType {
    // OnlyName
 }
 
+open class UriRealInfo(val uri: Uri, val name:String? = null, val realPath:String? = null, val relativePath:String? = null) {
+    fun goodName() : String? {
+        val n = realPath ?: (relativePath ?: name)
+        return n?.substring(n.lastIndexOf("/") + 1)
+    }
+}
+
+/**
+ * 通过uri解析真实路径
+ * @return 如果解析不出来，则是null。如果解析出来是路径，则是路径 to true；如果只能解析出名字，则是名字 to false。
+ */
+fun Uri.getRealInfo(context: Context): UriRealInfo {
+     val pair = getRealPath(context)
+    if (pair == null) {
+        return UriRealInfo(this, null, null)
+    }
+    if (pair.second == ContentUriRealPathType.FullPath) {
+        return UriRealInfo(this, realPath = pair.first)
+    }
+    if (pair.second == ContentUriRealPathType.RelativePath) {
+        return UriRealInfo(this, relativePath = pair.first)
+    }
+    return UriRealInfo(this, name = pair.first)
+}
+
 /**
  * 通过uri解析真实路径
  * @return 如果解析不出来，则是null。如果解析出来是路径，则是路径 to true；如果只能解析出名字，则是名字 to false。

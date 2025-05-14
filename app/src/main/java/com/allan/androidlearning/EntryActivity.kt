@@ -10,12 +10,16 @@ import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
+import com.allan.androidlearning.transfer.KEY_START_TYPE
+import com.allan.androidlearning.transfer.MY_DROID_SHARE_IMPORT_URIS
+import com.allan.androidlearning.transfer.views.ShareReceiverFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.logdNoFile
 import com.au.module_androidui.toast.toastOnTop
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.delay
@@ -35,7 +39,6 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val goto = intent?.getStringExtra("goto")
-
         logd { "goto $goto" }
 
         EntryList().also {
@@ -62,6 +65,21 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
             FragmentShellActivity.start(this, LiveDataFragment::class.java)
         } else if (goto == "FontTest") {
             FragmentShellActivity.start(this, FontTestFragment::class.java)
+        }
+
+        val intent = intent
+        if(intent != null) parseIntoIntent(intent)
+    }
+
+    private fun parseIntoIntent(intent: Intent) {
+        val isFromNewShareImportUris = intent.getStringExtra(KEY_START_TYPE)
+        intent.removeExtra(KEY_START_TYPE)
+        logdNoFile { "parseInto Intent $isFromNewShareImportUris" }
+        if (isFromNewShareImportUris == MY_DROID_SHARE_IMPORT_URIS) {
+            lifecycleScope.launch {
+                delay(200)
+                FragmentShellActivity.start(this@EntryActivity, ShareReceiverFragment::class.java)
+            }
         }
     }
 }

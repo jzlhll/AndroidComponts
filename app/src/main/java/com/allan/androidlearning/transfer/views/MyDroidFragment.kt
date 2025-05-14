@@ -36,7 +36,7 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
             FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
         }
         binding.sendFileLogicBtn.onClick {
-            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            FragmentShellActivity.start(requireActivity(), ShareReceiverFragment::class.java)
         }
         binding.middleLogicBtn.onClick {
 

@@ -27,7 +27,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         style="@style/StyleFontSecondTitleText"
-        android:textColor="@color/color_text_reverse_press"
+        android:textColor="#ffffff"
         android:textSize="13sp"
         tools:text="保持在该界面，不熄屏"
         android:gravity="center_horizontal"

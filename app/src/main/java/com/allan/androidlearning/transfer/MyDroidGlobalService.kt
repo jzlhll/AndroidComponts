@@ -2,9 +2,10 @@ package com.allan.androidlearning.transfer
 
 import android.app.Activity
 import androidx.annotation.MainThread
-import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
@@ -45,6 +46,12 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
      * first是IP。second是Port。Third是websocket Port。
      */
     val ipPortData = NoStickLiveData<IpInfo?>()
+
+    /**
+     * 从shareReceiver activity处接收数据
+     * key是uri.toString而来。
+     */
+    val shareReceiverUriMap = NoStickLiveData<HashMap<String, UriRealInfoEx>>(hashMapOf())
 
     var fileExportSuccessCallbacks = ArrayList<((info:String, exportFileStr:String)->Unit)>()
     var fileExportFailCallbacks = ArrayList<((String)->Unit)>()

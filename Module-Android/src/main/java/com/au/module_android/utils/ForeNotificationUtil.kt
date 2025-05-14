@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
+import android.os.Build
 import androidx.annotation.DrawableRes
 
 object ForeNotificationUtil {
@@ -27,7 +28,9 @@ object ForeNotificationUtil {
      * onStartCommand调用
      */
     @JvmStatic
-    fun startForeground(service: Service, channelName: String, channelDesc: String, contentTitle: String, contentText: String,
+    fun startForeground(service: Service,
+                        channelName: String, channelDesc: String, contentTitle: String, contentText: String,
+                        foregroundServiceType:Int?,
                         @DrawableRes noBgIcon:Int? = null,
                         pendingIntent: PendingIntent? = null) {
         val manager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -35,7 +38,17 @@ object ForeNotificationUtil {
         notification.flags = Notification.FLAG_ONGOING_EVENT
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         notification.flags = notification.flags or Notification.FLAG_FOREGROUND_SERVICE
-        service.startForeground(FOREGROUND_ID, notification)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+ 可指定前台服务类型（Android 13+ 需要 FOREGROUND_SERVICE_DATA_SYNC）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && foregroundServiceType != null) {
+                service.startForeground(FOREGROUND_ID, notification, foregroundServiceType)
+            } else {
+                service.startForeground(FOREGROUND_ID, notification)
+            }
+        } else {
+            service.startForeground(FOREGROUND_ID, notification)
+        }
     }
 
     /**

@@ -8,4 +8,5 @@
     <string name="select_manually">手動選擇</string>
     <string name="automatic_desc">開啟後，app將會跟隨系統自動切換淺色或者深色模式。</string>
     <string name="language">語言</string>
+    <string name="import_zone">MyDroid 導入站</string>
 </resources>

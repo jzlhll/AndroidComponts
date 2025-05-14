@@ -23,7 +23,9 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.au.module_android.Globals
 import com.au.module_android.Globals.app
+import com.au.module_android.ui.FragmentShellActivity
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.net.URLDecoder
@@ -321,4 +323,31 @@ fun String.md5(): String {
         //do nothing.
         return ""
     }
+}
+
+/**
+ * 找到启动的activity
+ * first是启动的activity的Intent。
+ * second如果是true就找到了。false就是没找到。
+ */
+fun findLaunchActivity(context: Context): Pair<Intent, Boolean> {
+    val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
+    val className = l.component?.className
+    val found = Globals.activityList.find { className?.contains(it.javaClass.simpleName) == true}
+    return l to (found != null)
+}
+
+fun findEntryActivity(mainActivityCls: Class<*>): Boolean {
+    val found = Globals.activityList.find { it.javaClass == mainActivityCls}
+    return found != null
+}
+
+/**
+ * 如果是我们框架的代码，则可以用Fragment的来判断
+ */
+fun findCustomFragmentGetActivity(customFragment: Class<*>): Activity? {
+    val found = Globals.activityList.find {
+        it.javaClass == FragmentShellActivity::class.java && (it as FragmentShellActivity).fragmentClass == customFragment
+    }
+    return found
 }

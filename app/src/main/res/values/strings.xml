@@ -151,4 +151,6 @@
     <string name="transfer_list" translatable="false">"接收列表 "</string>
     <string name="transfer_list_2" translatable="false">"接收列表*"</string>
     <string name="not_close_window" translatable="false">保持在该界面，不熄屏 %s</string>
+
+    <string name="import_zone">MyDroid Import Zone</string>
 </resources>

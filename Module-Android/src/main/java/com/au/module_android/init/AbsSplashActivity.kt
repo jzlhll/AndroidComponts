@@ -40,7 +40,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
         launcherApp(intent)
     }
 
-    abstract fun goActivity()
+    abstract fun goActivity(intent: Intent?)
 
     fun launcherApp(intent: Intent?) {
         //直接从android Studio run起来会初始化多次。
@@ -58,7 +58,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
             }
         }
 
-        goActivity()
+        goActivity(intent)
 
         this.finish()
     }

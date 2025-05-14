@@ -317,14 +317,4 @@ object AutoFsObj {
         }
     }
 
-    /**
-     * 找到启动的activity其实就是AllPermissionActivity。
-     */
-    fun findLaunchActivity(context: Context): Pair<Intent, Boolean> {
-        val l = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
-        val className = l.component?.className
-        val found = Globals.activityList.find { className?.contains(it.javaClass.simpleName) == true}
-        return l to (found != null)
-    }
-
 }

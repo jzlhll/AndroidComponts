@@ -3,12 +3,12 @@ package com.au.module_android.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.EmptySuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -65,8 +65,25 @@ public abstract class AutoStopService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (isForeground()) ForeNotificationUtil.startForeground(this, getNotifyName(), getNotifyName(), getNotifyName(), "", noBgIcon(), getPendingIntent());
+        if (isForeground()) {
+            startForeground();
+        }
     }
+
+    /**
+     * 如果你的service的foregroundType不会变化。则不需要继承。实现Integer foregroundType();即可。
+     * 如果有变化。则继承这里, 不调用super，再自行实现。
+     */
+    @EmptySuper
+    public void startForeground() {
+        ForeNotificationUtil.startForeground(this,
+                getNotifyName(), getNotifyName(), getNotifyName(), "",
+                foregroundType(),
+                noBgIcon(),
+                getPendingIntent());
+    }
+
+    public abstract Integer foregroundType();
 
     @Nullable
     abstract protected PendingIntent getPendingIntent();
@@ -95,7 +112,10 @@ public abstract class AutoStopService extends Service {
         }
     }
 
-    protected final void stopWrapSelf() {
+    /**
+     * 不管是否有没有完成的任务。调用该函数结束。
+     */
+    protected final void forceStop() {
         synchronized (mStartIds) {
             mStartIds.clear();
             stopSelf();
