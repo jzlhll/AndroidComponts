@@ -3,6 +3,10 @@
     let wsCntInterval = 1000;
     let wsCntIntervalId = null;
 
+    const API_SEND_FILE_LIST = "s_sendFileList";
+    const API_LEFT_SPACE = "s_leftSpace";
+    const API_CLIENT_INIT_CALLBACK = "s_clientInitCallback";
+
     let mRandom8bitName = null;
     window.getRandomWSName = function() {
         if (mRandom8bitName) {
@@ -40,7 +44,10 @@
                 //通过每次接收leftSpace来当做ping/pong
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
-                parseMessage(data);
+                const api = jsonData.api;
+                console.log("api ", api);
+                console.log("json ", jsonData);
+                parseMessage(api, data);
             };
     
             // 错误处理
@@ -67,13 +74,13 @@
         return false;
     }
 
-    function parseMessage(data) {
-        if (data.leftSpace) {
+    function parseMessage(api, data) {
+        if (api == API_LEFT_SPACE) {
             myHtmlUpdateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
-        } if (data.myDroidMode) {
+        } if (api == API_CLIENT_INIT_CALLBACK) {
             const ip = data.ip;
             myHtmlUpdateBigTitle(data.myDroidMode, ip + "@" + data.clientName);
-        } else if (data.urlRealInfoHtmlList) {
+        } else if (api == API_SEND_FILE_LIST) {
             console.log("data urlReaultInfos " + data.urlRealInfoHtmlList);
             if (window.onUrlRealInfoHtmlListReceiver) {
                 window.onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);

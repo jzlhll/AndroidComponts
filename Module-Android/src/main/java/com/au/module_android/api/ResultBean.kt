@@ -6,4 +6,4 @@ import androidx.annotation.Keep
  * data是json对象
 */
 @Keep
-class ResultBean<T>(code: String, msg: String?, val data:T? = null) : BaseBean(code, msg)
+open class ResultBean<T>(code: String, msg: String?, val data:T? = null) : BaseBean(code, msg)

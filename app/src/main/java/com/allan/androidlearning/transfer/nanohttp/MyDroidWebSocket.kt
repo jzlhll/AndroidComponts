@@ -7,10 +7,13 @@ import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
 import com.allan.androidlearning.transfer.benas.toCNName
+import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
+import com.allan.androidlearning.transfer.htmlbeans.API_LEFT_SPACE
+import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_LIST
 import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
 import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
+import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
 import com.au.module_android.Globals
-import com.au.module_android.api.ResultBean
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
@@ -49,7 +52,7 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 cvtList.add(urlRealInfoEx.copyToHtml())
             }
             server.heartbeatScope.launchOnThread {
-                val ret = ResultBean(CODE_SUC, "send files to html!", FileListForHtmlResult(cvtList))
+                val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
                 logt { json }
@@ -79,7 +82,7 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 try {
                     if (leftSpaceCount % 3 == 0L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
-                        send(ResultBean(CODE_SUC, "success!", LeftSpaceResult(leftSpace)).toJsonString())
+                        send(WSResultBean(CODE_SUC, "success!", API_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString())
                     }
 
                     //心跳 websocket必须ping。浏览器则自动实现了pong。
@@ -112,7 +115,7 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             //通过later则不需要注意线程
             ToastBuilder().setMessage("一个新的网页接入！$remoteIpStr@$targetName").setIcon("success").setOnTopLater(200).toast()
             val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
-            val ret = ResultBean(CODE_SUC, "success!", MyDroidModeResult(mode, remoteIpStr, targetName))
+            val ret = WSResultBean(CODE_SUC, "success!", API_CLIENT_INIT_CALLBACK, MyDroidModeResult(mode, remoteIpStr, targetName))
             send(ret.toJsonString())
         }
         message.setUnmasked()
