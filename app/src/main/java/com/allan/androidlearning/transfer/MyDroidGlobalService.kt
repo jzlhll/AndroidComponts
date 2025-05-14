@@ -2,6 +2,7 @@ package com.allan.androidlearning.transfer
 
 import android.app.Activity
 import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
@@ -14,7 +15,10 @@ import com.allan.androidlearning.transfer.views.MyDroidSendFragment
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
 import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.simplelivedata.RealValueLiveData
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.loge
@@ -51,7 +55,10 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
      * 从shareReceiver activity处接收数据
      * key是uri.toString而来。
      */
-    val shareReceiverUriMap = NoStickLiveData<HashMap<String, UriRealInfoEx>>(hashMapOf())
+    val shareReceiverUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
+    fun shareReceiverUriMapSetValue(map: HashMap<String, UriRealInfoEx>) {
+        shareReceiverUriMap.asNoStickLiveData().setValueSafe(map)
+    }
 
     var fileExportSuccessCallbacks = ArrayList<((info:String, exportFileStr:String)->Unit)>()
     var fileExportFailCallbacks = ArrayList<((String)->Unit)>()

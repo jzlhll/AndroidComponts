@@ -1,13 +1,18 @@
 package com.allan.androidlearning.transfer.nanohttp
 
+import androidx.lifecycle.Observer
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.benas.FileListForHtmlResult
 import com.allan.androidlearning.transfer.benas.LeftSpaceResult
 import com.allan.androidlearning.transfer.benas.MyDroidModeResult
+import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
 import com.allan.androidlearning.transfer.benas.toCNName
 import com.au.module_android.Globals
 import com.au.module_android.api.ResultBean
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_android.utils.unsafeLazy
@@ -37,19 +42,42 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     private var isActive = true
 
+    private var mShareReceiverUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
+        override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
+            val cvtList = mutableListOf<UriRealInfoHtml>()
+            map.values.forEach { urlRealInfoEx->
+                cvtList.add(urlRealInfoEx.copyToHtml())
+            }
+            server.heartbeatScope.launchOnThread {
+                val ret = ResultBean(CODE_SUC, "send files to html!", FileListForHtmlResult(cvtList))
+                val json = ret.toJsonString()
+                logt { "${Thread.currentThread()} on map changed. send file list to html" }
+                logt { json }
+                send(json)
+            }
+        }
+    }
+
     override fun onOpen() {
         logdNoFile { "$cTag on open:" }
         openTs = System.currentTimeMillis() //必须在前面
         server.addIntoConnections(this)
 
+        heartbeat()
+
+        Globals.mainScope.launch {
+            MyDroidGlobalService.shareReceiverUriMap.observeForever(mShareReceiverUriMapOb)
+        }
+    }
+
+    private fun heartbeat() {
         server.heartbeatScope.launch {
-            var leftSpaceCount = 0
+            var leftSpaceCount = 0L
             while (isActive) {
-                logdNoFile { "$cTag heartbeat!" }
+                logdNoFile { "${Thread.currentThread()} $cTag heartbeat!" }
                 leftSpaceCount++
                 try {
-                    //ping(MyDroidWebSocketServer.PING_PAYLOAD)
-                    if (leftSpaceCount % 3 == 0) { //隔久一点再告知leftSpace
+                    if (leftSpaceCount % 3 == 0L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
                         send(ResultBean(CODE_SUC, "success!", LeftSpaceResult(leftSpace)).toJsonString())
                     }
@@ -68,6 +96,9 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         logdNoFile { "$cTag on close: $reason initByRemote:$initiatedByRemote" }
         isActive = false
         server.removeFromConnections(this)
+        Globals.mainScope.launch {
+            MyDroidGlobalService.shareReceiverUriMap.removeObserver(mShareReceiverUriMapOb)
+        }
     }
 
     override fun onMessage(message: WebSocketFrame) {

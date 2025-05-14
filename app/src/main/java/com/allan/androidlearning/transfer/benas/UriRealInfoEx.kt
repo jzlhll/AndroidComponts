@@ -1,14 +1,16 @@
 package com.allan.androidlearning.transfer.benas
 
 import android.net.Uri
+import androidx.annotation.Keep
 import com.au.module_android.utilsmedia.UriRealInfo
 import com.au.module_android.utilsmedia.formatBytes
 import java.io.File
 
+@Keep
 data class UriRealInfoEx(val uri: Uri, val name:String? = null,
                          val realPath:String? = null, val relativePath:String? = null,
                          val fileSizeStr:String,
-                         var isChecked: Boolean = false) {
+                         @Transient var isChecked: Boolean = false) {
     companion object {
         fun copyFrom(info: UriRealInfo, isChecked: Boolean) : UriRealInfoEx {
             val goodPath = info.realPath ?: info.relativePath
@@ -25,4 +27,14 @@ data class UriRealInfoEx(val uri: Uri, val name:String? = null,
         val n = realPath ?: (relativePath ?: name)
         return n?.substring(n.lastIndexOf("/") + 1)
     }
+
+    fun copyToHtml() : UriRealInfoHtml {
+        return UriRealInfoHtml(uri.toString(), goodName(), fileSizeStr)
+    }
 }
+
+/**
+ * 转变成传输给前端的对象
+ */
+@Keep
+data class UriRealInfoHtml(val uriStr:String, val name:String?, val fileSizeStr: String)

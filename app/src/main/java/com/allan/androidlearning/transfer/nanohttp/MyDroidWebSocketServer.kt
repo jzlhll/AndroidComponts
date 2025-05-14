@@ -23,6 +23,10 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
 
     private val executor = Executors.newSingleThreadExecutor()
     private val singleThreadDispatcher = executor.asCoroutineDispatcher()
+
+    /**
+     * 多个websocket客户端共享同一线程、scope
+     */
     val heartbeatScope = CoroutineScope(singleThreadDispatcher)
 
     private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()

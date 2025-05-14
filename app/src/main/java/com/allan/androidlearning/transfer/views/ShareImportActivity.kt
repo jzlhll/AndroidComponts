@@ -14,6 +14,7 @@ import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.Globals
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.findCustomFragmentGetActivity
@@ -72,7 +73,7 @@ class ShareImportActivity : ViewActivity() {
                 map.put(uriStr, UriRealInfoEx.copyFrom(real, true))
             }
         }
-        MyDroidGlobalService.shareReceiverUriMap.setValueSafe(map)
+        MyDroidGlobalService.shareReceiverUriMapSetValue(map)
 
         val found = findEntryActivity(EntryActivity::class.java)
         //清理掉自己

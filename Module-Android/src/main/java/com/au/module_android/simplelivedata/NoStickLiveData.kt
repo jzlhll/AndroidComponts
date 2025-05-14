@@ -16,9 +16,7 @@ import kotlin.concurrent.Volatile
  * 2. 添加noStick(去除粘性)；
  * 3. 增加safe操作。
  */
-open class NoStickLiveData<T> : LiveData<T> {
-    @Volatile
-    private var mRealData: Any? = null
+open class NoStickLiveData<T> : RealValueLiveData<T> {
 
     /**
      * 本身来讲，默认支持NoStick即可。
@@ -35,7 +33,6 @@ open class NoStickLiveData<T> : LiveData<T> {
     }
 
     constructor(value: T) : super(value) {
-        mRealData = value
         mVersion = 0
     }
 
@@ -63,7 +60,6 @@ open class NoStickLiveData<T> : LiveData<T> {
     @Deprecated("如非必要，推荐使用setValueSafe。")
     override fun setValue(value: T?) {
         mVersion++
-        mRealData = value
         mIsPosting = false
         super.setValue(value)
     }
@@ -74,27 +70,8 @@ open class NoStickLiveData<T> : LiveData<T> {
     @Deprecated("如非必要，推荐使用setValueSafe。")
     override fun postValue(value: T?) {
         mIsPosting = true
-        mRealData = value
         super.postValue(value)
     }
-
-    /**
-     * 真实的变量。区别与getValue。
-     */
-    val realValue: T?
-        get() {
-            val realData = mRealData ?: return null
-            return realData as T
-        }
-
-    /**
-     * 真实的变量。区别与getValue。
-     * 代码逻辑，你自身确保它就一定不会为空的。
-     */
-    val realValueUnsafe:T
-        get() {
-            return mRealData as T
-        }
 
     //////////////////////////////////
     /////// no stick

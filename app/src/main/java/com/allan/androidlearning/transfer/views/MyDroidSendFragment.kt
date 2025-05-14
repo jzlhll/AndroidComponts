@@ -10,6 +10,7 @@ import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
@@ -23,36 +24,6 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.toolbar.setNavigationOnClickListener {
-            requireActivity().finishAfterTransition()
-        }
-
-        parseEntryFileList()
-
-        MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
-            for (clientBinding in sendClientBindings) {
-                clientBinding.root.gone()
-            }
-
-            clientList.forEachIndexed { index, clientInfo ->
-                logdNoFile { "client List[$index] = $clientInfo" }
-                val item = clientItem(index)
-                item.title.text = clientInfo.ip + "@" + clientInfo.name
-                item.icon.background = ViewBackgroundBuilder()
-                    .setBackground(requireContext().getColor(clientInfo.colorIcon))
-                    .setCornerRadius(32f.dp)
-                    .build()
-                if (!item.root.isAttachedToWindow) {
-                    binding.clientsHost.addView(item.root)
-                }
-                item.root.visible()
-            }
-
-            sendClientBindings.forEachIndexed { index, binding ->
-                binding.check.isChecked = index == 0
-            }
-        }
-
         requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
                 toolbarLP.topMargin = statusBarsHeight
@@ -60,6 +31,13 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
             }
             insets
         }
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().finishAfterTransition()
+        }
+
+        parseEntryFileList()
+        clientLiveDataInit()
 
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, "")
@@ -86,6 +64,36 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
             requireActivity().setTurnScreenOn(true)
         }
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    private fun clientLiveDataInit() {
+        MyDroidGlobalService.clientListLiveData.observe(this) { clientList ->
+            for (clientBinding in sendClientBindings) {
+                clientBinding.root.gone()
+            }
+
+            clientList.forEachIndexed { index, clientInfo ->
+                logdNoFile { "client List[$index] = $clientInfo" }
+                val item = clientItem(index)
+                item.title.text = clientInfo.ip + "@" + clientInfo.name
+                item.icon.background = ViewBackgroundBuilder()
+                    .setBackground(requireContext().getColor(clientInfo.colorIcon))
+                    .setCornerRadius(32f.dp)
+                    .build()
+                if (!item.root.isAttachedToWindow) {
+                    binding.clientsHost.addView(item.root)
+                }
+                item.root.visible()
+            }
+
+            sendClientBindings.forEachIndexed { index, binding ->
+                binding.check.isChecked = index == 0
+            }
+        }
+
+        MyDroidGlobalService.shareReceiverUriMap.asNoStickLiveData().observeUnStick(this) {
+
+        }
     }
 
     override fun onStart() {
