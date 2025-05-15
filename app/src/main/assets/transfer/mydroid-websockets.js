@@ -7,15 +7,7 @@
     const API_LEFT_SPACE = "s_leftSpace";
     const API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
 
-    let mRandom8bitName = null;
-    window.getRandomWSName = function() {
-        if (mRandom8bitName) {
-            return mRandom8bitName;
-        }
-        const n = generateUUID();
-        mRandom8bitName = n.substring(0, 6);
-        return mRandom8bitName;
-    }
+    window.myIpRandomName = null;
 
     // 停止定时器
     function stopWebSocketInterval() {
@@ -34,7 +26,8 @@
             socket.onopen = (event) => {
                 console.log('WebSocket 连接已建立');
                 // 发送初始数据
-                const wsName = getRandomWSName();
+                const n = generateUUID();
+                const wsName = n.substring(0, 8);
                 const wsInit = { "wsInit": wsName };
                 socket.send(JSON.stringify(wsInit));
             };
@@ -79,9 +72,11 @@
             commonHtmlUpdateLeftSpace("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
         } if (api == API_CLIENT_INIT_CALLBACK) {
             const ip = data.ip;
-            commonHtmlUpdateIpClient(data.myDroidMode, ip + "@" + data.clientName);
+            const ipRandomName = ip + "@" + data.clientName;
+            window.myIpRandomName = ipRandomName;
+            commonHtmlUpdateIpClient(data.myDroidMode, ipRandomName);
         } else if (api == API_SEND_FILE_LIST) {
-            console.log("data urlReaultInfos " + data.urlRealInfoHtmlList);
+            console.log("data url result Infos " + data.urlRealInfoHtmlList);
             if (window.onUrlRealInfoHtmlListReceiver) {
                 window.onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);
             }

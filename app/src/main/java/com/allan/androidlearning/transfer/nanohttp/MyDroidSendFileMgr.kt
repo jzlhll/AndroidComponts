@@ -15,7 +15,7 @@ import java.io.FileInputStream
 class MyDroidSendFileMgr {
 
     /**
-     * url 就是/download?uriUuid=abcdefge 格式
+     * url 就是/download?uriUuid=abcdefge&ipRandomName=addf@name 格式
      */
     fun handleDownFileRequest(session: IHTTPSession) : Response {
         session.queryParameterString
@@ -33,8 +33,7 @@ class MyDroidSendFileMgr {
             val uri = info.uri
             val inputStream = try {
                 val cr = Globals.app.contentResolver
-                val inputStream = cr.openInputStream(uri)
-                inputStream
+                cr.openInputStream(uri)
             } catch (e: Exception) {
                 null
             }

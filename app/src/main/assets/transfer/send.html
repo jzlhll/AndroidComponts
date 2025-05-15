@@ -109,6 +109,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
             background: white;
+            display: none;
             margin: 16px 0;
             font-family: system-ui, -apple-system, sans-serif;
         }
@@ -195,6 +196,11 @@
         </table>
     </div>
 
+    <div id="loading-text" style="text-align: center; font-size: 3em; font-family: 'Arial Black', sans-serif;
+         color: #3498db; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin: 50px 0;">
+        Loading...
+    </div>
+
     <!-- 错误遮罩层 -->
     <div id="overlayView">
         <div id="overlayView-content">
@@ -220,6 +226,8 @@
 
         // 接收并显示数据的JS函数
         window.displayFileList = function(uriRealInfoHtmlList) {
+            document.getElementById('loading-text').style.display = 'none';
+            document.getElementById('file-list-container').style.display = 'table';
             const tbody = document.getElementById('file-list-body');
             tbody.innerHTML = '';
 

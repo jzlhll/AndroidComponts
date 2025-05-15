@@ -8,28 +8,17 @@
 
      window.startDownload = async function(uriUuid) {
         try {
-            const downUrl = `/download?uriUuid=${uriUuid}`;
+            const params = new URLSearchParams({
+              uriUuid: uriUuid,
+              ipRandomName: window.myIpRandomName
+            });
+            const downUrl = `/download?${params.toString()}`;
             console.log("startDownload: ", downUrl);
             const response = await fetch(downUrl);
             console.log("startDownload response: ", response);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(response);
             }
-
-            // 将响应流转换为 Blob
-            const blob = await response.blob();
-
-            // 创建临时 URL 并触发下载
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'large_file.zip'; // 设置下载文件名
-            document.body.appendChild(a);
-            a.click();
-
-            // 清理资源
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
         } catch (error) {
             console.error('下载失败:', error);
             alert('下载失败，请检查控制台日志');

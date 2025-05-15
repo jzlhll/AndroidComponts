@@ -86,9 +86,9 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
                 item.root.visible()
             }
 
-            sendClientBindings.forEachIndexed { index, binding ->
-                binding.check.isChecked = index == 0
-            }
+//            sendClientBindings.forEachIndexed { index, binding ->
+//                binding.check.isChecked = index == 0
+//            }
         }
 
         MyDroidGlobalService.shareReceiverUriMap.asNoStickLiveData().observeUnStick(this) {
