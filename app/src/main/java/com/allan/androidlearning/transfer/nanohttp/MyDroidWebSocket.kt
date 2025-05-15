@@ -55,7 +55,7 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
-                logt { json }
+                logt { "send:" + json }
                 send(json)
             }
         }
@@ -80,9 +80,11 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 logdNoFile { "${Thread.currentThread()} $cTag heartbeat!" }
                 leftSpaceCount++
                 try {
-                    if (leftSpaceCount % 3 == 0L) { //隔久一点再告知leftSpace
+                    if (leftSpaceCount % 3 == 1L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
-                        send(WSResultBean(CODE_SUC, "success!", API_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString())
+                        val json = WSResultBean(CODE_SUC, "success!", API_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
+                        logt { "send: $json" }
+                        send(json)
                     }
 
                     //心跳 websocket必须ping。浏览器则自动实现了pong。
@@ -116,7 +118,9 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             ToastBuilder().setMessage("一个新的网页接入！$remoteIpStr@$targetName").setIcon("success").setOnTopLater(200).toast()
             val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
             val ret = WSResultBean(CODE_SUC, "success!", API_CLIENT_INIT_CALLBACK, MyDroidModeResult(mode, remoteIpStr, targetName))
-            send(ret.toJsonString())
+            val json = ret.toJsonString()
+            logt { "send: $json" }
+            send(json)
         }
         message.setUnmasked()
     }

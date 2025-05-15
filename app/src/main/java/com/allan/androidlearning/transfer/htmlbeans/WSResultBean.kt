@@ -1,9 +1,11 @@
 package com.allan.androidlearning.transfer.htmlbeans
 
+import androidx.annotation.Keep
 import com.au.module_android.api.ResultBean
 
+@Keep
 class WSResultBean<T>(code: String,
                       msg: String?,
-                      api:String,
+                      val api:String,
                       data:T?)
     : ResultBean<T>(code, msg, data)
