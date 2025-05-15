@@ -218,7 +218,7 @@
 
     let isUploadingFile = false; //正在上传
 
-    window.myHtmlUpdateSubtitle = function(newText) {
+    window.commonHtmlUpdateLeftSpace = function(newText) {
         const subtitleElement = document.getElementById('subtitle');
         if (subtitleElement) {
             subtitleElement.textContent = newText;
@@ -463,7 +463,7 @@
         }
     }
 
-    window.myHtmlUpdateBigTitle = function(mode, ipAndRandomCode) {
+    window.commonHtmlUpdateIpClient = function(mode, ipAndRandomCode) {
         document.getElementById('bigTitle').textContent = `${ipAndRandomCode} (${mode})`;
     };
 

@@ -66,11 +66,13 @@ class ShareImportActivity : ViewActivity() {
     private fun handleIncreaseUris(uris: List<Uri>) {
         logdNoFile { "handle increase uris $uris" }
         val map = MyDroidGlobalService.shareReceiverUriMap.realValue ?: hashMapOf()
+        val oldList = map.values.toList()
+
         uris.forEach { uri->
-            val uriStr = uri.toString()
-            if (!map.contains(uriStr)) {
+            if (oldList.find { it.uri == uri } == null) {
                 val real = uri.getRealInfo(Globals.app)
-                map.put(uriStr, UriRealInfoEx.copyFrom(real, true))
+                val bean = UriRealInfoEx.copyFrom(real, true)
+                map.put(bean.uriUuid, bean)
             }
         }
         MyDroidGlobalService.shareReceiverUriMapSetValue(map)

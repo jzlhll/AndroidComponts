@@ -7,7 +7,7 @@ import com.allan.androidlearning.transfer.CODE_FAIL_RECEIVER_CHUNK
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.badRequestJsonResponse
-import com.allan.androidlearning.transfer.benas.ChunkInfo
+import com.allan.androidlearning.transfer.benas.ChunkInfoResult
 import com.allan.androidlearning.transfer.jsonResponse
 import com.allan.androidlearning.transfer.nanoTempCacheChunksDir
 import com.allan.androidlearning.transfer.nanoTempCacheMergedDir
@@ -29,14 +29,14 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
     /**
      * key是fileName；value是chunkInfo组
      */
-    val fileChunkInfosMap = HashMap<String, ArrayList<ChunkInfo>>()
+    val fileChunkInfosMap = HashMap<String, ArrayList<ChunkInfoResult>>()
     val fileChunkLock = Any()
     
     private fun transferInfoCallback(info:String) {
         MyDroidGlobalService.onTransferInfoData.setValueSafe(info)
     }
 
-    private fun addChunkInfo(chunkInfo: ChunkInfo) {
+    private fun addChunkInfo(chunkInfo: ChunkInfoResult) {
         synchronized(fileChunkLock) {
             val chunkInfoList = fileChunkInfosMap.getOrPut(chunkInfo.fileName) {
                 ArrayList()
@@ -45,7 +45,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         }
     }
 
-    private fun removeChunkInfoList(fileName: String) : ArrayList<ChunkInfo>? {
+    private fun removeChunkInfoList(fileName: String) : ArrayList<ChunkInfoResult>? {
         synchronized(fileChunkLock) {
             return fileChunkInfosMap.remove(fileName)
         }
@@ -70,7 +70,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
             // 2. 获取文件块内容（核心）
             val tmpFileStr = filesMap["chunk"]
             if (tmpFileStr.isNullOrEmpty()) {
-                return ResultBean<ChunkInfo>(CODE_FAIL, "未接收到文件块", null).badRequestJsonResponse()
+                return ResultBean<ChunkInfoResult>(CODE_FAIL, "未接收到文件块", null).badRequestJsonResponse()
             }
 
             val tmpFile = File(tmpFileStr)
@@ -84,7 +84,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
             }
             tmpFile.renameTo( chunkTmpFile)
 
-            val chunkInfo = ChunkInfo(fileName, chunkIndex, totalChunks, md5, chunkTmpFile)
+            val chunkInfo = ChunkInfoResult(fileName, chunkIndex, totalChunks, md5, chunkTmpFile)
             addChunkInfo(chunkInfo)
 
             transferInfoCallback("$fileName: $shortMd5 $chunkIndex/$totalChunks")
@@ -95,7 +95,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         } catch (e: Exception) {
             logd { ALogJ.ex(e) }
             transferInfoCallback("$fileName Chunk $chunkIndex/$totalChunks received failed!")
-            return ResultBean<ChunkInfo>(
+            return ResultBean<ChunkInfoResult>(
                 CODE_FAIL_RECEIVER_CHUNK,
                 "$fileName Chunk $chunkIndex/$totalChunks received failed!",
                 null).okJsonResponse()
@@ -111,7 +111,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         val fileName = params.optString("fileName")
         val totalChunks = params.optInt("totalChunks")
         if (md5.isNullOrEmpty() || fileName.isNullOrEmpty()) {
-            return ResultBean<ChunkInfo>(CODE_FAIL, "Error merge chunk params.", null).badRequestJsonResponse()
+            return ResultBean<ChunkInfoResult>(CODE_FAIL, "Error merge chunk params.", null).badRequestJsonResponse()
         }
         logt { "handle Merge Chunk $fileName , $md5 , totalChunks:$totalChunks" }
 
@@ -119,12 +119,12 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         val chunkInfoList = removeChunkInfoList(fileName)
         if (chunkInfoList == null) {
             transferInfoCallback("$fileName: $shortMd5 No chunks?")
-            return ResultBean<ChunkInfo>(CODE_FAIL_MERGE_CHUNK, "No chunks?", null).jsonResponse(Status.OK)
+            return ResultBean<ChunkInfoResult>(CODE_FAIL_MERGE_CHUNK, "No chunks?", null).jsonResponse(Status.OK)
         }
         chunkInfoList.sortBy { it.chunkIndex }
         if (chunkInfoList.size != totalChunks) {
             transferInfoCallback("$fileName: $shortMd5 Chunks number not match.")
-            return ResultBean<ChunkInfo>(CODE_FAIL_MERGE_CHUNK, "Chunks number not match.", null).jsonResponse(Status.OK)
+            return ResultBean<ChunkInfoResult>(CODE_FAIL_MERGE_CHUNK, "Chunks number not match.", null).jsonResponse(Status.OK)
         }
         val outputFileStr = nanoTempCacheMergedDir() + File.separatorChar + fileName
         val outputFile = File(outputFileStr)
@@ -150,13 +150,13 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
             MyDroidGlobalService.onFileMergedData.setValueSafe(outputFile)
 
             transferInfoCallback("$fileName: $shortMd5 传输成功，md5检验通过！")
-            return ResultBean<ChunkInfo>(
+            return ResultBean<ChunkInfoResult>(
                 CODE_SUC,
                 "文件合并完成且校验通过", null).okJsonResponse()
         } else {
             outputFile.delete()
             transferInfoCallback("$fileName: $shortMd5 md5 check failed.")
-            return ResultBean<ChunkInfo>(
+            return ResultBean<ChunkInfoResult>(
                 CODE_FAIL_MD5_CHECK,
                 "MD5校验失败", null).okJsonResponse()
         }

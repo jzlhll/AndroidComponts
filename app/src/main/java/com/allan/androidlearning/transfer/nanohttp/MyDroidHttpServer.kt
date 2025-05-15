@@ -41,6 +41,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     }
 
     private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
+    private val sendFileMgr by lazy { MyDroidSendFileMgr() }
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)
@@ -52,7 +53,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
         session.headers.put("content-type", ct.contentTypeHeader)
 
         return when (session.method) {
-            Method.GET -> handleGetRequest(session.uri)
+            Method.GET -> handleGetRequest(session)
             Method.POST -> handlePostRequest(session)
             else -> newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404")
         }
@@ -75,7 +76,9 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
         return response
     }
 
-    private fun handleGetRequest(url: String): Response {
+    private fun handleGetRequest(session: IHTTPSession): Response {
+        val url = session.uri ?: ""
+        logdNoFile { "handle Get Request $url" }
         return when {
             // 主页面请求
             url == "/" -> {
@@ -92,12 +95,16 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 //                serveAssetFile("transfer/$jsName")
                 serverJsFile("transfer/$jsName")
             }
+            url == "/download" -> {
+                sendFileMgr.handleDownFileRequest(session)
+            }
             else -> {
                 logdNoFile { "handle get request $url" }
                 newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")
             }
         }
     }
+
 
     private fun handlePostRequest(session: IHTTPSession): Response {
         return when (session.uri) {

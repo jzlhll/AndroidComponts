@@ -5,12 +5,17 @@ import androidx.annotation.Keep
 import com.au.module_android.utilsmedia.UriRealInfo
 import com.au.module_android.utilsmedia.formatBytes
 import java.io.File
+import java.util.UUID
 
 @Keep
-data class UriRealInfoEx(val uri: Uri, val name:String? = null,
-                         val realPath:String? = null, val relativePath:String? = null,
+data class UriRealInfoEx(val uri: Uri,
+                         val name:String? = null,
+                         val realPath:String? = null,
+                         val relativePath:String? = null,
                          val fileSizeStr:String,
                          @Transient var isChecked: Boolean = false) {
+    val uriUuid:String = UUID.randomUUID().toString().replace("-", "")
+
     companion object {
         fun copyFrom(info: UriRealInfo, isChecked: Boolean) : UriRealInfoEx {
             val goodPath = info.realPath ?: info.relativePath
@@ -29,8 +34,7 @@ data class UriRealInfoEx(val uri: Uri, val name:String? = null,
     }
 
     fun copyToHtml() : UriRealInfoHtml {
-        val base64Str = java.util.Base64.getEncoder().encodeToString(uri.toString().toByteArray())
-        return UriRealInfoHtml(base64Str, goodName(), fileSizeStr)
+        return UriRealInfoHtml(uriUuid, goodName(), fileSizeStr)
     }
 }
 
@@ -38,4 +42,4 @@ data class UriRealInfoEx(val uri: Uri, val name:String? = null,
  * 转变成传输给前端的对象
  */
 @Keep
-data class UriRealInfoHtml(val uriStrBase64:String, val name:String?, val fileSizeStr: String)
+data class UriRealInfoHtml(val uriUuid:String, val name:String?, val fileSizeStr: String)

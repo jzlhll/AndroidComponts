@@ -27,6 +27,7 @@ const val MIME_TYPE_JSON = "application/json; charset=UTF-8"
 
 const val CODE_SUC = "0"
 const val CODE_FAIL = "-1"
+const val CODE_FAIL_FILE_SEND_ERR = "-2"
 const val CODE_FAIL_RECEIVER_CHUNK = "-101"
 const val CODE_FAIL_MERGE_CHUNK = "-102"
 const val CODE_FAIL_MD5_CHECK = "-103"

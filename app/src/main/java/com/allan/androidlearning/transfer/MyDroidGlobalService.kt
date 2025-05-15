@@ -53,7 +53,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
 
     /**
      * 从shareReceiver activity处接收数据
-     * key是uri.toString而来。
+     * key是uriUuid
      */
     val shareReceiverUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
     fun shareReceiverUriMapSetValue(map: HashMap<String, UriRealInfoEx>) {

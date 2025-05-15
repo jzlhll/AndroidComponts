@@ -166,7 +166,9 @@
         .download-link:hover {
             color: #0056b3;
             text-decoration: underline;
+          cursor: pointer;
         }
+
     </style>
 </head>
 
@@ -202,7 +204,7 @@
     </div>
 
     <script>
-         window.myHtmlUpdateSubtitle = function(newText) {
+         window.commonHtmlUpdateLeftSpace = function(newText) {
             //不做显示。
         }
 
@@ -212,12 +214,12 @@
             document.body.style.overflow = 'hidden'; // 禁止页面滚动
         }
         
-        window.myHtmlUpdateBigTitle = function(mode, ipAndRandomCode) {
+        window.commonHtmlUpdateIpClient = function(mode, ipAndRandomCode) {
             document.getElementById('bigTitle').textContent =  `${ipAndRandomCode} (${mode})`;
         };
 
         // 接收并显示数据的JS函数
-        window.displayFileList = function displayFileList(uriRealInfoHtmlList) {
+        window.displayFileList = function(uriRealInfoHtmlList) {
             const tbody = document.getElementById('file-list-body');
             tbody.innerHTML = '';
 
@@ -230,9 +232,8 @@
                         <td>${item.fileSizeStr}</td>
                         <td>
                             <a class="download-link"
-                               href="data:application/octet-stream;base64,${item.uriStrBase64}"
-                               download="${item.name || 'download'}">
-                                下载
+                               onclick="startDownload('${item.uriUuid}')">
+                               下载
                             </a>
                         </td>
                     </tr>

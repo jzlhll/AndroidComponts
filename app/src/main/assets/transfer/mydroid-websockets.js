@@ -5,7 +5,7 @@
 
     const API_SEND_FILE_LIST = "s_sendFileList";
     const API_LEFT_SPACE = "s_leftSpace";
-    const API_CLIENT_INIT_CALLBACK = "s_clientInitCallback";
+    const API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
 
     let mRandom8bitName = null;
     window.getRandomWSName = function() {
@@ -76,10 +76,10 @@
 
     function parseMessage(api, data) {
         if (api == API_LEFT_SPACE) {
-            myHtmlUpdateSubtitle("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
+            commonHtmlUpdateLeftSpace("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
         } if (api == API_CLIENT_INIT_CALLBACK) {
             const ip = data.ip;
-            myHtmlUpdateBigTitle(data.myDroidMode, ip + "@" + data.clientName);
+            commonHtmlUpdateIpClient(data.myDroidMode, ip + "@" + data.clientName);
         } else if (api == API_SEND_FILE_LIST) {
             console.log("data urlReaultInfos " + data.urlRealInfoHtmlList);
             if (window.onUrlRealInfoHtmlListReceiver) {
