@@ -469,6 +469,13 @@
 
     ////////run init functions//////
     startWsConnect();
+    
+    // 判断是否为 HTTPS
+    if (window.location.protocol === 'https:') {
+        console.log("当前页面使用 HTTPS");
+    } else {
+        console.log("当前页面使用 HTTP");
+    }
 </script>
 </body>
 </html>

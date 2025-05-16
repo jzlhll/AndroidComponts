@@ -180,6 +180,8 @@
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
+<script src="streamsaver.min.js"></script>
+<script src="ponyfill.min.js"></script>
 
 <body>
     <div class="container">
@@ -275,6 +277,13 @@
         
         ////////run init functions//////
         startWsConnect();
+
+        // 判断是否为 HTTPS
+        if (window.location.protocol === 'https:') {
+            console.log("当前页面使用 HTTPS");
+        } else {
+            console.log("当前页面使用 HTTP");
+        }
     </script>
 </body>
 </html>

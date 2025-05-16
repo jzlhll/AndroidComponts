@@ -32,6 +32,21 @@ const val CODE_FAIL_RECEIVER_CHUNK = "-101"
 const val CODE_FAIL_MERGE_CHUNK = "-102"
 const val CODE_FAIL_MD5_CHECK = "-103"
 
+// 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
+fun getWSSendFileChunkSize(fileSize:Long?) : Long{
+    val b = 1024L
+    if (fileSize == null) return b * 512
+    return if (fileSize <= 10 * b) {
+        b * 64
+    } else if (fileSize <= 100 * b) {
+        b * 256
+    } else if (fileSize <= 500 * b) {
+        b * 512
+    } else {
+        b
+    }
+}
+
 fun ResultBean<*>.okJsonResponse() : Response{
     return newFixedLengthResponse(
         Status.OK,

@@ -30,9 +30,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
 
-open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
-                            var server: MyDroidWebSocketServer,
-                            val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
+open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
+                                    var server: MyDroidWebSocketServer,
+                                    val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
     interface IOnMessage {
         fun onNewClientInit()
         fun onSendFile(uriUuid:String, info: UriRealInfoEx?)
@@ -54,31 +54,6 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     private val messager : IOnMessage = MyDroidWebSocketMessager(this)
 
-    private var mShareReceiverUriMapOb:Observer<HashMap<String, UriRealInfoEx>>? = null
-    private fun getMapOB(): Observer<HashMap<String, UriRealInfoEx>> {
-        val ob = mShareReceiverUriMapOb
-        if (ob != null) {
-            return ob
-        }
-        mShareReceiverUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
-            override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
-                val cvtList = mutableListOf<UriRealInfoHtml>()
-                map.values.forEach { urlRealInfoEx->
-                    cvtList.add(urlRealInfoEx.copyToHtml())
-                }
-                server.heartbeatScope.launchOnThread {
-                    val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
-                    val json = ret.toJsonString()
-                    logt { "${Thread.currentThread()} on map changed. send file list to html" }
-                    logt { "send:$json" }
-                    send(json)
-                }
-            }
-        }
-        return mShareReceiverUriMapOb!!
-    }
-
-
     override fun onOpen() {
         scope = MainScope()
 
@@ -87,10 +62,6 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         server.addIntoConnections(this)
 
         heartbeat()
-
-        Globals.mainScope.launch {
-            MyDroidGlobalService.shareReceiverUriMap.observeForever(getMapOB())
-        }
     }
 
     private fun heartbeat() {
@@ -121,10 +92,6 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         logdNoFile { "$clientName on close: $reason initByRemote:$initiatedByRemote" }
         isActive = false
         server.removeFromConnections(this)
-        Globals.mainScope.launch {
-            MyDroidGlobalService.shareReceiverUriMap.removeObserver(getMapOB())
-        }
-
         scope?.cancel()
         scope = null
     }

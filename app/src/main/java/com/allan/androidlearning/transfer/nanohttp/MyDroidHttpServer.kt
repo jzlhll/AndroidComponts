@@ -95,7 +95,6 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
         }
     }
 
-
     private fun handlePostRequest(session: IHTTPSession): Response {
         return when (session.uri) {
             "/upload-chunk" -> chunksMgr.handleUploadChunk(session)

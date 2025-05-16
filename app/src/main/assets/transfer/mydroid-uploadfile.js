@@ -30,6 +30,7 @@
         return await response.json();
     }
     
+    // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
     function getChunkSize(fileSize) {
         const MB = 1024 * 1024;
         if (fileSize <= 10 * MB) {
@@ -38,10 +39,8 @@
             return 1 * MB;
         } else if (fileSize <= 500 * MB) {
             return 2 * MB;
-        } else if (fileSize <= 2 * 1024 * MB) {
-            return 5 * MB;
         } else {
-            return 8 * MB;
+            return 3 * MB;
         }
     }
 
@@ -52,7 +51,6 @@
     
         const fileName = file.name;
         myHtmlChangeProgressVisible(true);
-        // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
         const fileSize = file.size;
         const chunkSize = getChunkSize(fileSize);
         console.log("选择的chunkSize是" + chunkSize);

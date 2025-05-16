@@ -39,13 +39,11 @@
     
             // 接收消息
             socket.onmessage = (event) => {
-                //通过每次接收leftSpace来当做ping/pong
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
                 const api = jsonData.api;
                 const msg = jsonData.msg;
-                console.log("apiAndMsg ", api, msg);
-                console.log("json ", jsonData);
+                console.log("api ", api, "msg ", msg);
                 parseMessage(api, msg, data);
             };
     
@@ -143,6 +141,8 @@
     }
 
     function onUrlRealInfoHtmlListReceiver(urlRealInfoHtmlList) {
-        if(sendHtmlDisplayFileList) sendHtmlDisplayFileList(urlRealInfoHtmlList);
+        if (window.sendHtmlDisplayFileList && typeof window.sendHtmlDisplayFileList === "function") {
+            window.sendHtmlDisplayFileList(urlRealInfoHtmlList);
+        }
     };
 })();

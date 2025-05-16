@@ -11,6 +11,7 @@ data class UriRealInfoEx(val uri: Uri,
                          val name:String? = null,
                          val realPath:String? = null,
                          val relativePath:String? = null,
+                         val fileSize:Long?,
                          val fileSizeStr:String,
                          @Transient var isChecked: Boolean = false) {
     val uriUuid:String = UUID.randomUUID().toString().replace("-", "")
@@ -18,12 +19,13 @@ data class UriRealInfoEx(val uri: Uri,
     companion object {
         fun copyFrom(info: UriRealInfo, isChecked: Boolean) : UriRealInfoEx {
             val goodPath = info.realPath ?: info.relativePath
+            val fileSize = if(goodPath != null) File(goodPath).length() else null
             val fileLen = if(goodPath != null) formatBytes(File(goodPath).length()) else "大小未知"
-            return UriRealInfoEx(info.uri, info.name, info.realPath, info.relativePath, fileLen, isChecked)
+            return UriRealInfoEx(info.uri, info.name, info.realPath, info.relativePath, fileSize, fileLen, isChecked)
         }
 
         fun copyFrom(info: UriRealInfoEx) : UriRealInfoEx {
-            return UriRealInfoEx(info.uri, info.name, info.realPath, info.relativePath, info.fileSizeStr, info.isChecked)
+            return UriRealInfoEx(info.uri, info.name, info.realPath, info.relativePath, info.fileSize, info.fileSizeStr, info.isChecked)
         }
     }
 

@@ -77,7 +77,7 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
         val nextColorIcon = nextColorIcon()
         logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
-        return MyDroidWebSocket(handshake, this, nextColorIcon())
+        return MyDroidWebSocket(handshake,  this, nextColorIcon())
     }
 
     public override fun serveHttp(session: IHTTPSession): Response {
