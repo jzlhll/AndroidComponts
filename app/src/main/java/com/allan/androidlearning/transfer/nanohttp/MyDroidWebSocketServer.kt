@@ -66,7 +66,7 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
     fun triggerConnectionsList() {
         val list = ArrayList<WebSocketClientInfo>()
         connections.forEach {
-            list.add(WebSocketClientInfo(it.remoteIpStr ?: "--", it.clientTellName, it.openTs, it.colorIcon))
+            list.add(WebSocketClientInfo(it.clientName, it.openTs, it.colorIcon))
         }
         list.sortByDescending { it.enterTs }
         MyDroidGlobalService.clientListLiveData.setValueSafe(list)

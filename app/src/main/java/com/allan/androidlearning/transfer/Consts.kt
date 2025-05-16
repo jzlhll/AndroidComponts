@@ -56,7 +56,6 @@ fun ResultBean<*>.jsonResponse(status: Response.IStatus) : Response{
     )
 }
 
-
 @DrawableRes
 fun getIcon(fileName: String?): Int {
     // 提取文件后缀并转为小写（处理无后缀的情况）

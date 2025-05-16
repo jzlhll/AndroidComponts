@@ -3,13 +3,17 @@
     let wsCntInterval = 1000;
     let wsCntIntervalId = null;
 
+    window.WS = null;
+
     const API_SEND_FILE_LIST = "s_sendFileList";
     const API_LEFT_SPACE = "s_leftSpace";
     const API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
+    const API_SEND_FILE_CHUNK = "s_sendFileChunk";
+    const API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist";
 
-    window.myIpRandomName = null;
+    const API_WS_INIT = "c_wsInit";
+    window.API_REQUEST_FILE = "c_requestFile";
 
-    // 停止定时器
     function stopWebSocketInterval() {
         if (wsCntIntervalId) {
             console.log('停止start WebSocket ConnectInterval');
@@ -28,7 +32,8 @@
                 // 发送初始数据
                 const n = generateUUID();
                 const wsName = n.substring(0, 8);
-                const wsInit = { "wsInit": wsName };
+                const wsInit = {};
+                wsInit[API_WS_INIT] = wsName;
                 socket.send(JSON.stringify(wsInit));
             };
     
@@ -38,9 +43,10 @@
                 const jsonData = JSON.parse(event.data);
                 const data = jsonData.data;
                 const api = jsonData.api;
-                console.log("api ", api);
+                const msg = jsonData.msg;
+                console.log("apiAndMsg ", api, msg);
                 console.log("json ", jsonData);
-                parseMessage(api, data);
+                parseMessage(api, msg, data);
             };
     
             // 错误处理
@@ -55,32 +61,34 @@
                     // 非正常关闭时尝试重连
                     //reconnect();
                 //}
-                myHtmlShowConnectError();
+                commonHtmlConnectError();
             };
 
+            WS = socket;
             return true;
         } catch(e) {
             console.error("create websocket error", e);
-            myHtmlShowConnectError();
+            commonHtmlConnectError();
         }
         
         return false;
     }
 
-    function parseMessage(api, data) {
+    function parseMessage(api, msg, data) {
         if (api == API_LEFT_SPACE) {
-            commonHtmlUpdateLeftSpace("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
+            if(htmlUpdateLeftSpace) htmlUpdateLeftSpace("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
         } if (api == API_CLIENT_INIT_CALLBACK) {
-            const ip = data.ip;
-            const ipRandomName = ip + "@" + data.clientName;
-            window.myIpRandomName = ipRandomName;
-            commonHtmlUpdateIpClient(data.myDroidMode, ipRandomName);
+            htmlUpdateIpClient(data.myDroidMode, data.clientName);
         } else if (api == API_SEND_FILE_LIST) {
             console.log("data url result Infos " + data.urlRealInfoHtmlList);
-            if (window.onUrlRealInfoHtmlListReceiver) {
-                window.onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);
+            onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);
+        } else if (api == API_SEND_FILE_START_NOT_EXIST) {
+            if (onStartDownloadError) {
+                onStartDownloadError(msg, data.uriUuid);
             }
-        } else {
+        } 
+        
+        else {
             // 处理数据（JSON 示例）
             console.log("on messagae other: " + data);
             try {
@@ -106,7 +114,7 @@
             });
         } catch(e) {
             console.error("read websocket ip port error!", e);
-            myHtmlShowConnectError();
+            commonHtmlConnectError();
             shouldStopInterval = true;
         }
 
@@ -133,4 +141,8 @@
         // 然后设置定时器
         wsCntIntervalId = setInterval(startWebSocket, wsCntInterval);
     }
+
+    function onUrlRealInfoHtmlListReceiver(urlRealInfoHtmlList) {
+        if(sendHtmlDisplayFileList) sendHtmlDisplayFileList(urlRealInfoHtmlList);
+    };
 })();

@@ -3,27 +3,27 @@ package com.allan.androidlearning.transfer.nanohttp
 import androidx.lifecycle.Observer
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
-import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
-import com.allan.androidlearning.transfer.benas.toCNName
-import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
 import com.allan.androidlearning.transfer.htmlbeans.API_LEFT_SPACE
+import com.allan.androidlearning.transfer.htmlbeans.API_REQUEST_FILE
 import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_LIST
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
 import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
-import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
+import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
 import com.au.module_android.Globals
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
-import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utilsmedia.getExternalFreeSpace
-import com.au.module_androidui.toast.ToastBuilder
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
 import fi.iki.elonen.NanoWSD.WebSocketFrame
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -32,18 +32,26 @@ import java.io.IOException
 open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                             var server: MyDroidWebSocketServer,
                             val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
-    val remoteIpStr: String? = httpSession.remoteIpAddress
+    interface IOnMessage {
+        fun onNewClientInit()
+        fun onSendFile(uriUuid:String, info: UriRealInfoEx?)
+    }
+
+    private val remoteIpStr: String? = httpSession.remoteIpAddress
+
+    /**
+     * 客户端名字；就像 192.168.0.6@abde1234
+     */
+    var clientName = "$remoteIpStr@--"
+        private set
 
     var openTs:Long = System.currentTimeMillis()
 
-    private val cTag by unsafeLazy {
-        val str = this@MyDroidWebSocket.toString()
-        remoteIpStr + "@" + str.substring(str.indexOf("@") + 1)
-    }
-
-    var clientTellName = "--"
-
     private var isActive = true
+
+    var scope:CoroutineScope? = null
+
+    private val messager : IOnMessage = MyDroidWebSocketMessager(this)
 
     private var mShareReceiverUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
         override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
@@ -55,14 +63,16 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
-                logt { "send:" + json }
+                logt { "send:$json" }
                 send(json)
             }
         }
     }
 
     override fun onOpen() {
-        logdNoFile { "$cTag on open:" }
+        scope = MainScope()
+
+        logdNoFile { "$clientName on open:" }
         openTs = System.currentTimeMillis() //必须在前面
         server.addIntoConnections(this)
 
@@ -77,7 +87,7 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         server.heartbeatScope.launch {
             var leftSpaceCount = 0L
             while (isActive) {
-                logdNoFile { "${Thread.currentThread()} $cTag heartbeat!" }
+                logdNoFile { "${Thread.currentThread()} $clientName heartbeat!" }
                 leftSpaceCount++
                 try {
                     if (leftSpaceCount % 3 == 1L) { //隔久一点再告知leftSpace
@@ -98,42 +108,44 @@ open class MyDroidWebSocket(httpSession: NanoHTTPD.IHTTPSession,
     }
 
     override fun onClose(code: WebSocketFrame.CloseCode, reason: String, initiatedByRemote: Boolean) {
-        logdNoFile { "$cTag on close: $reason initByRemote:$initiatedByRemote" }
+        logdNoFile { "$clientName on close: $reason initByRemote:$initiatedByRemote" }
         isActive = false
         server.removeFromConnections(this)
         Globals.mainScope.launch {
             MyDroidGlobalService.shareReceiverUriMap.removeObserver(mShareReceiverUriMapOb)
         }
+
+        scope?.cancel()
+        scope = null
     }
 
     override fun onMessage(message: WebSocketFrame) {
         val text = message.textPayload
-        logt { "$cTag on Message:$text" }
+        logt { "$clientName on Message:$text" }
         val json = JSONObject(text)
-        if (json.has("wsInit")) {
-            val targetName = json.optString("wsInit")
-            clientTellName = targetName
+        if (json.has(API_WS_INIT)) {
+            val targetName = json.optString(API_WS_INIT)
+            clientName = "$remoteIpStr@$targetName"
             server.triggerConnectionsList()
-            //通过later则不需要注意线程
-            ToastBuilder().setMessage("一个新的网页接入！$remoteIpStr@$targetName").setIcon("success").setOnTopLater(200).toast()
-            val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
-            val ret = WSResultBean(CODE_SUC, "success!", API_CLIENT_INIT_CALLBACK, MyDroidModeResult(mode, remoteIpStr, targetName))
-            val json = ret.toJsonString()
-            logt { "send: $json" }
-            send(json)
+
+            messager.onNewClientInit()
+        } else if (json.has(API_REQUEST_FILE)) {
+            val uriUuid = json.optString(API_REQUEST_FILE)
+            val info = MyDroidGlobalService.shareReceiverUriMap.value?.get(uriUuid)
+            messager.onSendFile(uriUuid, info)
         }
         message.setUnmasked()
     }
 
     override fun onPong(pong: WebSocketFrame) {
-        logdNoFile { "$cTag on Pong: " + pong.textPayload }
+        logdNoFile { "$clientName on Pong: " + pong.textPayload }
         if (pong.textPayload != MyDroidWebSocketServer.PING_PAYLOAD_TEXT) {
             onException(IOException("WS: pong is not same!"))
         }
     }
 
     override fun onException(exception: IOException) {
-        logdNoFile{"$cTag on Exception: " + exception.message}
+        logdNoFile{"$clientName on Exception: " + exception.message}
         try {
             // 主动发送关闭帧并终止连接
             close(WebSocketFrame.CloseCode.InternalServerError, "Server Error on Exception", false)

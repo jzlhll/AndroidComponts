@@ -33,17 +33,12 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        #bigTitle, #receiverUrl {
+        #bigTitle {
             font-size: 16px;
             color: #333;
             padding: 8px;
             min-height: 40px;
             flex: 1;
-        }
-
-        #bigTitle {
-            font-weight: bold;
-            margin-right: 10px;
         }
 
         .custom-button {
@@ -133,6 +128,7 @@
             color: #444;
         }
 
+
         /* 列宽分配 */
         #file-list-container td:nth-child(1) { width: 60%; } /* 文件名列 */
         #file-list-container td:nth-child(2) { width: 20%; min-width: 80px; } /* 大小列 */
@@ -167,7 +163,13 @@
         .download-link:hover {
             color: #0056b3;
             text-decoration: underline;
-          cursor: pointer;
+            cursor: pointer;
+        }
+        .download-link.disabled {
+            color: #999;
+            pointer-events: none;
+            text-decoration: none;
+            cursor: not-allowed;
         }
 
     </style>
@@ -178,7 +180,6 @@
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
-<script src="mydroid-ws-filelist.js"></script>
 
 <body>
     <div class="container">
@@ -210,22 +211,20 @@
     </div>
 
     <script>
-         window.commonHtmlUpdateLeftSpace = function(newText) {
-            //不做显示。
-        }
+        let isDownloading = false;
 
-        window.myHtmlShowConnectError = function(message) {
+        window.commonHtmlConnectError = function(message) {
             const overlay = document.getElementById('overlayView');
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden'; // 禁止页面滚动
         }
         
-        window.commonHtmlUpdateIpClient = function(mode, ipAndRandomCode) {
-            document.getElementById('bigTitle').textContent =  `${ipAndRandomCode} (${mode})`;
+        window.htmlUpdateIpClient = function(mode, name) {
+            document.getElementById('bigTitle').textContent = `${name} (${mode})`;
         };
 
         // 接收并显示数据的JS函数
-        window.displayFileList = function(uriRealInfoHtmlList) {
+        window.sendHtmlDisplayFileList = function(uriRealInfoHtmlList) {
             document.getElementById('loading-text').style.display = 'none';
             document.getElementById('file-list-container').style.display = 'table';
             const tbody = document.getElementById('file-list-body');
@@ -239,7 +238,7 @@
                         </td>
                         <td>${item.fileSizeStr}</td>
                         <td>
-                            <a class="download-link"
+                            <a id="${item.uriUuid}" class="download-link"
                                onclick="startDownload('${item.uriUuid}')">
                                下载
                             </a>
@@ -248,6 +247,30 @@
                 `;
                 tbody.innerHTML += row;
             });
+        };
+
+        function updateDownloadLink(good, uriUuid, text) {
+            const a = document.getElementById(uriUuid);
+            a.textContent = text;
+            if (good) {
+                a.classList.remove('disabled');
+            } else {
+                a.classList.add('disabled');
+            }
+        }
+        
+        async function startDownload(uriUuid) {
+            const json = {};
+            json[API_REQUEST_FILE] = uriUuid;
+            WS.send(JSON.stringify(json));
+        };
+
+        window.onStartDownloadError = function(msg, uriUuid) {
+            updateDownloadLink(false, uriUuid, msg);
+        };
+
+        window.onDownloadChunk = function(obj) {
+            console.log("onDownload Chunk", obj);
         };
         
         ////////run init functions//////

@@ -75,7 +75,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
             clientList.forEachIndexed { index, clientInfo ->
                 logdNoFile { "client List[$index] = $clientInfo" }
                 val item = clientItem(index)
-                item.title.text = clientInfo.ip + "@" + clientInfo.name
+                item.title.text = clientInfo.clientName
                 item.icon.background = ViewBackgroundBuilder()
                     .setBackground(requireContext().getColor(clientInfo.colorIcon))
                     .setCornerRadius(32f.dp)

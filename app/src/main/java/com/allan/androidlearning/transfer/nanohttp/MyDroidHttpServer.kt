@@ -1,7 +1,5 @@
 package com.allan.androidlearning.transfer.nanohttp
 
-import android.os.Handler
-import android.os.HandlerThread
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
@@ -30,18 +28,13 @@ interface IMyDroidHttpServer {
 }
 
 class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer {
-    private val handleThread: HandlerThread
-    private val handle: Handler
-
     init {
         tempFileManagerFactory = MyDroidTempFileMgrFactory()
-        handleThread = HandlerThread("MyDroidHttpServer")
-        handleThread.start()
-        handle = Handler(handleThread.looper)
     }
 
     private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
-    private val sendFileMgr by lazy { MyDroidSendFileMgr() }
+
+    var webSocketServer : MyDroidWebSocketServer? = null
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)
@@ -94,9 +87,6 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
                 val jsName = url.substring(1)
 //                serveAssetFile("transfer/$jsName")
                 serverJsFile("transfer/$jsName")
-            }
-            url == "/download" -> {
-                sendFileMgr.handleDownFileRequest(session)
             }
             else -> {
                 logdNoFile { "handle get request $url" }
@@ -158,8 +148,6 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 
     override fun stop() {
         logdNoFile { "stop all." }
-        handle.removeCallbacksAndMessages(null)
-        handleThread.quit()
         super.stop()
     }
 }

@@ -7,7 +7,6 @@ import com.au.module_android.utilsmedia.formatBytes
 import java.io.File
 import java.util.UUID
 
-@Keep
 data class UriRealInfoEx(val uri: Uri,
                          val name:String? = null,
                          val realPath:String? = null,
@@ -41,5 +40,4 @@ data class UriRealInfoEx(val uri: Uri,
 /**
  * 转变成传输给前端的对象
  */
-@Keep
-data class UriRealInfoHtml(val uriUuid:String, val name:String?, val fileSizeStr: String)
+data class UriRealInfoHtml(@Keep val uriUuid:String, @Keep val name:String?, @Keep val fileSizeStr: String)

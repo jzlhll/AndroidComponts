@@ -200,7 +200,6 @@ object AutoFsObj {
         val curTs = System.currentTimeMillis()
         if (curTs < lastTs) {
             loge { "Error check AndStart NextAlarm 不可能的curTs" }
-            return null
         }
 
         lastCheckAndStartSystemTs = curTs

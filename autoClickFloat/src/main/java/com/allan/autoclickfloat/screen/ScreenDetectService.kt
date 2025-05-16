@@ -30,6 +30,10 @@ class ScreenDetectService : AutoStopService() {
         return "Screen detect"
     }
 
+    override fun foregroundType(): Int? {
+        return null
+    }
+
     override fun getPendingIntent(): PendingIntent? {
         return null
     }

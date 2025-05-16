@@ -67,6 +67,12 @@ fun CoroutineScope.launchOnThread(
     return launch(Dispatchers.Default, start = CoroutineStart.DEFAULT, block = block)
 }
 
+fun CoroutineScope.launchOnIOThread(
+    block: suspend CoroutineScope.() -> Unit
+): Job {
+    return launch(Dispatchers.IO, start = CoroutineStart.DEFAULT, block = block)
+}
+
 fun CoroutineScope.launchOnUi(
     block: suspend CoroutineScope.() -> Unit
 ): Job {

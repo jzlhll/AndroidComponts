@@ -218,14 +218,14 @@
 
     let isUploadingFile = false; //正在上传
 
-    window.commonHtmlUpdateLeftSpace = function(newText) {
+    window.htmlUpdateLeftSpace = function(newText) {
         const subtitleElement = document.getElementById('subtitle');
         if (subtitleElement) {
             subtitleElement.textContent = newText;
         }
     }
 
-    window.myHtmlShowConnectError = function(message) {
+    window.commonHtmlConnectError = function(message) {
         const overlay = document.getElementById('overlayView');
         overlay.style.display = 'flex';
         document.body.style.overflow = 'hidden'; // 禁止页面滚动
@@ -463,7 +463,7 @@
         }
     }
 
-    window.commonHtmlUpdateIpClient = function(mode, ipAndRandomCode) {
+    window.htmlUpdateIpClient = function(mode, ipAndRandomCode) {
         document.getElementById('bigTitle').textContent = `${ipAndRandomCode} (${mode})`;
     };
 

@@ -97,6 +97,8 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         val wsPort = findAvailableWsPort()
         httpServer = MyDroidHttpServer(p)
         websocketServer = MyDroidWebSocketServer(wsPort)
+        httpServer?.webSocketServer = websocketServer
+
         logd { "start server with port: $p, wsPort: $wsPort" }
 
         try {
