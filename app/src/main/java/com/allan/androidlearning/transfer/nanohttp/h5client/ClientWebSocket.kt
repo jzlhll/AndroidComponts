@@ -1,27 +1,24 @@
-package com.allan.androidlearning.transfer.nanohttp
+package com.allan.androidlearning.transfer.nanohttp.h5client
 
-import androidx.lifecycle.Observer
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidGlobalService
-import com.allan.androidlearning.transfer.benas.MyDroidMode
-import com.allan.androidlearning.transfer.benas.UriRealInfoEx
-import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
+import com.allan.androidlearning.transfer.benas.toCNName
+import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
 import com.allan.androidlearning.transfer.htmlbeans.API_LEFT_SPACE
-import com.allan.androidlearning.transfer.htmlbeans.API_REQUEST_FILE
-import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_LIST
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
-import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
 import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
+import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
 import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
+import com.allan.androidlearning.transfer.nanohttp.AbsMsgParser
+import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer
 import com.au.module_android.Globals
 import com.au.module_android.json.toJsonString
-import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_android.utilsmedia.getExternalFreeSpace
+import com.au.module_androidui.toast.ToastBuilder
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
-import fi.iki.elonen.NanoWSD.WebSocketFrame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -30,15 +27,15 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
 
-open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
-                                    var server: MyDroidWebSocketServer,
-                                    val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
-    interface IOnMessage {
-        fun onNewClientInit()
-        fun onSendFile(uriUuid:String, info: UriRealInfoEx?)
-    }
-
+class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
+                      var server: MyDroidWSServer,
+                      val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
+
+    /**
+     * 初始化的同时赋值
+     */
+    lateinit var messenger : AbsMsgParser
 
     /**
      * 客户端名字；就像 192.168.0.6@abde1234
@@ -50,9 +47,7 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
 
     private var isActive = true
 
-    var scope:CoroutineScope? = null
-
-    private val messager : IOnMessage = MyDroidWebSocketMessager(this)
+    var scope: CoroutineScope? = null
 
     override fun onOpen() {
         scope = MainScope()
@@ -62,6 +57,8 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
         server.addIntoConnections(this)
 
         heartbeat()
+
+        messenger.onOpen()
     }
 
     private fun heartbeat() {
@@ -79,8 +76,8 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
                     }
 
                     //心跳 websocket必须ping。浏览器则自动实现了pong。
-                    ping(MyDroidWebSocketServer.PING_PAYLOAD)
-                    delay(MyDroidWebSocketServer.HEARTBEAT_INTERVAL)
+                    ping(MyDroidWSServer.Companion.PING_PAYLOAD)
+                    delay(MyDroidWSServer.Companion.HEARTBEAT_INTERVAL)
                 } catch (e: IOException) {
                     onException(e)
                 }
@@ -88,15 +85,17 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
         }
     }
 
-    override fun onClose(code: WebSocketFrame.CloseCode, reason: String, initiatedByRemote: Boolean) {
+    override fun onClose(code: NanoWSD.WebSocketFrame.CloseCode, reason: String, initiatedByRemote: Boolean) {
         logdNoFile { "$clientName on close: $reason initByRemote:$initiatedByRemote" }
         isActive = false
         server.removeFromConnections(this)
+        messenger.onClose()
+
         scope?.cancel()
         scope = null
     }
 
-    override fun onMessage(message: WebSocketFrame) {
+    override fun onMessage(message: NanoWSD.WebSocketFrame) {
         val text = message.textPayload
         logt { "$clientName on Message:$text" }
         val json = JSONObject(text)
@@ -105,18 +104,31 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
             clientName = "$remoteIpStr@$targetName"
             server.triggerConnectionsList()
 
-            messager.onNewClientInit()
-        } else if (json.has(API_REQUEST_FILE)) {
-            val uriUuid = json.optString(API_REQUEST_FILE)
-            val info = MyDroidGlobalService.shareReceiverUriMap.value?.get(uriUuid)
-            messager.onSendFile(uriUuid, info)
+            clientInit()
+        } else {
+            messenger.onMessage(json)
         }
+
         message.setUnmasked()
     }
 
-    override fun onPong(pong: WebSocketFrame) {
+    private fun clientInit() {
+        //通过later则不需要注意线程
+        ToastBuilder().setMessage("$clientName 新的网页接入！")
+            .setIcon("success")
+            .setOnTopLater(200).toast()
+
+        val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
+        val json = WSResultBean(CODE_SUC, "success!",
+                    API_CLIENT_INIT_CALLBACK,
+                    MyDroidModeResult(mode, clientName)).toJsonString()
+        logt { "send: $json" }
+        send(json)
+    }
+
+    override fun onPong(pong: NanoWSD.WebSocketFrame) {
         logdNoFile { "$clientName on Pong: " + pong.textPayload }
-        if (pong.textPayload != MyDroidWebSocketServer.PING_PAYLOAD_TEXT) {
+        if (pong.textPayload != MyDroidWSServer.Companion.PING_PAYLOAD_TEXT) {
             onException(IOException("WS: pong is not same!"))
         }
     }
@@ -125,7 +137,7 @@ open class MyDroidWebSocketReceiver(httpSession: NanoHTTPD.IHTTPSession,
         logdNoFile{"$clientName on Exception: " + exception.message}
         try {
             // 主动发送关闭帧并终止连接
-            close(WebSocketFrame.CloseCode.InternalServerError, "Server Error on Exception", false)
+            close(NanoWSD.WebSocketFrame.CloseCode.InternalServerError, "Server Error on Exception", false)
         } catch (e: IOException) {
             e.printStackTrace()
         }

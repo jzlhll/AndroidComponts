@@ -34,7 +34,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 
     private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
 
-    var webSocketServer : MyDroidWebSocketServer? = null
+    var webSocketServer : MyDroidWSServer? = null
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)

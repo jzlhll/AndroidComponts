@@ -11,6 +11,7 @@ import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoHTTPD.newFixedLengthResponse
 import java.io.File
 
+const val KEY_AUTO_ENTER_SEND_VIEW = "key_auto_import"
 const val KEY_START_TYPE = "entry_start_type"
 const val MY_DROID_SHARE_IMPORT_URIS = "myDroidShareReceiverUris"
 

@@ -97,7 +97,7 @@ inline fun <THIS : Any> THIS.logdNoFile(tag:String = TAG, crossinline block: (TH
 inline fun logt(tag:String = TAG, block:()->String) {
     if(BuildConfig.ENABLE_LOGCAT) {
         val str = block()
-        Log.d(tag, ALogJ.logt(str))
+        Log.w(tag, ALogJ.logt(str))
     }
 }
 

@@ -155,6 +155,7 @@
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
+<script src="mydroid-websocket-receiver.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
@@ -162,7 +163,6 @@
 <body>
 <div class="container">
     <h1>MyDroid工具集</h1>
-    <p id="bigTitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 22px;">
     </p>
     <p id="subtitle" style="text-align: center; color: #95a5a6; font-size: 1.0em; margin-top: -20px; margin-bottom: 30px;">
         局域网fast传输
@@ -462,10 +462,6 @@
             intervalId = null;
         }
     }
-
-    window.htmlUpdateIpClient = function(mode, ipAndRandomCode) {
-        document.getElementById('bigTitle').textContent = `${ipAndRandomCode} (${mode})`;
-    };
 
     ////////run init functions//////
     startWsConnect();

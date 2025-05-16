@@ -41,4 +41,8 @@ open class ConfirmBottomSingleDialog : BindingDialog<ConfirmBottomDialogSingleBi
             return dialog
         }
     }
+
+    fun changeContent(content:String) {
+        binding.contentTv.text = content
+    }
 }

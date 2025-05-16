@@ -2,14 +2,13 @@ package com.allan.androidlearning.transfer
 
 import android.app.Activity
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
-import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer
-import com.allan.androidlearning.transfer.nanohttp.MyDroidWebSocketServer.Companion.WEBSOCKET_READ_TIMEOUT
+import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer
+import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer.Companion.WEBSOCKET_READ_TIMEOUT
 import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
 import com.allan.androidlearning.transfer.views.MyDroidSendFragment
 import com.au.module_android.init.IInterestLife
@@ -18,7 +17,6 @@ import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.simplelivedata.RealValueLiveData
 import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
-import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.loge
@@ -66,7 +64,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     var isSuccessOpenServer = false
 
     private var httpServer: MyDroidHttpServer?= null
-    var websocketServer: MyDroidWebSocketServer?= null
+    var websocketServer: MyDroidWSServer?= null
 
     private var mLastHttpServerPort = 10595
     private var mLastWsServerPort = 15595
@@ -96,7 +94,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         val p = findAvailablePort()
         val wsPort = findAvailableWsPort()
         httpServer = MyDroidHttpServer(p)
-        websocketServer = MyDroidWebSocketServer(wsPort)
+        websocketServer = MyDroidWSServer(wsPort)
         httpServer?.webSocketServer = websocketServer
 
         logd { "start server with port: $p, wsPort: $wsPort" }

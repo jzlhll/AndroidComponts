@@ -180,8 +180,7 @@
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
-<script src="streamsaver.min.js"></script>
-<script src="ponyfill.min.js"></script>
+<script src="mydroid-websocket-send.js"></script>
 
 <body>
     <div class="container">
@@ -226,7 +225,7 @@
         };
 
         // 接收并显示数据的JS函数
-        window.sendHtmlDisplayFileList = function(uriRealInfoHtmlList) {
+        window.htmlShowFileList = function(uriRealInfoHtmlList) {
             document.getElementById('loading-text').style.display = 'none';
             document.getElementById('file-list-container').style.display = 'table';
             const tbody = document.getElementById('file-list-body');
@@ -267,7 +266,7 @@
             WS.send(JSON.stringify(json));
         };
 
-        window.onStartDownloadError = function(msg, uriUuid) {
+        window.onStartDownErr = function(msg, uriUuid) {
             updateDownloadLink(false, uriUuid, msg);
         };
 

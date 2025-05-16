@@ -29,6 +29,8 @@ data class UriRealInfoEx(val uri: Uri,
         }
     }
 
+    fun goodPath() = realPath ?: relativePath
+
     fun goodName() : String? {
         val n = realPath ?: (relativePath ?: name)
         return n?.substring(n.lastIndexOf("/") + 1)

@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.androidlearning.databinding.ActivityMyDroidReceiveShareBinding
+import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.au.module_android.permissions.PermissionMediaType.*
+import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
 import com.au.module_android.ui.bindings.BindingFragment
@@ -20,10 +24,24 @@ import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
+import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.toast.ToastBuilder
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding>() {
+    private val perResult = createStoragePermissionForResult(arrayOf(IMAGE, AUDIO, VIDEO))
+
     private val adapter = ShareReceiverAdapter()
+
+    private var mAutoNextJob: Job? = null
+    private var mDelayCancelDialog:ConfirmBottomSingleDialog? = null
+    private var mDelayTime = 3
+
+    private fun dialogContent() : String{
+        return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
+    }
 
     private val menuMgr by unsafeLazy { ToolbarMenuManager(this, binding.toolbar,
         com.allan.androidlearning.R.menu.menu_next,
@@ -33,11 +51,24 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
                 if (binding.empty.isVisible) {
                     ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件。").setIcon("info").toast()
                 } else {
-                    FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+                    jumpIntoMyDroidSend()
                 }
             }
         }
     }}
+
+    private fun jumpIntoMyDroidSend() {
+        mDelayCancelDialog?.dismissAllowingStateLoss()
+        mDelayCancelDialog = null
+
+        perResult.safeRun({
+            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+        }, notGivePermissionBlock = {
+            Toast(requireActivity()).also {
+                it.setText("未授权。")
+            }.show()
+        })
+    }
 
     val permissionUtil = NotificationUtil.createPostNotificationPermissionResult(this)
 
@@ -47,6 +78,8 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
 
         MyDroidKeepLiveService.Companion.stopMyDroidAlive()
     }
+
+    private val autoImport by unsafeLazy { arguments?.getBoolean(KEY_AUTO_ENTER_SEND_VIEW) == true }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         logdNoFile {"onBinding Created"}
@@ -69,6 +102,30 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
 
         initRcv()
+
+        if (autoImport) autoImportAction()
+    }
+
+    private fun autoImportAction() {
+        mDelayCancelDialog = ConfirmBottomSingleDialog.show(childFragmentManager,
+            "自动下一步",
+            dialogContent(),
+            getString(com.au.module_android.R.string.cancel),
+        ) {
+            mAutoNextJob?.cancel()
+            it.dismissAllowingStateLoss()
+        }
+
+        mAutoNextJob = lifecycleScope.launch {
+            while(--mDelayTime > 0) {
+                delay(1000)
+                mDelayCancelDialog?.changeContent(dialogContent())
+            }
+            //自动跳入
+            if (!binding.empty.isVisible) {
+                jumpIntoMyDroidSend()
+            }
+        }
     }
 
     private fun initRcv() {

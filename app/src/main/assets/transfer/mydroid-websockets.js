@@ -5,13 +5,13 @@
 
     window.WS = null;
 
-    const API_SEND_FILE_LIST = "s_sendFileList";
-    const API_LEFT_SPACE = "s_leftSpace";
-    const API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
-    const API_SEND_FILE_CHUNK = "s_sendFileChunk";
-    const API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist";
+    window.API_SEND_FILE_LIST = "s_sendFileList";
+    window.API_LEFT_SPACE = "s_leftSpace";
+    window.API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
+    window.API_SEND_FILE_CHUNK = "s_sendFileChunk";
+    window.API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist";
 
-    const API_WS_INIT = "c_wsInit";
+    window.API_WS_INIT = "c_wsInit";
     window.API_REQUEST_FILE = "c_requestFile";
 
     function stopWebSocketInterval() {
@@ -39,12 +39,16 @@
     
             // 接收消息
             socket.onmessage = (event) => {
-                const jsonData = JSON.parse(event.data);
-                const data = jsonData.data;
-                const api = jsonData.api;
-                const msg = jsonData.msg;
-                console.log("api ", api, "msg ", msg);
-                parseMessage(api, msg, data);
+                console.log("on message", event);
+                if (!parseMessage(event.data)) {
+                    // 处理数据（JSON 示例）
+                    console.log("on messagae other! ");
+                    try {
+                        //handleMessage(jsonData);
+                    } catch (e) {
+                        console.error('WebSocket 消息解析失败', e);
+                    }
+                }
             };
     
             // 错误处理
@@ -70,31 +74,6 @@
         }
         
         return false;
-    }
-
-    function parseMessage(api, msg, data) {
-        if (api == API_LEFT_SPACE) {
-            if(htmlUpdateLeftSpace) htmlUpdateLeftSpace("Fast局域网传输工具\n手机剩余空间：" + data.leftSpace);
-        } if (api == API_CLIENT_INIT_CALLBACK) {
-            htmlUpdateIpClient(data.myDroidMode, data.clientName);
-        } else if (api == API_SEND_FILE_LIST) {
-            console.log("data url result Infos " + data.urlRealInfoHtmlList);
-            onUrlRealInfoHtmlListReceiver(data.urlRealInfoHtmlList);
-        } else if (api == API_SEND_FILE_START_NOT_EXIST) {
-            if (onStartDownloadError) {
-                onStartDownloadError(msg, data.uriUuid);
-            }
-        } 
-        
-        else {
-            // 处理数据（JSON 示例）
-            console.log("on messagae other: " + data);
-            try {
-                //handleMessage(jsonData);
-            } catch (e) {
-                console.error('WebSocket 消息解析失败', e);
-            }
-        }
     }
 
     async function startWebSocket() {
@@ -139,10 +118,4 @@
         // 然后设置定时器
         wsCntIntervalId = setInterval(startWebSocket, wsCntInterval);
     }
-
-    function onUrlRealInfoHtmlListReceiver(urlRealInfoHtmlList) {
-        if (window.sendHtmlDisplayFileList && typeof window.sendHtmlDisplayFileList === "function") {
-            window.sendHtmlDisplayFileList(urlRealInfoHtmlList);
-        }
-    };
 })();

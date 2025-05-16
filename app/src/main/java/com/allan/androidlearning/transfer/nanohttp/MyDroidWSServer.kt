@@ -2,7 +2,11 @@ package com.allan.androidlearning.transfer.nanohttp
 
 import androidx.annotation.ColorRes
 import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
+import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserHttp
+import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserWS
+import com.allan.androidlearning.transfer.nanohttp.h5client.ClientWebSocket
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -12,7 +16,7 @@ import kotlinx.coroutines.cancel
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 
-class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
+class MyDroidWSServer(port:Int) : NanoWSD(port) {
     companion object {
         const val HEARTBEAT_INTERVAL: Long = 60 * 1000
         const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 15 * 1000
@@ -29,7 +33,7 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
      */
     val heartbeatScope = CoroutineScope(singleThreadDispatcher)
 
-    private val connections: MutableList<MyDroidWebSocket> = CopyOnWriteArrayList()
+    private val connections: MutableList<ClientWebSocket> = CopyOnWriteArrayList()
 
     private var currentColorIconIndex = 0
     private val colorIconList = listOf(
@@ -50,12 +54,12 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
         }
     }
 
-    fun addIntoConnections(websocket:MyDroidWebSocket) {
+    fun addIntoConnections(websocket: ClientWebSocket) {
         connections.add(websocket)
         triggerConnectionsList()
     }
 
-    fun removeFromConnections(websocket: MyDroidWebSocket) {
+    fun removeFromConnections(websocket: ClientWebSocket) {
         connections.remove(websocket)
         triggerConnectionsList()
     }
@@ -77,7 +81,15 @@ class MyDroidWebSocketServer(port:Int) : NanoWSD(port) {
         val nextColorIcon = nextColorIcon()
         logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
-        return MyDroidWebSocket(handshake,  this, nextColorIcon())
+        val client = ClientWebSocket(handshake, this, nextColorIcon())
+        val parser = when (MyDroidGlobalService.myDroidModeData.realValue) {
+            MyDroidMode.Receiver -> MsgParserHttp(client)
+            MyDroidMode.Send -> MsgParserWS(client)
+            MyDroidMode.Middle -> MsgParserWS(client)
+            null -> MsgParserHttp(client)
+        }
+        client.messenger = parser
+        return client
     }
 
     public override fun serveHttp(session: IHTTPSession): Response {
