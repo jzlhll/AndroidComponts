@@ -4,5 +4,6 @@ import androidx.annotation.Keep
 
 data class WSChunkResult(
     @Keep val action: String,
-    @Keep val endIndex:Int
+    @Keep val endIndex:Int,
+    @Keep val fileSize:Long
 )

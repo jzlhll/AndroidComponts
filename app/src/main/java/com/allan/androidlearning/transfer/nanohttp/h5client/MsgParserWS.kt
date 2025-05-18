@@ -120,14 +120,14 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             }
 
             if (inputStream != null && info != null) {
-                sendFileNoSize(info.uriUuid, inputStream)
+                sendFileNoSize(info.uriUuid, info.fileSize, inputStream)
             } else {
                 client.send(WSResultBean(CODE_SUC, "文件不存在", API_SEND_FILE_START_NOT_EXIST, NotExistResult(uriUuid)).toJsonString())
             }
         }
     }
 
-    private fun sendFileNoSize(uriUuid:String, inputStream: InputStream) {
+    private fun sendFileNoSize(uriUuid:String, fileSize:Long?, inputStream: InputStream) {
         val chunkSize = getWSSendFileChunkSize(null).toInt()
         val buffer = ByteArray(chunkSize)
 
@@ -138,7 +138,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
         var index = 0
         var offset = 0
 
-        val startJson = WSResultBean(CODE_SUC, "send file start.", API_SEND_FILE_CHUNK, WSChunkResult("start", 0)).toJsonString()
+        val startJson = WSResultBean(CODE_SUC, "send file start.", API_SEND_FILE_CHUNK, WSChunkResult("start", 0, fileSize ?: -1)).toJsonString()
         logt { "send file start $startJson" }
         client.send(startJson)
 
@@ -149,7 +149,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             client.send(arr)
         }
 
-        val endJson = WSResultBean(CODE_SUC, "send file end.", API_SEND_FILE_CHUNK, WSChunkResult("end", index)).toJsonString()
+        val endJson = WSResultBean(CODE_SUC, "send file end.", API_SEND_FILE_CHUNK, WSChunkResult("end", index, -1)).toJsonString()
         client.send(endJson)
         logt { "send file end $endJson" }
     }
