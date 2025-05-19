@@ -34,4 +34,34 @@
             return v.toString(16);
         });
     };
+
+    window.delay = function(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // 辅助函数，用于格式化数字为两位或三位数（前面补0）
+    function padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+    }
+    
+    function padTo3Digits(num) {
+        return num.toString().padStart(3, '0');
+    }
+
+    window.nowTimeStr = function() {
+        // 获取当前时间的毫秒数
+        const timestamp = Date.now();
+        
+        // 创建一个Date对象
+        const date = new Date(timestamp);
+        
+        // 获取时分秒毫秒
+        const hr = date.getHours(); // 小时
+        const m = date.getMinutes(); // 分钟
+        const s = date.getSeconds(); // 秒
+        const ms = date.getMilliseconds(); // 毫秒
+        
+        // 格式化输出
+        return `${padTo2Digits(hr)}:${padTo2Digits(m)}:${padTo2Digits(s)}.${padTo3Digits(ms)}`;
+    }
 })();

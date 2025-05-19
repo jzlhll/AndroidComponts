@@ -5,6 +5,8 @@ const val API_LEFT_SPACE = "s_leftSpace"
 const val API_CLIENT_INIT_CALLBACK = "s_clientInitBack"
 
 const val API_SEND_FILE_CHUNK = "s_sendFileChunk"
+const val API_SEND_SMALL_FILE_CHUNK = "s_sendSmallFileChunk"
+
 const val API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist"
 
 const val API_WS_INIT = "c_wsInit"

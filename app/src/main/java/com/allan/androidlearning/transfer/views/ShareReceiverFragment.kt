@@ -1,9 +1,14 @@
 package com.allan.androidlearning.transfer.views
 
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,10 +26,12 @@ import com.au.module_android.utils.NotificationUtil
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
+import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,7 +44,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
 
     private var mAutoNextJob: Job? = null
     private var mDelayCancelDialog:ConfirmBottomSingleDialog? = null
-    private var mDelayTime = 3
+    private var mDelayTime = 2
 
     private fun dialogContent() : String{
         return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
@@ -57,12 +64,42 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
     }}
 
+    private fun ifGotoMgrAll() : Boolean{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val ex = Environment.isExternalStorageManager()
+            if (!ex) {
+                ConfirmCenterDialog.show(childFragmentManager,
+                    "应用管理权限",
+                    "该功能需要全局设置权限，即将跳转，打开该功能。",
+                    "OK") {
+                    gotoMgrAll()
+                    it.dismissAllowingStateLoss()
+                }
+            }
+            return ex
+        }
+
+        return true
+    }
+
+    private fun gotoMgrAll() {
+        val intent = Intent().apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+            }
+            data = "package:${requireContext().packageName}".toUri()
+        }
+        startActivityFix(intent)
+    }
+
     private fun jumpIntoMyDroidSend() {
         mDelayCancelDialog?.dismissAllowingStateLoss()
         mDelayCancelDialog = null
 
         perResult.safeRun({
-            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            if (ifGotoMgrAll()) {
+                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            }
         }, notGivePermissionBlock = {
             Toast(requireActivity()).also {
                 it.setText("未授权。")
@@ -117,7 +154,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
 
         mAutoNextJob = lifecycleScope.launch {
-            while(--mDelayTime > 0) {
+            while(mDelayTime-- > 0) {
                 delay(1000)
                 mDelayCancelDialog?.changeContent(dialogContent())
             }

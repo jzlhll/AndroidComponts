@@ -8,7 +8,7 @@ class BufferManager(val chunkSize:Int) {
     init {
         logd { "chunkSize $chunkSize" }
     }
-    private val preSize = 32 + 4 + 4 + 4 + 4
+    private val preSize = 32 + 4 + 4 + 8 + 4
 
     //如果是buildChunkPacket的dataSize刚好是chunkSize，则可以利用cache
     private val buffer = ByteBuffer.allocate(preSize + chunkSize).also {
@@ -23,7 +23,7 @@ class BufferManager(val chunkSize:Int) {
         uriUuid: String,
         index: Int,
         total: Int,
-        offset: Int,
+        offset: Long,
         dataSize:Int,
         data: ByteArray,
     ): ByteArray {
@@ -34,7 +34,7 @@ class BufferManager(val chunkSize:Int) {
             put(uuidBytes)               // 32字节
             putInt(index)                // 4字节index
             putInt(total)                // 4字节total
-            putInt(offset)               // 4字节offset
+            putLong(offset)               // 8字节offset
             putInt(dataSize)             // 4字节dataSize
             put(data)                    // 变长数据体
         }

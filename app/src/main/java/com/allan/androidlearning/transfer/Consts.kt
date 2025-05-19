@@ -26,6 +26,11 @@ fun nanoTempCacheMergedDir()  = Globals.goodCacheDir.absolutePath + File.separat
 
 const val MIME_TYPE_JSON = "application/json; charset=UTF-8"
 
+/**
+ * 250MB就认为是小文件。
+ */
+const val SMALL_FILE_DEFINE_SIZE = 250 * 1024 * 1024L
+
 const val CODE_SUC = "0"
 const val CODE_FAIL = "-1"
 const val CODE_FAIL_FILE_SEND_ERR = "-2"
@@ -36,15 +41,16 @@ const val CODE_FAIL_MD5_CHECK = "-103"
 // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
 fun getWSSendFileChunkSize(fileSize:Long?) : Long{
     val b = 1024L
-    if (fileSize == null) return b * 512
-    return if (fileSize <= 10 * b) {
-        b * 64
-    } else if (fileSize <= 100 * b) {
+    val mb = 1024 * 1024L
+    if (fileSize == null) return mb
+    return if (fileSize <= 10 * mb) {
         b * 256
-    } else if (fileSize <= 500 * b) {
+    } else if (fileSize <= 100 * mb) {
         b * 512
+    } else if (fileSize <= 500 * mb) {
+        mb
     } else {
-        b
+        2 * mb
     }
 }
 

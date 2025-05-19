@@ -9,6 +9,7 @@
     window.API_LEFT_SPACE = "s_leftSpace";
     window.API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
     window.API_SEND_FILE_CHUNK = "s_sendFileChunk";
+    window.API_SEND_SMALL_FILE_CHUNK = "s_sendSmallFileChunk";
     window.API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist";
 
     window.API_WS_INIT = "c_wsInit";
@@ -39,10 +40,11 @@
     
             // 接收消息
             socket.onmessage = (event) => {
-                console.log("on message", event);
-                if (!parseMessage(event.data)) {
+                console.log(`${nowTimeStr()} on message`, event.data);
+                const result = parseMessage(event.data);
+                if (!result) {
                     // 处理数据（JSON 示例）
-                    console.log("on messagae other! ");
+                    console.log("on msg other! ");
                     try {
                         //handleMessage(jsonData);
                     } catch (e) {

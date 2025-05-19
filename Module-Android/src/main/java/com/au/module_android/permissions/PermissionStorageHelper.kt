@@ -51,7 +51,7 @@ class PermissionStorageHelper {
      * 获取指定媒体类型所需的运行时权限
      */
     fun getRequiredPermissions(mediaTypes: Array<PermissionMediaType>) : Array<String> {
-        val permissions: MutableList<String> = ArrayList<String>()
+        val permissions: MutableList<String> = ArrayList()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 14+
             // Android 14+需额外声明READ_MEDIA_VISUAL_USER_SELECTED
@@ -63,6 +63,7 @@ class PermissionStorageHelper {
                     PermissionMediaType.IMAGE -> permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
                     PermissionMediaType.VIDEO -> permissions.add(Manifest.permission.READ_MEDIA_VIDEO)
                     PermissionMediaType.AUDIO -> permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
+                    PermissionMediaType.STORAGE -> permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
             }
         } else { // Android 12及以下
