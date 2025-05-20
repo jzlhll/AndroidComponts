@@ -82,11 +82,13 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
         val client = ClientWebSocket(handshake, this, nextColorIcon())
-        val parser = when (MyDroidConst.myDroidModeData.realValue) {
+        val parser = when (MyDroidConst.myDroidMode) {
             MyDroidMode.Receiver -> MsgParserHttp(client)
             MyDroidMode.Send -> MsgParserWS(client)
             MyDroidMode.Middle -> MsgParserWS(client)
-            null -> MsgParserHttp(client)
+            MyDroidMode.None,
+            MyDroidMode.Image,
+            MyDroidMode.Video -> MsgParserHttp(client)
         }
         client.messenger = parser
         return client
@@ -102,5 +104,6 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         logdNoFile { "stopped and cancel heartbeat scope" }
         heartbeatScope.cancel()
         executor.shutdown()
+        MyDroidConst.clientListLiveData.setValueSafe(emptyList())
     }
 }

@@ -64,7 +64,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             httpServer?.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
             websocketServer?.start(WEBSOCKET_READ_TIMEOUT.toInt(), false)
 
-            MyDroidConst.serverIsOpen.asNoStickLiveData().setValueSafe(true)
+            MyDroidConst.serverIsOpen = true
             val realValue = MyDroidConst.ipPortData.realValue ?: IpInfo("", null, null)
             realValue.httpPort = p
             realValue.webSocketPort = wsPort
@@ -86,7 +86,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         logd { ">>>stop server." }
         httpServer?.closeAllConnections()
         websocketServer?.closeAllConnections()
-        MyDroidConst.serverIsOpen.asNoStickLiveData().setValueSafe(false)
+        MyDroidConst.serverIsOpen = false
     }
 
     //////////////////////////life////
@@ -119,6 +119,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         logdNoFile { "on life close." }
         stopServer()
         MyDroidConst.ipPortData.setValueSafe(null)
+        MyDroidConst.receiverProgressData.setValueSafe(emptyMap())
         for (life in lifeObservers) {
             life.onLifeClose()
         }

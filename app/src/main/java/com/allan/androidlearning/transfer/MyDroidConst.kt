@@ -2,6 +2,7 @@ package com.allan.androidlearning.transfer
 
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.benas.ReceivingFileInfo
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.au.module_android.simplelivedata.NoStickLiveData
@@ -9,7 +10,8 @@ import com.au.module_android.simplelivedata.RealValueLiveData
 import java.io.File
 
 object MyDroidConst {
-    val serverIsOpen: RealValueLiveData<Boolean> = NoStickLiveData(false)
+    var serverIsOpen = false
+    var myDroidMode = MyDroidMode.None
 
     /**
      * 用于通知界面更新。告知有多少通过WS接入的client。
@@ -17,15 +19,8 @@ object MyDroidConst {
     val clientListLiveData = NoStickLiveData<List<WebSocketClientInfo>>()
 
     /**
-     * 当前的模式
+     * 文件合并成功的通知。必须使用observerNoStick。
      */
-    val myDroidModeData = NoStickLiveData<MyDroidMode>()
-
-    /**
-     * 传输的信息，类似log。
-     */
-    val onTransferInfoData = NoStickLiveData<String>()
-
     val onFileMergedData = NoStickLiveData<File>()
 
     /**
@@ -34,6 +29,13 @@ object MyDroidConst {
     val ipPortData = NoStickLiveData<IpInfo?>()
 
     /**
+     * 接收模式下的接收文件的进度
+     * Map<filename-md5, ReceivingFileInfo>
+     */
+    val receiverProgressData = NoStickLiveData<Map<String, ReceivingFileInfo>>()
+
+    /**
+     * 这个就全局存活。不重启app不做处理。
      * 从shareReceiver activity处接收数据
      * key是uriUuid
      */

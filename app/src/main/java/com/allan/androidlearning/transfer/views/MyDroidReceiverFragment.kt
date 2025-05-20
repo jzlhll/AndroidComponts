@@ -8,11 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidConst
-import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
-import com.allan.androidlearning.transfer.MyDroidMess
 import com.allan.androidlearning.transfer.benas.MyDroidMode
-import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
@@ -28,7 +25,6 @@ import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.getExternalFreeSpace
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
@@ -85,10 +81,12 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
 
-        MyDroidConst.onTransferInfoData.observeUnStick(this) { info->
-            binding.transferInfo.text = info
+        //todo
+        MyDroidConst.receiverProgressData.observe(this) {
+            binding.transferInfo.text = it.toJsonString()
         }
-        MyDroidConst.onFileMergedData.observe(this) { file->
+
+        MyDroidConst.onFileMergedData.observeUnStick(this) { file->
             scope.launch {
                 ToastBuilder().setOnTop()
                     .setMessage("成功收到文件：${file.name} !")
@@ -103,7 +101,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             } else {
                 if (info.httpPort == null) {
                     binding.title.text = info.ip
-                } else if (MyDroidConst.serverIsOpen.realValueUnsafe) {
+                } else if (MyDroidConst.serverIsOpen) {
                     binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
                 } else {
                     binding.title.text = info.ip + ":" + info.httpPort
@@ -121,7 +119,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     override fun onStart() {
-        MyDroidConst.myDroidModeData.setValueSafe(MyDroidMode.Receiver)
+        MyDroidConst.myDroidMode = MyDroidMode.Receiver
         super.onStart()
     }
 

@@ -87,7 +87,7 @@ class MyDroidNetworkObserver : IInterestLife {
             logt { "get IpAddress set ip portData $v" }
             ipPortData.setValueSafe(v)
 
-            if (!MyDroidConst.serverIsOpen.realValueUnsafe) {
+            if (!MyDroidConst.serverIsOpen) {
                 MyDroidGlobalService.startServer{ msg->
                      MyDroidGlobalService.scope.launch {
                         ToastBuilder()

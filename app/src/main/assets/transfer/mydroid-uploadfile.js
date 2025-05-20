@@ -96,6 +96,7 @@
             const chunk = file.slice(start, end); // 切割分片
 
             const formData = new FormData();
+            console.log(`send chunk ${fileName} ${md5}: ${i}/${chunks}`);
             formData.append('fileName', fileName);
             formData.append('chunk', chunk);
             formData.append('chunkIndex', i + 1);

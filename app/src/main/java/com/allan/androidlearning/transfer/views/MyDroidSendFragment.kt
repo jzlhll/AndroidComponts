@@ -42,17 +42,13 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, "")
 
-        MyDroidConst.onTransferInfoData.observeUnStick(this) { info->
-            //todo
-        }
-
         MyDroidConst.ipPortData.observe(this) { info->
             if (info == null || info.ip.isEmpty()) {
                 binding.title.text = "请连接WI-FI或者开启热点"
             } else {
                 if (info.httpPort == null) {
                     binding.title.text = info.ip
-                } else if (MyDroidConst.serverIsOpen.realValueUnsafe) {
+                } else if (MyDroidConst.serverIsOpen) {
                     binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
                 } else {
                     binding.title.text = info.ip + ":" + info.httpPort
@@ -97,7 +93,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     }
 
     override fun onStart() {
-        MyDroidConst.myDroidModeData.setValueSafe(MyDroidMode.Send)
+        MyDroidConst.myDroidMode = MyDroidMode.Send
         super.onStart()
     }
 

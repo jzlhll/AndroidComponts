@@ -120,7 +120,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             .setIcon("success")
             .setOnTopLater(200).toast()
 
-        val mode = MyDroidConst.myDroidModeData.realValue?.toCNName() ?: "--"
+        val mode = MyDroidConst.myDroidMode.toCNName()
         val json = WSResultBean(CODE_SUC, "success!",
                     API_CLIENT_INIT_CALLBACK,
                     MyDroidModeResult(mode, clientName,

@@ -1,9 +1,12 @@
 package com.allan.androidlearning.transfer.benas
 
 enum class MyDroidMode {
+    None,
     Receiver,
     Send,
-    Middle
+    Middle,
+    Image,
+    Video,
 }
 
 /**
@@ -14,5 +17,8 @@ fun MyDroidMode.toCNName() : String {
         MyDroidMode.Receiver -> "发送给手机"
         MyDroidMode.Send -> "从手机接收"
         MyDroidMode.Middle -> "中转"
+        MyDroidMode.None -> "无"
+        MyDroidMode.Image -> "图片浏览"
+        MyDroidMode.Video -> "视频点播"
     }
 }
