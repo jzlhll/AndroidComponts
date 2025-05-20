@@ -14,11 +14,11 @@ import java.io.File
 /**
  * 调试模式下，上传文件会变慢。
  */
-const val DEBUG_SLOW_RECEIVER_TRANSFER = true
+const val DEBUG_SLOW_RECEIVER_TRANSFER = false
 /**
  * 调试模式下，上传文件会变慢。
  */
-const val DEBUG_SLOW_SEND_TRANSFER = true
+const val DEBUG_SLOW_SEND_TRANSFER = false
 
 const val KEY_AUTO_ENTER_SEND_VIEW = "key_auto_import"
 const val KEY_START_TYPE = "entry_start_type"

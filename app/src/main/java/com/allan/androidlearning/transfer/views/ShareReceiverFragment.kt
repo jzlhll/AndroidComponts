@@ -1,14 +1,8 @@
 package com.allan.androidlearning.transfer.views
 
-import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.Settings
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,10 +12,6 @@ import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.permissions.PermissionStorageHelper
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
-import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
 import com.au.module_android.ui.bindings.BindingFragment
@@ -29,7 +19,6 @@ import com.au.module_android.utils.NotificationUtil
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
-import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible

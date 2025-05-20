@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:backgroundNormal="@color/windowDialogBackground"
-    app:cornerSizeTopRight="8dp"
-    app:cornerSizeTopLeft="8dp"
+    app:cornerSizeTopRight="16dp"
+    app:cornerSizeTopLeft="16dp"
     android:orientation="vertical">
 
     <com.au.module_android.widget.BgBuildView
@@ -13,8 +13,8 @@
         android:layout_width="36dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
         app:backgroundNormal="@color/color_line"
         app:cornerRadius="4dp" />
 
