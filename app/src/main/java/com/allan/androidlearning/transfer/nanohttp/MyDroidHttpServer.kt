@@ -2,7 +2,10 @@ package com.allan.androidlearning.transfer.nanohttp
 
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidConst
+import com.allan.androidlearning.transfer.benas.ABORT_UPLOAD_CHUNKS
+import com.allan.androidlearning.transfer.benas.MERGE_CHUNKS
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.benas.UPLOAD_CHUNK
 import com.allan.androidlearning.transfer.htmlbeans.IpPortResult
 import com.allan.androidlearning.transfer.okJsonResponse
 import com.au.module_android.Globals
@@ -18,6 +21,7 @@ import java.io.InputStream
 interface IChunkMgr {
     fun handleUploadChunk(session: NanoHTTPD.IHTTPSession): Response
     fun handleMergeChunk(session: NanoHTTPD.IHTTPSession) : Response
+    fun handleAbortChunk(session: NanoHTTPD.IHTTPSession) : Response
 }
 
 interface IMyDroidHttpServer {
@@ -97,8 +101,9 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 
     private fun handlePostRequest(session: IHTTPSession): Response {
         return when (session.uri) {
-            "/upload-chunk" -> chunksMgr.handleUploadChunk(session)
-            "/merge-chunks" -> chunksMgr.handleMergeChunk(session)
+            UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
+            MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
+            ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
             "/read-websocket-ip-port" -> getWebsocketIpPort()
             else -> newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
         }

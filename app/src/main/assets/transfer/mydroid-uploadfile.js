@@ -1,9 +1,13 @@
 (function() {
+    const MERGE_CHUNKS = "/merge-chunks";
+    const UPLOAD_CHUNK = "/upload-chunk";
+    const ABORT_UPLOAD_CHUNKS = "/abort-upload-chunks";
+
     // 上传分片
     async function uploadChunk(formData) {
         let response = null;
         try {
-            response = await fetch('/upload-chunk', {
+            response = await fetch(UPLOAD_CHUNK, {
                     method: 'POST',
                     body: formData,
                 });
@@ -17,7 +21,7 @@
     async function mergeChunks(md5, fileName, totalChunks) {
         let response = null;
         try {
-            response = await fetch('/merge-chunks', {
+            response = await fetch(MERGE_CHUNKS, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,6 +33,22 @@
         if (!response.ok) throw new Error('上传失败E04 ' + (await response.text()));
         return await response.json();
     }
+
+    async function abortUploadChunk(md5, fileName) {
+                let response = null;
+        try {
+            response = await fetch(ABORT_UPLOAD_CHUNKS, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ md5, fileName }),
+            });
+        } catch(e) {}
+        if (!response) throw new Error('上传失败E05: 可能手机端不在线。');
+        if (!response.ok) throw new Error('上传失败E06 ' + (await response.text()));
+        return await response.json();
+    }
     
     // 64k 600kb/s 256k 2MB/s 512k 2.8~3MB/s 1M 6MB/s 分块越大，越快。
     function getChunkSize(fileSize) {
@@ -36,15 +56,15 @@
         if (fileSize <= 10 * MB) {
             return MB / 2;
         } else if (fileSize <= 100 * MB) {
-            return 2 * MB;
-        } else if (fileSize <= 500 * MB) {
             return 3 * MB;
-        } else {
+        } else if (fileSize <= 500 * MB) {
             return 4 * MB;
+        } else {
+            return 5 * MB;
         }
     }
 
-    window.startUploadFile = async function startUploadFile(startTs, file, md5, onProgress = () => {}) {
+    window.startUploadFile = async function(startTs, file, md5, onProgress = () => {}) {
         if (!file) {
             throw new Error("没有选择文件！");
         }
@@ -65,6 +85,7 @@
         for (let i = 0; i < chunks; i++) {
             //放在这里可以让最后一包如果完成的话，就接着完成。
             if (startTs != window.lastStartTsFlagArr.startUploadTime) {
+                await abortUploadChunk(md5, fileName);
                 throw new Error("已被取消!");
             }
 
@@ -80,6 +101,10 @@
             formData.append('chunkIndex', i + 1);
             formData.append('totalChunks', chunks);
             formData.append('md5', md5);
+
+            if (window.debugReceiver == true) {
+                await delay(1000);
+            }
 
             const ans = await uploadChunk(formData); // 上传分片
             //console.log(`chunkResponse: code=${ans.code} msg=${ans.msg}`);
@@ -100,8 +125,8 @@
         }
 
         console.log('所有分片上传完成，通知服务器合并文件');
-        onProgress(chunks, chunks, "", "mergeChunksStart");
-        const mergeAns = await mergeChunks(md5, file.name, chunks); // 通知服务器合并分片
+        onProgress(chunks, chunks, "", "merge ChunksStart");
+        const mergeAns = await mergeChunks(md5, fileName, chunks); // 通知服务器合并分片
         if (mergeAns.code != 0) {
             throw new Error(`${mergeAns.msg}`);
         }

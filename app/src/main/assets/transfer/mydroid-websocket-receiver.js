@@ -7,6 +7,9 @@
         if (api == API_LEFT_SPACE) {
             htmlUpdateLeftSpace("手机剩余空间：" + data.leftSpace);
             return true;
+        } else if (api == API_CLIENT_INIT_CALLBACK) {
+            window.debugReceiver = data.debugReceiver;
+            return true;
         }
         return false;
     }

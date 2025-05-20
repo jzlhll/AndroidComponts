@@ -162,6 +162,20 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         }
     }
 
+    override fun handleAbortChunk(session: IHTTPSession): Response {
+        logt { "clear up when abort chunk." }
+        val body = parseRequestBody(session)
+        val params = JSONObject(body)
+        // 3. 提取关键参数
+        val fileName = params.optString("fileName")
+
+        removeChunkInfoList(fileName)?.forEach { chunkInfo->
+            Thread.sleep(20)
+            chunkInfo.chunkTmpFile.delete() // 删除已合并的分片
+        }
+        return ResultBean<String>(CODE_SUC, "clear up.", null).jsonResponse(Status.OK)
+    }
+
     // 辅助方法：将请求体转为字符串
     private fun parseRequestBody(session: IHTTPSession): String {
         val contentLength = session.headers["content-length"]?.toInt() ?: 0

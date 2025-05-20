@@ -1,6 +1,8 @@
 package com.allan.androidlearning.transfer.nanohttp.h5client
 
 import com.allan.androidlearning.transfer.CODE_SUC
+import com.allan.androidlearning.transfer.DEBUG_SLOW_RECEIVER_TRANSFER
+import com.allan.androidlearning.transfer.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.toCNName
 import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
@@ -121,7 +123,9 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         val mode = MyDroidConst.myDroidModeData.realValue?.toCNName() ?: "--"
         val json = WSResultBean(CODE_SUC, "success!",
                     API_CLIENT_INIT_CALLBACK,
-                    MyDroidModeResult(mode, clientName)).toJsonString()
+                    MyDroidModeResult(mode, clientName,
+                        debugReceiver = DEBUG_SLOW_RECEIVER_TRANSFER,
+                        debugSend = DEBUG_SLOW_SEND_TRANSFER)).toJsonString()
         logt { "send: $json" }
         send(json)
     }

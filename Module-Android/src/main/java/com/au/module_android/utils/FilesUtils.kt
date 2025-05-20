@@ -60,3 +60,33 @@ fun File?.getDirSize(): Long {
     }
     return size
 }
+
+/**
+ * 清理文件夹下旧文件
+ * @param dirPath 文件夹路径
+ * @param deltaTs 默认15天
+ */
+fun clearDirOldFiles(dirPath:String, deltaTs:Long = 15L * 3600 * 24 * 1000) {
+    var count = 0
+    do {
+        val file = File(dirPath)
+        if (!file.exists()) {
+            break
+        }
+        val files = file.listFiles() ?: break
+        for (f in files) {
+            if (f.exists()) {
+                try {
+                    val time = f.lastModified()
+                    if (System.currentTimeMillis() - time > deltaTs) { //N天前的旧文件删除。
+                        if (f.delete()) {
+                            count++
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    } while (false)
+}

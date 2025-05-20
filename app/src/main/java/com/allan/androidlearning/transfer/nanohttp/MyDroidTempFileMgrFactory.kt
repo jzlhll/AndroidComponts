@@ -15,7 +15,7 @@ class MyDroidTempFileMgrFactory : TempFileManagerFactory {
 }
 
 class MyDroidTempFileManager : TempFileManager {
-    private val tmpdir: File
+    private val tmpdir: File = File(nanoTempCacheDir())
 
     private val tempFiles: MutableList<TempFile>
 
@@ -26,7 +26,6 @@ class MyDroidTempFileManager : TempFileManager {
     }
 
     init {
-        this.tmpdir = File(nanoTempCacheDir())
         //logdNoFile { "$addrTag make tmp dir $tmpDirStr" }
         if (!tmpdir.exists()) {
             tmpdir.mkdirs()

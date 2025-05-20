@@ -211,6 +211,7 @@
                 }
                 return true;
             } else if (api == API_CLIENT_INIT_CALLBACK) {
+                window.debugSend = data.debugSend;
                 htmlUpdateIpClient(data.myDroidMode, data.clientName);
                 return true;
             } else if (api == API_SEND_FILE_LIST) {
