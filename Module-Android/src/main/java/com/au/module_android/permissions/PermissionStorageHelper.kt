@@ -2,11 +2,19 @@ package com.au.module_android.permissions
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
+import androidx.core.net.toUri
+import com.au.module_android.utils.startActivityFix
 
+/**
+ * 兼容到android14+的权限申请策略
+ */
 class PermissionStorageHelper {
     enum class MediaType {
         IMAGE,
@@ -76,5 +84,27 @@ class PermissionStorageHelper {
         }
 
         return permissions.toTypedArray()
+    }
+
+    fun ifGotoMgrAll(showDialogBlock:()->Unit) : Boolean{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val ex = Environment.isExternalStorageManager()
+            if (!ex) {
+                showDialogBlock()
+            }
+            return ex
+        }
+
+        return true
+    }
+
+    fun gotoMgrAll(context: Context) {
+        val intent = Intent().apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+            }
+            data = "package:${context.packageName}".toUri()
+        }
+        context.startActivityFix(intent)
     }
 }

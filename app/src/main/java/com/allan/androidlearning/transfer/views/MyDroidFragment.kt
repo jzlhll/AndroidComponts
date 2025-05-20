@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
+import com.au.module_android.permissions.PermissionStorageHelper
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
@@ -27,7 +28,6 @@ import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
 @EntryFrgName(priority = 12)
 class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
-    private val perResult = createStoragePermissionForResult(arrayOf(IMAGE, AUDIO, VIDEO))
 
     var waitDialog:ConfirmBottomSingleDialog? = null
 
@@ -71,41 +71,16 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
             }
         }
 
-        perResult.safeRun({
-            ifGotoMgrAll()
-        }, notGivePermissionBlock = {
-            Toast(requireActivity()).also {
-                it.setText("MyDroid: 有一些权限没有授权，后续继续开启吧。")
-            }.show()
-        })
-    }
-
-    private fun ifGotoMgrAll() : Boolean{
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val ex = Environment.isExternalStorageManager()
-            if (!ex) {
-                ConfirmCenterDialog.show(childFragmentManager,
-                    "应用管理权限",
-                    "该功能需要全局设置权限，即将跳转，打开该功能。",
-                    "OK") {
-                    gotoMgrAll()
-                    it.dismissAllowingStateLoss()
-                }
+        val helper = PermissionStorageHelper()
+        helper.ifGotoMgrAll {
+            ConfirmCenterDialog.show(childFragmentManager,
+                "应用管理权限",
+                "该功能需要全局设置权限，即将跳转，打开该功能。",
+                "OK") {
+                helper.gotoMgrAll(requireActivity())
+                it.dismissAllowingStateLoss()
             }
-            return ex
         }
-
-        return true
-    }
-
-    private fun gotoMgrAll() {
-        val intent = Intent().apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-            }
-            data = "package:${requireContext().packageName}".toUri()
-        }
-        startActivityFix(intent)
     }
 
     override fun toolbarInfo() = ToolbarInfo("MyDroid局域网工具")

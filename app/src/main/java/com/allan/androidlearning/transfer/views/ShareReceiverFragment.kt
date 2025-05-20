@@ -17,6 +17,7 @@ import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.au.module_android.permissions.PermissionStorageHelper
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
 import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
@@ -40,8 +41,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding>() {
-    private val perResult = createStoragePermissionForResult(arrayOf(IMAGE, AUDIO, VIDEO))
-
     private val adapter = ShareReceiverAdapter()
 
     private var mAutoNextJob: Job? = null
@@ -66,47 +65,22 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
     }}
 
-    private fun ifGotoMgrAll() : Boolean{
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val ex = Environment.isExternalStorageManager()
-            if (!ex) {
-                ConfirmCenterDialog.show(childFragmentManager,
-                    "应用管理权限",
-                    "该功能需要全局设置权限，即将跳转，打开该功能。",
-                    "OK") {
-                    gotoMgrAll()
-                    it.dismissAllowingStateLoss()
-                }
-            }
-            return ex
-        }
-
-        return true
-    }
-
-    private fun gotoMgrAll() {
-        val intent = Intent().apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-            }
-            data = "package:${requireContext().packageName}".toUri()
-        }
-        startActivityFix(intent)
-    }
-
     private fun jumpIntoMyDroidSend() {
         mDelayCancelDialog?.dismissAllowingStateLoss()
         mDelayCancelDialog = null
 
-        perResult.safeRun({
-            if (ifGotoMgrAll()) {
-                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+        val helper = PermissionStorageHelper()
+        if(helper.ifGotoMgrAll {
+            ConfirmCenterDialog.show(childFragmentManager,
+                "应用管理权限",
+                "该功能需要全局设置权限，即将跳转，打开该功能。",
+                "OK") {
+                helper.gotoMgrAll(requireActivity())
+                it.dismissAllowingStateLoss()
             }
-        }, notGivePermissionBlock = {
-            Toast(requireActivity()).also {
-                it.setText("未授权。")
-            }.show()
-        })
+        }) {
+            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+        }
     }
 
     val permissionUtil = NotificationUtil.createPostNotificationPermissionResult(this)
