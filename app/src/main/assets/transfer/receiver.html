@@ -216,7 +216,7 @@
     const ALREADY_TITLE = "🗃️ 已上传文件列表\n\n";
     let alreadyFilesInfo = ""; //已经发送的文件s
 
-    let isUploadingFile = false; //正在上传
+    let isActioning = false; //正在操作中
 
     window.htmlUpdateLeftSpace = function(newText) {
         const subtitleElement = document.getElementById('subtitle');
@@ -231,9 +231,9 @@
         document.body.style.overflow = 'hidden'; // 禁止页面滚动
     }
 
-    function requireNotUploading(continueCallback) {
-        if (isUploadingFile) {
-            alert("正在上传中，请勿操作。");
+    function requireNotActioning(continueCallback) {
+        if (isActioning) {
+            alert("正在操作中，请勿操作。");
         } else {
             continueCallback();
         }
@@ -241,7 +241,7 @@
 
     // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
-        requireNotUploading(()=>{
+        requireNotActioning(()=>{
             const newFile = e.target.files[0];
             if (newFile) {
                 selectedFile = newFile;
@@ -253,7 +253,7 @@
     function handleDrop(e) {
         e.preventDefault();
         document.getElementById('dropZone').classList.remove('dragover');
-        requireNotUploading(()=>{
+        requireNotActioning(()=>{
             const newFile = e.dataTransfer.files[0];
             if (newFile) {
                 selectedFile = newFile;
@@ -287,6 +287,8 @@
 
     // 计算文件唯一标识（MD5）
     async function showFileInfoBySmall(file, fileSize) {
+        isActioning = true;
+
         const fileListDiv = document.getElementById('fileList');
         fileListDiv.className = `status-message info`;
         fileListDiv.style.display = 'block';
@@ -302,9 +304,13 @@
         const fileHash = spark.end();
         selectedMd5 = fileHash;
         fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash}`;
+        
+        isActioning = false;
     }
 
     async function showFileInfoByWorker(startTs, file, fileSize) {
+        isActioning = true;
+
         const fileListDiv = document.getElementById('fileList');
         fileListDiv.className = `status-message info`;
         fileListDiv.style.display = 'block';
@@ -336,6 +342,8 @@
         }
 
         stopLoopingCheck();
+
+        isActioning = false;
         fileListDiv.textContent = text;
     }
 
@@ -377,7 +385,7 @@
 
     // 开始上传
     function startUpload() {
-        isUploadingFile = true;
+        isActioning = true;
         changeUploadButton(false);
 
         const startTime = Date.now();
@@ -396,14 +404,14 @@
                 console.log(message);
                 showStatus("文件上传成功!", "success", true);
                 resetUI(true);
-                isUploadingFile = false;
+                isActioning = false;
                 changeUploadButton(true);
             })
             .catch(error => {
                 console.error("error: " + error);
                 showStatus(error.message, "error");
                 resetUI(false);
-                isUploadingFile = false;
+                isActioning = false;
                 changeUploadButton(true);
             });
     }

@@ -18,7 +18,13 @@ import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
 class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
-    val mAdapter = MyDroidReceiveFileListAdapter {
+    val mAdapter = MyDroidReceiveFileListAdapter(fullClick = { bean->
+        ShowReceiveItemDialog.pop(f.childFragmentManager, arrayOf(
+            bean.file.name,
+            bean.md5,
+            bean.fileSizeInfo
+        ))
+    }) {
         ExportSelectActionDialog.pop(f.childFragmentManager, it, fileExportFailCallback = f.fileExportFailCallback,
             fileExportSuccessCallback = f.fileExportSuccessCallback, refreshFileListCallback = f.fileChanged)
     }

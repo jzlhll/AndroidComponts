@@ -8,8 +8,15 @@ import com.au.module_android.click.onClick
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import java.io.File
 
-class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding, click:(File)->Unit) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
+class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding,
+                               fullClick:(MergedFileInfo)->Unit,
+                               click:(File)->Unit) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
     init {
+        binding.root.onClick {
+            val d = currentData ?: return@onClick
+            fullClick(d)
+        }
+
         binding.actionBtn.onClick {
             val d = currentData ?: return@onClick
             val file = d.file
