@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.au.module_android.widget.CustomFontText
         app:layout_constraintTop_toTopOf="parent"
@@ -29,6 +30,7 @@
     <com.au.module_android.widget.BgBuildLinearLayout
         android:id="@+id/logicBtnsHost"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -44,8 +46,8 @@
             android:elevation="4dp"
             android:id="@+id/receiveFileLogicBtn"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginHorizontal="24dp"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="28dp"
             android:layout_marginTop="32dp"
             android:gravity="center"
             android:text="文件接收"
@@ -58,8 +60,8 @@
             android:elevation="4dp"
             android:id="@+id/sendFileLogicBtn"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginHorizontal="24dp"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="28dp"
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="文件发送"
@@ -72,14 +74,42 @@
             android:elevation="4dp"
             android:id="@+id/middleLogicBtn"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginHorizontal="24dp"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="28dp"
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="中转站"
             android:textColor="#ffffff"
             android:textSize="24sp"
             app:backgroundNormal="@color/logic_middle"
+            app:cornerRadius="16dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:elevation="4dp"
+            android:id="@+id/seeImageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="28dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="图片预览"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            app:backgroundNormal="@color/logic_watch_picture"
+            app:cornerRadius="16dp" />
+
+        <com.au.module_android.widget.CustomButton
+            android:elevation="4dp"
+            android:id="@+id/seeVideoBtn"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="28dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="视频点播"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            app:backgroundNormal="@color/logic_watch_video"
             app:cornerRadius="16dp" />
 
         <Space
@@ -89,6 +119,7 @@
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/loading"
+        tools:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

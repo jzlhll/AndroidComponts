@@ -36,11 +36,11 @@
         if (fileSize <= 10 * MB) {
             return MB / 2;
         } else if (fileSize <= 100 * MB) {
-            return 1 * MB;
-        } else if (fileSize <= 500 * MB) {
             return 2 * MB;
-        } else {
+        } else if (fileSize <= 500 * MB) {
             return 3 * MB;
+        } else {
+            return 4 * MB;
         }
     }
 

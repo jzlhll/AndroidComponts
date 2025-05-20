@@ -10,20 +10,38 @@ import com.allan.androidlearning.transfer.MyDroidMess
 import com.au.module_android.Globals
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
+import com.au.module_android.utils.visible
 import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
 class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
-    val adapter = MyDroidReceiveFileListAdapter(f)
+    val mAdapter = MyDroidReceiveFileListAdapter {
+        ExportSelectActionDialog.pop(f.childFragmentManager, it, fileExportFailCallback = f.fileExportFailCallback,
+            fileExportSuccessCallback = f.fileExportSuccessCallback, refreshFileListCallback = f.fileChanged)
+    }
 
     fun initRcv() {
-        f.apply {
-            binding.rcv.adapter = adapter
-            binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
-            binding.rcv.setHasFixedSize(true)
-            binding.rcv.addItemDecoration(VertPaddingItemDecoration(0, 0, 2.dp))
+        f.binding.receiveRcv.apply {
+            adapter = mAdapter
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            addItemDecoration(VertPaddingItemDecoration(0, 0, 2.dp))
+        }
+    }
+
+    fun changeRcvEmptyTextVisible() {
+        val isRcvVisible = f.binding.receiveRcv.isVisible
+        if (isRcvVisible) {
+            if (mAdapter.datas.isEmpty()) {
+                f.binding.receiveRcvEmptyTv.visible()
+            } else {
+                f.binding.receiveRcvEmptyTv.gone()
+            }
+        } else {
+            f.binding.receiveRcvEmptyTv.gone()
         }
     }
 
@@ -33,9 +51,10 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
             val fileList = MyDroidMess().loadFileList()
             logd { "load file list1" }
             f.lifecycleScope.launch {
-                adapter.submitList(fileList, false)
-
-                if (!f.binding.rcv.isVisible) {
+                val isRcvVisible = f.binding.receiveRcv.isVisible
+                mAdapter.submitList(fileList, false)
+                changeRcvEmptyTextVisible()
+                if (!isRcvVisible) {
                     f.receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
                         tabTv.text = f.getString(R.string.transfer_list_2)
                     }
@@ -48,7 +67,7 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
         MyDroidGlobalService.scope.launchOnThread {
             val history = MyDroidMess().loadExportHistory()
             f.lifecycleScope.launch {
-                f.binding.exportHistoryTv.text = "只保留最近80~100条导出记录:\n\n" + history
+                f.binding.exportHistoryTv.text = "只保留最近80-100条导出记录。\n\n" + history
                 if (!f.binding.exportHistoryHost.isVisible && !init) {
                     f.exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
                         tabTv.text = f.getString(R.string.export_history_2)

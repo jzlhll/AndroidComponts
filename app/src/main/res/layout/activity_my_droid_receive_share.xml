@@ -58,7 +58,7 @@
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/empty"
         android:visibility="gone"
-        android:text="暂时没有任何文件。\n请从相册、文件管理器或者其他应用\n分享到本应用。"
+        android:text="暂无文件，从相册，文件管理器\n或其他应用分享进来吧。"
         style="@style/StyleFontText"
         android:gravity="center"
         android:layout_marginVertical="4dp"

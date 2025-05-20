@@ -242,8 +242,11 @@
     // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
         requireNotUploading(()=>{
-            selectedFile = e.target.files[0];
-            showFileInfo();
+            const newFile = e.target.files[0];
+            if (newFile) {
+                selectedFile = newFile;
+                showFileInfo();
+            }
         });
     });
 
@@ -251,8 +254,11 @@
         e.preventDefault();
         document.getElementById('dropZone').classList.remove('dragover');
         requireNotUploading(()=>{
-            selectedFile = e.dataTransfer.files[0];
-            showFileInfo();
+            const newFile = e.dataTransfer.files[0];
+            if (newFile) {
+                selectedFile = newFile;
+                showFileInfo();
+            }
         });
     }
     

@@ -10,6 +10,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class MyDroidMess {
+    private val keyMyDroidExportHistory = "my_droid_export_history_list"
+
     fun formatSize(bytes: Long): String {
         val units = listOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
@@ -36,7 +38,7 @@ class MyDroidMess {
     }
 
     suspend fun loadExportHistory() : String {
-        return AppDataStore.read("mydroidExportHistory", "")
+        return AppDataStore.read(keyMyDroidExportHistory, "")
     }
 
     suspend fun writeNewExportHistory(info:String) {
@@ -58,6 +60,6 @@ class MyDroidMess {
         // 格式化为字符串
         val formattedTime = formatter.format(Instant.ofEpochMilli(currentTimeMillis))
 
-        AppDataStore.save("mydroidExportHistory", "($formattedTime) $info\n$fixOld")
+        AppDataStore.save(keyMyDroidExportHistory, "($formattedTime) $info\n\n$fixOld")
     }
 }

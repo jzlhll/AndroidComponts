@@ -1,29 +1,19 @@
 package com.allan.androidlearning.transfer.views
 
 import android.annotation.SuppressLint
-import androidx.core.os.bundleOf
 import com.allan.androidlearning.databinding.HolderMydroidFileitemBinding
 import com.allan.androidlearning.transfer.benas.MergedFileInfo
 import com.allan.androidlearning.transfer.getIcon
-import com.au.module_android.Globals
 import com.au.module_android.click.onClick
-import com.au.module_android.utilsmedia.shareFile
-import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
+import java.io.File
 
-class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
+class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding, click:(File)->Unit) : BindViewHolder<MergedFileInfo, HolderMydroidFileitemBinding>(binding) {
     init {
-        binding.downloadBtn.onClick {
+        binding.actionBtn.onClick {
             val d = currentData ?: return@onClick
             val file = d.file
-            val fragmentMgr = (bindingAdapter as MyDroidReceiveFileListAdapter).f.childFragmentManager
-
-            FragmentBottomSheetDialog.show<ExportSelectActionDialog>(fragmentMgr, bundleOf("file" to file))
-        }
-
-        binding.sharesBtn.onClick {
-            val d = currentData ?: return@onClick
-            shareFile(Globals.app, d.file)
+            click(file)
         }
     }
 

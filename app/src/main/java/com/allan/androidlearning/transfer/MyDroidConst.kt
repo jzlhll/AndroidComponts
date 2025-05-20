@@ -38,7 +38,4 @@ object MyDroidConst {
      * key是uriUuid
      */
     val shareReceiverUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
-
-    var fileExportSuccessCallbacks = ArrayList<((info:String, exportFileStr:String)->Unit)>()
-    var fileExportFailCallbacks = ArrayList<((String)->Unit)>()
 }

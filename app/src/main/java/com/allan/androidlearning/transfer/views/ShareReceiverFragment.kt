@@ -58,7 +58,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         when (menuItem.itemId) {
             com.allan.androidlearning.R.id.next -> {
                 if (binding.empty.isVisible) {
-                    ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件。").setIcon("info").toast()
+                    ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
                 } else {
                     jumpIntoMyDroidSend()
                 }

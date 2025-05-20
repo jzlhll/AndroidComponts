@@ -92,14 +92,26 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv"
+        android:id="@+id/receiveRcv"
         android:layout_marginHorizontal="12dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/tabLayoutHost"
-        tools:listitem="@layout/holder_mydroid_fileitem"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        tools:listitem="@layout/holder_mydroid_fileitem"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/receiveRcvEmptyTv"
+        android:visibility="gone"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tabLayoutHost"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        style="@style/StyleFontText"
+        android:text="暂无接收到的文件。"/>
 
     <ScrollView
         android:visibility="gone"
@@ -113,8 +125,8 @@
         android:layout_height="0dp">
         <com.au.module_android.widget.CustomFontText
             android:id="@+id/exportHistoryTv"
+            android:layout_marginHorizontal="8dp"
             style="@style/StyleFontText"
-            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>

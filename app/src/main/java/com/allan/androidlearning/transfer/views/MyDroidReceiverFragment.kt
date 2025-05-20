@@ -10,6 +10,7 @@ import com.allan.androidlearning.databinding.FragmentMyDroidBinding
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
+import com.allan.androidlearning.transfer.MyDroidMess
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.Globals
@@ -18,6 +19,7 @@ import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
+import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
@@ -35,29 +37,29 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     lateinit var receivedFileListTab: TabLayout.Tab
     lateinit var exportHistoryTab: TabLayout.Tab
 
-    private val fileExportFailCallback:(String)->Unit = { info->
+    val fileExportFailCallback:(String)->Unit = { info->
         Globals.mainScope.launchOnUi {
             ToastBuilder().setOnTop().setMessage(info).setIcon("error").toast()
         }
     }
 
-    private val fileExportSuccessCallback:(info:String, exportFileStr:String)->Unit = { info, exportFileStr->
+    val fileExportSuccessCallback:(info:String, exportFileStr:String)->Unit = { info, exportFileStr->
         Globals.mainScope.launchOnUi {
             ToastBuilder().setOnTop().setMessage(info.replace("/storage/emulated/0/", "/sdcard/"))
                 .setIcon("success").toast()
 
             //确保写错。避免退出界面，没写。
             mFileListMgr.writeHistory(exportFileStr) {
-                mFileListMgr.loadFileList()
-                mFileListMgr.loadHistory(false)
+                fileChanged()
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        MyDroidConst.fileExportFailCallbacks.remove(fileExportFailCallback)
-        MyDroidConst.fileExportSuccessCallbacks.remove(fileExportSuccessCallback)
+    val fileChanged:()->Unit = {
+        Globals.mainScope.launchOnThread {
+            mFileListMgr.loadFileList()
+            mFileListMgr.loadHistory(false)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,9 +76,6 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             }
             insets
         }
-
-        MyDroidConst.fileExportFailCallbacks.add(fileExportFailCallback)
-        MyDroidConst.fileExportSuccessCallbacks.add(fileExportSuccessCallback)
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -130,7 +129,8 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         Globals.mainHandler.post {
             val transferFileList = binding.tabLayout.newTextTab(getString(R.string.transfer_list), true, 16f)
             transferFileList.view.onClick {
-                binding.rcv.visible()
+                binding.receiveRcv.visible()
+                mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.gone()
                 receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
                     tabTv.text = getString(R.string.transfer_list)
@@ -139,7 +139,8 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             receivedFileListTab = transferFileList
             val exportHistory = binding.tabLayout.newTextTab(getString(R.string.export_history), false, 16f)
             exportHistory.view.onClick {
-                binding.rcv.gone()
+                binding.receiveRcv.gone()
+                mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.visible()
                 exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
                     tabTv.text = getString(R.string.export_history)

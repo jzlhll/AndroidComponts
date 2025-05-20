@@ -5,13 +5,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
-import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
+import com.au.module_android.permissions.PermissionMediaType.AUDIO
+import com.au.module_android.permissions.PermissionMediaType.IMAGE
+import com.au.module_android.permissions.PermissionMediaType.VIDEO
+import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
@@ -25,6 +28,8 @@ import kotlinx.coroutines.launch
 
 @EntryFrgName(priority = 12)
 class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
+    private val perResult = createStoragePermissionForResult(arrayOf(IMAGE, AUDIO, VIDEO))
+
     var waitDialog:ConfirmBottomSingleDialog? = null
 
     val viewModel by unsafeLazy {
@@ -66,10 +71,18 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
                 waitDialog = null
             }
         }
+
+        perResult.safeRun({
+            ifGotoMgrAll()
+        }, notGivePermissionBlock = {
+            Toast(requireActivity()).also {
+                it.setText("MyDroid: 有一些权限没有授权，后续继续开启吧。")
+            }.show()
+        })
     }
 
     private fun ifGotoMgrAll() : Boolean{
-        if (false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val ex = Environment.isExternalStorageManager()
             if (!ex) {
                 ConfirmCenterDialog.show(childFragmentManager,
