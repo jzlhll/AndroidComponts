@@ -385,35 +385,38 @@
 
     // 开始上传
     function startUpload() {
-        isActioning = true;
-        changeUploadButton(false);
+        requireNotActioning(()=>{
+            isActioning = true;
+            changeUploadButton(false);
 
-        const startTime = Date.now();
-        window.lastStartTsFlagArr.startUploadTime = startTime;
+            const startTime = Date.now();
+            window.lastStartTsFlagArr.startUploadTime = startTime;
 
-        startUploadFile(startTime, selectedFile, selectedMd5, (uploaded, total, speed, str) => {
-            if (str == "mergeChunksStart") {
-                showStatus("最后的检验中...", "info");
-            } else if(str == "uploadChunk") {
-                const percent = Math.round((uploaded / total) * 100);
-                updateProgress(percent);
-                showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
-            }
-        })
-            .then(message => {
-                console.log(message);
-                showStatus("文件上传成功!", "success", true);
-                resetUI(true);
-                isActioning = false;
-                changeUploadButton(true);
+            startUploadFile(startTime, selectedFile, selectedMd5, (uploaded, total, speed, str) => {
+                if (str == "mergeChunksStart") {
+                    showStatus("最后的检验中...", "info");
+                } else if(str == "uploadChunk") {
+                    const percent = Math.round((uploaded / total) * 100);
+                    updateProgress(percent);
+                    showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
+                }
             })
-            .catch(error => {
-                console.error("error: " + error);
-                showStatus(error.message, "error");
-                resetUI(false);
-                isActioning = false;
-                changeUploadButton(true);
-            });
+                .then(message => {
+                    console.log(message);
+                    showStatus("文件上传成功!", "success", true);
+                    resetUI(true);
+                    isActioning = false;
+                    changeUploadButton(true);
+                })
+                .catch(error => {
+                    console.error("error: " + error);
+                    showStatus(error.message, "error");
+                    resetUI(false);
+                    isActioning = false;
+                    changeUploadButton(true);
+                });
+            }
+        );
     }
 
     function showStatus(message, type, shouldReset=false) {

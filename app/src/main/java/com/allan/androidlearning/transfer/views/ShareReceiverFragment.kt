@@ -17,9 +17,9 @@ import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
-import com.au.module_android.permissions.PermissionMediaType.AUDIO
-import com.au.module_android.permissions.PermissionMediaType.IMAGE
-import com.au.module_android.permissions.PermissionMediaType.VIDEO
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
 import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager

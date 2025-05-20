@@ -43,7 +43,7 @@ fun LifecycleOwner.createMultiPermissionForResult(permissions:Array<String>)
         : IMultiPermissionsResult
     = PermissionsForResult(this, permissions)
 
-fun LifecycleOwner.createStoragePermissionForResult(types:Array<PermissionMediaType>)
+fun LifecycleOwner.createStoragePermissionForResult(types:Array<PermissionStorageHelper.MediaType>)
         : IMultiPermissionsResult
     = createMultiPermissionForResult(PermissionStorageHelper().getRequiredPermissions(types))
 

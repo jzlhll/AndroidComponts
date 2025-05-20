@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
-import com.au.module_android.permissions.PermissionMediaType.AUDIO
-import com.au.module_android.permissions.PermissionMediaType.IMAGE
-import com.au.module_android.permissions.PermissionMediaType.VIDEO
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
+import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
 import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
@@ -24,7 +24,6 @@ import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
-import kotlinx.coroutines.launch
 
 @EntryFrgName(priority = 12)
 class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
