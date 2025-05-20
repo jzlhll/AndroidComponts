@@ -3,11 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="logic_receiver">#CC3232</color>
+    <color name="logic_receiver">#D74D1F</color>
     <color name="logic_send">#449955</color>
-    <color name="logic_middle">#338E8E</color>
+    <color name="logic_middle">#CC3232</color>
     <color name="logic_watch_picture">#DDAA11</color>
-    <color name="logic_watch_video">#EE5522</color>
+    <color name="logic_watch_video">#3F51B5</color>
 
     <color name="client_send_1">#3D7C42</color>
     <color name="client_send_2">#439999</color>

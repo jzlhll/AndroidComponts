@@ -28,6 +28,7 @@ import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import org.json.JSONObject
 import java.io.File
+import kotlin.collections.first
 
 class MyDroidHttpChunksMgr() : IChunkMgr{
     private val parseBodyFileMap = HashMap<String, String>() // 存放临时文件路径
@@ -139,6 +140,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         val md5 = params.optString("md5")
         val fileName = params.optString("fileName")
         val totalChunks = params.optInt("totalChunks")
+        var lastModified = params.optLong("lastModified", System.currentTimeMillis())
         if (md5.isNullOrEmpty() || fileName.isNullOrEmpty()) {
             return ResultBean<ChunkInfoResult>(CODE_FAIL, "Error merge chunk params.", null).badRequestJsonResponse()
         }
@@ -210,6 +212,8 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         // MD5 校验（需自行实现校验逻辑）
         val fileMd5 = getFileMD5(outputFile.absolutePath)
         if (fileMd5 == md5) {
+            outputFile.setLastModified(lastModified)
+            Thread.sleep(10)
             MyDroidConst.onFileMergedData.setValueSafe(outputFile)
 
             MyDroidConst.receiverProgressData.setValueSafe(

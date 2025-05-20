@@ -18,7 +18,7 @@
     }
 
     // 通知服务器合并分片
-    async function mergeChunks(md5, fileName, totalChunks) {
+    async function mergeChunks(md5, fileName, totalChunks, lastModified) {
         let response = null;
         try {
             response = await fetch(MERGE_CHUNKS, {
@@ -26,7 +26,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ md5, fileName, totalChunks }),
+                body: JSON.stringify({ md5, fileName, totalChunks, lastModified }),
             });
         } catch(e) {}
         if (!response) throw new Error('上传失败E03: 可能手机端不在线。');
@@ -125,9 +125,9 @@
             onProgress(uploadedChunks, chunks, sendSpeedStr, "uploadChunk");
         }
 
-        console.log('所有分片上传完成，通知服务器合并文件');
-        onProgress(chunks, chunks, "", "merge ChunksStart");
-        const mergeAns = await mergeChunks(md5, fileName, chunks); // 通知服务器合并分片
+        console.log('所有分片上传完成，通知服务器合并文件', file);
+        onProgress(chunks, chunks, "", "merge ChunksStart ");
+        const mergeAns = await mergeChunks(md5, fileName, chunks, file.lastModified); // 通知服务器合并分片
         if (mergeAns.code != 0) {
             throw new Error(`${mergeAns.msg}`);
         }

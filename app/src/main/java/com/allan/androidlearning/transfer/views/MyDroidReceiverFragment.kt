@@ -47,6 +47,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             //确保写错。避免退出界面，没写。
             mFileListMgr.writeHistory(exportFileStr) {
                 fileChanged()
+                mFileListMgr.loadHistory(false)
             }
         }
     }
@@ -54,7 +55,6 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     val fileChanged:()->Unit = {
         Globals.mainScope.launchOnThread {
             mFileListMgr.loadFileList()
-            mFileListMgr.loadHistory(false)
         }
     }
 

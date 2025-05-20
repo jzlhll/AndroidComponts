@@ -1,5 +1,6 @@
 package com.allan.androidlearning.transfer.views
 
+import android.content.res.ColorStateList
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.allan.androidlearning.R
@@ -42,11 +43,13 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
         }
     }
 
+    val normalColor = ColorStateList.valueOf(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
+
     val mItems = listOf(
-        ItemBean("share", "分享", R.drawable.ic_share),
-        ItemBean("exportOnly", "导出", R.drawable.ic_download),
-        ItemBean("delete", "删除", R.drawable.ic_delete),
-        ItemBean("exportAndDownload", "导出&删除", R.drawable.ic_download))
+        ItemBean("share", "分享", R.drawable.ic_share, normalColor),
+        ItemBean("delete", "删除", R.drawable.ic_delete, normalColor),
+        ItemBean("exportOnly", "导出", R.drawable.ic_download, normalColor),
+        ItemBean("exportAndDownload", "导出 & 删除", R.drawable.ic_download, normalColor))
     override val items: List<ItemBean>
         get() = mItems
 
