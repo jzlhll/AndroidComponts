@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
 import com.allan.androidlearning.transfer.benas.MyDroidMode
@@ -55,8 +56,8 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        MyDroidGlobalService.fileExportFailCallbacks.remove(fileExportFailCallback)
-        MyDroidGlobalService.fileExportSuccessCallbacks.remove(fileExportSuccessCallback)
+        MyDroidConst.fileExportFailCallbacks.remove(fileExportFailCallback)
+        MyDroidConst.fileExportSuccessCallbacks.remove(fileExportSuccessCallback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +75,8 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             insets
         }
 
-        MyDroidGlobalService.fileExportFailCallbacks.add(fileExportFailCallback)
-        MyDroidGlobalService.fileExportSuccessCallbacks.add(fileExportSuccessCallback)
+        MyDroidConst.fileExportFailCallbacks.add(fileExportFailCallback)
+        MyDroidConst.fileExportSuccessCallbacks.add(fileExportSuccessCallback)
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -85,10 +86,10 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
 
-        MyDroidGlobalService.onTransferInfoData.observeUnStick(this) { info->
+        MyDroidConst.onTransferInfoData.observeUnStick(this) { info->
             binding.transferInfo.text = info
         }
-        MyDroidGlobalService.onFileMergedData.observe(this) { file->
+        MyDroidConst.onFileMergedData.observe(this) { file->
             scope.launch {
                 ToastBuilder().setOnTop()
                     .setMessage("成功收到文件：${file.name} !")
@@ -97,13 +98,13 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             mFileListMgr.loadFileList()
         }
 
-        MyDroidGlobalService.ipPortData.observe(this) { info->
+        MyDroidConst.ipPortData.observe(this) { info->
             if (info == null || info.ip.isEmpty()) {
                 binding.title.text = "请连接WI-FI或者开启热点"
             } else {
                 if (info.httpPort == null) {
                     binding.title.text = info.ip
-                } else if (MyDroidGlobalService.isSuccessOpenServer) {
+                } else if (MyDroidConst.serverIsOpen.realValueUnsafe) {
                     binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
                 } else {
                     binding.title.text = info.ip + ":" + info.httpPort
@@ -111,7 +112,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
             }
         }
 
-        MyDroidGlobalService.clientListLiveData.observe(this) { clientList->
+        MyDroidConst.clientListLiveData.observe(this) { clientList->
             logdNoFile {
                 ">>client List:" + clientList.toJsonString()
             }
@@ -121,7 +122,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     override fun onStart() {
-        MyDroidGlobalService.myDroidModeData.setValueSafe(MyDroidMode.Receiver)
+        MyDroidConst.myDroidModeData.setValueSafe(MyDroidMode.Receiver)
         super.onStart()
     }
 

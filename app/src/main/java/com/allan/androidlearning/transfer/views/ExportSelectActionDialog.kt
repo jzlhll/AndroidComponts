@@ -1,7 +1,7 @@
 package com.allan.androidlearning.transfer.views
 
 import com.allan.androidlearning.R
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.au.module_android.Globals
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.launchOnThread
@@ -51,18 +51,18 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
             val p = pair.first.replace("/storage/emulated/0/", "/sdcard/")
             when (pair.second) {
                 ContentUriRealPathType.RelativePath -> {
-                    MyDroidGlobalService.fileExportSuccessCallbacks.forEach {
+                    MyDroidConst.fileExportSuccessCallbacks.forEach {
                         it("转存到${pair.first}成功！", "/sdcard/$p")
                     }
                 }
                 ContentUriRealPathType.FullPath -> {
-                    MyDroidGlobalService.fileExportSuccessCallbacks.forEach {
+                    MyDroidConst.fileExportSuccessCallbacks.forEach {
                         it("转存到${pair.first}成功！", p)
                     }
                 }
             }
         } else {
-            MyDroidGlobalService.fileExportFailCallbacks.forEach {
+            MyDroidConst.fileExportFailCallbacks.forEach {
                 it("转存失败！")
             }
         }
@@ -74,11 +74,11 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
             ignoreError { file.delete() }
             logd { "export file info: $info" }
             val splits = info.split("\n")
-            MyDroidGlobalService.fileExportSuccessCallbacks.forEach {
+            MyDroidConst.fileExportSuccessCallbacks.forEach {
                 it(splits[0], splits[1])
             }
         } else {
-            MyDroidGlobalService.fileExportFailCallbacks.forEach {
+            MyDroidConst.fileExportFailCallbacks.forEach {
                 it(info)
             }
         }

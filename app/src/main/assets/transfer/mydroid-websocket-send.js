@@ -184,7 +184,6 @@
         }
     }
 
-
     window.parseMessage = async function(eventData) {
         if (eventData instanceof Blob) {
             handleChunk(eventData);

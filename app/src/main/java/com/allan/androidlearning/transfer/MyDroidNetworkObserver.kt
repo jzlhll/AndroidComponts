@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import com.allan.androidlearning.transfer.MyDroidGlobalService.isSuccessOpenServer
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
@@ -25,7 +24,7 @@ class MyDroidNetworkObserver : IInterestLife {
         }
         override fun onLost(network: Network) {
             logdNoFile { "network on Lost" }
-            MyDroidGlobalService.ipPortData.setValueSafe(null)
+            MyDroidConst.ipPortData.setValueSafe(null)
             // 网络丢失
             MyDroidGlobalService.stopServer()
         }
@@ -79,7 +78,7 @@ class MyDroidNetworkObserver : IInterestLife {
 
     fun getIpAddressAndStartServer() {
         val ip = getIpAddress()
-        val ipPortData = MyDroidGlobalService.ipPortData
+        val ipPortData = MyDroidConst.ipPortData
         if (ip.isNullOrEmpty()) {
             ipPortData.setValueSafe(null)
         } else {
@@ -88,7 +87,7 @@ class MyDroidNetworkObserver : IInterestLife {
             logt { "get IpAddress set ip portData $v" }
             ipPortData.setValueSafe(v)
 
-            if (!isSuccessOpenServer) {
+            if (!MyDroidConst.serverIsOpen.realValueUnsafe) {
                 MyDroidGlobalService.startServer{ msg->
                      MyDroidGlobalService.scope.launch {
                         ToastBuilder()

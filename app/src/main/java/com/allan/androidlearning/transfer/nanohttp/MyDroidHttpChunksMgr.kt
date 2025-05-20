@@ -5,7 +5,7 @@ import com.allan.androidlearning.transfer.CODE_FAIL_MD5_CHECK
 import com.allan.androidlearning.transfer.CODE_FAIL_MERGE_CHUNK
 import com.allan.androidlearning.transfer.CODE_FAIL_RECEIVER_CHUNK
 import com.allan.androidlearning.transfer.CODE_SUC
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.badRequestJsonResponse
 import com.allan.androidlearning.transfer.benas.ChunkInfoResult
 import com.allan.androidlearning.transfer.jsonResponse
@@ -33,7 +33,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
     val fileChunkLock = Any()
     
     private fun transferInfoCallback(info:String) {
-        MyDroidGlobalService.onTransferInfoData.setValueSafe(info)
+        MyDroidConst.onTransferInfoData.setValueSafe(info)
     }
 
     private fun addChunkInfo(chunkInfo: ChunkInfoResult) {
@@ -147,7 +147,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         // MD5 校验（需自行实现校验逻辑）
         val fileMd5 = getFileMD5(outputFile.absolutePath)
         if (fileMd5 == md5) {
-            MyDroidGlobalService.onFileMergedData.setValueSafe(outputFile)
+            MyDroidConst.onFileMergedData.setValueSafe(outputFile)
 
             transferInfoCallback("$fileName: $shortMd5 传输成功，md5检验通过！")
             return ResultBean<ChunkInfoResult>(

@@ -3,7 +3,7 @@ package com.allan.androidlearning.transfer.nanohttp.h5client
 import android.net.Uri
 import androidx.lifecycle.Observer
 import com.allan.androidlearning.transfer.CODE_SUC
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.SMALL_FILE_DEFINE_SIZE
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
@@ -15,7 +15,7 @@ import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_START_NOT_EXIS
 import com.allan.androidlearning.transfer.htmlbeans.API_SEND_SMALL_FILE_CHUNK
 import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
 import com.allan.androidlearning.transfer.htmlbeans.NotExistResult
-import com.allan.androidlearning.transfer.htmlbeans.WSChunkResult
+import com.allan.androidlearning.transfer.htmlbeans.WSChunkActionResult
 import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
 import com.allan.androidlearning.transfer.nanohttp.AbsMsgParser
 import com.au.module_android.Globals
@@ -51,20 +51,20 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
 
     override fun onOpen() {
         Globals.mainScope.launch {
-            MyDroidGlobalService.shareReceiverUriMap.observeForever(receiverUriMapOb)
+            MyDroidConst.shareReceiverUriMap.observeForever(receiverUriMapOb)
         }
     }
 
     override fun onClose() {
         Globals.mainScope.launch {
-            MyDroidGlobalService.shareReceiverUriMap.removeObserver(receiverUriMapOb)
+            MyDroidConst.shareReceiverUriMap.removeObserver(receiverUriMapOb)
         }
     }
 
     override fun onMessage(json: JSONObject) {
         if (json.has(API_REQUEST_FILE)) {
             val uriUuid = json.optString(API_REQUEST_FILE)
-            val info = MyDroidGlobalService.shareReceiverUriMap.value?.get(uriUuid)
+            val info = MyDroidConst.shareReceiverUriMap.value?.get(uriUuid)
             onSendFile(uriUuid, info)
         }
     }
@@ -147,7 +147,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             (fileSize / chunkSize).toInt() + (if(isNotFull) 1 else 0)
         } else 0
 
-        val startJson = WSResultBean(CODE_SUC, "send file start.", api, WSChunkResult("start", uriUuid, fileSize ?: 0, totalChunks, "")).toJsonString()
+        val startJson = WSResultBean(CODE_SUC, "send file start.", api, WSChunkActionResult("start", uriUuid, fileSize ?: 0, totalChunks, "")).toJsonString()
         logt { "send file start $startJson" }
         client.send(startJson)
         delay(100)
@@ -158,7 +158,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             client.send(arr)
         }
         delay(1000)
-        val endJson = WSResultBean(CODE_SUC, "send file end.", api, WSChunkResult("end", uriUuid, offset, index, fileName?:"")).toJsonString()
+        val endJson = WSResultBean(CODE_SUC, "send file end.", api, WSChunkActionResult("end", uriUuid, offset, index, fileName?:"")).toJsonString()
         client.send(endJson)
         logt { "send file end $endJson" }
     }

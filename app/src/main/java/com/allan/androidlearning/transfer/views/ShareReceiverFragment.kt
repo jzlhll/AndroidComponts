@@ -14,10 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.androidlearning.databinding.ActivityMyDroidReceiveShareBinding
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
-import com.au.module_android.permissions.PermissionMediaType.*
+import com.au.module_android.permissions.PermissionMediaType.AUDIO
+import com.au.module_android.permissions.PermissionMediaType.IMAGE
+import com.au.module_android.permissions.PermissionMediaType.VIDEO
 import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
@@ -170,7 +172,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
         binding.rcv.setHasFixedSize(true)
 
-        MyDroidGlobalService.shareReceiverUriMap.observe(this) { map->
+        MyDroidConst.shareReceiverUriMap.observe(this) { map->
             val list = ArrayList<UriRealInfoEx>()
             list.addAll(map.values)
             adapter.submitList(list, false)

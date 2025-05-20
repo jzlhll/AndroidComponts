@@ -1,7 +1,7 @@
 package com.allan.androidlearning.transfer.nanohttp
 
 import androidx.annotation.ColorRes
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
 import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserHttp
@@ -73,7 +73,7 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
             list.add(WebSocketClientInfo(it.clientName, it.openTs, it.colorIcon))
         }
         list.sortByDescending { it.enterTs }
-        MyDroidGlobalService.clientListLiveData.setValueSafe(list)
+        MyDroidConst.clientListLiveData.setValueSafe(list)
     }
 
     override fun openWebSocket(handshake: IHTTPSession): WebSocket {
@@ -82,7 +82,7 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
         val client = ClientWebSocket(handshake, this, nextColorIcon())
-        val parser = when (MyDroidGlobalService.myDroidModeData.realValue) {
+        val parser = when (MyDroidConst.myDroidModeData.realValue) {
             MyDroidMode.Receiver -> MsgParserHttp(client)
             MyDroidMode.Send -> MsgParserWS(client)
             MyDroidMode.Middle -> MsgParserWS(client)

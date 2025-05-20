@@ -1,7 +1,7 @@
 package com.allan.androidlearning.transfer.nanohttp.h5client
 
 import com.allan.androidlearning.transfer.CODE_SUC
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.toCNName
 import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
 import com.allan.androidlearning.transfer.htmlbeans.API_LEFT_SPACE
@@ -118,7 +118,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             .setIcon("success")
             .setOnTopLater(200).toast()
 
-        val mode = MyDroidGlobalService.myDroidModeData.realValue?.toCNName() ?: "--"
+        val mode = MyDroidConst.myDroidModeData.realValue?.toCNName() ?: "--"
         val json = WSResultBean(CODE_SUC, "success!",
                     API_CLIENT_INIT_CALLBACK,
                     MyDroidModeResult(mode, clientName)).toJsonString()

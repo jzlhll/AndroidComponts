@@ -1,7 +1,7 @@
 package com.allan.androidlearning.transfer.nanohttp
 
 import com.allan.androidlearning.transfer.CODE_SUC
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.htmlbeans.IpPortResult
 import com.allan.androidlearning.transfer.okJsonResponse
@@ -76,7 +76,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             // 主页面请求
             url == "/" -> {
                 //todo 增加middle页面
-                if (MyDroidGlobalService.myDroidModeData.realValue == MyDroidMode.Send) {
+                if (MyDroidConst.myDroidModeData.realValue == MyDroidMode.Send) {
                     serveAssetFile("transfer/send.html")
                 } else {
                     serveAssetFile("transfer/receiver.html")
@@ -105,7 +105,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     }
 
     private fun getWebsocketIpPort() : Response{
-        val data = MyDroidGlobalService.ipPortData
+        val data = MyDroidConst.ipPortData
         val ip = data.value?.ip
         val wsPort = data.value?.webSocketPort
 

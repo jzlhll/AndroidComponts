@@ -96,5 +96,5 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
         startActivityFix(intent)
     }
 
-    override fun toolbarInfo() = ToolbarInfo("MyDroid传输工具集")
+    override fun toolbarInfo() = ToolbarInfo("MyDroid局域网工具")
 }

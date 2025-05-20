@@ -7,7 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
 import com.allan.androidlearning.databinding.MydroidSendClientBinding
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.simplelivedata.asNoStickLiveData
@@ -42,17 +42,17 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, "")
 
-        MyDroidGlobalService.onTransferInfoData.observeUnStick(this) { info->
+        MyDroidConst.onTransferInfoData.observeUnStick(this) { info->
             //todo
         }
 
-        MyDroidGlobalService.ipPortData.observe(this) { info->
+        MyDroidConst.ipPortData.observe(this) { info->
             if (info == null || info.ip.isEmpty()) {
                 binding.title.text = "请连接WI-FI或者开启热点"
             } else {
                 if (info.httpPort == null) {
                     binding.title.text = info.ip
-                } else if (MyDroidGlobalService.isSuccessOpenServer) {
+                } else if (MyDroidConst.serverIsOpen.realValueUnsafe) {
                     binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
                 } else {
                     binding.title.text = info.ip + ":" + info.httpPort
@@ -67,7 +67,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     }
 
     private fun clientLiveDataInit() {
-        MyDroidGlobalService.clientListLiveData.observe(this) { clientList ->
+        MyDroidConst.clientListLiveData.observe(this) { clientList ->
             for (clientBinding in sendClientBindings) {
                 clientBinding.root.gone()
             }
@@ -91,18 +91,18 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
 //            }
         }
 
-        MyDroidGlobalService.shareReceiverUriMap.asNoStickLiveData().observeUnStick(this) {
+        MyDroidConst.shareReceiverUriMap.asNoStickLiveData().observeUnStick(this) {
 
         }
     }
 
     override fun onStart() {
-        MyDroidGlobalService.myDroidModeData.setValueSafe(MyDroidMode.Send)
+        MyDroidConst.myDroidModeData.setValueSafe(MyDroidMode.Send)
         super.onStart()
     }
 
     fun parseEntryFileList() {
-        val entryList = MyDroidGlobalService.shareReceiverUriMap.realValue?.values
+        val entryList = MyDroidConst.shareReceiverUriMap.realValue?.values
         entryFileList = entryList?.map {
             UriRealInfoEx.copyFrom(it)
         } ?: listOf()

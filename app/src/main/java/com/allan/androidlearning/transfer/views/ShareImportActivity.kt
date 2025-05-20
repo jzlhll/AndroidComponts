@@ -12,15 +12,16 @@ import com.allan.androidlearning.EntryActivity
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.KEY_START_TYPE
 import com.allan.androidlearning.transfer.MY_DROID_SHARE_IMPORT_URIS
-import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.Globals
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.findCustomFragmentGetActivity
-import com.au.module_android.utils.findLaunchActivity
 import com.au.module_android.utils.findEntryActivity
+import com.au.module_android.utils.findLaunchActivity
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.parcelableArrayListExtraCompat
 import com.au.module_android.utils.parcelableExtraCompat
@@ -66,7 +67,7 @@ class ShareImportActivity : ViewActivity() {
 
     private fun handleIncreaseUris(uris: List<Uri>) {
         logdNoFile { "handle increase uris $uris" }
-        val map = MyDroidGlobalService.shareReceiverUriMap.realValue ?: hashMapOf()
+        val map = MyDroidConst.shareReceiverUriMap.realValue ?: hashMapOf()
         val oldList = map.values.toList()
 
         uris.forEach { uri->
@@ -76,7 +77,7 @@ class ShareImportActivity : ViewActivity() {
                 map.put(bean.uriUuid, bean)
             }
         }
-        MyDroidGlobalService.shareReceiverUriMapSetValue(map)
+        MyDroidConst.shareReceiverUriMap.asNoStickLiveData().setValueSafe(map)
 
         val found = findEntryActivity(EntryActivity::class.java)
         //清理掉自己
