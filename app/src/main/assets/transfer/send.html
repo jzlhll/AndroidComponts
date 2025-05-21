@@ -176,7 +176,6 @@
 </head>
 
 <script src="mydroid-md5generator.js"></script>
-<script src="mydroid-uploadfile.js"></script>
 <script src="spark-md5.min.js"></script>
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
@@ -262,9 +261,7 @@
         }
         
         async function startDownload(uriUuid) {
-            const json = {};
-            json[API_REQUEST_FILE] = uriUuid;
-            WS.send(JSON.stringify(json));
+            startDownloadUri(uriUuid);
         };
 
         window.onStartDownErr = function(msg, uriUuid) {

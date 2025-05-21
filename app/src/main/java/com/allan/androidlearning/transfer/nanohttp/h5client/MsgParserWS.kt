@@ -8,11 +8,12 @@ import com.allan.androidlearning.transfer.SMALL_FILE_DEFINE_SIZE
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.benas.UriRealInfoHtml
 import com.allan.androidlearning.transfer.getWSSendFileChunkSize
-import com.allan.androidlearning.transfer.htmlbeans.API_REQUEST_FILE
-import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_CHUNK
-import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_LIST
-import com.allan.androidlearning.transfer.htmlbeans.API_SEND_FILE_START_NOT_EXIST
-import com.allan.androidlearning.transfer.htmlbeans.API_SEND_SMALL_FILE_CHUNK
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_FILE_DOWNLOAD_COMPLETE
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_REQUEST_FILE
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_SEND_FILE_CHUNK
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_SEND_FILE_LIST
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_SEND_FILE_NOT_EXIST
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_SEND_SMALL_FILE_CHUNK
 import com.allan.androidlearning.transfer.htmlbeans.FileListForHtmlResult
 import com.allan.androidlearning.transfer.htmlbeans.NotExistResult
 import com.allan.androidlearning.transfer.htmlbeans.WSChunkActionResult
@@ -24,8 +25,6 @@ import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
-import com.au.module_android.utilsmedia.MediaUriResolver
-import com.au.module_android.utilsmedia.getRealInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -42,7 +41,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
                 }
             }
             client.server.heartbeatScope.launchOnThread {
-                val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
+                val ret = WSResultBean(CODE_SUC, "send files to html!", API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
                 logt { "send:$json" }
@@ -64,10 +63,13 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
     }
 
     override fun onMessage(json: JSONObject) {
-        if (json.has(API_REQUEST_FILE)) {
-            val uriUuid = json.optString(API_REQUEST_FILE)
+        if (json.has(API_WS_REQUEST_FILE)) {
+            val uriUuid = json.optString(API_WS_REQUEST_FILE)
             val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
             onSendFile(uriUuid, info)
+        } else if (json.has(API_WS_FILE_DOWNLOAD_COMPLETE)) {
+            val uriUuid = json.optString(API_WS_REQUEST_FILE)
+            val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
         }
     }
 
@@ -93,6 +95,13 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun onFileSendComplete(info: UriRealInfoEx?) {
+        logdNoFile { "${client.clientName} onFile Send Complete : $info" }
+        client.scope?.launchOnIOThread {
+
+        }
     }
 
     fun onSendFile(uriUuid:String, info: UriRealInfoEx?) {
@@ -127,7 +136,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             if (inputStream != null && info != null) {
                 sendFile(info.uriUuid, info.fileSize, info.goodName(), inputStream)
             } else {
-                client.send(WSResultBean(CODE_SUC, "文件不存在", API_SEND_FILE_START_NOT_EXIST, NotExistResult(uriUuid)).toJsonString())
+                client.send(WSResultBean(CODE_SUC, "文件不存在", API_WS_SEND_FILE_NOT_EXIST, NotExistResult(uriUuid)).toJsonString())
             }
         }
     }
@@ -143,7 +152,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
         var index = 0
         var offset = 0L
 
-        val api = if(fileSize == null || fileSize >= SMALL_FILE_DEFINE_SIZE) API_SEND_FILE_CHUNK else API_SEND_SMALL_FILE_CHUNK
+        val api = if(fileSize == null || fileSize >= SMALL_FILE_DEFINE_SIZE) API_WS_SEND_FILE_CHUNK else API_WS_SEND_SMALL_FILE_CHUNK
         val totalChunks = if(fileSize != null) {
             val isNotFull = fileSize % chunkSize > 0
             (fileSize / chunkSize).toInt() + (if(isNotFull) 1 else 0)

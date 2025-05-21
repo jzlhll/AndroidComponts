@@ -5,15 +5,16 @@
 
     window.WS = null;
 
-    window.API_SEND_FILE_LIST = "s_sendFileList";
-    window.API_LEFT_SPACE = "s_leftSpace";
-    window.API_CLIENT_INIT_CALLBACK = "s_clientInitBack";
-    window.API_SEND_FILE_CHUNK = "s_sendFileChunk";
-    window.API_SEND_SMALL_FILE_CHUNK = "s_sendSmallFileChunk";
-    window.API_SEND_FILE_START_NOT_EXIST = "s_sendFileNotExist";
+    window.API_WS_SEND_FILE_LIST = "s_sendFileList";
+    window.API_WS_LEFT_SPACE = "s_leftSpace";
+    window.API_WS_CLIENT_INIT_CALLBACK = "s_clientInitBack";
+    window.API_WS_SEND_FILE_CHUNK = "s_sendFileChunk";
+    window.API_WS_SEND_SMALL_FILE_CHUNK = "s_sendSmallFileChunk";
+    window.API_WS_SEND_FILE_NOT_EXIST = "s_sendFileNotExist";
 
     window.API_WS_INIT = "c_wsInit";
-    window.API_REQUEST_FILE = "c_requestFile";
+    window.API_WS_REQUEST_FILE = "c_requestFile";
+    window.API_WS_FILE_DOWNLOAD_COMPLETE = "c_downloadFileComplete";
 
     function stopWebSocketInterval() {
         if (wsCntIntervalId) {

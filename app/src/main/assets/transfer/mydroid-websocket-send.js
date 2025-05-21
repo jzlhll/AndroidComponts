@@ -5,6 +5,18 @@
     let mFileSaver = null;
     const uuidDecoder = new TextDecoder();
 
+    window.startDownloadUri = function(uriUuid) {
+        const json = {};
+        json[API_WS_REQUEST_FILE] = uriUuid;
+        WS.send(JSON.stringify(json));
+    }
+
+    window.downloadUriComplete = function(uriUuid) {
+        const json = {};
+        json[API_WS_FILE_DOWNLOAD_COMPLETE] = uriUuid;
+        WS.send(JSON.stringify(json));
+    }
+
     async function handleChunk(blob) {
         const arrayBuffer = await blob.arrayBuffer();
         const dataView = new DataView(arrayBuffer);
@@ -37,6 +49,20 @@
 
         async handleChunk(uuid, index, total, offset, dataSize, data) {
 
+        }
+
+        async fileComplete(uuid) {
+            // 上传分片
+            let response = null;
+            try {
+                response = await fetch(UPLOAD_CHUNK, {
+                        method: 'POST',
+                        body: formData,
+                    });
+            } catch(e) {}
+            if (!response) throw new Error('上传失败E01: 可能手机端不在线。');
+            if (!response.ok) throw new Error('上传失败E02 ' + (await response.text()));
+            return await response.json();
         }
     }
 
@@ -207,7 +233,7 @@
             const api = jsonData.api;
             const msg = jsonData.msg;
 
-            if (api == API_SEND_SMALL_FILE_CHUNK) {
+            if (api == API_WS_SEND_SMALL_FILE_CHUNK) {
                 if (data.action == "start") {
                     console.log(api, msg, data);
                     if (!mFileSaver) {
@@ -223,14 +249,14 @@
                     mFileSaver?.onStop(data.uriUuid, fileName, data.totalFileSize, data.totalChunks);
                 }
                 return true;
-            } else if (api == API_CLIENT_INIT_CALLBACK) {
+            } else if (api == API_WS_CLIENT_INIT_CALLBACK) {
                 window.debugSend = data.debugSend;
                 htmlUpdateIpClient(data.myDroidMode, data.clientName);
                 return true;
-            } else if (api == API_SEND_FILE_LIST) {
+            } else if (api == API_WS_SEND_FILE_LIST) {
                 htmlShowFileList(data.urlRealInfoHtmlList);
                 return true;
-            } else if (api == API_SEND_FILE_START_NOT_EXIST) {
+            } else if (api == API_WS_SEND_FILE_NOT_EXIST) {
                 onStartDownErr(msg, data.uriUuid);
                 return true;
             }

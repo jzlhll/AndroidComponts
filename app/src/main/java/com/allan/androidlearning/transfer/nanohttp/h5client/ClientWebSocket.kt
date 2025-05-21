@@ -5,8 +5,8 @@ import com.allan.androidlearning.transfer.DEBUG_SLOW_RECEIVER_TRANSFER
 import com.allan.androidlearning.transfer.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.toCNName
-import com.allan.androidlearning.transfer.htmlbeans.API_CLIENT_INIT_CALLBACK
-import com.allan.androidlearning.transfer.htmlbeans.API_LEFT_SPACE
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_LEFT_SPACE
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
 import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
@@ -72,7 +72,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 try {
                     if (leftSpaceCount % 3 == 1L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
-                        val json = WSResultBean(CODE_SUC, "success!", API_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
+                        val json = WSResultBean(CODE_SUC, "success!", API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
                         logt { "send: $json" }
                         send(json)
                     }
@@ -122,7 +122,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
         val mode = MyDroidConst.myDroidMode.toCNName()
         val json = WSResultBean(CODE_SUC, "success!",
-                    API_CLIENT_INIT_CALLBACK,
+                    API_WS_CLIENT_INIT_CALLBACK,
                     MyDroidModeResult(mode, clientName,
                         debugReceiver = DEBUG_SLOW_RECEIVER_TRANSFER,
                         debugSend = DEBUG_SLOW_SEND_TRANSFER)).toJsonString()

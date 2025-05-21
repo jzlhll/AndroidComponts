@@ -24,6 +24,11 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setTurnScreenOn(true)
+        }
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
         binding.adHost.startAnimation()
 
@@ -58,10 +63,6 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun clientLiveDataInit() {
