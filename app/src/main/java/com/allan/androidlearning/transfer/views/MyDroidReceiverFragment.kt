@@ -97,11 +97,6 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         val fmt = getString(R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
 
-        //todo
-        MyDroidConst.receiverProgressData.observe(this) {
-            binding.transferInfo.text = it.toJsonString()
-        }
-
         MyDroidConst.onFileMergedData.observeUnStick(this) { file->
             scope.launch {
                 ToastBuilder().setOnTop()

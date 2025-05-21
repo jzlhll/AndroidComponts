@@ -5,11 +5,15 @@
         let size = bytes;
         let unitIndex = 0;
 
+        if (size < 1024) {
+            return `${size}B`;
+        }
+
         while (size >= 1024 && unitIndex < units.length - 1) {
             size /= 1024;
             unitIndex++;
         }
-        return `${size.toFixed(2)} ${units[unitIndex]}`;
+        return `${size.toFixed(1)}${units[unitIndex]}`;
     };
 
     //辅助函数：遍历打印对象
