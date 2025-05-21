@@ -8,7 +8,7 @@
     <View
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/ic_shadow_bg"
+        android:background="@drawable/ic_shadow16dp"
         android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

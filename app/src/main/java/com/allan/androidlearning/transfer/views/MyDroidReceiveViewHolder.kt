@@ -28,7 +28,8 @@ class MyDroidReceiveViewHolder(binding: HolderMydroidFileitemBinding,
     override fun bindData(bean: MergedFileInfo) {
         super.bindData(bean)
         binding.fileNameTv.text = bean.file.name
-        binding.fileSizeAndMD5Tv.text = bean.md5 + "   " + bean.fileSizeInfo
+        val md5Sub = (if(bean.md5.length > 8) bean.md5.substring(0, 8) else bean.md5)
+        binding.fileSizeAndMD5Tv.text = md5Sub + "  " + bean.fileSizeInfo
         binding.icon.setImageResource(getIcon(bean.file.name))
     }
 }
