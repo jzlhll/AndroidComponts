@@ -5,14 +5,17 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidBinding
+import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
+import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
@@ -58,6 +61,16 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         }
     }
 
+    val importSendCallback:()->Unit = {
+        activity?.let { a->
+            a.finishAfterTransition()
+            FragmentShellActivity.Companion.start(
+                a, ShareReceiverFragment::class.java,
+                bundleOf(KEY_AUTO_ENTER_SEND_VIEW to true)
+            )
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -75,6 +88,9 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
+        binding.adHost.startAnimation()
+
         binding.tabLayout.tabSelectTextColor = R.color.logic_receiver
         binding.tabLayout.tabNotSelectColor = com.au.module_androidcolor.R.color.color_text_desc
 

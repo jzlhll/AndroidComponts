@@ -4,19 +4,22 @@ import android.view.ViewGroup
 import com.allan.androidlearning.databinding.HolderShareReceiveItemBinding
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.getIcon
-import com.au.module_android.click.onClick
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
 class ShareReceiverAdapter : BindRcvAdapter<UriRealInfoEx, ShareReceiverAdapter.ShareReceiverHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareReceiverHolder {
         return ShareReceiverHolder(create(parent))
     }
 
     class ShareReceiverHolder(binding: HolderShareReceiveItemBinding) : BindViewHolder<UriRealInfoEx, HolderShareReceiveItemBinding>(binding) {
+        private val targetAlpha = 0.5f
+
         init {
-            binding.root.onClick {
-                binding.checkBox.isChecked = !binding.checkBox.isChecked
+            binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+                currentData?.isChecked = isChecked
+                binding.root.alpha = if (isChecked) 1f else targetAlpha
             }
         }
 
@@ -27,6 +30,8 @@ class ShareReceiverAdapter : BindRcvAdapter<UriRealInfoEx, ShareReceiverAdapter.
             binding.fileNameTv.text = goodName ?: bean.uri.toString()
             binding.fileSizeAndMD5Tv.text = bean.fileSizeStr
             binding.checkBox.isChecked = bean.isChecked
+
+            binding.root.alpha = if (bean.isChecked) 1f else targetAlpha
         }
     }
 }

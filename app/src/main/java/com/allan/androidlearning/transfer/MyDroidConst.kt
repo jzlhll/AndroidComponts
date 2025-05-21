@@ -39,5 +39,5 @@ object MyDroidConst {
      * 从shareReceiver activity处接收数据
      * key是uriUuid
      */
-    val shareReceiverUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
+    val sendUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
 }

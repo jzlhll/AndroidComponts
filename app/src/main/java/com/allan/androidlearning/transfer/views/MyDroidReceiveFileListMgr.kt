@@ -26,7 +26,9 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
         ))
     }) {
         ExportSelectActionDialog.pop(f.childFragmentManager, it, fileExportFailCallback = f.fileExportFailCallback,
-            fileExportSuccessCallback = f.fileExportSuccessCallback, refreshFileListCallback = f.fileChanged)
+            fileExportSuccessCallback = f.fileExportSuccessCallback,
+            refreshFileListCallback = f.fileChanged,
+            importSendCallback = f.importSendCallback)
     }
 
     fun initRcv() {

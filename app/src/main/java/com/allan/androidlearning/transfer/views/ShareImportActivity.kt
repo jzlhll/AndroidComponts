@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.EntryActivity
+import com.allan.androidlearning.transfer.CACHE_IMPORT_DIR
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.KEY_START_TYPE
 import com.allan.androidlearning.transfer.MY_DROID_SHARE_IMPORT_URIS
@@ -22,11 +25,15 @@ import com.au.module_android.ui.views.ViewActivity
 import com.au.module_android.utils.findCustomFragmentGetActivity
 import com.au.module_android.utils.findEntryActivity
 import com.au.module_android.utils.findLaunchActivity
+import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.logt
 import com.au.module_android.utils.parcelableArrayListExtraCompat
 import com.au.module_android.utils.parcelableExtraCompat
 import com.au.module_android.utils.startActivityFix
+import com.au.module_android.utilsmedia.copyToCacheConvert
 import com.au.module_android.utilsmedia.getRealInfo
+import com.au.module_android.utilsmedia.isFromMyApp
 
 class ShareImportActivity : ViewActivity() {
     override fun onDestroy() {
@@ -65,36 +72,89 @@ class ShareImportActivity : ViewActivity() {
         dealWithIntent(intent)
     }
 
-    private fun handleIncreaseUris(uris: List<Uri>) {
-        logdNoFile { "handle increase uris $uris" }
-        val map = MyDroidConst.shareReceiverUriMap.realValue ?: hashMapOf()
+    private fun ifUrisFromMyApp(sharedImportUris: List<Uri>) : Boolean{
+        var isFromMyApp = false
+        for (uri in sharedImportUris) {
+            if (uri.isFromMyApp(this@ShareImportActivity)) {
+                isFromMyApp = true
+                break
+            }
+        }
+        return isFromMyApp
+    }
+
+    private fun parseImportList(uris: List<Uri>, newImportList:MutableList<UriRealInfoEx>) : Boolean{
+        val map = MyDroidConst.sendUriMap.realValue ?: hashMapOf()
         val oldList = map.values.toList()
 
+        var hasNoPath = false
         uris.forEach { uri->
             if (oldList.find { it.uri == uri } == null) {
                 val real = uri.getRealInfo(Globals.app)
-                val bean = UriRealInfoEx.copyFrom(real, true)
-                map.put(bean.uriUuid, bean)
+                if (real.goodPath() == null) {
+                    hasNoPath = true
+                }
+                val bean = UriRealInfoEx.copyFrom(real)
+                newImportList.add(bean)
             }
         }
-        MyDroidConst.shareReceiverUriMap.asNoStickLiveData().setValueSafe(map)
 
+        return hasNoPath
+    }
+
+    private fun handleIncreaseUris(uris: List<Uri>) {
+        logdNoFile { "handle increase uris $uris" }
+
+        if (ifUrisFromMyApp(uris)) {
+            Toast.makeText(this, "请点击\"导入到发送列表\"，而不是\"分享\"！", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        val newImportList = mutableListOf<UriRealInfoEx>()
+        val hasNoPath = parseImportList(uris, newImportList)
+
+        if (!hasNoPath) { //不需要等待，直接信息转换，存入并结束本activity
+            importMapAndJumpFinish(newImportList)
+        } else { //需要转圈等待拷贝，转成本地cache，uri。再finish
+            lifecycleScope.launchOnIOThread {
+                val newImportCacheList = mutableListOf<UriRealInfoEx>()
+                for (bean in newImportList) {
+                    val copiedFileUri = bean.uri.copyToCacheConvert(contentResolver, null, CACHE_IMPORT_DIR)
+                    val info = copiedFileUri.getRealInfo(this@ShareImportActivity)
+                    newImportCacheList.add(UriRealInfoEx.copyFrom(info))
+                }
+                logt { "newImportCacheList $newImportCacheList" }
+                importMapAndJumpFinish(newImportCacheList)
+            }
+        }
+    }
+
+    private fun importMapAndJumpFinish(newImportList: MutableList<UriRealInfoEx>) {
+        val map = MyDroidConst.sendUriMap.realValue ?: hashMapOf()
+        map.putAll(newImportList.map { it.uriUuid to it })
+        MyDroidConst.sendUriMap.asNoStickLiveData().setValueSafe(map)
+        jumpNext()
+        finish()
+    }
+
+    private fun jumpNext() {
         val found = findEntryActivity(EntryActivity::class.java)
         //清理掉自己
         val foundShellActivity = findCustomFragmentGetActivity(ShareReceiverFragment::class.java)
         foundShellActivity?.finish()
 
-        if (!found) { //说明app没有启动过。
+        if (!found) { //说明app没有启动过。需要先启动下首页，借过一下。
             val intent = findLaunchActivity(Globals.app).first
             intent.putExtra(KEY_START_TYPE, MY_DROID_SHARE_IMPORT_URIS)
             logdNoFile { "start entry activity " + intent.extras }
             startActivityFix(intent)
         } else { //app启动过了。有主界面，则直接跳入到ShareFragment
-            FragmentShellActivity.Companion.start(this, ShareReceiverFragment::class.java,
-                bundleOf(KEY_AUTO_ENTER_SEND_VIEW to true))
+            FragmentShellActivity.Companion.start(
+                this, ShareReceiverFragment::class.java,
+                bundleOf(KEY_AUTO_ENTER_SEND_VIEW to true)
+            )
         }
-
-        finish()
     }
 
     override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

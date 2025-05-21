@@ -10,7 +10,7 @@ import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
-import com.au.module_android.simplelivedata.asNoStickLiveData
+import com.au.module_android.Globals
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
@@ -24,6 +24,9 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
+        binding.adHost.startAnimation()
+
         requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
                 toolbarLP.topMargin = statusBarsHeight
@@ -36,7 +39,6 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
             requireActivity().finishAfterTransition()
         }
 
-        parseEntryFileList()
         clientLiveDataInit()
 
         val fmt = getString(R.string.not_close_window)
@@ -87,8 +89,8 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
 //            }
         }
 
-        MyDroidConst.shareReceiverUriMap.asNoStickLiveData().observeUnStick(this) {
-
+        MyDroidConst.sendUriMap.observe(this) {
+            parseEntryFileList()
         }
     }
 
@@ -98,7 +100,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     }
 
     fun parseEntryFileList() {
-        val entryList = MyDroidConst.shareReceiverUriMap.realValue?.values
+        val entryList = MyDroidConst.sendUriMap.realValue?.values?.filter { it.isChecked }
         entryFileList = entryList?.map {
             UriRealInfoEx.copyFrom(it)
         } ?: listOf()

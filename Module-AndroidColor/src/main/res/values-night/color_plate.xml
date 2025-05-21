@@ -21,8 +21,8 @@
     <color name="color_text_reverse">#212121</color>
     <color name="color_text_reverse_press">#cc212121</color>
 
-    <color name="color_text_desc">#707070</color>
-    <color name="color_hint_text">#464646</color>
+    <color name="color_text_desc">#999999</color>
+    <color name="color_hint_text">#777777</color>
 
     <!-- button: main button色 -->
     <color name="color_main_btn_bg">#db4f4f</color>
@@ -38,7 +38,7 @@
 
     <!-- button: disable -->
     <color name="color_disable_btn_bg">#343434</color>
-    <color name="color_disable_btn_text">#707070</color>
+    <color name="color_disable_btn_text">#999999</color>
 
     <!-- button: warning button色 -->
     <color name="color_warn_btn_bg">#fa3939</color>
@@ -46,13 +46,13 @@
     <color name="color_warn_btn_text">#ffffff</color>
 
     <!-- edit: 相关一切颜色 -->
-    <color name="color_edit_text_hint">#464646</color>
+    <color name="color_edit_text_hint">#777777</color>
 
     <color name="color_edit_background">#19191a</color>
     <color name="color_edit_background_error">#19191a</color>
 
     <color name="color_edit_board_select">#ffffff</color>
-    <color name="color_edit_board_normal">#464646</color>
+    <color name="color_edit_board_normal">#777777</color>
     <color name="color_edit_board_error">#fa3939</color>
 
     <!-- tabLayout: 相关一切颜色。由于tabLayout有不同的样式。这里只提供一个常规的。 -->
@@ -61,14 +61,14 @@
 
     <!-- 分割线的颜色 -->
     <color name="color_line">#343434</color>
-    <color name="color_line_on_dialog">#464646</color>
-    <color name="color_line_on_block">#464646</color>
+    <color name="color_line_on_dialog">#777777</color>
+    <color name="color_line_on_block">#777777</color>
 
     <!-- switch控件的颜色 -->
     <color name="color_switch_block_bg">#343434</color>
-    <color name="color_switch_block_sel_dis_bg">#464646</color>
+    <color name="color_switch_block_sel_dis_bg">#777777</color>
     <color name="color_switch_block_text">#ffffff</color>
-    <color name="color_switch_block_text_dis">#464646</color>
+    <color name="color_switch_block_text_dis">#777777</color>
     <color name="color_switch_block_text_sel">#212121</color>
     <color name="color_switch_block_text_sel_dis">#707070</color>
 

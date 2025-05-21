@@ -9,5 +9,5 @@
     <string name="automatic_desc">开启后，app将会跟随系统自动切换浅色或者深色模式。</string>
     <string name="language">语言</string>
 
-    <string name="import_zone">MyDroid 导入站</string>
+    <string name="send_list">MyDroid 发送列表</string>
 </resources>

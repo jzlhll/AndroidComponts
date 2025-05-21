@@ -3,11 +3,16 @@ package com.au.module_android.utilsmedia
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
+import androidx.annotation.WorkerThread
 import androidx.core.net.toFile
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logd
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 /**
  * @author allan
@@ -74,11 +79,14 @@ open class UriRealInfo(val uri: Uri, val name:String? = null, val realPath:Strin
         val n = realPath ?: (relativePath ?: name)
         return n?.substring(n.lastIndexOf("/") + 1)
     }
+
+    fun goodPath() : String? {
+        return realPath ?: relativePath
+    }
 }
 
 /**
  * 通过uri解析真实路径
- * @return 如果解析不出来，则是null。如果解析出来是路径，则是路径 to true；如果只能解析出名字，则是名字 to false。
  */
 fun Uri.getRealInfo(context: Context): UriRealInfo {
      val pair = getRealPath(context)
@@ -131,4 +139,36 @@ fun Uri.getRealPath(context: Context): Pair<String, ContentUriRealPathType>? {
         }
     }
     return ret
+}
+
+/**
+ * 判断 Uri 是否来源于当前应用
+ * - 对 `content://` 类型的 Uri，验证其 ContentProvider 的包名
+ * - 对 `file://` 类型的 Uri，验证文件路径是否位于应用私有目录
+ */
+fun Uri.isFromMyApp(context: Context): Boolean {
+    val packageName = context.packageName
+    return when (scheme) {
+        ContentResolver.SCHEME_CONTENT -> {
+            // 检查 ContentProvider 的包名
+            val auth = authority ?: return false
+            try {
+                val providerInfo = context.packageManager.resolveContentProvider(auth, 0)
+                providerInfo?.packageName == packageName
+            } catch (_: Exception) {
+                false
+            }
+        }
+        ContentResolver.SCHEME_FILE -> {
+            // 检查文件路径是否在应用私有目录中
+            val path = path ?: return false
+            val appDirs = listOfNotNull(
+                context.filesDir?.absolutePath,
+                context.cacheDir?.absolutePath,
+                context.externalCacheDir?.absolutePath
+            )
+            appDirs.any { path.startsWith(it) }
+        }
+        else -> false
+    }
 }

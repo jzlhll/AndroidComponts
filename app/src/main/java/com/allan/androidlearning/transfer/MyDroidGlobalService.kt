@@ -11,7 +11,6 @@ import com.allan.androidlearning.transfer.views.MyDroidSendFragment
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
-import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.clearDirOldFiles
 import com.au.module_android.utils.launchOnIOThread
@@ -74,6 +73,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             //检查并清理过期temp文件
             Globals.mainScope.launchOnIOThread {
                 clearDirOldFiles(nanoTempCacheChunksDir())
+                clearDirOldFiles(cacheImportDir())
             }
         } catch (e: IOException) {
             val msg = "Port $p WsPort $wsPort occupied ${e.message}"
@@ -133,5 +133,4 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         MyDroidReceiverFragment::class.java,
         MyDroidSendFragment::class.java,
     )
-
 }

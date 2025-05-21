@@ -11,7 +11,11 @@ import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.au.module_android.Globals
+import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
+import com.au.module_android.permissions.createMultiPermissionForResult
+import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
 import com.au.module_android.ui.bindings.BindingFragment
@@ -36,6 +40,12 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
     private var mDelayCancelDialog:ConfirmBottomSingleDialog? = null
     private var mDelayTime = 2
 
+    private val permissionResult = createStoragePermissionForResult(
+            arrayOf(PermissionStorageHelper.MediaType.AUDIO,
+                PermissionStorageHelper.MediaType.IMAGE,
+                PermissionStorageHelper.MediaType.VIDEO,)
+        )
+
     private fun dialogContent() : String{
         return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
     }
@@ -45,14 +55,31 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         Color.WHITE) { menuItem->
         when (menuItem.itemId) {
             com.allan.androidlearning.R.id.next -> {
-                if (binding.empty.isVisible) {
-                    ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
-                } else {
-                    jumpIntoMyDroidSend()
+                when (isEmpty()) {
+                    2-> {
+                        ToastBuilder().setOnActivity(requireActivity()).setMessage("请勾选文件。").setIcon("info").toast()
+                    }
+                    1-> {
+                        jumpIntoMyDroidSend()
+                    }
+                    else -> {
+                        ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
+                    }
                 }
             }
         }
     }}
+
+    /**
+     * 1表示有数据。2表示有数据，但是全都没勾；0表示无数据。
+     */
+    private fun isEmpty() : Int{
+        val values = MyDroidConst.sendUriMap.realValue?.values
+        if (values == null || values.size == 0) {
+            return 0
+        }
+        return if(values.find { it.isChecked } != null) 1 else 2
+    }
 
     private fun jumpIntoMyDroidSend() {
         mDelayCancelDialog?.dismissAllowingStateLoss()
@@ -68,7 +95,11 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
                 it.dismissAllowingStateLoss()
             }
         }) {
-            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            permissionResult.safeRun({
+                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            }, notGivePermissionBlock = {
+                ToastBuilder().setMessage("请授权媒体权限，否则，无法访问文件。").setIcon("warn").setOnTop().toast()
+            })
         }
     }
 
@@ -89,8 +120,20 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
             MyDroidKeepLiveService.Companion.keepMyDroidAlive()
         }
 
+        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
+        binding.adHost.startAnimation()
+
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().finishAfterTransition()
+        }
+
+        binding.infoText.onClick {
+            ConfirmBottomSingleDialog.show(childFragmentManager,
+                "免责申明",
+                "从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。",
+                "知道了") {
+                it.dismissAllowingStateLoss()
+            }
         }
 
         menuMgr.showMenu()
@@ -124,7 +167,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
                 mDelayCancelDialog?.changeContent(dialogContent())
             }
             //自动跳入
-            if (!binding.empty.isVisible) {
+            if (isEmpty() == 1) {
                 jumpIntoMyDroidSend()
             }
         }
@@ -135,7 +178,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
         binding.rcv.setHasFixedSize(true)
 
-        MyDroidConst.shareReceiverUriMap.observe(this) { map->
+        MyDroidConst.sendUriMap.observe(this) { map->
             val list = ArrayList<UriRealInfoEx>()
             list.addAll(map.values)
             adapter.submitList(list, false)

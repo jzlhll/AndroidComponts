@@ -78,7 +78,7 @@
             android:layout_marginHorizontal="28dp"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="中转站"
+            android:text="中转"
             android:textColor="#ffffff"
             android:textSize="24sp"
             app:backgroundNormal="@color/logic_middle"

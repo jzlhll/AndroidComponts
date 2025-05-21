@@ -12,7 +12,7 @@
         android:layout_height="0dp"/>
 
     <com.au.module_android.widget.CustomToolbar
-        app:title="@string/import_zone"
+        app:title="@string/send_list"
         android:id="@+id/toolbar"
         app:titleCentered="true"
         android:layout_marginEnd="8dp"
@@ -30,28 +30,16 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         android:textColor="#ffffff"
         android:textSize="13sp"
-        android:text="管理你即将发送的文件"
+        android:text="选择你即将发送的文件"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="26dp"/>
 
-    <com.au.module_android.widget.CustomFontText
-        android:id="@+id/subTitle"
-        android:layout_marginTop="4dp"
-        android:layout_marginHorizontal="@dimen/ui_padding_edge"
-        style="@style/StyleFontSecondTitleText"
-        app:layout_constraintTop_toBottomOf="@id/descTitle"
-        android:textSize="13sp"
-        android:text="❔申明：仅做了文件名和大小解析，没有复制。\n程序进程死亡后，您需要重新分享导入。"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
         android:layout_marginVertical="4dp"
-        app:layout_constraintTop_toBottomOf="@id/subTitle"
         app:layout_constraintBottom_toTopOf="@id/rcvGuideLine"
+        app:layout_constraintTop_toBottomOf="@id/descTitle"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
@@ -72,15 +60,28 @@
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rcvGuideLine"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.75"
+        app:layout_constraintGuide_percent="0.66"
         android:layout_width="wrap_content"
         android:layout_height="1dp" />
 
-    <FrameLayout
+    <com.au.module_androidui.widget.ShineView
+        android:background="@color/color_normal_block2"
         android:id="@+id/adHost"
         android:layout_marginVertical="8dp"
         app:layout_constraintTop_toBottomOf="@id/rcvGuideLine"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/infoText"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/infoText"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        style="@style/StyleFontSecondTitleText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="12dp"
+        android:textSize="13sp"
+        android:text="❔免责申明(点击查看)"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

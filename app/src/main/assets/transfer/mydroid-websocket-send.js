@@ -20,7 +20,7 @@
         const data = blob.slice(52, 52 + dataSize);
         console.log(`handle Chunk ${uuid} index:${index}/${total} offset:${offset} dataSize:${dataSize}`);
 
-        await mFileSaver?.handleChunk(uuid, index, dataSize, data);
+        await mFileSaver?.handleChunk(uuid, index, total, offset, dataSize, data);
     }
 
     class AbsFileSaver {
@@ -35,7 +35,7 @@
 
         }
 
-        async handleChunk(uuid, index, dataSize, data) {
+        async handleChunk(uuid, index, total, offset, dataSize, data) {
 
         }
     }
@@ -109,15 +109,24 @@
                 this.chunkMap.delete(uuid);
             }
             this.chunkMap.set(uuid, new Map());
+            htmlDownloadProcess(uuid, "传输开始", false);
         }
 
-        async handleChunk(uuid, index, dataSize, data) {
+        async handleChunk(uuid, index, total, offset, dataSize, data) {
             const chunks = this.chunkMap.get(uuid);
             const a = {};
             a.index = index;
             a.dataSize = dataSize;
             a.data = data;
             chunks.set(index, a);
+            let percent = 0;
+            if (total > 0) {
+                percent = index * 100 / total;
+                htmlDownloadProcess(uuid, `传输中 ${percent}%`, false);
+            } else {
+                const sz = myDroidFormatSize(offset);
+                htmlDownloadProcess(uuid, `传输中 ${sz}`, false);
+            }
         }
 
         checkCompletionOnce(uuid, totalChunks) {
@@ -136,6 +145,8 @@
         async onStop(uuid, fileName, totalFileSize, totalChunks) {
             const chunks = this.chunkMap.get(uuid);
             if (!chunks) return;
+
+            htmlDownloadProcess(uuid, `合并中`, false);
             let checkCount = 5;
             while (checkCount-- >= 0) {
                 const isCompleted = this.checkCompletionOnce(uuid, totalChunks);
@@ -164,6 +175,8 @@
                     downloadLink.download = fileName;
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
+
+                    htmlDownloadProcess(uuid, `下载完成`, true);
 
                     // 立即清理资源
                     requestAnimationFrame(() => {

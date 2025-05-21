@@ -1,26 +1,15 @@
 package com.allan.androidlearning.transfer.views
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.Settings
-import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.AUDIO
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.IMAGE
-import com.au.module_android.permissions.PermissionStorageHelper.MediaType.VIDEO
-import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.gone
-import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog

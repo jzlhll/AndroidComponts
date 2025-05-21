@@ -25,7 +25,7 @@ import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_android.utilsmedia.MediaUriResolver
-import com.au.module_android.utilsmedia.getRealPath
+import com.au.module_android.utilsmedia.getRealInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -33,11 +33,13 @@ import java.io.FileInputStream
 import java.io.InputStream
 
 class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
-    private val receiverUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
+    private val sendUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
         override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
             val cvtList = mutableListOf<UriRealInfoHtml>()
             map.values.forEach { urlRealInfoEx->
-                cvtList.add(urlRealInfoEx.copyToHtml())
+                if (urlRealInfoEx.isChecked) {
+                    cvtList.add(urlRealInfoEx.copyToHtml())
+                }
             }
             client.server.heartbeatScope.launchOnThread {
                 val ret = WSResultBean(CODE_SUC, "send files to html!", API_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
@@ -51,30 +53,30 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
 
     override fun onOpen() {
         Globals.mainScope.launch {
-            MyDroidConst.shareReceiverUriMap.observeForever(receiverUriMapOb)
+            MyDroidConst.sendUriMap.observeForever(sendUriMapOb)
         }
     }
 
     override fun onClose() {
         Globals.mainScope.launch {
-            MyDroidConst.shareReceiverUriMap.removeObserver(receiverUriMapOb)
+            MyDroidConst.sendUriMap.removeObserver(sendUriMapOb)
         }
     }
 
     override fun onMessage(json: JSONObject) {
         if (json.has(API_REQUEST_FILE)) {
             val uriUuid = json.optString(API_REQUEST_FILE)
-            val info = MyDroidConst.shareReceiverUriMap.value?.get(uriUuid)
+            val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
             onSendFile(uriUuid, info)
         }
     }
 
     private fun readFromRealPath(uri: Uri) : InputStream? {
         try {
-            val readPathPair = uri.getRealPath(Globals.app)
-            val realPath =readPathPair?.first
-            if (realPath != null) {
-                return FileInputStream(realPath)
+            val info = uri.getRealInfo(Globals.app)
+            val path = info.goodPath()
+            if (path != null) {
+                return FileInputStream(path)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -95,7 +97,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
     }
 
     fun onSendFile(uriUuid:String, info: UriRealInfoEx?) {
-        logdNoFile { "${client.clientName} start SendFileToClient Async client : $info" }
+        logdNoFile { "${client.clientName} onSend File : $info" }
 
         client.scope?.launchOnIOThread {
             var inputStream: InputStream? = null
@@ -103,21 +105,21 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             if (info != null) {
                 val uri = info.uri
 
-                logt { "read from realPath111" }
-                inputStream = readFromRealPath(uri)
-                logt { "read from realPath222 $inputStream" }
+                logt { "onSend File ContentResolver 111" }
+                inputStream = readFromContentResolver(uri)
+                logt { "onSend File ContentResolver 111 $inputStream" }
                 if (inputStream == null) {
-                    logt { "readFrom ContentResolver 111" }
-                    inputStream = readFromContentResolver(uri)
-                    logt { "readFrom ContentResolver 222 $inputStream" }
+                    logt { "onSend File realPath222" }
+                    inputStream = readFromRealPath(uri)
+                    logt { "onSend File realPath222 $inputStream" }
                 }
                 if (inputStream == null) {
-                    logt { "resolve MediaStoreUri 111" }
+                    logt { "onSend File MediaStoreUri 333" }
                     val resolvedUri: Uri? = MediaUriResolver().resolveMediaStoreUri(Globals.app, uri)
-                    logt { "resolve MediaStoreUri 222 $resolvedUri" }
+                    logt { "onSend File MediaStoreUri 333 $resolvedUri" }
                     if (resolvedUri != null) {
-                        inputStream = readFromContentResolver(uri)
-                        logt { "resolve MediaStoreUri 333 $inputStream" }
+                        inputStream = readFromContentResolver(resolvedUri)
+                        logt { "onSend File MediaStoreUri 333 $inputStream" }
                     }
                 }
             }

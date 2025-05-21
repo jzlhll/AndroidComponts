@@ -271,10 +271,10 @@
             updateDownloadLink(false, uriUuid, msg);
         };
 
-        window.onDownloadChunk = function(obj) {
-            console.log("onDownload Chunk", obj);
+        window.htmlDownloadProcess = function(uuid, str, enable) {
+            updateDownloadLink(enable, uuid, str)
         };
-        
+
         ////////run init functions//////
         startWsConnect();
 

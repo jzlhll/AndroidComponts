@@ -1,6 +1,7 @@
 package com.au.module_android.utilsmedia
 
 import android.content.ContentResolver
+import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import androidx.core.net.toFile
 import com.au.module_android.Globals
 import com.au.module_android.utils.logt
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -53,11 +55,7 @@ fun Uri.copyToCacheConvert(cr:ContentResolver,
                            copyFilePrefix:String = "copy_",
                            size:LongArray? = null) : Uri{
     val file = this.copyToCacheFile(cr, param, subCacheDir, copyFilePrefix, size)
-    return if (file == null) {
-        this //被limit或者size为0
-    } else {
-        Uri.fromFile(file)
-    }
+    return Uri.fromFile(file)
 }
 
 /**
@@ -76,21 +74,20 @@ fun Uri.copyToCacheConvert(cr:ContentResolver,
 fun Uri.copyToCacheFile(cr: ContentResolver, param:String? = null,
                         subCacheDir:String,
                         copyFilePrefix:String = "copy_",
-                        size:LongArray? = null): File? {
-    var file: File? = null
+                        size:LongArray? = null): File {
     if (this.scheme == ContentResolver.SCHEME_FILE) {
-        file = copyToCacheFileSchemeFile(size)
+        return copyToCacheFileSchemeFile(size)!!
     } else if (this.scheme == ContentResolver.SCHEME_CONTENT) {
-        file = copyToCacheFileSchemeContent(cr, param, subCacheDir, copyFilePrefix, size)
+        return copyToCacheFileSchemeContent(cr, param, subCacheDir, copyFilePrefix, size)
     }
-    return file
+    throw IllegalArgumentException()
 }
 
 private fun Uri.copyToCacheFileSchemeContent(cr: ContentResolver,
                                              param:String? = null,
                                              subCacheDir:String,
                                              copyFilePrefix:String = "copy_",
-                                             size:LongArray? = null) : File? {
+                                             size:LongArray? = null) : File {
     val cacheDir = Globals.goodCacheDir
     val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(getUriMimeType(cr))?.lowercase()
     val isSourceHeic = extension == "heic"
