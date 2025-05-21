@@ -13,7 +13,6 @@ import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
-import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
 import com.au.module_android.ui.bindings.BindingFragment
@@ -38,11 +37,12 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
     private var mDelayCancelDialog:ConfirmBottomSingleDialog? = null
     private var mDelayTime = 2
 
-    private val permissionResult = createStoragePermissionForResult(
-            arrayOf(PermissionStorageHelper.MediaType.AUDIO,
-                PermissionStorageHelper.MediaType.IMAGE,
-                PermissionStorageHelper.MediaType.VIDEO,)
-        )
+    //todo 有manageAll，则无需本地
+//    private val permissionResult = createStoragePermissionForResult(
+//            arrayOf(PermissionStorageHelper.MediaType.AUDIO,
+//                PermissionStorageHelper.MediaType.IMAGE,
+//                PermissionStorageHelper.MediaType.VIDEO,)
+//        )
 
     private fun dialogContent() : String{
         return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
@@ -93,11 +93,13 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
                 it.dismissAllowingStateLoss()
             }
         }) {
-            permissionResult.safeRun({
-                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
-            }, notGivePermissionBlock = {
-                ToastBuilder().setMessage("请授权媒体权限，否则，无法访问文件。").setIcon("warn").setOnTop().toast()
-            })
+            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+
+//            permissionResult.safeRun({
+//                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+//            }, notGivePermissionBlock = {
+//                ToastBuilder().setMessage("请授权媒体权限，否则，无法访问文件。").setIcon("warn").setOnTop().toast()
+//            })
         }
     }
 
