@@ -1,6 +1,6 @@
 // IIFE（传统非模块化环境）
 (function() {
-    window.streamBasedHashWorker = async function streamBasedHashWorker(file, startTs) {
+    window.streamBasedHashWorker = async function(file, startTs) {
         return new Promise((resolve, reject) => {
             const worker = new Worker('worker-mydroid-md5.js');
             

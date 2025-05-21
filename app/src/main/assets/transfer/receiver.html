@@ -170,7 +170,7 @@
     <div class="form-container">
         <form id="uploadForm" enctype="multipart/form-data">
             <div class="upload-section">
-                <input type="file" name="file" id="real-file">
+                <input type="file" multiple name="file" id="real-file">
                 <button type="button" class="custom-button" onclick="document.getElementById('real-file').click()">
                     📁 选择文件
                 </button>
@@ -210,8 +210,7 @@
 </div>
 
 <script>
-    let selectedFile = null; // 存储选择的文件
-    let selectedMd5 = null; //文件的md5
+    
 
     const ALREADY_TITLE = "🗃️ 已上传文件列表\n\n";
     let alreadyFilesInfo = ""; //已经发送的文件s
@@ -242,11 +241,7 @@
     // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
         requireNotActioning(()=>{
-            const newFile = e.target.files[0];
-            if (newFile) {
-                selectedFile = newFile;
-                showFileInfo();
-            }
+            showFileInfo(e.target.files);
         });
     });
 
@@ -254,11 +249,7 @@
         e.preventDefault();
         document.getElementById('dropZone').classList.remove('dragover');
         requireNotActioning(()=>{
-            const newFile = e.dataTransfer.files[0];
-            if (newFile) {
-                selectedFile = newFile;
-                showFileInfo();
-            }
+            showFileInfo(e.dataTransfer.files);
         });
     }
     
@@ -266,85 +257,96 @@
         e.preventDefault();
         document.getElementById('dropZone').classList.add('dragover');
     }
+    
+    //字段：name, fileSizeStr, md5, md5Time, uploadInfo
+    let prepareFilesMap = {}; 
+    let isMd5Process = true;
 
-    function showFileInfo() {
-        const startTs = Date.now();
-        window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
-        window.lastStartTsFlagArr.checkMd5StartTime = startTs;
+    function showPrepareFilesInfo() {
+        let str = "选择的文件\n";
+        for (let i = 0; i < prepareFilesMap.size; i++) {
+            const info = prepareFilesMap[i];
+            const name = info.file.name;
+            const fileSizeStr = info.fileSizeStr;
 
-        // 添加兼容性检查
-        if (selectedFile) {
-            const file = selectedFile;
-            const fileSize = myDroidFormatSize(file.size);
+            const md5 = info.md5 ?? "--";
+            const uploadInfo = info.uploadInfo ?? "--";
             
-            if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
-                showFileInfoByWorker(startTs, file, fileSize);
+            if (isMd5Process) {
+                const md5Time = info.md5Time ?? "--";
+                str = str + `${name} ${fileSizeStr} md5:${md5} 耗时:${md5Time}毫秒\n`;
             } else {
-                showFileInfoBySmall(file, fileSize);
+                const uploadInfo = info.uploadInfo ?? "--";
+                str = str + `${name} ${fileSizeStr} md5:${md5} 上传:${uploadInfo}\n`;
             }
         }
+        const fileListDiv = document.getElementById('fileList');
+        fileListDiv.textContent = str;
     }
 
-    // 计算文件唯一标识（MD5）
-    async function showFileInfoBySmall(file, fileSize) {
-        isActioning = true;
+    async function showFileInfo(files) {
+        console.log("showwFileInfo file list: ", files);
+        if (files) {
+            const startTs = Date.now();
+            window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
+            window.lastStartTsFlagArr.checkMd5StartTime = startTs;
 
-        const fileListDiv = document.getElementById('fileList');
-        fileListDiv.className = `status-message info`;
-        fileListDiv.style.display = 'block';
-        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 计算中...`;
+            isActioning = true;
 
-        const spark = new SparkMD5.ArrayBuffer();
-        const stream = file.stream().getReader();
-        while (true) {
-            const { done, value } = await stream.read();
-            if (done) break;
-            spark.append(value.buffer);
-        }
-        const fileHash = spark.end();
-        selectedMd5 = fileHash;
-        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash}`;
-        
-        isActioning = false;
-    }
+            //1. 设定 检查loop开始
+            console.log("showwFileInfo file list 1.");
+            let deltaTs = 0;
+            isMd5Process = true;
+            const loopController = new LoopController();
+            loopController.start(showPrepareFilesInfo);
 
-    async function showFileInfoByWorker(startTs, file, fileSize) {
-        isActioning = true;
-
-        const fileListDiv = document.getElementById('fileList');
-        fileListDiv.className = `status-message info`;
-        fileListDiv.style.display = 'block';
-        fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 计算中...`;
-        
-        let deltaTs = 0;
-        function checkCb() {
-            const nowTs = Date.now();
-            deltaTs = nowTs - startTs;
-            fileListDiv.textContent = `文件: ${file.name} (${fileSize}) \nmd5: 耗时${deltaTs}毫秒...`;
-        }
-        startLoopingCheck(checkCb);
-
-        let text = "";
-        try {
-            const fileHash = await streamBasedHashWorker(file, startTs);
-            console.log("计算结果:", fileHash);
-            selectedMd5 = fileHash;
-            const nowTs = Date.now();
-            deltaTs = nowTs - startTs;
-            text = `文件: ${file.name} (${fileSize}) \nmd5: ${fileHash} 耗时${deltaTs}毫秒。`;
-        } catch (error) {
-            if (error == "aborted") {
-                text = `文件: ${file.name} (${fileSize}) 已终止。`;
-            } else {
-                console.error("发生错误:", error);
-                text = `文件: ${file.name} (${fileSize}) \n${error}。`;
+            //2. 初始化map
+            console.log("showwFileInfo file list 2.");
+            prepareFilesMap.clear();
+            for (let i = 0; i < files.length; i++) {
+                prepareFilesMap[i] = {
+                    file: files[i],
+                    name: files[i].name,
+                    fileSizeStr: myDroidFormatSize(files[i].size)
+                };
             }
+            //2.1 一上来就检查一次
+            showPrepareFilesInfo();
+            
+            //3. 开始generate md5
+            console.log("showwFileInfo file list 3.");
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    let md5 = "";
+                    const one = prepareFilesMap[i];
+                    
+                    const oneStartTs = Date.now();
+                    console.log(`showwFileInfo file list 3.1 ${one.name}`);
+                    if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
+                        md5 = await streamBasedHashWorker(file, startTs);
+                    } else {
+                        md5 = await generateMd5Small(file);
+                    }
+                    one.md5 = md5;
+                    one.md5Time = Date.now() - oneStartTs;
+                    console.log(`showwFileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
+                }
+            } catch(error) {
+                if (error == "aborted") {
+                    text = `文件: ${file.name} (${fileSize}) 已终止。`;
+                } else {
+                    console.error("发生错误:", error);
+                    text = `文件: ${file.name} (${fileSize}) \n${error}。`;
+                }
+            }
+            
+            //4. 结束检查
+            loopController.stop();
+            
+            console.log("end show file info!");
+            isActioning = false;
         }
-
-        stopLoopingCheck();
-
-        isActioning = false;
-        fileListDiv.textContent = text;
     }
 
     window.myHtmlChangeProgressVisible = function(visible) {
@@ -385,38 +387,45 @@
 
     // 开始上传
     function startUpload() {
-        requireNotActioning(()=>{
+        requireNotActioning(async ()=>{
             isActioning = true;
             changeUploadButton(false);
 
             const startTime = Date.now();
             window.lastStartTsFlagArr.startUploadTime = startTime;
 
-            startUploadFile(startTime, selectedFile, selectedMd5, (uploaded, total, speed, str) => {
-                if (str == "mergeChunksStart") {
-                    showStatus("最后的检验中...", "info");
-                } else if(str == "uploadChunk") {
-                    const percent = Math.round((uploaded / total) * 100);
-                    updateProgress(percent);
-                    showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
-                }
-            })
-                .then(message => {
+            isMd5Process = false;
+            for (let i = 0; i < prepareFilesMap.size; i++) {
+                const one = prepareFilesMap[i];
+
+                console.log(`${one.name} start upload...`);
+                try {
+                    const message = await startUploadFile(startTime, one.file, one.md5, (uploaded, total, speed, str) => {
+                        if (str == "mergeChunksStart") {
+                            showStatus("最后的检验中...", "info");
+                        } else if(str == "uploadChunk") {
+                            const percent = Math.round((uploaded / total) * 100);
+                            updateProgress(percent);
+                            showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
+                        }
+                    })
+
                     console.log(message);
-                    showStatus("文件上传成功!", "success", true);
-                    resetUI(true);
+                    showStatus(`${one.name} 上传成功!`, "success", true);
                     isActioning = false;
                     changeUploadButton(true);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.error("error: " + error);
                     showStatus(error.message, "error");
-                    resetUI(false);
                     isActioning = false;
                     changeUploadButton(true);
-                });
+                }
+
+                updateProgress(0);
             }
-        );
+            
+            resetUI(false);
+        });
     }
 
     function showStatus(message, type, shouldReset=false) {
@@ -433,20 +442,17 @@
     }
 
     // 重置UI状态
-    function resetUI(isSuccess) {
-        if (isSuccess) {
-            document.getElementById('real-file').value = '';
-            document.getElementById('fileList').textContent = '';
+    function resetUI() {
+        todo
+        document.getElementById('real-file').value = '';
+        document.getElementById('fileList').textContent = '';
 
-            const fileSize = myDroidFormatSize(selectedFile.size);
-            alreadyFilesInfo = ALREADY_TITLE + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n" + alreadyFilesInfo;
-            document.getElementById('alreadyFileList').textContent = alreadyFilesInfo;
-            selectedFile = null;
-            selectedMd5 = null;
+        const fileSize = myDroidFormatSize(selectedFile.size);
+        alreadyFilesInfo = ALREADY_TITLE + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n" + alreadyFilesInfo;
+        document.getElementById('alreadyFileList').textContent = alreadyFilesInfo;
+        showAlreadyFileList();
 
-            showAlreadyFileList();
-        }
-
+        prepareFilesMap.clear();
         updateProgress(0);
         myHtmlChangeProgressVisible(false);
     }
@@ -454,30 +460,6 @@
     function updateProgress(percent) {
         const progressBar = document.getElementById('uploadProgress');
         progressBar.style.width = `${percent}%`;
-    }
-
-    let intervalId = null;
-    let isLooping = false;
-    function startLoopingCheck(callback) {
-        if (isLooping) {
-            return;
-        }
-        
-        isLooping = true;
-
-        if (!intervalId) {
-            intervalId = setInterval(() => {
-            callback();
-            }, 300);
-        }
-    }
-
-    function stopLoopingCheck() {
-        isLooping = false;
-        if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-        }
     }
 
     ////////run init functions//////

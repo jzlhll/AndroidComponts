@@ -64,4 +64,30 @@
         // 格式化输出
         return `${padTo2Digits(hr)}:${padTo2Digits(m)}:${padTo2Digits(s)}.${padTo3Digits(ms)}`;
     }
+
+    window.LoopController = class{
+        constructor() {
+            this.intervalId = null;
+            this.isLooping = false;
+        }
+
+        start(callback, interval = 300) {
+            if (this.isLooping) return;
+            
+            this.isLooping = true;
+            if (!this.intervalId) {
+            this.intervalId = setInterval(() => {
+                callback();
+            }, interval);
+            }
+        }
+
+        stop() {
+            this.isLooping = false;
+            if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+            }
+        }
+    }
 })();

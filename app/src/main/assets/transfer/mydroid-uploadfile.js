@@ -3,6 +3,17 @@
     const UPLOAD_CHUNK = "/upload-chunk";
     const ABORT_UPLOAD_CHUNKS = "/abort-upload-chunks";
 
+    window.generateMd5Small = async function(file) {
+        const spark = new SparkMD5.ArrayBuffer();
+        const stream = file.stream().getReader();
+        while (true) {
+            const { done, value } = await stream.read();
+            if (done) break;
+            spark.append(value.buffer);
+        }
+        return spark.end();
+    }
+
     // 上传分片
     async function uploadChunk(formData) {
         let response = null;
