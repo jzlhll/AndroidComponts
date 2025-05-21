@@ -15,7 +15,7 @@ import com.au.module_android.utils.logdNoFile
  */
 class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        logdNoFile { "onActivityCreated $activity ${activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName}" }
+        //logdNoFile { "onActivityCreated $activity ${activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName}" }
         activityList.add(activity)
     }
 
@@ -54,6 +54,6 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityDestroyed(activity: Activity) {
         activityList.remove(activity)
-        logdNoFile { "onActivityDestroyed $activity ${activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName}" }
+        //logdNoFile { "onActivityDestroyed $activity ${activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName}" }
     }
 }

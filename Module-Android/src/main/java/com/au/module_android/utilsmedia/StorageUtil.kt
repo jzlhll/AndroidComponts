@@ -30,7 +30,6 @@ suspend fun exportFileToDownload(outputFileName: String, sourceFile: File): Stri
 
     // 获取下载目录
     val has = hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    logt { "has permission $has" }
     val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 
     val generateUniqueFileName = fun(directory: File, originalName: String): File {
@@ -91,7 +90,6 @@ fun saveFileToPublicDirectory(
     }
 
     val uri = insertFileToContentResolverFile(context, origFile, origFile.name, path, setContentValues)
-    logt { "insert FileToContent ResolverFile $uri" }
     var isSuc = false
     if (uri != null) {
         context.contentResolver.openOutputStream(uri)?.use { outputStream ->

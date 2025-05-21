@@ -27,12 +27,14 @@ public final class ALogJ {
         return lvl + " " + log.substring(log.lastIndexOf('.') + 1) + ": " + s;
     }
 
-    public static String logt(String s) {
+    public static String logThread(String s, Class<?> javaClass) {
         var id = Thread.currentThread().getId();
+        var log = javaClass.toString();
+        var className = log.substring(log.lastIndexOf('.') + 1);
         if (id == Looper.getMainLooper().getThread().getId()) {
-            return "MainThread: " + s;
+            return className + " MainThread: " + s;
         } else {
-            return String.format(Locale.ROOT, "SubThread[%02d]: %s", id, s);
+            return String.format(Locale.ROOT, className + " SubThread[%02d]: %s", id, s);
         }
     }
 

@@ -94,10 +94,11 @@ inline fun <THIS : Any> THIS.logdNoFile(tag:String = TAG, crossinline block: (TH
     }
 }
 
-inline fun logt(tag:String = TAG, block:()->String) {
-    if(BuildConfig.ENABLE_LOGCAT) {
-        val str = block()
-        Log.w(tag, ALogJ.logt(str))
+inline fun <THIS : Any> THIS.logt(tag:String = TAG, crossinline block: (THIS) -> String) {
+    if (BuildConfig.ENABLE_LOGCAT) {
+        val str = block(this)
+        val log = ALogJ.logThread(str, this.javaClass)
+        Log.d(tag, log)
     }
 }
 
