@@ -81,7 +81,6 @@
         }
     
         const fileName = file.name;
-        myHtmlChangeProgressVisible(true);
         const fileSize = file.size;
         const chunkSize = getChunkSize(fileSize);
         console.log("选择的chunkSize是" + chunkSize);
@@ -93,11 +92,13 @@
         let deltaTime = 0;
         let sendSpeedStr = "-- KB/s";
 
+        let isAbort = false;
         for (let i = 0; i < chunks; i++) {
             //放在这里可以让最后一包如果完成的话，就接着完成。
             if (startTs != window.lastStartTsFlagArr.startUploadTime) {
                 await abortUploadChunk(md5, fileName);
-                throw new Error("已被取消!");
+                isAbort = true;
+                break;
             }
 
             const start = i * chunkSize;
@@ -113,10 +114,6 @@
             formData.append('chunkIndex', i + 1);
             formData.append('totalChunks', chunks);
             formData.append('md5', md5);
-
-            if (window.debugReceiver == true) {
-                await delay(1000);
-            }
 
             const ans = await uploadChunk(formData); // 上传分片
             //console.log(`chunkResponse: code=${ans.code} msg=${ans.msg}`);
@@ -134,15 +131,25 @@
                 }
             }
             onProgress(uploadedChunks, chunks, sendSpeedStr, "uploadChunk");
+
+            if (window.debugReceiver == true) {
+                await delay(1000);
+            }
         }
 
-        console.log('所有分片上传完成，通知服务器合并文件', file);
-        onProgress(chunks, chunks, "", "merge ChunksStart ");
-        const mergeAns = await mergeChunks(md5, fileName, chunks, file.lastModified); // 通知服务器合并分片
-        if (mergeAns.code != 0) {
-            throw new Error(`${mergeAns.msg}`);
+        if (isAbort) {
+            onProgress(0, 0, "", "abort");
+            return "abort";
+        } else {
+            console.log('所有分片上传完成，通知服务器合并文件', file);
+            onProgress(chunks, chunks, "", "mergeChunksStart");
+            const mergeAns = await mergeChunks(md5, fileName, chunks, file.lastModified); // 通知服务器合并分片
+            if (mergeAns.code != 0) {
+                throw new Error(`${mergeAns.msg}`);
+            }
+            console.log(`mergeAllChunksReponse: code=${mergeAns.code} msg=${mergeAns.msg}`);
+            onProgress(chunks, chunks, "", "complete");
+            return mergeAns.msg;
         }
-        console.log(`mergeAllChunksReponse: code=${mergeAns.code} msg=${mergeAns.msg}`);
-        return mergeAns.msg;
     };
   })();

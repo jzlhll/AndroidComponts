@@ -77,11 +77,10 @@
             color: #3498db;
         }
 
-        .status-message {
+        .normal-message {
             margin-top: 20px;
             padding: 10px;
             border-radius: 5px;
-            display: none;
         }
 
         .success {
@@ -184,6 +183,8 @@
         </button>
     </div>
 
+    <div id="status" class="normal-message" style="visibility: hidden;">暂无消息</div>
+
     <div class="progress-container">
         <div id="uploadProgress" class="progress-bar"></div>
     </div>
@@ -192,12 +193,9 @@
         ⬇️ 或者拖拽文件至此区域
     </div>
 
-    <div id="fileList" class="status-message" style="white-space: pre-line;"></div>
-    <div id="status" class="status-message"></div>
-    <div class="divider" style="display: none;"></div>
-    <div id="alreadyFileList"
-         class="status-message"
-         style="display: none; white-space: pre-line; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+    <div id="fileList" class="normal-message" style="display: none;white-space: pre-line;">
+    </div>
+    <div class="divider" style="display: none;">
     </div>
 </div>
 
@@ -210,12 +208,19 @@
 </div>
 
 <script>
-    
-
-    const ALREADY_TITLE = "🗃️ 已上传文件列表\n\n";
-    let alreadyFilesInfo = ""; //已经发送的文件s
-
     let isActioning = false; //正在操作中
+
+    function showStatus(message, type, shouldReset=true) {
+        const statusDiv = document.getElementById('status');
+        statusDiv.style.visibility = 'visible';
+        statusDiv.textContent = message;
+        statusDiv.className = `status-message ${type}`;
+        if (shouldReset) {
+            setTimeout(() => {
+                statusDiv.style.visibility = 'hidden';
+            }, 3000);
+        }
+    }
 
     window.htmlUpdateLeftSpace = function(newText) {
         const subtitleElement = document.getElementById('subtitle');
@@ -232,7 +237,7 @@
 
     function requireNotActioning(continueCallback) {
         if (isActioning) {
-            alert("正在操作中，请勿操作。");
+            showStatus("正在操作中，请勿操作。", "error", true);
         } else {
             continueCallback();
         }
@@ -259,28 +264,29 @@
     }
     
     //字段：name, fileSizeStr, md5, md5Time, uploadInfo
-    let prepareFilesMap = {}; 
+    let selectedFileMap = new Map(); 
     let isMd5Process = true;
 
-    function showPrepareFilesInfo() {
-        let str = "选择的文件\n";
-        for (let i = 0; i < prepareFilesMap.size; i++) {
-            const info = prepareFilesMap[i];
+    function showSelectedFilesInfo() {
+        let str = "选择的文件列表：\n";
+        console.log("selected file map " + selectedFileMap.size);
+        for (let i = 0; i < selectedFileMap.size; i++) {
+            const info = selectedFileMap.get(i);
             const name = info.file.name;
             const fileSizeStr = info.fileSizeStr;
 
             const md5 = info.md5 ?? "--";
-            const uploadInfo = info.uploadInfo ?? "--";
             
             if (isMd5Process) {
                 const md5Time = info.md5Time ?? "--";
-                str = str + `${name} ${fileSizeStr} md5:${md5} 耗时:${md5Time}毫秒\n`;
+                str = str + `${name} ${fileSizeStr} \nmd5:${md5} 耗时:${md5Time}毫秒\n\n`;
             } else {
                 const uploadInfo = info.uploadInfo ?? "--";
-                str = str + `${name} ${fileSizeStr} md5:${md5} 上传:${uploadInfo}\n`;
+                str = str + `${name} ${fileSizeStr} \nmd5:${md5} 上传:${uploadInfo}\n\n`;
             }
         }
         const fileListDiv = document.getElementById('fileList');
+        fileListDiv.style.display = 'block';
         fileListDiv.textContent = str;
     }
 
@@ -298,68 +304,65 @@
             let deltaTs = 0;
             isMd5Process = true;
             const loopController = new LoopController();
-            loopController.start(showPrepareFilesInfo);
+            loopController.start(showSelectedFilesInfo);
 
             //2. 初始化map
             console.log("showwFileInfo file list 2.");
-            prepareFilesMap.clear();
+            selectedFileMap.clear();
             for (let i = 0; i < files.length; i++) {
-                prepareFilesMap[i] = {
+                selectedFileMap.set(i, {
                     file: files[i],
                     name: files[i].name,
                     fileSizeStr: myDroidFormatSize(files[i].size)
-                };
+                });
             }
             //2.1 一上来就检查一次
-            showPrepareFilesInfo();
+            showSelectedFilesInfo();
             
             //3. 开始generate md5
             console.log("showwFileInfo file list 3.");
-            try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    let md5 = "";
-                    const one = prepareFilesMap[i];
-                    
-                    const oneStartTs = Date.now();
-                    console.log(`showwFileInfo file list 3.1 ${one.name}`);
-                    if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
-                        md5 = await streamBasedHashWorker(file, startTs);
-                    } else {
-                        md5 = await generateMd5Small(file);
-                    }
-                    one.md5 = md5;
-                    one.md5Time = Date.now() - oneStartTs;
-                    console.log(`showwFileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
-                }
-            } catch(error) {
-                if (error == "aborted") {
-                    text = `文件: ${file.name} (${fileSize}) 已终止。`;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                try {
+                let md5 = "";
+                const one = selectedFileMap.get(i);
+                
+                const oneStartTs = Date.now();
+                console.log(`showwFileInfo file list 3.1 ${one.name}`);
+                if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
+                    md5 = await streamBasedHashWorker(file, startTs);
                 } else {
-                    console.error("发生错误:", error);
-                    text = `文件: ${file.name} (${fileSize}) \n${error}。`;
+                    md5 = await generateMd5Small(file);
+                }
+                one.md5 = md5;
+                one.md5Time = Date.now() - oneStartTs;
+                console.log(`showwFileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
+                } catch(error) {
+                    if (error == "aborted") {
+                        console.log(`文件md5: ${file.name} (${fileSize}) 已终止。`);
+                    } else {
+                        console.log(`文件md5: ${file.name} 错误：(${error})。`);
+                    }
+                    one.md5 = "md5错误";
+                    one.md5Time = Date.now() - oneStartTs;
                 }
             }
             
             //4. 结束检查
             loopController.stop();
             
+            showSelectedFilesInfo();
             console.log("end show file info!");
             isActioning = false;
         }
     }
 
-    window.myHtmlChangeProgressVisible = function(visible) {
+    function myHtmlChangeProgressVisible(visible) {
         if(visible) 
             document.querySelector('.progress-container').style.display = 'block';
         else 
             document.querySelector('.progress-container').style.display = 'none';
-    }
-
-    // 显示文件列表区域的函数
-    function showAlreadyFileList() {
-        document.querySelector('.divider').style.display = 'block';
-        document.getElementById('alreadyFileList').style.display = 'block'; //none 是hide
     }
 
     function changeUploadButton(reset) {
@@ -388,71 +391,62 @@
     // 开始上传
     function startUpload() {
         requireNotActioning(async ()=>{
+            if (selectedFileMap.size == 0) {
+                showStatus("请选择文件。", "error", true);
+                return;
+            }
+
             isActioning = true;
             changeUploadButton(false);
 
             const startTime = Date.now();
             window.lastStartTsFlagArr.startUploadTime = startTime;
 
+            myHtmlChangeProgressVisible(true);
+
             isMd5Process = false;
-            for (let i = 0; i < prepareFilesMap.size; i++) {
-                const one = prepareFilesMap[i];
+
+            for (let i = 0; i < selectedFileMap.size; i++) {
+                updateProgress(0);
+                const one = selectedFileMap.get(i);
 
                 console.log(`${one.name} start upload...`);
                 try {
-                    const message = await startUploadFile(startTime, one.file, one.md5, (uploaded, total, speed, str) => {
+                    const message = await startUploadFile(startTime, one.file, one.md5, 
+                        (uploadChunks, totalChunks, speed, str) => {
+                        //console.log(`updateChunks ${uploadChunks}/${totalChunks} ${speed} ${str}`);
                         if (str == "mergeChunksStart") {
-                            showStatus("最后的检验中...", "info");
+                            updateProgress(100);
+                            one.uploadInfo = "最后检验中...";
                         } else if(str == "uploadChunk") {
-                            const percent = Math.round((uploaded / total) * 100);
+                            const percent = Math.round((uploadChunks / totalChunks) * 100);
                             updateProgress(percent);
-                            showStatus(`文件发送中${percent}%，速度${speed}...`, "info");
+                            one.uploadInfo = `${percent}%，速度${speed}`;
+                        } else if (str == "complete") {
+                            one.uploadInfo = `发送成功。`;
+                        } else if (str == "abort") {
+                            one.uploadInfo = `已取消。`;
                         }
-                    })
-
+                    });
                     console.log(message);
-                    showStatus(`${one.name} 上传成功!`, "success", true);
-                    isActioning = false;
-                    changeUploadButton(true);
                 } catch(error) {
-                    console.error("error: " + error);
-                    showStatus(error.message, "error");
-                    isActioning = false;
-                    changeUploadButton(true);
+                    console.error(error);
+                    one.uploadInfo = error;
                 }
 
-                updateProgress(0);
+                showSelectedFilesInfo();
             }
-            
-            resetUI(false);
+        
+            isActioning = false;
+            changeUploadButton(true);
+            afterUpload();
         });
     }
 
-    function showStatus(message, type, shouldReset=false) {
-        const statusDiv = document.getElementById('status');
-        statusDiv.textContent = message;
-        statusDiv.className = `status-message ${type}`;
-        statusDiv.style.display = 'block';
-
-        if (shouldReset) {
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 3000);
-        }
-    }
-
     // 重置UI状态
-    function resetUI() {
-        todo
+    function afterUpload() {
         document.getElementById('real-file').value = '';
-        document.getElementById('fileList').textContent = '';
-
-        const fileSize = myDroidFormatSize(selectedFile.size);
-        alreadyFilesInfo = ALREADY_TITLE + selectedFile.name + " " + fileSize + " " + selectedMd5 + "\n" + alreadyFilesInfo;
-        document.getElementById('alreadyFileList').textContent = alreadyFilesInfo;
-        showAlreadyFileList();
-
-        prepareFilesMap.clear();
+        selectedFileMap.clear();
         updateProgress(0);
         myHtmlChangeProgressVisible(false);
     }
