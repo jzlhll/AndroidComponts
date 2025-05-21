@@ -3,7 +3,6 @@ package com.allan.androidlearning.transfer.views
 import android.graphics.Color
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.androidlearning.databinding.ActivityMyDroidReceiveShareBinding
@@ -14,7 +13,6 @@ import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
-import com.au.module_android.permissions.createMultiPermissionForResult
 import com.au.module_android.permissions.createStoragePermissionForResult
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager

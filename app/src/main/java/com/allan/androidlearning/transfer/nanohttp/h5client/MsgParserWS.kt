@@ -71,9 +71,8 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
         }
     }
 
-    private fun readFromRealPath(uri: Uri) : InputStream? {
+    private fun readFromRealPath(info: UriRealInfoEx) : InputStream? {
         try {
-            val info = uri.getRealInfo(Globals.app)
             val path = info.goodPath()
             if (path != null) {
                 return FileInputStream(path)
@@ -105,23 +104,24 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             if (info != null) {
                 val uri = info.uri
 
-                logt { "onSend File ContentResolver 111" }
-                inputStream = readFromContentResolver(uri)
-                logt { "onSend File ContentResolver 111 $inputStream" }
+                //1. 尝试从真实路径直接读取
+                logt { "onSend File try read from real Path ${info.goodPath()}" }
+                inputStream = readFromRealPath(info)
+
+                //2. 尝试从ContentResolver中直接读取
                 if (inputStream == null) {
-                    logt { "onSend File realPath222" }
-                    inputStream = readFromRealPath(uri)
-                    logt { "onSend File realPath222 $inputStream" }
+                    inputStream = readFromContentResolver(uri)
+                    logt { "onSend File 222 $inputStream" }
                 }
-                if (inputStream == null) {
-                    logt { "onSend File MediaStoreUri 333" }
-                    val resolvedUri: Uri? = MediaUriResolver().resolveMediaStoreUri(Globals.app, uri)
-                    logt { "onSend File MediaStoreUri 333 $resolvedUri" }
-                    if (resolvedUri != null) {
-                        inputStream = readFromContentResolver(resolvedUri)
-                        logt { "onSend File MediaStoreUri 333 $inputStream" }
-                    }
-                }
+                //3. 转成media uri再读一次试试
+//                if (inputStream == null) {
+//                    val resolvedUri: Uri? = MediaUriResolver().resolveMediaStoreUri(Globals.app, uri)
+//                    logt { "onSend File MediaStoreUri 333 $resolvedUri" }
+//                    if (resolvedUri != null) {
+//                        inputStream = readFromContentResolver(resolvedUri)
+//                        logt { "onSend File MediaStoreUri 333 $inputStream" }
+//                    }
+//                }
             }
 
             if (inputStream != null && info != null) {

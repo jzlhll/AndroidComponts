@@ -121,7 +121,7 @@
             chunks.set(index, a);
             let percent = 0;
             if (total > 0) {
-                percent = index * 100 / total;
+                percent = (index * 100 / total) | 0;
                 htmlDownloadProcess(uuid, `传输中 ${percent}%`, false);
             } else {
                 const sz = myDroidFormatSize(offset);
@@ -176,7 +176,7 @@
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
 
-                    htmlDownloadProcess(uuid, `下载完成`, true);
+                    htmlDownloadProcess(uuid, `下载完成`, false);
 
                     // 立即清理资源
                     requestAnimationFrame(() => {
