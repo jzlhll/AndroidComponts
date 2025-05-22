@@ -1,5 +1,8 @@
 <html lang="zh-cn">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDroid</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -155,23 +158,21 @@
 <script src="mydroid-utils.js"></script>
 <script src="mydroid-websockets.js"></script>
 <script src="mydroid-websocket-receiver.js"></script>
+<script src="mydroid-locales.js"></script>
 
 <!-- 指定 app/worker 否则无法识别。-->
 <script src="worker-mydroid-md5.js" type="app/worker"></script>
 
 <body>
 <div class="container">
-    <h1>MyDroid局域网工具</h1>
-    </p>
+    <h1>MyDroid</h1>
     <p id="subtitle" style="text-align: center; color: #95a5a6; font-size: 1.0em; margin-top: -20px; margin-bottom: 30px;">
-        局域网fast传输
     </p>
     <div class="form-container">
         <form id="uploadForm" enctype="multipart/form-data">
             <div class="upload-section">
                 <input type="file" multiple name="file" id="real-file">
-                <button type="button" class="custom-button" onclick="document.getElementById('real-file').click()">
-                    📁 选择文件
+                <button id="selectedFileBtn" type="button" class="custom-button" onclick="document.getElementById('real-file').click()">
                 </button>
             </div>
         </form>
@@ -179,18 +180,16 @@
         <button id="uploadButton" type="button" class="custom-button" 
                 style="background-color: #27ae60" 
                 onclick="startUpload()">
-            🚀 开始上传
         </button>
     </div>
 
-    <div id="status" class="normal-message" style="visibility: hidden;">暂无消息</div>
+    <div id="status" class="normal-message" style="visibility: hidden;">...</div>
 
     <div class="progress-container">
         <div id="uploadProgress" class="progress-bar"></div>
     </div>
 
     <div id="dropZone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-        ⬇️ 或者拖拽文件至此区域
     </div>
 
     <div id="fileList" class="normal-message" style="display: none;white-space: pre-line;">
@@ -202,13 +201,23 @@
 <!-- 错误遮罩层 -->
 <div id="overlayView">
     <div id="overlayView-content">
-        <h2>⚠️ 连接已断开</h2>
-        <p id="overlayView-message">请检查手机地址和端口，重新连接。</p>
+        <h2 id="overlayError1"></h2>
+        <p id="overlayError2"></p>
     </div>
 </div>
 
 <script>
+    console.log("html init...");
     let isActioning = false; //正在操作中
+
+    //init locales
+    document.getElementById('subtitle').textContent = loc["local_network_fast_transfer"];
+
+    document.getElementById('selectedFileBtn').textContent = loc["select_file"];
+    document.getElementById('uploadButton').textContent = loc["start_upload"];
+    document.getElementById('dropZone').textContent = loc["drag_drop_hint"];
+    document.getElementById('overlayError1').textContent = loc["connection_lost"];
+    document.getElementById('overlayError2').textContent = loc["reconnect_prompt"];
 
     function showStatus(message, type, shouldReset=true) {
         const statusDiv = document.getElementById('status');
@@ -223,27 +232,23 @@
     }
 
     window.htmlUpdateLeftSpace = function(newText) {
-        const subtitleElement = document.getElementById('subtitle');
-        if (subtitleElement) {
-            subtitleElement.textContent = newText;
-        }
+        document.getElementById('subtitle').textContent = newText;
     }
 
     window.commonHtmlConnectError = function(message) {
         const overlay = document.getElementById('overlayView');
         overlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // 禁止页面滚动
+        document.body.style.overflow = 'hidden';
     }
 
     function requireNotActioning(continueCallback) {
         if (isActioning) {
-            showStatus("正在操作中，请勿操作。", "error", true);
+            showStatus(loc["not_action_message"], "error", true);
         } else {
             continueCallback();
         }
     }
 
-    // 处理文件选择（通过按钮）
     document.getElementById('real-file').addEventListener('change', function(e) {
         requireNotActioning(()=>{
             showFileInfo(e.target.files);
@@ -268,7 +273,7 @@
     let isMd5Process = true;
 
     function showSelectedFilesInfo() {
-        let str = "选择的文件列表：\n";
+        let str = loc["selected_files"];
         console.log("selected file map " + selectedFileMap.size);
         for (let i = 0; i < selectedFileMap.size; i++) {
             const info = selectedFileMap.get(i);
@@ -279,10 +284,12 @@
             
             if (isMd5Process) {
                 const md5Time = info.md5Time ?? "--";
-                str = str + `${name} ${fileSizeStr} \nmd5:${md5} 耗时:${md5Time}毫秒\n\n`;
+                const tStr = loc["time_consumed"];
+                str = str + `${name} ${fileSizeStr} \nmd5:${md5} ${tStr}:${md5Time}ms\n\n`;
             } else {
                 const uploadInfo = info.uploadInfo ?? "--";
-                str = str + `${name} ${fileSizeStr} \nmd5:${md5} 上传:${uploadInfo}\n\n`;
+                const upStr = loc["upload"];
+                str = str + `${name} ${fileSizeStr} \nmd5:${md5} ${upStr}:${uploadInfo}\n\n`;
             }
         }
         const fileListDiv = document.getElementById('fileList');
@@ -340,9 +347,9 @@
                 console.log(`showwFileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
                 } catch(error) {
                     if (error == "aborted") {
-                        console.log(`文件md5: ${file.name} (${fileSize}) 已终止。`);
+                        console.log(`md5: ${file.name} (${fileSize}) 已终止。`);
                     } else {
-                        console.log(`文件md5: ${file.name} 错误：(${error})。`);
+                        console.log(`md5: ${file.name} 错误：(${error})。`);
                     }
                     one.md5 = "md5错误";
                     one.md5Time = Date.now() - oneStartTs;
@@ -370,12 +377,12 @@
         
         if (reset) {
             // 重置为上传状态（原始样式）
-            uploadButton.innerHTML = '🚀 开始上传';
+            uploadButton.innerHTML = loc["start_upload"];
             uploadButton.style.backgroundColor = '#27ae60';
             uploadButton.onclick = startUpload;
         } else {
             // 变为取消状态
-            uploadButton.innerHTML = '❌ 取消上传';
+            uploadButton.innerHTML = loc["cancel_upload"];
             uploadButton.style.backgroundColor = '#e74c3c'; // 红色
             uploadButton.onclick = cancelUpload;
         }
@@ -392,7 +399,7 @@
     function startUpload() {
         requireNotActioning(async ()=>{
             if (selectedFileMap.size == 0) {
-                showStatus("请选择文件。", "error", true);
+                showStatus(loc["select_file"], "error", true);
                 return;
             }
 
@@ -417,15 +424,15 @@
                         //console.log(`updateChunks ${uploadChunks}/${totalChunks} ${speed} ${str}`);
                         if (str == "mergeChunksStart") {
                             updateProgress(100);
-                            one.uploadInfo = "最后检验中...";
+                            one.uploadInfo = loc["final_check"];
                         } else if(str == "uploadChunk") {
                             const percent = Math.round((uploadChunks / totalChunks) * 100);
                             updateProgress(percent);
-                            one.uploadInfo = `${percent}%，速度${speed}`;
+                            one.uploadInfo = `${percent}%，${speed}`;
                         } else if (str == "complete") {
-                            one.uploadInfo = `发送成功。`;
+                            one.uploadInfo = loc["send_success"];
                         } else if (str == "abort") {
-                            one.uploadInfo = `已取消。`;
+                            one.uploadInfo = loc["operation_cancelled"];
                         }
                     });
                     console.log(message);
@@ -458,13 +465,6 @@
 
     ////////run init functions//////
     startWsConnect();
-    
-    // 判断是否为 HTTPS
-    if (window.location.protocol === 'https:') {
-        console.log("当前页面使用 HTTPS");
-    } else {
-        console.log("当前页面使用 HTTP");
-    }
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDroid局域网工具</title>
+    <title>MyDroid</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -111,7 +111,7 @@
 
         #file-list-container table {
             width: 100%;
-            table-layout: fixed; /* 固定列宽分配 */
+            table-layout: fixed;
             border-collapse: collapse;
         }
 
@@ -181,17 +181,18 @@
 <script src="mydroid-websockets.js"></script>
 <script src="mydroid-websocket-send.js"></script>
 <script src="localforage.min.js"></script>
+<script src="mydroid-locales.js"></script>
 
 <body>
     <div class="container">
-        <h1>MyDroid局域网工具</h1>
+        <h1>MyDroid</h1>
         <p id="bigTitle" style="text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: -20px; margin-bottom: 22px;">
         <table id="file-list-container">
             <thead>
             <tr>
-                <th>文件名</th>
-                <th>大小</th>
-                <th>操作</th>
+                <th id="fileNameTh"></th>
+                <th id="fileSizeTh"></th>
+                <th id="fileActionTh"></th>
             </tr>
             </thead>
             <tbody id="file-list-body"></tbody>
@@ -206,18 +207,24 @@
     <!-- 错误遮罩层 -->
     <div id="overlayView">
         <div id="overlayView-content">
-            <h2>⚠️ 连接已断开</h2>
-            <p id="overlayView-message">请检查手机地址和端口，重新连接。</p>
+            <h2 id="overlayError1"></h2>
+            <p id="overlayError2"></p>
         </div>
     </div>
 
     <script>
         let isDownloading = false;
+        //init loc
+        document.getElementById('fileNameTh').textContent = loc["filename"];
+        document.getElementById('fileSizeTh').textContent = loc["size"];
+        document.getElementById('fileActionTh').textContent = loc["action"];
+        document.getElementById('overlayError1').textContent = loc["connection_lost"];
+        document.getElementById('overlayError2').textContent = loc["reconnect_prompt"];
 
         window.commonHtmlConnectError = function(message) {
             const overlay = document.getElementById('overlayView');
             overlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // 禁止页面滚动
+            document.body.style.overflow = 'hidden';
         }
         
         window.htmlUpdateIpClient = function(mode, name) {
@@ -235,7 +242,7 @@
                 const row = `
                     <tr>
                         <td>
-                            <div class="file-name">${item.name || '未命名文件'}</div>
+                            <div class="file-name">${item.name || 'noNameFile'}</div>
                         </td>
                         <td>${item.fileSizeStr}</td>
                         <td>
@@ -274,13 +281,6 @@
 
         ////////run init functions//////
         startWsConnect();
-
-        // 判断是否为 HTTPS
-        if (window.location.protocol === 'https:') {
-            console.log("当前页面使用 HTTPS");
-        } else {
-            console.log("当前页面使用 HTTP");
-        }
     </script>
 </body>
 </html>

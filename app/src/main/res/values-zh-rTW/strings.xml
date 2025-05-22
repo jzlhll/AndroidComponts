@@ -23,9 +23,9 @@
     <string name="my_droid_mode_none">無</string>
     <string name="my_droid_mode_image">圖片瀏覽</string>
     <string name="my_droid_mode_video">視頻點播</string>
-    <string name="send_files_to_html">發送文件到HTML</string>
-    <string name="send_file_start">發送文件開始。</string>
-    <string name="send_file_end">發送文件結束。</string>
+    <string name="send_files_to_html">發送檔案到HTML</string>
+    <string name="send_file_start">發送檔案開始。</string>
+    <string name="send_file_end">發送檔案結束。</string>
 
     <string name="unknown_size">大小未知</string>
     <string name="new_webpage_access">%s 新的網頁接入！</string>
@@ -54,10 +54,10 @@
     <string name="already_in_sending_list">已經存在發送列表中。</string>
     <string name="keep_recent_records">僅保留最近80–100條匯出記錄。</string>
     <string name="storage_remaining"> 存儲剩餘：</string>
-    <string name="file_received_success_fmt">成功接收文件：%s！</string>
+    <string name="file_received_success_fmt">成功接收檔案：%s！</string>
     <string name="connect_wifi_or_hotspot">請連接WI-FI或開啟熱點</string>
     <string name="lan_access_fmt">區域網路內存取：%1$s:%2$s</string>
-    <string name="auto_proceed_fmt">將在%d秒後自動進入下一步，你可以點擊取消，勾選取消部分文件。</string>
+    <string name="auto_proceed_fmt">將在%d秒後自動進入下一步，你可以點擊取消，勾選取消部分檔案。</string>
 
     <string name="select_files_hint">請勾選檔案。</string>
     <string name="empty_file_prompt">暫無檔案，請從相簿、檔案管理員或其他應用分享匯入。</string>

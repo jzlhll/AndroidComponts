@@ -23,8 +23,8 @@
                     body: formData,
                 });
         } catch(e) {}
-        if (!response) throw new Error('上传失败E01: 可能手机端不在线。');
-        if (!response.ok) throw new Error('上传失败E02 ' + (await response.text()));
+        if (!response) throw new Error(loc["error_upload_failure_e01"]);
+        if (!response.ok) throw new Error(loc["error_upload_failure_e02"] + (await response.text()));
         return await response.json();
     }
 
@@ -40,8 +40,8 @@
                 body: JSON.stringify({ md5, fileName, totalChunks, lastModified }),
             });
         } catch(e) {}
-        if (!response) throw new Error('上传失败E03: 可能手机端不在线。');
-        if (!response.ok) throw new Error('上传失败E04 ' + (await response.text()));
+        if (!response) throw new Error(loc["error_upload_failure_e03"]);
+        if (!response.ok) throw new Error(loc["error_upload_failure_e04"] + (await response.text()));
         return await response.json();
     }
 
@@ -56,8 +56,8 @@
                 body: JSON.stringify({ md5, fileName }),
             });
         } catch(e) {}
-        if (!response) throw new Error('上传失败E05: 可能手机端不在线。');
-        if (!response.ok) throw new Error('上传失败E06 ' + (await response.text()));
+        if (!response) throw new Error(loc["error_upload_failure_e05"]);
+        if (!response.ok) throw new Error(loc["error_upload_failure_e06"] + (await response.text()));
         return await response.json();
     }
     
@@ -77,7 +77,7 @@
 
     window.startUploadFile = async function(startTs, file, md5, onProgress = () => {}) {
         if (!file) {
-            throw new Error("没有选择文件！");
+            throw new Error(loc["no_file_selected"]);
         }
     
         const fileName = file.name;

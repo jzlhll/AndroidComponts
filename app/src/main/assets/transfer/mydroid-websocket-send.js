@@ -60,8 +60,8 @@
                         body: formData,
                     });
             } catch(e) {}
-            if (!response) throw new Error('上传失败E01: 可能手机端不在线。');
-            if (!response.ok) throw new Error('上传失败E02 ' + (await response.text()));
+            if (!response) throw new Error(loc["error_upload_failure_e01"]);
+            if (!response.ok) throw new Error(loc["error_upload_failure_e02"] + (await response.text()));
             return await response.json();
         }
     }
@@ -71,18 +71,18 @@
             super();
         }
 
-        initLocalForage() {
-            if(isInitLocalForage) return;
-            isInitLocalForage = true;
-
-            // 配置 LocalForage
-            localforage.config({
-                driver: localforage.INDEXEDDB, // 使用 IndexedDB 存储引擎
-                name: 'myDroid', // 数据库名称
-                version: 1.0, // 数据库版本
-                storeName: 'merge_file' // 存储表名称
-            });
-        }
+//        initLocalForage() {
+//            if(isInitLocalForage) return;
+//            isInitLocalForage = true;
+//
+//            // 配置 LocalForage
+//            localforage.config({
+//                driver: localforage.INDEXEDDB, // 使用 IndexedDB 存储引擎
+//                name: 'myDroid', // 数据库名称
+//                version: 1.0, // 数据库版本
+//                storeName: 'merge_file' // 存储表名称
+//            });
+//        }
 
         async endChunks(totalIndexs) {
             const chunks = [];
@@ -135,7 +135,7 @@
                 this.chunkMap.delete(uuid);
             }
             this.chunkMap.set(uuid, new Map());
-            htmlDownloadProcess(uuid, "传输开始", false);
+            htmlDownloadProcess(uuid, loc["transfer_start"], false);
         }
 
         async handleChunk(uuid, index, total, offset, dataSize, data) {
@@ -146,12 +146,13 @@
             a.data = data;
             chunks.set(index, a);
             let percent = 0;
+            const transferStr = loc["progress"];
             if (total > 0) {
                 percent = (index * 100 / total) | 0;
-                htmlDownloadProcess(uuid, `传输中 ${percent}%`, false);
+                htmlDownloadProcess(uuid, `${transferStr} ${percent}%`, false);
             } else {
                 const sz = myDroidFormatSize(offset);
-                htmlDownloadProcess(uuid, `传输中 ${sz}`, false);
+                htmlDownloadProcess(uuid, `${transferStr} ${sz}`, false);
             }
         }
 
@@ -172,7 +173,7 @@
             const chunks = this.chunkMap.get(uuid);
             if (!chunks) return;
 
-            htmlDownloadProcess(uuid, `合并中`, false);
+            htmlDownloadProcess(uuid, loc["merging"], false);
             let checkCount = 5;
             while (checkCount-- >= 0) {
                 const isCompleted = this.checkCompletionOnce(uuid, totalChunks);
@@ -202,7 +203,7 @@
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
 
-                    htmlDownloadProcess(uuid, `下载完成`, false);
+                    htmlDownloadProcess(uuid, loc["download_complete"], false);
 
                     // 立即清理资源
                     requestAnimationFrame(() => {
