@@ -9,6 +9,7 @@ import com.allan.androidlearning.transfer.benas.UPLOAD_CHUNK
 import com.allan.androidlearning.transfer.htmlbeans.IpPortResult
 import com.allan.androidlearning.transfer.okJsonResponse
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD
@@ -105,7 +106,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
             "/read-websocket-ip-port" -> getWebsocketIpPort()
-            else -> newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
+            else -> newFixedLengthResponse(com.allan.androidlearning.R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }
 
@@ -119,7 +120,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             logdNoFile { "get websocket ipPort $info" }
             ResultBean(CODE_SUC, "Success!", info).okJsonResponse()
         } else {
-            newFixedLengthResponse("Invalid request from AppServer") // 或者其他默认响应
+            newFixedLengthResponse(com.allan.androidlearning.R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }
 

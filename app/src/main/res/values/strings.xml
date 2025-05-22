@@ -153,4 +153,33 @@
     <string name="not_close_window" translatable="false">不退出，不熄屏 %s</string>
 
     <string name="send_list">MyDroid Send List</string>
+    <string name="my_droid_mode_receiver">Send to phone</string>
+    <string name="my_droid_mode_send">Receive from phone</string>
+    <string name="my_droid_mode_middle">Transfer</string>
+    <string name="my_droid_mode_none">None</string>
+    <string name="my_droid_mode_image">Image browsing</string>
+    <string name="my_droid_mode_video">Video on demand</string>
+
+    <string name="unknown_size">Unknown Size</string>
+    <string name="new_webpage_access">%s New Webpage Access!</string>
+    <string name="success_message">Success!</string>
+
+    <string name="server_error_exception">Server Exception Error</string>
+
+    <string name="send_files_to_html">Send files to HTML</string>
+
+    <string name="send_file_start">Send File Start.</string>
+    <string name="send_file_end">Send File End.</string>
+
+    <string name="file_not_exist">File does not exist</string>
+    <string name="file_not_received">File not received.</string>
+    <string name="chunk_receiver_error">chunk receiver error.</string>
+    <string name="error_merge_chunk_params">Error merge chunk params.</string>
+    <string name="no_chunks">No chunks?</string>
+    <string name="chunks_number_not_match">Chunks number not match.</string>
+    <string name="file_merge_success">File merge completed and verified.</string>
+    <string name="md5_check_failed">MD5 check failed.</string>
+    <string name="clear_up">Clear up</string>
+    <string name="invalid_request_from_appserver">Invalid request from AppServer</string>
+
 </resources>

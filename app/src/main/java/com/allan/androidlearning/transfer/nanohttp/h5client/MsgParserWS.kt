@@ -20,6 +20,7 @@ import com.allan.androidlearning.transfer.htmlbeans.WSChunkActionResult
 import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
 import com.allan.androidlearning.transfer.nanohttp.AbsMsgParser
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.launchOnThread
@@ -41,7 +42,7 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
                 }
             }
             client.server.heartbeatScope.launchOnThread {
-                val ret = WSResultBean(CODE_SUC, "send files to html!", API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
+                val ret = WSResultBean(CODE_SUC, com.allan.androidlearning.R.string.send_files_to_html.resStr(), API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
                 logt { "send:$json" }
@@ -136,7 +137,9 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             if (inputStream != null && info != null) {
                 sendFile(info.uriUuid, info.fileSize, info.goodName(), inputStream)
             } else {
-                client.send(WSResultBean(CODE_SUC, "文件不存在", API_WS_SEND_FILE_NOT_EXIST, NotExistResult(uriUuid)).toJsonString())
+                client.send(WSResultBean(CODE_SUC,
+                    com.allan.androidlearning.R.string.file_not_exist.resStr(),
+                    API_WS_SEND_FILE_NOT_EXIST, NotExistResult(uriUuid)).toJsonString())
             }
         }
     }
@@ -158,7 +161,11 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             (fileSize / chunkSize).toInt() + (if(isNotFull) 1 else 0)
         } else 0
 
-        val startJson = WSResultBean(CODE_SUC, "send file start.", api, WSChunkActionResult("start", uriUuid, fileSize ?: 0, totalChunks, "")).toJsonString()
+        val startJson = WSResultBean(CODE_SUC,
+            com.allan.androidlearning.R.string.send_file_start.resStr(), api,
+            WSChunkActionResult("start",
+                uriUuid, fileSize ?: 0,
+                totalChunks, "")).toJsonString()
         logt { "send file start $startJson" }
         client.send(startJson)
         delay(100)
@@ -169,7 +176,10 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             client.send(arr)
         }
         delay(1000)
-        val endJson = WSResultBean(CODE_SUC, "send file end.", api, WSChunkActionResult("end", uriUuid, offset, index, fileName?:"")).toJsonString()
+        val endJson = WSResultBean(CODE_SUC, 
+            Globals.getString(com.allan.androidlearning.R.string.send_file_end), 
+            api, 
+            WSChunkActionResult("end", uriUuid, offset, index, fileName?:"")).toJsonString()
         client.send(endJson)
         logt { "send file end $endJson" }
     }

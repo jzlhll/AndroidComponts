@@ -1,4 +1,4 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.receiver
 
 import android.os.Build
 import android.os.Bundle
@@ -6,12 +6,11 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
-import com.allan.androidlearning.R
-import com.allan.androidlearning.databinding.FragmentMyDroidBinding
+import com.allan.androidlearning.databinding.FragmentMyDroidReceiveBinding
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
-import com.allan.androidlearning.transfer.MyDroidGlobalService.scope
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
@@ -26,11 +25,11 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.getExternalFreeSpace
+import com.au.module_androidcolor.R
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.launch
 
-class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
+class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>() {
     private val mFileListMgr by unsafeLazy { MyDroidReceiveFileListMgr(this) }
 
     lateinit var receivedFileListTab: TabLayout.Tab
@@ -65,7 +64,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         activity?.let { a->
             a.finishAfterTransition()
             FragmentShellActivity.Companion.start(
-                a, ShareReceiverFragment::class.java,
+                a, SendListSelectorFragment::class.java,
                 bundleOf(KEY_AUTO_ENTER_SEND_VIEW to true)
             )
         }
@@ -78,7 +77,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
         }
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
+        requireActivity().transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
                 toolbarLP.topMargin = statusBarsHeight
                 binding.toolbar.layoutParams = toolbarLP
@@ -88,21 +87,19 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
+        binding.adHost.setColor(Globals.getColor(R.color.color_normal_block0))
         binding.adHost.startAnimation()
 
-        binding.tabLayout.tabSelectTextColor = R.color.logic_receiver
-        binding.tabLayout.tabNotSelectColor = com.au.module_androidcolor.R.color.color_text_desc
+        binding.tabLayout.tabSelectTextColor = com.allan.androidlearning.R.color.logic_receiver
+        binding.tabLayout.tabNotSelectColor = R.color.color_text_desc
 
-        val fmt = getString(R.string.not_close_window)
+        val fmt = getString(com.allan.androidlearning.R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
 
         MyDroidConst.onFileMergedData.observeUnStick(this) { file->
-            scope.launch {
-                ToastBuilder().setOnTop()
-                    .setMessage("成功收到文件：${file.name} !")
-                    .setIcon("success").toast()
-            }
+            ToastBuilder().setOnTop()
+                .setMessage("成功收到文件：${file.name} !")
+                .setIcon("success").toast()
             mFileListMgr.loadFileList()
         }
 
@@ -136,23 +133,23 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidBinding>() {
 
     private fun initLater() {
         Globals.mainHandler.post {
-            val transferFileList = binding.tabLayout.newTextTab(getString(R.string.transfer_list), true, 16f)
+            val transferFileList = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.transfer_list), true, 16f)
             transferFileList.view.onClick {
                 binding.receiveRcv.visible()
                 mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.gone()
                 receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
-                    tabTv.text = getString(R.string.transfer_list)
+                    tabTv.text = getString(com.allan.androidlearning.R.string.transfer_list)
                 }
             }
             receivedFileListTab = transferFileList
-            val exportHistory = binding.tabLayout.newTextTab(getString(R.string.export_history), false, 16f)
+            val exportHistory = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.export_history), false, 16f)
             exportHistory.view.onClick {
                 binding.receiveRcv.gone()
                 mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.visible()
                 exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
-                    tabTv.text = getString(R.string.export_history)
+                    tabTv.text = getString(com.allan.androidlearning.R.string.export_history)
                 }
             }
             exportHistoryTab = exportHistory

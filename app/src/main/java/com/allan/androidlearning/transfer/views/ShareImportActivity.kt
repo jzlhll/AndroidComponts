@@ -3,25 +3,23 @@ package com.allan.androidlearning.transfer.views
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.EntryActivity
-import com.allan.androidlearning.transfer.CACHE_IMPORT_DIR
+import com.allan.androidlearning.databinding.ActivityImportBinding
+import com.allan.androidlearning.transfer.CACHE_IMPORT_COPY_DIR
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.KEY_START_TYPE
 import com.allan.androidlearning.transfer.MY_DROID_SHARE_IMPORT_URIS
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
-import com.au.module_android.ui.views.ViewActivity
+import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.findCustomFragmentGetActivity
 import com.au.module_android.utils.findEntryActivity
 import com.au.module_android.utils.findLaunchActivity
@@ -31,11 +29,12 @@ import com.au.module_android.utils.logt
 import com.au.module_android.utils.parcelableArrayListExtraCompat
 import com.au.module_android.utils.parcelableExtraCompat
 import com.au.module_android.utils.startActivityFix
+import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.copyToCacheConvert
 import com.au.module_android.utilsmedia.getRealInfo
 import com.au.module_android.utilsmedia.isFromMyApp
 
-class ShareImportActivity : ViewActivity() {
+class ShareImportActivity : BindingActivity<ActivityImportBinding>() {
     override fun onDestroy() {
         super.onDestroy()
 
@@ -117,10 +116,11 @@ class ShareImportActivity : ViewActivity() {
         if (!hasNoPath) { //不需要等待，直接信息转换，存入并结束本activity
             importMapAndJumpFinish(newImportList)
         } else { //需要转圈等待拷贝，转成本地cache，uri。再finish
+            binding.progressBar.visible()
             lifecycleScope.launchOnIOThread {
                 val newImportCacheList = mutableListOf<UriRealInfoEx>()
                 for (bean in newImportList) {
-                    val copiedFileUri = bean.uri.copyToCacheConvert(contentResolver, null, CACHE_IMPORT_DIR)
+                    val copiedFileUri = bean.uri.copyToCacheConvert(contentResolver, null, CACHE_IMPORT_COPY_DIR)
                     val info = copiedFileUri.getRealInfo(this@ShareImportActivity)
                     newImportCacheList.add(UriRealInfoEx.copyFrom(info))
                 }
@@ -141,7 +141,7 @@ class ShareImportActivity : ViewActivity() {
     private fun jumpNext() {
         val found = findEntryActivity(EntryActivity::class.java)
         //清理掉自己
-        val foundShellActivity = findCustomFragmentGetActivity(ShareReceiverFragment::class.java)
+        val foundShellActivity = findCustomFragmentGetActivity(SendListSelectorFragment::class.java)
         foundShellActivity?.finish()
 
         if (!found) { //说明app没有启动过。需要先启动下首页，借过一下。
@@ -151,13 +151,9 @@ class ShareImportActivity : ViewActivity() {
             startActivityFix(intent)
         } else { //app启动过了。有主界面，则直接跳入到ShareFragment
             FragmentShellActivity.Companion.start(
-                this, ShareReceiverFragment::class.java,
+                this, SendListSelectorFragment::class.java,
                 bundleOf(KEY_AUTO_ENTER_SEND_VIEW to true)
             )
         }
-    }
-
-    override fun onUiCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return RelativeLayout(inflater.context)
     }
 }

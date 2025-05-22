@@ -1,10 +1,9 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.send
 
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
 import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidConst
@@ -19,6 +18,7 @@ import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
+import com.au.module_androidcolor.R
 
 class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
@@ -29,10 +29,10 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         }
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
+        binding.adHost.setColor(Globals.getColor(R.color.color_normal_block0))
         binding.adHost.startAnimation()
 
-        requireActivity().transparentStatusBar(statusBarTextDark = false) {  insets, statusBarsHeight, _ ->
+        requireActivity().transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
                 toolbarLP.topMargin = statusBarsHeight
                 binding.toolbar.layoutParams = toolbarLP
@@ -46,7 +46,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
 
         clientLiveDataInit()
 
-        val fmt = getString(R.string.not_close_window)
+        val fmt = getString(com.allan.androidlearning.R.string.not_close_window)
         binding.descTitle.text = String.format(fmt, "")
 
         MyDroidConst.ipPortData.observe(this) { info->
@@ -103,7 +103,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     fun parseEntryFileList() {
         val entryList = MyDroidConst.sendUriMap.realValue?.values?.filter { it.isChecked }
         entryFileList = entryList?.map {
-            UriRealInfoEx.copyFrom(it)
+            UriRealInfoEx.Companion.copyFrom(it)
         } ?: listOf()
 
         val sb = StringBuilder()
@@ -114,7 +114,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
     }
 
     private val sendClientBindings = mutableListOf<MydroidSendClientBinding>()
-    private fun clientItem(index:Int) : MydroidSendClientBinding{
+    private fun clientItem(index:Int) : MydroidSendClientBinding {
         var binding = sendClientBindings.getOrNull(index)
         if (binding != null) {
             return binding

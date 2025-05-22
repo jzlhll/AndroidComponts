@@ -3,6 +3,8 @@ package com.allan.androidlearning.transfer.views
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
+import com.allan.androidlearning.transfer.views.receiver.MyDroidReceiverFragment
+import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
@@ -16,12 +18,12 @@ import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 
 @EntryFrgName(priority = 12)
-class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
+class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
 
     var waitDialog:ConfirmBottomSingleDialog? = null
 
     val viewModel by unsafeLazy {
-        ViewModelProvider(this)[MyDroidSendViewModel::class.java]
+        ViewModelProvider(this)[MyDroidAllViewModel::class.java]
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -29,7 +31,7 @@ class MyDroidFragment : BindingFragment<FragmentMyDroidAllBinding>() {
             FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
         }
         binding.sendFileLogicBtn.onClick {
-            FragmentShellActivity.start(requireActivity(), ShareReceiverFragment::class.java)
+            FragmentShellActivity.start(requireActivity(), SendListSelectorFragment::class.java)
         }
         binding.middleLogicBtn.onClick {
 

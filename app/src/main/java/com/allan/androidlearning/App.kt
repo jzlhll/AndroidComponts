@@ -4,8 +4,13 @@ import com.allan.androidlearning.crashtest.debugApplicationCreateCrash
 import com.allan.androidlearning.crashtest.debugApplicationPostMainThreadCrash
 import com.allan.androidlearning.crashtest.debugSubThreadCrash
 import com.allan.androidlearning.transfer.MyDroidGlobalService
+import com.allan.androidlearning.transfer.cacheImportCopyDir
+import com.allan.androidlearning.transfer.nanoTempCacheChunksDir
 import com.au.module_android.DarkModeAndLocalesConst
+import com.au.module_android.Globals
 import com.au.module_android.InitApplication
+import com.au.module_android.utils.clearDirOldFiles
+import com.au.module_android.utils.launchOnIOThread
 import java.util.Locale
 
 /**
@@ -29,5 +34,10 @@ class App : InitApplication() {
         debugApplicationPostMainThreadCrash()
         debugSubThreadCrash()
         registerActivityLifecycleCallbacks(MyDroidGlobalService)
+
+        //一上来直接强制移除所有临时import的文件。
+        Globals.mainScope.launchOnIOThread {
+            clearDirOldFiles(cacheImportCopyDir(), 0)
+        }
     }
 }

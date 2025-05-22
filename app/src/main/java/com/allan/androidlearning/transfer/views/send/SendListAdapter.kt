@@ -1,19 +1,19 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.send
 
 import android.view.ViewGroup
-import com.allan.androidlearning.databinding.HolderShareReceiveItemBinding
+import com.allan.androidlearning.databinding.HolderMydroidSendlistItemBinding
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.getIcon
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
-class ShareReceiverAdapter : BindRcvAdapter<UriRealInfoEx, ShareReceiverAdapter.ShareReceiverHolder>() {
+class SendListAdapter : BindRcvAdapter<UriRealInfoEx, SendListAdapter.ShareReceiverHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareReceiverHolder {
         return ShareReceiverHolder(create(parent))
     }
 
-    class ShareReceiverHolder(binding: HolderShareReceiveItemBinding) : BindViewHolder<UriRealInfoEx, HolderShareReceiveItemBinding>(binding) {
+    class ShareReceiverHolder(binding: HolderMydroidSendlistItemBinding) : BindViewHolder<UriRealInfoEx, HolderMydroidSendlistItemBinding>(binding) {
         private val targetAlpha = 0.5f
 
         init {

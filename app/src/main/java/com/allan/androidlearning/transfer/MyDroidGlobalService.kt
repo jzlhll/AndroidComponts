@@ -6,8 +6,8 @@ import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer.Companion.WEBSOCKET_READ_TIMEOUT
-import com.allan.androidlearning.transfer.views.MyDroidReceiverFragment
-import com.allan.androidlearning.transfer.views.MyDroidSendFragment
+import com.allan.androidlearning.transfer.views.receiver.MyDroidReceiverFragment
+import com.allan.androidlearning.transfer.views.send.MyDroidSendFragment
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
@@ -73,7 +73,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             //检查并清理过期temp文件
             Globals.mainScope.launchOnIOThread {
                 clearDirOldFiles(nanoTempCacheChunksDir())
-                clearDirOldFiles(cacheImportDir())
+                clearDirOldFiles(cacheImportCopyDir())
             }
         } catch (e: IOException) {
             val msg = "Port $p WsPort $wsPort occupied ${e.message}"

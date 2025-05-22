@@ -1,4 +1,4 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.receiver
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -52,16 +52,22 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
             this.refreshFileListCallback = WeakReference(refreshFileListCallback)
             this.importSendCallback = WeakReference(importSendCallback)
         }
+
+        private const val TAG_SHARE = "share"
+        private const val TAG_SEND_IMPORT = "sendImport"
+        private const val TAG_DELETE = "delete"
+        private const val TAG_EXPORT_ONLY = "exportOnly"
+        private const val TAG_EXPORT_AND_DOWNLOAD = "exportAndDownload"
     }
 
     val normalColor = ColorStateList.valueOf(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
 
     val mItems = listOf(
-        ItemBean("share", "分享", R.drawable.ic_share, normalColor),
-        ItemBean("sendImport", "导入到发送列表", R.drawable.ic_send, normalColor),
-        ItemBean("delete", "删除", R.drawable.ic_delete, normalColor),
-        ItemBean("exportOnly", "导出", R.drawable.ic_download, normalColor),
-        ItemBean("exportAndDownload", "导出 & 删除", R.drawable.ic_download, normalColor))
+        ItemBean(TAG_SHARE, "分享", R.drawable.ic_share, normalColor),
+        ItemBean(TAG_SEND_IMPORT, "导入到发送列表", R.drawable.ic_send, normalColor),
+        ItemBean(TAG_DELETE, "删除", R.drawable.ic_delete, normalColor),
+        ItemBean(TAG_EXPORT_ONLY, "导出", R.drawable.ic_download, normalColor),
+        ItemBean(TAG_EXPORT_AND_DOWNLOAD, "导出 & 删除", R.drawable.ic_download, normalColor))
     override val items: List<ItemBean>
         get() = mItems
 
@@ -112,16 +118,16 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
 
     override fun notify(tag: Any) {
         when (tag.toString()) {
-            "share" -> {
+            TAG_SHARE -> {
                 shareFile(Globals.app, file)
             }
-            "exportOnly" -> {
+            TAG_EXPORT_ONLY -> {
                 export(false)
             }
-            "exportAndDownload" -> {
+            TAG_EXPORT_AND_DOWNLOAD -> {
                 export(true)
             }
-            "sendImport" -> {
+            TAG_SEND_IMPORT -> {
                 val map = MyDroidConst.sendUriMap.realValue ?: hashMapOf()
                 val oldValues = map.values
 
@@ -137,7 +143,7 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
 
                 importSendCallback?.get()?.invoke()
             }
-            "delete" -> {
+            TAG_DELETE -> {
                 Globals.mainScope.launchOnThread {
                     ignoreError { file?.delete() }
                     delay(100)

@@ -8,7 +8,6 @@ import android.net.NetworkRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.au.module_android.Globals
-import com.au.module_android.init.IInterestLife
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.utils.logdNoFile
 import kotlinx.coroutines.delay
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.net.Inet4Address
 import java.net.NetworkInterface
 
-class MyDroidSendViewModel() : ViewModel() {
+class MyDroidAllViewModel() : ViewModel() {
     val ipData = NoStickLiveData<String?>()
 
     private val netObserver = object : ConnectivityManager.NetworkCallback() {

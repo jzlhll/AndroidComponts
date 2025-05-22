@@ -10,4 +10,29 @@
     <string name="language">语言</string>
 
     <string name="send_list">MyDroid 发送列表</string>
+    <string name="my_droid_mode_receiver">发送给手机</string>
+    <string name="my_droid_mode_send">从手机接收</string>
+    <string name="my_droid_mode_middle">中转</string>
+    <string name="my_droid_mode_none">无</string>
+    <string name="my_droid_mode_image">图片浏览</string>
+    <string name="my_droid_mode_video">视频点播</string>
+    <string name="send_files_to_html">发送文件到HTML</string>
+    <string name="send_file_start">发送文件开始。</string>
+    <string name="send_file_end">发送文件结束。</string>
+
+    <string name="unknown_size">大小未知</string>
+    <string name="new_webpage_access">%s 新的网页接入！</string>
+    <string name="file_not_exist">文件不存在</string>
+    <string name="file_not_received">未接收到文件。</string>
+    <string name="chunk_receiver_error">分块接收错误。</string>
+    <string name="error_merge_chunk_params">合并分块参数错误。</string>
+    <string name="no_chunks">没有分块？</string>
+    <string name="chunks_number_not_match">分块数量不匹配。</string>
+
+    <string name="success_message">成功！</string>
+    <string name="server_error_exception">服务器异常错误</string>
+    <string name="file_merge_success">文件合并完成且校验通过</string>
+    <string name="md5_check_failed">MD5校验失败</string>
+    <string name="clear_up">清理</string>
+    <string name="invalid_request_from_appserver">来自应用服务器的无效请求</string>
 </resources>

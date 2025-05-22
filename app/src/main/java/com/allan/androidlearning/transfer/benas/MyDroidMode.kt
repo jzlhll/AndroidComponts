@@ -1,5 +1,8 @@
 package com.allan.androidlearning.transfer.benas
 
+import com.au.module_android.Globals
+import com.allan.androidlearning.R
+
 enum class MyDroidMode {
     None,
     Receiver,
@@ -12,13 +15,13 @@ enum class MyDroidMode {
 /**
  * 这是翻译给前端用的
  */
-fun MyDroidMode.toCNName() : String {
-    return when(this) {
-        MyDroidMode.Receiver -> "发送给手机"
-        MyDroidMode.Send -> "从手机接收"
-        MyDroidMode.Middle -> "中转"
-        MyDroidMode.None -> "无"
-        MyDroidMode.Image -> "图片浏览"
-        MyDroidMode.Video -> "视频点播"
+fun MyDroidMode.toCNName(): String {
+    return when (this) {
+        MyDroidMode.Receiver -> Globals.getString(R.string.my_droid_mode_receiver)
+        MyDroidMode.Send -> Globals.getString(R.string.my_droid_mode_send)
+        MyDroidMode.Middle -> Globals.getString(R.string.my_droid_mode_middle)
+        MyDroidMode.None -> Globals.getString(R.string.my_droid_mode_none)
+        MyDroidMode.Image -> Globals.getString(R.string.my_droid_mode_image)
+        MyDroidMode.Video -> Globals.getString(R.string.my_droid_mode_video)
     }
 }

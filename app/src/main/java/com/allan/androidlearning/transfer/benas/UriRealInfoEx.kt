@@ -2,6 +2,7 @@ package com.allan.androidlearning.transfer.benas
 
 import android.net.Uri
 import androidx.annotation.Keep
+import com.au.module_android.Globals
 import com.au.module_android.utilsmedia.UriRealInfo
 import com.au.module_android.utilsmedia.formatBytes
 import java.io.File
@@ -21,7 +22,7 @@ data class UriRealInfoEx(val uri: Uri,
         fun copyFrom(info: UriRealInfo) : UriRealInfoEx {
             val goodPath = info.realPath ?: info.relativePath
             val fileSize = if(goodPath != null) File(goodPath).length() else null
-            val fileLen = if(goodPath != null) formatBytes(File(goodPath).length()) else "大小未知"
+            val fileLen = if(goodPath != null) formatBytes(File(goodPath).length()) else Globals.getString(com.allan.androidlearning.R.string.unknown_size)
             return UriRealInfoEx(info.uri, info.name, info.realPath, info.relativePath, fileSize, fileLen)
         }
 

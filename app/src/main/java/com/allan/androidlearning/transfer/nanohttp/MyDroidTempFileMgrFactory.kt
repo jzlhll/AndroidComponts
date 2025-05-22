@@ -19,12 +19,6 @@ class MyDroidTempFileManager : TempFileManager {
 
     private val tempFiles: MutableList<TempFile>
 
-    private val addrTag by unsafeLazy {
-        val t = this.toString()
-        val index = t.indexOf("@")
-        "[" + t.substring(index + 1) + "]"
-    }
-
     init {
         //logdNoFile { "$addrTag make tmp dir $tmpDirStr" }
         if (!tmpdir.exists()) {

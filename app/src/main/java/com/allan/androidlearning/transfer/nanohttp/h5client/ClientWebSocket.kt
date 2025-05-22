@@ -6,14 +6,15 @@ import com.allan.androidlearning.transfer.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.toCNName
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.androidlearning.transfer.htmlbeans.API_WS_LEFT_SPACE
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
+import com.allan.androidlearning.transfer.htmlbeans.API_WS_LEFT_SPACE
 import com.allan.androidlearning.transfer.htmlbeans.LeftSpaceResult
 import com.allan.androidlearning.transfer.htmlbeans.MyDroidModeResult
 import com.allan.androidlearning.transfer.htmlbeans.WSResultBean
 import com.allan.androidlearning.transfer.nanohttp.AbsMsgParser
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
@@ -31,7 +32,7 @@ import java.io.IOException
 
 class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                       var server: MyDroidWSServer,
-                      val colorIcon:Int) : NanoWSD.WebSocket(httpSession) {
+                      val colorIcon: Int) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
 
     /**
@@ -72,7 +73,8 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 try {
                     if (leftSpaceCount % 3 == 1L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
-                        val json = WSResultBean(CODE_SUC, "success!", API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
+                        val suc = com.allan.androidlearning.R.string.success_message.resStr()
+                        val json = WSResultBean(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
                         logt { "send: $json" }
                         send(json)
                     }
@@ -116,16 +118,17 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     private fun clientInit() {
         //通过later则不需要注意线程
-        ToastBuilder().setMessage("$clientName 新的网页接入！")
+        val message = String.format(com.allan.androidlearning.R.string.new_webpage_access.resStr(), clientName)
+        ToastBuilder().setMessage(message)
             .setIcon("success")
             .setOnTopLater(200).toast()
 
         val mode = MyDroidConst.myDroidMode.toCNName()
-        val json = WSResultBean(CODE_SUC, "success!",
-                    API_WS_CLIENT_INIT_CALLBACK,
-                    MyDroidModeResult(mode, clientName,
-                        debugReceiver = DEBUG_SLOW_RECEIVER_TRANSFER,
-                        debugSend = DEBUG_SLOW_SEND_TRANSFER)).toJsonString()
+        val json = WSResultBean(CODE_SUC, com.allan.androidlearning.R.string.success_message.resStr(),
+                API_WS_CLIENT_INIT_CALLBACK,
+                MyDroidModeResult(mode, clientName,
+                    debugReceiver = DEBUG_SLOW_RECEIVER_TRANSFER,
+                    debugSend = DEBUG_SLOW_SEND_TRANSFER)).toJsonString()
         logt { "send: $json" }
         send(json)
     }
@@ -141,7 +144,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         logdNoFile{"$clientName on Exception: " + exception.message}
         try {
             // 主动发送关闭帧并终止连接
-            close(NanoWSD.WebSocketFrame.CloseCode.InternalServerError, "Server Error on Exception", false)
+            close(NanoWSD.WebSocketFrame.CloseCode.InternalServerError, Globals.getString(com.allan.androidlearning.R.string.server_error_exception), false)
         } catch (e: IOException) {
             e.printStackTrace()
         }

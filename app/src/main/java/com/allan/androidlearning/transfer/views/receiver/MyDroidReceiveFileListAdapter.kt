@@ -1,7 +1,6 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.receiver
 
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.allan.androidlearning.transfer.benas.MergedFileInfo
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import java.io.File

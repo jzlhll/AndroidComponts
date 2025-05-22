@@ -1,11 +1,12 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.send
 
 import android.graphics.Color
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.allan.androidlearning.databinding.ActivityMyDroidReceiveShareBinding
+import com.allan.androidlearning.R
+import com.allan.androidlearning.databinding.ActivityMyDroidSendlistBinding
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.MyDroidKeepLiveService
@@ -30,11 +31,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding>() {
-    private val adapter = ShareReceiverAdapter()
+class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>() {
+    private val adapter = SendListAdapter()
 
     private var mAutoNextJob: Job? = null
-    private var mDelayCancelDialog:ConfirmBottomSingleDialog? = null
+    private var mDelayCancelDialog: ConfirmBottomSingleDialog? = null
     private var mDelayTime = 2
 
     //todo 有manageAll，则无需本地
@@ -48,25 +49,31 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
     }
 
-    private val menuMgr by unsafeLazy { ToolbarMenuManager(this, binding.toolbar,
-        com.allan.androidlearning.R.menu.menu_next,
-        Color.WHITE) { menuItem->
-        when (menuItem.itemId) {
-            com.allan.androidlearning.R.id.next -> {
-                when (isEmpty()) {
-                    2-> {
-                        ToastBuilder().setOnActivity(requireActivity()).setMessage("请勾选文件。").setIcon("info").toast()
-                    }
-                    1-> {
-                        jumpIntoMyDroidSend()
-                    }
-                    else -> {
-                        ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
+    private val menuMgr by unsafeLazy {
+        ToolbarMenuManager(
+            this, binding.toolbar,
+            R.menu.menu_next,
+            Color.WHITE
+        ) { menuItem ->
+            when (menuItem.itemId) {
+                R.id.next -> {
+                    when (isEmpty()) {
+                        2 -> {
+                            ToastBuilder().setOnActivity(requireActivity()).setMessage("请勾选文件。").setIcon("info").toast()
+                        }
+
+                        1 -> {
+                            jumpIntoMyDroidSend()
+                        }
+
+                        else -> {
+                            ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
+                        }
                     }
                 }
             }
         }
-    }}
+    }
 
     /**
      * 1表示有数据。2表示有数据，但是全都没勾；0表示无数据。
@@ -85,7 +92,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
 
         val helper = PermissionStorageHelper()
         if(helper.ifGotoMgrAll {
-            ConfirmCenterDialog.show(childFragmentManager,
+            ConfirmCenterDialog.Companion.show(childFragmentManager,
                 "应用管理权限",
                 "该功能需要全局设置权限，即将跳转，打开该功能。",
                 "OK") {
@@ -93,7 +100,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
                 it.dismissAllowingStateLoss()
             }
         }) {
-            FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
+            FragmentShellActivity.Companion.start(requireActivity(), MyDroidSendFragment::class.java)
 
 //            permissionResult.safeRun({
 //                FragmentShellActivity.start(requireActivity(), MyDroidSendFragment::class.java)
@@ -103,7 +110,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
     }
 
-    val permissionUtil = NotificationUtil.createPostNotificationPermissionResult(this)
+    val permissionUtil = NotificationUtil.Companion.createPostNotificationPermissionResult(this)
 
     override fun onDestroy() {
         logdNoFile {"on destrory"}
@@ -116,7 +123,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         logdNoFile {"onBinding Created"}
-        NotificationUtil.requestPermission(permissionUtil) {
+        NotificationUtil.Companion.requestPermission(permissionUtil) {
             MyDroidKeepLiveService.Companion.keepMyDroidAlive()
         }
 
@@ -128,7 +135,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
         }
 
         binding.infoText.onClick {
-            ConfirmBottomSingleDialog.show(childFragmentManager,
+            ConfirmBottomSingleDialog.Companion.show(childFragmentManager,
                 "免责申明",
                 "从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。",
                 "知道了") {
@@ -152,7 +159,7 @@ class ShareReceiverFragment : BindingFragment<ActivityMyDroidReceiveShareBinding
     }
 
     private fun autoImportAction() {
-        mDelayCancelDialog = ConfirmBottomSingleDialog.show(childFragmentManager,
+        mDelayCancelDialog = ConfirmBottomSingleDialog.Companion.show(childFragmentManager,
             "自动下一步",
             dialogContent(),
             getString(com.au.module_android.R.string.cancel),

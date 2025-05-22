@@ -103,6 +103,8 @@ object Globals {
     fun getString(@StringRes resId:Int) : String {
         return ContextCompat.getString(app, resId)
     }
+
+    fun Int.resStr() = getString(this)
 }
 
 //----------------------handler start

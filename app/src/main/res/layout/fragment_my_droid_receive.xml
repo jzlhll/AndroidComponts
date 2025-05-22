@@ -88,7 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:listitem="@layout/holder_mydroid_fileitem"/>
+        tools:listitem="@layout/holder_mydroid_receiver_fileitem"/>
 
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/receiveRcvEmptyTv"

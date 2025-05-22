@@ -1,4 +1,4 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.receiver
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager

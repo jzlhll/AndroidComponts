@@ -9,4 +9,29 @@
     <string name="automatic_desc">開啟後，app將會跟隨系統自動切換淺色或者深色模式。</string>
     <string name="language">語言</string>
     <string name="send_list">MyDroid 發送列表</string>
+    <string name="my_droid_mode_receiver">發送給手機</string>
+    <string name="my_droid_mode_send">從手機接收</string>
+    <string name="my_droid_mode_middle">中轉</string>
+    <string name="my_droid_mode_none">無</string>
+    <string name="my_droid_mode_image">圖片瀏覽</string>
+    <string name="my_droid_mode_video">視頻點播</string>
+    <string name="send_files_to_html">發送文件到HTML</string>
+    <string name="send_file_start">發送文件開始。</string>
+    <string name="send_file_end">發送文件結束。</string>
+
+    <string name="unknown_size">大小未知</string>
+    <string name="new_webpage_access">%s 新的網頁接入！</string>
+    <string name="file_not_exist">檔案不存在</string>
+    <string name="file_not_received">未接收到檔案。</string>
+    <string name="chunk_receiver_error">分塊接收錯誤。</string>
+    <string name="no_chunks">沒有分塊？</string>
+    <string name="chunks_number_not_match">分塊數量不匹配。</string>
+    <string name="error_merge_chunk_params">合併分塊參數錯誤。</string>
+
+    <string name="success_message">成功！</string>
+    <string name="server_error_exception">伺服器異常錯誤</string>
+    <string name="file_merge_success">檔案合併完成且校驗通過</string>
+    <string name="md5_check_failed">MD5校驗失敗</string>
+    <string name="clear_up">清理</string>
+    <string name="invalid_request_from_appserver">來自應用伺服器的無效請求</string>
 </resources>

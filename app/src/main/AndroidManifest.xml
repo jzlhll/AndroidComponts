@@ -61,6 +61,7 @@
 
         <activity
             android:name=".transfer.views.ShareImportActivity"
+            android:theme="@style/TranslucentActivityTheme"
             android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>

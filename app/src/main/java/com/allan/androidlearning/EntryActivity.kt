@@ -12,7 +12,7 @@ import com.allan.androidlearning.activities.LiveDataFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
 import com.allan.androidlearning.transfer.KEY_START_TYPE
 import com.allan.androidlearning.transfer.MY_DROID_SHARE_IMPORT_URIS
-import com.allan.androidlearning.transfer.views.ShareReceiverFragment
+import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
@@ -78,7 +78,7 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
         if (isFromNewShareImportUris == MY_DROID_SHARE_IMPORT_URIS) {
             lifecycleScope.launch {
                 delay(200)
-                FragmentShellActivity.start(this@EntryActivity, ShareReceiverFragment::class.java)
+                FragmentShellActivity.start(this@EntryActivity, SendListSelectorFragment::class.java)
             }
         }
     }

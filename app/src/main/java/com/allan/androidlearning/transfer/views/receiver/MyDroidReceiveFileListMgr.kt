@@ -1,4 +1,4 @@
-package com.allan.androidlearning.transfer.views
+package com.allan.androidlearning.transfer.views.receiver
 
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -18,17 +18,21 @@ import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.launch
 
 class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
-    val mAdapter = MyDroidReceiveFileListAdapter(fullClick = { bean->
-        ShowReceiveItemDialog.pop(f.childFragmentManager, arrayOf(
-            bean.file.name,
-            bean.md5,
-            bean.fileSizeInfo
-        ))
+    val mAdapter = MyDroidReceiveFileListAdapter(fullClick = { bean ->
+        ShowReceiveItemDialog.Companion.pop(
+            f.childFragmentManager, arrayOf(
+                bean.file.name,
+                bean.md5,
+                bean.fileSizeInfo
+            )
+        )
     }) {
-        ExportSelectActionDialog.pop(f.childFragmentManager, it, fileExportFailCallback = f.fileExportFailCallback,
+        ExportSelectActionDialog.Companion.pop(
+            f.childFragmentManager, it, fileExportFailCallback = f.fileExportFailCallback,
             fileExportSuccessCallback = f.fileExportSuccessCallback,
             refreshFileListCallback = f.fileChanged,
-            importSendCallback = f.importSendCallback)
+            importSendCallback = f.importSendCallback
+        )
     }
 
     fun initRcv() {
