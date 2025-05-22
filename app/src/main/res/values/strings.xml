@@ -151,6 +151,7 @@
     <string name="transfer_list">Receive List</string>
     <string name="transfer_list_2">Receive List*</string>
     <string name="not_close_window">Do not exit or turn off screen: %s</string>
+    <string name="no_received_files">No files received</string>
 
     <string name="send_list">MyDroid Send List</string>
     <string name="my_droid_mode_receiver">Send to phone</string>
@@ -211,5 +212,13 @@
     <string name="exit_with_wifi_reminder">The app will exit. Please connect to WI-FI or enable hotspot, then reopen.</string>
     <string name="app_name_lan_tool">MyDroid LAN Tool</string>
     <string name="transfer_list_title">Transfer List</string>
-
+    <string name="file_send">File Send</string>
+    <string name="app_file_send">MyDroid File Send</string>
+    <string name="file_receive">File Receive</string>
+    <string name="app_file_receive">MyDroid File Receive</string>
+    <string name="file_transfer">Transfer</string>
+    <string name="image_preview">Image Preview</string>
+    <string name="video_playback">Video Playback</string>
+    <string name="select_files_to_send">Select files to send</string>
+    <string name="empty_file_hint">No files yet, share from gallery,\nfile manager or other apps</string>
 </resources>

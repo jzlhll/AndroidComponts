@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         android:textColor="#ffffff"
         android:textSize="13sp"
-        android:text="选择你即将发送的文件"
+        android:text="@string/select_files_to_send"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="26dp"/>
@@ -47,7 +47,7 @@
     <com.au.module_android.widget.CustomFontText
         android:id="@+id/empty"
         android:visibility="gone"
-        android:text="暂无文件，从相册，文件管理器\n或其他应用分享进来吧。"
+        android:text="@string/empty_file_hint"
         style="@style/StyleFontSecondaryText"
         android:textSize="21sp"
         android:gravity="center"
@@ -81,7 +81,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="12dp"
         android:textSize="13sp"
-        android:text="❔免责申明"
+        android:text="@string/disclaimer_title"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

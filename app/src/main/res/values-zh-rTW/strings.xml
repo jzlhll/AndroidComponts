@@ -14,6 +14,7 @@
     <string name="transfer_list">接收清單</string>
     <string name="transfer_list_2">接收清單*</string>
     <string name="not_close_window">不退出，不熄屏：%s</string>
+    <string name="no_received_files">暫無接收到的檔案</string>
 
     <string name="send_list">MyDroid 發送列表</string>
     <string name="my_droid_mode_receiver">發送給手機</string>
@@ -70,5 +71,12 @@
     <string name="exit_with_wifi_reminder">即將退出，請連接WI-FI或開啟熱點，然後重新進入。</string>
     <string name="app_name_lan_tool">MyDroid區域網路工具</string>
     <string name="transfer_list_title">傳輸清單</string>
-
+    <string name="file_send">檔案傳送</string>
+    <string name="app_file_send">MyDroid 檔案傳送</string>
+    <string name="file_receive">檔案接收</string>
+    <string name="file_transfer">中轉</string>
+    <string name="image_preview">圖片預覽</string>
+    <string name="video_playback">影片點播</string>
+    <string name="select_files_to_send">選擇要傳送的檔案</string>
+    <string name="empty_file_hint">暫無檔案，從相簿、檔案管理器\n或其他應用分享進來吧。</string>
 </resources>

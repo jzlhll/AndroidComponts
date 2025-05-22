@@ -12,7 +12,7 @@
         android:layout_height="0dp"/>
 
     <com.au.module_android.widget.CustomToolbar
-        app:title="MyDroid-接收"
+        app:title="@string/app_file_receive"
         app:titleCentered="true"
         android:id="@+id/toolbar"
         app:layout_constraintTop_toTopOf="parent"
@@ -100,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         style="@style/StyleFontText"
-        android:text="暂无接收到的文件。"/>
+        android:text="@string/no_received_files"/>
 
     <ScrollView
         android:visibility="gone"

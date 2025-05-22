@@ -15,6 +15,7 @@
     <string name="transfer_list">"接收列表 "</string>
     <string name="transfer_list_2">"接收列表*"</string>
     <string name="not_close_window">不退出，不熄屏 %s</string>
+    <string name="no_received_files">暂无接收到的文件</string>
 
     <string name="send_list">MyDroid 发送列表</string>
     <string name="my_droid_mode_receiver">发送给手机</string>
@@ -70,5 +71,13 @@
     <string name="exit_with_wifi_reminder">即将退出，请连接WI-FI或者开启热点，然后重新进入。</string>
     <string name="app_name_lan_tool">MyDroid局域网工具</string>
     <string name="transfer_list_title">传输列表</string>
-
+    <string name="file_send">文件发送</string>
+    <string name="app_file_send">MyDroid 文件发送</string>
+    <string name="file_receive">文件接收</string>
+    <string name="app_file_receive">MyDroid 文件接收</string>
+    <string name="file_transfer">中转</string>
+    <string name="image_preview">图片预览</string>
+    <string name="video_playback">视频点播</string>
+    <string name="select_files_to_send">选择要发送的文件</string>
+    <string name="empty_file_hint">暂无文件，从相册、文件管理器\n或其他应用分享进来吧。</string>
 </resources>

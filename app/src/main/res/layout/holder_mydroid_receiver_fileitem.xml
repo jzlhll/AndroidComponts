@@ -29,7 +29,6 @@
         android:tint="@color/color_text_normal"
         android:layout_marginBottom="12dp"
         android:src="@drawable/ic_menu"
-        android:contentDescription="操作"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
