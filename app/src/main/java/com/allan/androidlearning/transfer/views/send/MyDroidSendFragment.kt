@@ -110,7 +110,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         entryFileList.forEach {
             sb.append(it.goodName()).append("(").append(it.fileSizeStr).append(")").append("\n")
         }
-        binding.transferInfo.text =  "传输列表:\n" + sb
+        binding.transferInfo.text = getString(com.allan.androidlearning.R.string.transfer_list) + ":\n" + sb
     }
 
     private val sendClientBindings = mutableListOf<MydroidSendClientBinding>()

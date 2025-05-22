@@ -67,5 +67,8 @@
     <string name="action_confirm">知道了</string>
     <string name="action_auto_next">自動下一步</string>
     <string name="tips">提示</string>
+    <string name="exit_with_wifi_reminder">即將退出，請連接WI-FI或開啟熱點，然後重新進入。</string>
+    <string name="app_name_lan_tool">MyDroid區域網路工具</string>
+    <string name="transfer_list_title">傳輸清單</string>
 
 </resources>

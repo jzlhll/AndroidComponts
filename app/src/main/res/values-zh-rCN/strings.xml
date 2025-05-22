@@ -67,5 +67,8 @@
     <string name="disclaimer_content">从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。</string>
     <string name="action_confirm">知道了</string>
     <string name="action_auto_next">自动下一步</string>
+    <string name="exit_with_wifi_reminder">即将退出，请连接WI-FI或者开启热点，然后重新进入。</string>
+    <string name="app_name_lan_tool">MyDroid局域网工具</string>
+    <string name="transfer_list_title">传输列表</string>
 
 </resources>

@@ -43,7 +43,7 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
                 binding.title.setText(R.string.connect_wifi_or_hotspot)
                 if (waitDialog == null) {
                     ConfirmBottomSingleDialog.show(childFragmentManager, getString(R.string.tips),
-                        "即将退出，请连接WI-FI或者开启热点，然后重新进入。",
+                        getString(R.string.exit_with_wifi_reminder),
                         "OK",
                         true) { d->
                         waitDialog?.dismissAllowingStateLoss()
@@ -75,5 +75,5 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
         }
     }
 
-    override fun toolbarInfo() = ToolbarInfo("MyDroid局域网工具")
+    override fun toolbarInfo() = ToolbarInfo(getString(R.string.app_name_lan_tool))
 }

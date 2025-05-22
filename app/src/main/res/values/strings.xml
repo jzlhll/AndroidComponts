@@ -208,5 +208,8 @@
     <string name="action_confirm">Got it</string>
     <string name="action_auto_next">Auto Next</string>
     <string name="tips">Tips</string>
+    <string name="exit_with_wifi_reminder">The app will exit. Please connect to WI-FI or enable hotspot, then reopen.</string>
+    <string name="app_name_lan_tool">MyDroid LAN Tool</string>
+    <string name="transfer_list_title">Transfer List</string>
 
 </resources>
