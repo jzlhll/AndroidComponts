@@ -1,5 +1,6 @@
 package com.allan.androidlearning.transfer.views.receiver
 
+import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -8,6 +9,7 @@ import com.allan.androidlearning.R
 import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.MyDroidMess
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
 import com.au.module_android.utils.gone
@@ -75,11 +77,12 @@ class MyDroidReceiveFileListMgr(val f: MyDroidReceiverFragment) {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun loadHistory(init: Boolean) {
         MyDroidGlobalService.scope.launchOnThread {
             val history = MyDroidMess().loadExportHistory()
             f.lifecycleScope.launch {
-                f.binding.exportHistoryTv.text = "只保留最近80-100条导出记录。\n\n" + history
+                f.binding.exportHistoryTv.text = R.string.keep_recent_records.resStr() + "\n\n" + history
                 if (!f.binding.exportHistoryHost.isVisible && !init) {
                     f.exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
                         tabTv.text = f.getString(R.string.export_history_2)

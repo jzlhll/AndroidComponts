@@ -8,6 +8,13 @@
     <string name="select_manually">手動選擇</string>
     <string name="automatic_desc">開啟後，app將會跟隨系統自動切換淺色或者深色模式。</string>
     <string name="language">語言</string>
+
+    <string name="export_history">匯出歷史</string>
+    <string name="export_history_2">匯出歷史*</string>
+    <string name="transfer_list">接收清單</string>
+    <string name="transfer_list_2">接收清單*</string>
+    <string name="not_close_window">不退出，不熄屏：%s</string>
+
     <string name="send_list">MyDroid 發送列表</string>
     <string name="my_droid_mode_receiver">發送給手機</string>
     <string name="my_droid_mode_send">從手機接收</string>
@@ -34,4 +41,31 @@
     <string name="md5_check_failed">MD5校驗失敗</string>
     <string name="clear_up">清理</string>
     <string name="invalid_request_from_appserver">來自應用伺服器的無效請求</string>
+    <string name="mydroid_running_only_for_alive">MyDroid僅作為保活進程運行</string>
+    <string name="import_to_send_list_hint">請點擊\"匯入到發送列表\"而非\"分享\"！</string>
+    <string name="share">分享</string>
+    <string name="delete">刪除</string>
+    <string name="export">匯出</string>
+    <string name="export_and_delete">匯出 &amp; 刪除</string>
+    <string name="import_to_send_list">匯入到發送列表</string>
+    <string name="save_failed">轉存失敗！</string>
+    <string name="save_to_success">已成功轉存至 %s！</string>
+    <string name="already_in_sending_list">已經存在發送列表中。</string>
+    <string name="keep_recent_records">僅保留最近80–100條匯出記錄。</string>
+    <string name="storage_remaining"> 存儲剩餘：</string>
+    <string name="file_received_success_fmt">成功接收文件：%s！</string>
+    <string name="connect_wifi_or_hotspot">請連接WI-FI或開啟熱點</string>
+    <string name="lan_access_fmt">區域網路內存取：%1$s:%2$s</string>
+    <string name="auto_proceed_fmt">將在%d秒後自動進入下一步，你可以點擊取消，勾選取消部分文件。</string>
+
+    <string name="select_files_hint">請勾選檔案。</string>
+    <string name="empty_file_prompt">暫無檔案，請從相簿、檔案管理員或其他應用分享匯入。</string>
+    <string name="app_management_permission">應用程式管理權限</string>
+    <string name="global_permission_prompt">此功能需要全域設定權限，即將跳轉開啟該功能。</string>
+    <string name="disclaimer_title">免責聲明</string>
+    <string name="disclaimer_content">從系統相簿、檔案管理員匯入的檔案，僅解析檔名和大小，不會複製。從其他應用匯入的會暫存於快取，使用後自動刪除。\n下次啟動應用時需重新分享匯入。</string>
+    <string name="action_confirm">知道了</string>
+    <string name="action_auto_next">自動下一步</string>
+    <string name="tips">提示</string>
+
 </resources>

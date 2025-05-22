@@ -9,6 +9,7 @@ import com.allan.androidlearning.R
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.launchOnThread
@@ -63,11 +64,11 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
     val normalColor = ColorStateList.valueOf(Globals.getColor(com.au.module_androidcolor.R.color.color_text_normal))
 
     val mItems = listOf(
-        ItemBean(TAG_SHARE, "分享", R.drawable.ic_share, normalColor),
-        ItemBean(TAG_SEND_IMPORT, "导入到发送列表", R.drawable.ic_send, normalColor),
-        ItemBean(TAG_DELETE, "删除", R.drawable.ic_delete, normalColor),
-        ItemBean(TAG_EXPORT_ONLY, "导出", R.drawable.ic_download, normalColor),
-        ItemBean(TAG_EXPORT_AND_DOWNLOAD, "导出 & 删除", R.drawable.ic_download, normalColor))
+        ItemBean(TAG_SHARE, R.string.share.resStr(), R.drawable.ic_share, normalColor),
+        ItemBean(TAG_SEND_IMPORT, R.string.import_to_send_list.resStr(), R.drawable.ic_send, normalColor),
+        ItemBean(TAG_DELETE, R.string.delete.resStr(), R.drawable.ic_delete, normalColor),
+        ItemBean(TAG_EXPORT_ONLY, R.string.export.resStr(), R.drawable.ic_download, normalColor),
+        ItemBean(TAG_EXPORT_AND_DOWNLOAD, R.string.export_and_delete.resStr(), R.drawable.ic_download, normalColor))
     override val items: List<ItemBean>
         get() = mItems
 
@@ -103,16 +104,17 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
         val pair = uri?.getRealPath(Globals.app)
         if (pair != null) {
             val p = pair.first.replace("/storage/emulated/0/", "/sdcard/")
+            val firstStr = String.format(R.string.save_to_success.resStr(), pair.first)
             when (pair.second) {
                 ContentUriRealPathType.RelativePath -> {
-                    fileExportSuccessCallback?.get()?.invoke("转存到${pair.first}成功！", "/sdcard/$p")
+                    fileExportSuccessCallback?.get()?.invoke(firstStr, "/sdcard/$p")
                 }
                 ContentUriRealPathType.FullPath -> {
-                    fileExportSuccessCallback?.get()?.invoke("转存到${pair.first}成功！", p)
+                    fileExportSuccessCallback?.get()?.invoke(firstStr, p)
                 }
             }
         } else {
-            fileExportFailCallback?.get()?.invoke("转存失败！")
+            fileExportFailCallback?.get()?.invoke(R.string.save_failed.resStr())
         }
     }
 
@@ -133,7 +135,7 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
 
                 val fileUri = Uri.fromFile(file!!)
                 if (oldValues.find { it.uri == fileUri } != null) {
-                    ToastBuilder().setMessage("已经存在发送列表中。").setIcon("info").setOnTopLater(200).toast()
+                    ToastBuilder().setMessage(R.string.already_in_sending_list.resStr()).setIcon("info").setOnTopLater(200).toast()
                     return
                 }
                 val info = fileUri.getRealInfo(Globals.app)

@@ -146,11 +146,11 @@
     <string name="select_manually">Select manually</string>
     <string name="automatic_desc">When enabled, app will switch dark mode on/off to match your system settings.</string>
 
-    <string name="export_history" translatable="false">"导出历史 "</string>
-    <string name="export_history_2" translatable="false">"导出历史*"</string>
-    <string name="transfer_list" translatable="false">"接收列表 "</string>
-    <string name="transfer_list_2" translatable="false">"接收列表*"</string>
-    <string name="not_close_window" translatable="false">不退出，不熄屏 %s</string>
+    <string name="export_history">Export History</string>
+    <string name="export_history_2">Export History*</string>
+    <string name="transfer_list">Receive List</string>
+    <string name="transfer_list_2">Receive List*</string>
+    <string name="not_close_window">Do not exit or turn off screen: %s</string>
 
     <string name="send_list">MyDroid Send List</string>
     <string name="my_droid_mode_receiver">Send to phone</string>
@@ -181,5 +181,32 @@
     <string name="md5_check_failed">MD5 check failed.</string>
     <string name="clear_up">Clear up</string>
     <string name="invalid_request_from_appserver">Invalid request from AppServer</string>
+    <string name="mydroid_running_only_for_alive">MyDroid is running only for alive</string>
+    <string name="import_to_send_list_hint">Please tap \"Import to send list\" instead of \"Share\"!</string>
+    <string name="share">Share</string>
+    <string name="delete">delete</string>
+    <string name="export">Export</string>
+    <string name="export_and_delete">Export &amp; Delete</string>
+    <string name="import_to_send_list">Import to send list</string>
+    <string name="already_in_sending_list">Already exists in the send list.</string>
+
+    <string name="save_failed">Save failed!</string>
+    <string name="save_to_success">Saved to %s successfully!</string>
+    <string name="keep_recent_records">Keep only the last 80–100 export records.</string>
+    <string name="storage_remaining"> Storage Remaining:</string>
+    <string name="file_received_success_fmt">File received successfully: %s!</string>
+    <string name="connect_wifi_or_hotspot">Please connect to WI-FI or enable hotspot</string>
+    <string name="lan_access_fmt">Local network access: %1$s:%2$s</string>
+    <string name="auto_proceed_fmt">Will automatically proceed in %d s. You can click cancel to deselect some files.</string>
+
+    <string name="select_files_hint">Please select files.</string>
+    <string name="empty_file_prompt">No files yet. Share from gallery, file manager or other apps.</string>
+    <string name="app_management_permission">App Management Permission</string>
+    <string name="global_permission_prompt">This feature requires system settings permission. Redirecting to enable it.</string>
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer_content">Files from system gallery/file manager are only parsed for name/size without copying. Files from other apps are temporarily cached and deleted after use.\nYou need to re-share imports when app restarts.</string>
+    <string name="action_confirm">Got it</string>
+    <string name="action_auto_next">Auto Next</string>
+    <string name="tips">Tips</string>
 
 </resources>

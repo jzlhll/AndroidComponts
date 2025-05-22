@@ -17,6 +17,7 @@ import com.allan.androidlearning.transfer.MyDroidKeepLiveService
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
 import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
@@ -105,7 +106,7 @@ class ShareImportActivity : BindingActivity<ActivityImportBinding>() {
         logdNoFile { "handle increase uris $uris" }
 
         if (ifUrisFromMyApp(uris)) {
-            Toast.makeText(this, "请点击\"导入到发送列表\"，而不是\"分享\"！", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, com.allan.androidlearning.R.string.import_to_send_list_hint.resStr(), Toast.LENGTH_SHORT).show()
             finish()
             return
         }

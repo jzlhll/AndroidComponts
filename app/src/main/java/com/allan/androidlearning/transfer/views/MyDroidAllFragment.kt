@@ -2,6 +2,7 @@ package com.allan.androidlearning.transfer.views
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidAllBinding
 import com.allan.androidlearning.transfer.views.receiver.MyDroidReceiverFragment
 import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
@@ -39,9 +40,9 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
 
         viewModel.ipData.observe(this) { ip->
             if (ip.isNullOrEmpty()) {
-                binding.title.text = "请连接WI-FI或者开启热点"
+                binding.title.setText(R.string.connect_wifi_or_hotspot)
                 if (waitDialog == null) {
-                    ConfirmBottomSingleDialog.show(childFragmentManager, "提示",
+                    ConfirmBottomSingleDialog.show(childFragmentManager, getString(R.string.tips),
                         "即将退出，请连接WI-FI或者开启热点，然后重新进入。",
                         "OK",
                         true) { d->
@@ -64,9 +65,9 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
 
         val helper = PermissionStorageHelper()
         helper.ifGotoMgrAll {
-            ConfirmCenterDialog.show(childFragmentManager,
-                "应用管理权限",
-                "该功能需要全局设置权限，即将跳转，打开该功能。",
+            ConfirmCenterDialog.Companion.show(childFragmentManager,
+                getString(R.string.app_management_permission),
+                getString(R.string.global_permission_prompt),
                 "OK") {
                 helper.gotoMgrAll(requireActivity())
                 it.dismissAllowingStateLoss()

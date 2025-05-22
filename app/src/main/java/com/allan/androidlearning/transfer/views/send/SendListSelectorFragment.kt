@@ -46,7 +46,8 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
 //        )
 
     private fun dialogContent() : String{
-        return "即将在${mDelayTime}秒后自动进入下一步，你可以点击取消，勾掉一些文件。"
+        val fmt = getString(R.string.auto_proceed_fmt)
+        return String.format(fmt, mDelayTime)
     }
 
     private val menuMgr by unsafeLazy {
@@ -59,7 +60,9 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
                 R.id.next -> {
                     when (isEmpty()) {
                         2 -> {
-                            ToastBuilder().setOnActivity(requireActivity()).setMessage("请勾选文件。").setIcon("info").toast()
+                            ToastBuilder().setOnActivity(requireActivity()).setMessage(
+                                getString(R.string.select_files_hint)
+                            ).setIcon("info").toast()
                         }
 
                         1 -> {
@@ -67,7 +70,8 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
                         }
 
                         else -> {
-                            ToastBuilder().setOnActivity(requireActivity()).setMessage("暂无文件，从相册，文件管理器或其他应用分享进来吧。").setIcon("info").toast()
+                            ToastBuilder().setOnActivity(requireActivity()).setMessage(
+                                getString(R.string.empty_file_prompt)).setIcon("info").toast()
                         }
                     }
                 }
@@ -93,8 +97,8 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
         val helper = PermissionStorageHelper()
         if(helper.ifGotoMgrAll {
             ConfirmCenterDialog.Companion.show(childFragmentManager,
-                "应用管理权限",
-                "该功能需要全局设置权限，即将跳转，打开该功能。",
+                getString(R.string.app_management_permission),
+                getString(R.string.global_permission_prompt),
                 "OK") {
                 helper.gotoMgrAll(requireActivity())
                 it.dismissAllowingStateLoss()
@@ -136,9 +140,9 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
 
         binding.infoText.onClick {
             ConfirmBottomSingleDialog.Companion.show(childFragmentManager,
-                "免责申明",
-                "从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。",
-                "知道了") {
+                getString(R.string.disclaimer_title),
+                    getString(R.string.disclaimer_content),
+                getString(R.string.action_confirm)) {
                 it.dismissAllowingStateLoss()
             }
         }
@@ -160,7 +164,7 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
 
     private fun autoImportAction() {
         mDelayCancelDialog = ConfirmBottomSingleDialog.Companion.show(childFragmentManager,
-            "自动下一步",
+            getString(R.string.action_auto_next),
             dialogContent(),
             getString(com.au.module_android.R.string.cancel),
         ) {

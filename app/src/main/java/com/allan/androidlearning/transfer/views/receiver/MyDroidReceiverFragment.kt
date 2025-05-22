@@ -25,7 +25,7 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.getExternalFreeSpace
-import com.au.module_androidcolor.R
+import com.allan.androidlearning.R
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
 
@@ -87,30 +87,32 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>()
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.adHost.setColor(Globals.getColor(R.color.color_normal_block0))
+        binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
         binding.adHost.startAnimation()
 
-        binding.tabLayout.tabSelectTextColor = com.allan.androidlearning.R.color.logic_receiver
-        binding.tabLayout.tabNotSelectColor = R.color.color_text_desc
+        binding.tabLayout.tabSelectTextColor = R.color.logic_receiver
+        binding.tabLayout.tabNotSelectColor = com.au.module_androidcolor.R.color.color_text_desc
 
-        val fmt = getString(com.allan.androidlearning.R.string.not_close_window)
-        binding.descTitle.text = String.format(fmt, " 存储剩余：" + getExternalFreeSpace(requireActivity()))
+        val fmt = getString(R.string.not_close_window)
+        val leftStr = getString(R.string.storage_remaining)
+        binding.descTitle.text = String.format(fmt, leftStr + getExternalFreeSpace(requireActivity()))
 
         MyDroidConst.onFileMergedData.observeUnStick(this) { file->
+            val strFmt = getString(R.string.file_received_success_fmt)
             ToastBuilder().setOnTop()
-                .setMessage("成功收到文件：${file.name} !")
+                .setMessage(String.format(strFmt, file.name))
                 .setIcon("success").toast()
             mFileListMgr.loadFileList()
         }
 
         MyDroidConst.ipPortData.observe(this) { info->
             if (info == null || info.ip.isEmpty()) {
-                binding.title.text = "请连接WI-FI或者开启热点"
+                binding.title.setText(R.string.connect_wifi_or_hotspot)
             } else {
                 if (info.httpPort == null) {
                     binding.title.text = info.ip
                 } else if (MyDroidConst.serverIsOpen) {
-                    binding.title.text = "局域网内访问：" + info.ip + ":" + info.httpPort
+                    binding.title.text = String.format(getString(R.string.lan_access_fmt), info.ip, "" + info.httpPort)
                 } else {
                     binding.title.text = info.ip + ":" + info.httpPort
                 }
@@ -133,23 +135,23 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>()
 
     private fun initLater() {
         Globals.mainHandler.post {
-            val transferFileList = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.transfer_list), true, 16f)
+            val transferFileList = binding.tabLayout.newTextTab(getString(R.string.transfer_list), true, 16f)
             transferFileList.view.onClick {
                 binding.receiveRcv.visible()
                 mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.gone()
                 receivedFileListTab.customView.asOrNull<TextView>()?.let { tabTv->
-                    tabTv.text = getString(com.allan.androidlearning.R.string.transfer_list)
+                    tabTv.text = getString(R.string.transfer_list)
                 }
             }
             receivedFileListTab = transferFileList
-            val exportHistory = binding.tabLayout.newTextTab(getString(com.allan.androidlearning.R.string.export_history), false, 16f)
+            val exportHistory = binding.tabLayout.newTextTab(getString(R.string.export_history), false, 16f)
             exportHistory.view.onClick {
                 binding.receiveRcv.gone()
                 mFileListMgr.changeRcvEmptyTextVisible()
                 binding.exportHistoryHost.visible()
                 exportHistoryTab.customView.asOrNull<TextView>()?.let { tabTv->
-                    tabTv.text = getString(com.allan.androidlearning.R.string.export_history)
+                    tabTv.text = getString(R.string.export_history)
                 }
             }
             exportHistoryTab = exportHistory

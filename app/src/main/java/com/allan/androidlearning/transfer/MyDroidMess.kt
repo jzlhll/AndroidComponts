@@ -55,7 +55,7 @@ class MyDroidMess {
         val currentTimeMillis = System.currentTimeMillis()
         // 定义时间格式（例如：2023年10月05日 14:30）
         val formatter = DateTimeFormatter
-            .ofPattern("yyyy年MM月dd日 HH:mm")
+            .ofPattern("yyyyMMdd HH:mm")
             .withZone(ZoneId.systemDefault()) // 使用系统默认时区
         // 格式化为字符串
         val formattedTime = formatter.format(Instant.ofEpochMilli(currentTimeMillis))

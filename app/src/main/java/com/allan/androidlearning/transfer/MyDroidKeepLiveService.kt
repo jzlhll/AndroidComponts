@@ -6,6 +6,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import com.allan.androidlearning.transfer.views.ShareImportActivity
 import com.au.module_android.Globals
+import com.au.module_android.Globals.resStr
 import com.au.module_android.service.AutoStopService
 import com.au.module_android.utils.logd
 
@@ -38,7 +39,7 @@ class MyDroidKeepLiveService : AutoStopService() {
     }
 
     override fun getNotifyName(): String {
-        return "MyDroid is running only for alive"
+        return com.allan.androidlearning.R.string.mydroid_running_only_for_alive.resStr()
     }
 
     override fun getPendingIntent(): PendingIntent {
