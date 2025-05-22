@@ -15,7 +15,7 @@ enum class MyDroidMode {
 /**
  * 这是翻译给前端用的
  */
-fun MyDroidMode.toCNName(): String {
+fun MyDroidMode.toName(): String {
     return when (this) {
         MyDroidMode.Receiver -> Globals.getString(R.string.my_droid_mode_receiver)
         MyDroidMode.Send -> Globals.getString(R.string.my_droid_mode_send)

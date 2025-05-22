@@ -128,13 +128,10 @@
             color: #444;
         }
 
-
-        /* 列宽分配 */
         #file-list-container td:nth-child(1) { width: 60%; } /* 文件名列 */
         #file-list-container td:nth-child(2) { width: 20%; min-width: 80px; } /* 大小列 */
         #file-list-container td:nth-child(3) { width: 20%; min-width: 100px; } /* 操作列 */
 
-        /* 响应式优化 */
         @media (max-width: 768px) {
             #file-list-container td:nth-child(1) { width: 50%; }
             #file-list-container td:nth-child(2),
@@ -157,7 +154,7 @@
             color: #007bff;
             text-decoration: none;
             transition: color 0.2s;
-            white-space: nowrap; /* 防止换行 */
+            white-space: nowrap;
         }
 
         .download-link:hover {
@@ -204,7 +201,6 @@
         Loading...
     </div>
 
-    <!-- 错误遮罩层 -->
     <div id="overlayView">
         <div id="overlayView-content">
             <h2 id="overlayError1"></h2>
@@ -214,6 +210,7 @@
 
     <script>
         let isDownloading = false;
+
         //init loc
         document.getElementById('fileNameTh').textContent = loc["filename"];
         document.getElementById('fileSizeTh').textContent = loc["size"];

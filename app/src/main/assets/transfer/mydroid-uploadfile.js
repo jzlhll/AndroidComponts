@@ -147,7 +147,7 @@
             if (mergeAns.code != 0) {
                 throw new Error(`${mergeAns.msg}`);
             }
-            console.log(`mergeAllChunksReponse: code=${mergeAns.code} msg=${mergeAns.msg}`);
+            console.log(`mergeAllChunksResponse: code=${mergeAns.code} msg=${mergeAns.msg}`);
             onProgress(chunks, chunks, "", "complete");
             return mergeAns.msg;
         }

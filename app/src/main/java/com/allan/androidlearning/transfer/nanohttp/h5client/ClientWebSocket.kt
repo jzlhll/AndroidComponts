@@ -4,7 +4,7 @@ import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.DEBUG_SLOW_RECEIVER_TRANSFER
 import com.allan.androidlearning.transfer.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.androidlearning.transfer.MyDroidConst
-import com.allan.androidlearning.transfer.benas.toCNName
+import com.allan.androidlearning.transfer.benas.toName
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_CLIENT_INIT_CALLBACK
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_LEFT_SPACE
@@ -123,7 +123,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
             .setIcon("success")
             .setOnTopLater(200).toast()
 
-        val mode = MyDroidConst.myDroidMode.toCNName()
+        val mode = MyDroidConst.myDroidMode.toName()
         val json = WSResultBean(CODE_SUC, com.allan.androidlearning.R.string.success_message.resStr(),
                 API_WS_CLIENT_INIT_CALLBACK,
                 MyDroidModeResult(mode, clientName,

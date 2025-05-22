@@ -45,8 +45,8 @@
         }
 
         .custom-button {
-            height: 48px; /* 统一高度 */
-            line-height: 24px; /* 文字垂直居中 */
+            height: 48px;
+            line-height: 24px;
             background-color: #3498db;
             color: white;
             padding: 12px 24px;
@@ -207,12 +207,11 @@
 </div>
 
 <script>
-    console.log("html init...");
-    let isActioning = false; //正在操作中
+     //正在操作中
+    let isActioning = false;
 
     //init locales
     document.getElementById('subtitle').textContent = loc["local_network_fast_transfer"];
-
     document.getElementById('selectedFileBtn').textContent = loc["select_file"];
     document.getElementById('uploadButton').textContent = loc["start_upload"];
     document.getElementById('dropZone').textContent = loc["drag_drop_hint"];
@@ -269,7 +268,7 @@
     }
     
     //字段：name, fileSizeStr, md5, md5Time, uploadInfo
-    let selectedFileMap = new Map(); 
+    let selectedFileMap = new Map();
     let isMd5Process = true;
 
     function showSelectedFilesInfo() {
@@ -298,7 +297,7 @@
     }
 
     async function showFileInfo(files) {
-        console.log("showwFileInfo file list: ", files);
+        console.log("show FileInfo file list: ", files);
         if (files) {
             const startTs = Date.now();
             window.lastStartTsFlagArr = window.lastStartTsFlagArr || {};
@@ -307,14 +306,14 @@
             isActioning = true;
 
             //1. 设定 检查loop开始
-            console.log("showwFileInfo file list 1.");
+            console.log("show FileInfo file list 1.");
             let deltaTs = 0;
             isMd5Process = true;
             const loopController = new LoopController();
             loopController.start(showSelectedFilesInfo);
 
             //2. 初始化map
-            console.log("showwFileInfo file list 2.");
+            console.log("show FileInfo file list 2.");
             selectedFileMap.clear();
             for (let i = 0; i < files.length; i++) {
                 selectedFileMap.set(i, {
@@ -327,31 +326,29 @@
             showSelectedFilesInfo();
             
             //3. 开始generate md5
-            console.log("showwFileInfo file list 3.");
-            
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 try {
-                let md5 = "";
-                const one = selectedFileMap.get(i);
-                
-                const oneStartTs = Date.now();
-                console.log(`showwFileInfo file list 3.1 ${one.name}`);
-                if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
-                    md5 = await streamBasedHashWorker(file, startTs);
-                } else {
-                    md5 = await generateMd5Small(file);
-                }
-                one.md5 = md5;
-                one.md5Time = Date.now() - oneStartTs;
-                console.log(`showwFileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
+                    let md5 = "";
+                    const one = selectedFileMap.get(i);
+
+                    const oneStartTs = Date.now();
+                    //console.log(`show FileInfo file list 3.1 ${one.name}`);
+                    if (window.Worker && file.size > 50 * 1024 * 1024) { //50MB就用大的
+                        md5 = await streamBasedHashWorker(file, startTs);
+                    } else {
+                        md5 = await generateMd5Small(file);
+                    }
+                    one.md5 = md5;
+                    one.md5Time = Date.now() - oneStartTs;
+                    console.log(`show FileInfo file list 3.2 ${one.name} ${one.md5} ${one.md5Time}`);
                 } catch(error) {
-                    if (error == "aborted") {
+                    if (error == 'aborted') {
                         console.log(`md5: ${file.name} (${fileSize}) 已终止。`);
                     } else {
                         console.log(`md5: ${file.name} 错误：(${error})。`);
                     }
-                    one.md5 = "md5错误";
+                    one.md5 = loc["md5_error"];
                     one.md5Time = Date.now() - oneStartTs;
                 }
             }

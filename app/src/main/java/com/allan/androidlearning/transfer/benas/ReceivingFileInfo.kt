@@ -1,8 +1,5 @@
 package com.allan.androidlearning.transfer.benas
 
-import androidx.annotation.Keep
-import java.io.File
-
 const val PROCESS_CHUNK = "chunk"
 const val PROCESS_MERGING = "merging"
 const val PROCESS_ABORTED = "aborted"
