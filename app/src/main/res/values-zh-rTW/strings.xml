@@ -79,4 +79,6 @@
     <string name="video_playback">影片點播</string>
     <string name="select_files_to_send">選擇要傳送的檔案</string>
     <string name="empty_file_hint">暫無檔案，從相簿、檔案管理器\n或其他應用分享進來吧。</string>
+    <string name="send_success_fmt">%s 發送成功！</string>
+    <string name="inactivity_message">長時間未操作，App已經主動退出。</string>
 </resources>

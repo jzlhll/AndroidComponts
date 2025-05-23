@@ -35,7 +35,8 @@
                 const n = generateUUID();
                 const wsName = n.substring(0, 8);
                 const wsInit = {};
-                wsInit[API_WS_INIT] = wsName;
+                wsInit.api = API_WS_INIT;
+                wsInit.wsName = wsName;
                 socket.send(JSON.stringify(wsInit));
             };
     

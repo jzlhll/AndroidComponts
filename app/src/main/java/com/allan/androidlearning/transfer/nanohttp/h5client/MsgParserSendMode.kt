@@ -26,13 +26,14 @@ import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
+import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.InputStream
 
-class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
+class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
     private val sendUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
         override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
             val cvtList = mutableListOf<UriRealInfoHtml>()
@@ -63,14 +64,20 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
         }
     }
 
-    override fun onMessage(json: JSONObject) {
-        if (json.has(API_WS_REQUEST_FILE)) {
-            val uriUuid = json.optString(API_WS_REQUEST_FILE)
-            val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
-            onSendFile(uriUuid, info)
-        } else if (json.has(API_WS_FILE_DOWNLOAD_COMPLETE)) {
-            val uriUuid = json.optString(API_WS_REQUEST_FILE)
-            val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
+    override fun onMessage(api:String, json: JSONObject) {
+        when (api) {
+            API_WS_REQUEST_FILE->{
+                val uriUuid = json.optString("uriUuid")
+                val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
+                onSendFile(uriUuid, info)
+            }
+            API_WS_FILE_DOWNLOAD_COMPLETE-> {
+                val uriUuid = json.optString("uriUuid")
+                MyDroidConst.sendUriMap.value?.get(uriUuid)?.let { info->
+                    val fmt = com.allan.androidlearning.R.string.send_success_fmt.resStr()
+                    ToastBuilder().setOnTop().setMessage(String.format(fmt, info.goodName())).toast()
+                }
+            }
         }
     }
 
@@ -176,9 +183,9 @@ class MsgParserWS(client: ClientWebSocket) : AbsMsgParser(client) {
             client.send(arr)
         }
         delay(1000)
-        val endJson = WSResultBean(CODE_SUC, 
-            Globals.getString(com.allan.androidlearning.R.string.send_file_end), 
-            api, 
+        val endJson = WSResultBean(CODE_SUC,
+            Globals.getString(com.allan.androidlearning.R.string.send_file_end),
+            api,
             WSChunkActionResult("end", uriUuid, offset, index, fileName?:"")).toJsonString()
         client.send(endJson)
         logt { "send file end $endJson" }

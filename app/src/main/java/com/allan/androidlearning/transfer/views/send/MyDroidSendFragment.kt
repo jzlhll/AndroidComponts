@@ -1,16 +1,14 @@
 package com.allan.androidlearning.transfer.views.send
 
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.androidlearning.databinding.FragmentMyDroidSendBinding
 import com.allan.androidlearning.databinding.MydroidSendClientBinding
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.UriRealInfoEx
+import com.allan.androidlearning.transfer.views.AbsTransferAliveFragment
 import com.au.module_android.Globals
-import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
@@ -20,15 +18,11 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
 import com.au.module_androidcolor.R
 
-class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
+class MyDroidSendFragment : AbsTransferAliveFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
+        super.onBindingCreated(savedInstanceState)
         binding.adHost.setColor(Globals.getColor(R.color.color_normal_block0))
         binding.adHost.startAnimation()
 
@@ -110,7 +104,7 @@ class MyDroidSendFragment : BindingFragment<FragmentMyDroidSendBinding>() {
         entryFileList.forEach {
             sb.append(it.goodName()).append("(").append(it.fileSizeStr).append(")").append("\n")
         }
-        binding.transferInfo.text = getString(com.allan.androidlearning.R.string.transfer_list) + ":\n" + sb
+        binding.transferInfo.text = sb
     }
 
     private val sendClientBindings = mutableListOf<MydroidSendClientBinding>()

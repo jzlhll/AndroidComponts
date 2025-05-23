@@ -1,21 +1,20 @@
 package com.allan.androidlearning.transfer.views.receiver
 
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentMyDroidReceiveBinding
 import com.allan.androidlearning.transfer.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.androidlearning.transfer.MyDroidConst
 import com.allan.androidlearning.transfer.benas.MyDroidMode
+import com.allan.androidlearning.transfer.views.AbsTransferAliveFragment
 import com.allan.androidlearning.transfer.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.FragmentShellActivity
-import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.launchOnThread
@@ -25,11 +24,10 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.getExternalFreeSpace
-import com.allan.androidlearning.R
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
 
-class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>() {
+class MyDroidReceiverFragment : AbsTransferAliveFragment<FragmentMyDroidReceiveBinding>() {
     private val mFileListMgr by unsafeLazy { MyDroidReceiveFileListMgr(this) }
 
     lateinit var receivedFileListTab: TabLayout.Tab
@@ -72,11 +70,6 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setTurnScreenOn(true)
-        }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         requireActivity().transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->
             binding.toolbar.layoutParams.asOrNull<ConstraintLayout.LayoutParams>()?.let { toolbarLP->
                 toolbarLP.topMargin = statusBarsHeight
@@ -87,6 +80,7 @@ class MyDroidReceiverFragment : BindingFragment<FragmentMyDroidReceiveBinding>()
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        super.onBindingCreated(savedInstanceState)
         binding.adHost.setColor(Globals.getColor(com.au.module_androidcolor.R.color.color_normal_block0))
         binding.adHost.startAnimation()
 

@@ -2,10 +2,11 @@ package com.allan.androidlearning.transfer.nanohttp
 
 import androidx.annotation.ColorRes
 import com.allan.androidlearning.transfer.MyDroidConst
+import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.MyDroidMode
 import com.allan.androidlearning.transfer.benas.WebSocketClientInfo
-import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserHttp
-import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserWS
+import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserReceiverMode
+import com.allan.androidlearning.transfer.nanohttp.h5client.MsgParserSendMode
 import com.allan.androidlearning.transfer.nanohttp.h5client.ClientWebSocket
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
@@ -55,6 +56,7 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
     }
 
     fun addIntoConnections(websocket: ClientWebSocket) {
+        MyDroidGlobalService.updateAliveTs("when new client add")
         connections.add(websocket)
         triggerConnectionsList()
     }
@@ -83,12 +85,12 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         //uri = uri.replaceFirst("/", "", true)
         val client = ClientWebSocket(handshake, this, nextColorIcon())
         val parser = when (MyDroidConst.myDroidMode) {
-            MyDroidMode.Receiver -> MsgParserHttp(client)
-            MyDroidMode.Send -> MsgParserWS(client)
-            MyDroidMode.Middle -> MsgParserWS(client)
+            MyDroidMode.Receiver -> MsgParserReceiverMode(client)
+            MyDroidMode.Send -> MsgParserSendMode(client)
+            MyDroidMode.Middle -> MsgParserSendMode(client)
             MyDroidMode.None,
             MyDroidMode.Image,
-            MyDroidMode.Video -> MsgParserHttp(client)
+            MyDroidMode.Video -> MsgParserReceiverMode(client)
         }
         client.messenger = parser
         return client

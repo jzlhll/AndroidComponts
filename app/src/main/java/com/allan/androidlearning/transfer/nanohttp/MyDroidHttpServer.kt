@@ -2,6 +2,7 @@ package com.allan.androidlearning.transfer.nanohttp
 
 import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.MyDroidConst
+import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.ABORT_UPLOAD_CHUNKS
 import com.allan.androidlearning.transfer.benas.MERGE_CHUNKS
 import com.allan.androidlearning.transfer.benas.MyDroidMode
@@ -77,6 +78,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     private fun handleGetRequest(session: IHTTPSession): Response {
         val url = session.uri ?: ""
         logdNoFile { "handle Get Request $url" }
+        MyDroidGlobalService.updateAliveTs("http get request")
         return when {
             // 主页面请求
             url == "/" -> {
@@ -101,6 +103,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     }
 
     private fun handlePostRequest(session: IHTTPSession): Response {
+        MyDroidGlobalService.updateAliveTs("http post request")
         return when (session.uri) {
             UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)

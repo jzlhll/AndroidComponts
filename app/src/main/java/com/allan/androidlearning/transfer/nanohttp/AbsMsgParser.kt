@@ -7,5 +7,5 @@ abstract class AbsMsgParser(val client: ClientWebSocket) {
     abstract fun onOpen()
     abstract fun onClose()
 
-    abstract fun onMessage(json: JSONObject)
+    abstract fun onMessage(api:String, json: JSONObject)
 }

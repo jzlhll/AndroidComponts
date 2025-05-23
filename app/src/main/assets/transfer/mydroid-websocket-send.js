@@ -7,13 +7,15 @@
 
     window.startDownloadUri = function(uriUuid) {
         const json = {};
-        json[API_WS_REQUEST_FILE] = uriUuid;
+        json.api = API_WS_REQUEST_FILE;
+        json.uriUuid = uriUuid;
         WS.send(JSON.stringify(json));
     }
 
     window.downloadUriComplete = function(uriUuid) {
         const json = {};
-        json[API_WS_FILE_DOWNLOAD_COMPLETE] = uriUuid;
+        json.api = API_WS_FILE_DOWNLOAD_COMPLETE;
+        json.uriUuid = uriUuid;
         WS.send(JSON.stringify(json));
     }
 

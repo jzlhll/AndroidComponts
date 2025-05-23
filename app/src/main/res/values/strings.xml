@@ -221,4 +221,6 @@
     <string name="video_playback">Video Playback</string>
     <string name="select_files_to_send">Select files to send</string>
     <string name="empty_file_hint">No files yet, share from gallery,\nfile manager or other apps</string>
+    <string name="send_success_fmt">%s sent successfully!</string>
+    <string name="inactivity_message">The app has automatically exited due to inactivity.</string>
 </resources>

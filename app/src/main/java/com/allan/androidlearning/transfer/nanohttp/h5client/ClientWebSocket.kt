@@ -4,6 +4,7 @@ import com.allan.androidlearning.transfer.CODE_SUC
 import com.allan.androidlearning.transfer.DEBUG_SLOW_RECEIVER_TRANSFER
 import com.allan.androidlearning.transfer.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.androidlearning.transfer.MyDroidConst
+import com.allan.androidlearning.transfer.MyDroidGlobalService
 import com.allan.androidlearning.transfer.benas.toName
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_CLIENT_INIT_CALLBACK
 import com.allan.androidlearning.transfer.htmlbeans.API_WS_INIT
@@ -103,14 +104,21 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         val text = message.textPayload
         logt { "$clientName on Message:$text" }
         val json = JSONObject(text)
-        if (json.has(API_WS_INIT)) {
-            val targetName = json.optString(API_WS_INIT)
-            clientName = "$remoteIpStr@$targetName"
-            server.triggerConnectionsList()
+        val api = json.optString("api")
 
-            clientInit()
-        } else {
-            messenger.onMessage(json)
+        MyDroidGlobalService.updateAliveTs("when ws on message $api")
+        when (api) {
+            API_WS_INIT -> {
+                val targetName = json.optString("wsName")
+                clientName = "$remoteIpStr@$targetName"
+                server.triggerConnectionsList()
+
+                clientInit()
+            }
+
+            else -> {
+                messenger.onMessage(api, json)
+            }
         }
 
         message.setUnmasked()

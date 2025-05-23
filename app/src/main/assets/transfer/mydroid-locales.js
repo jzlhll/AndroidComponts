@@ -22,7 +22,7 @@ window.loc = {
 "time_consumed": "耗时",
 "upload": "上传",
 "cancel_upload": "❌ 取消上传",
-"select_file": "请选择文件。",
+"select_file": "请选择文件",
 "final_check": "最后检验中...",
 "send_success": "发送成功。",
 "operation_cancelled": "已取消。",

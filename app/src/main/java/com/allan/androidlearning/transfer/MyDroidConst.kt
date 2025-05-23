@@ -40,4 +40,6 @@ object MyDroidConst {
      * key是uriUuid
      */
     val sendUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
+
+    val aliveStoppedData = NoStickLiveData<Unit>()
 }

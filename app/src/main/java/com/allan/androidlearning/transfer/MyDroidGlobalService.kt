@@ -1,13 +1,13 @@
 package com.allan.androidlearning.transfer
 
 import android.app.Activity
+import android.os.SystemClock
 import androidx.annotation.MainThread
 import com.allan.androidlearning.transfer.benas.IpInfo
 import com.allan.androidlearning.transfer.nanohttp.MyDroidHttpServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer
 import com.allan.androidlearning.transfer.nanohttp.MyDroidWSServer.Companion.WEBSOCKET_READ_TIMEOUT
-import com.allan.androidlearning.transfer.views.receiver.MyDroidReceiverFragment
-import com.allan.androidlearning.transfer.views.send.MyDroidSendFragment
+import com.allan.androidlearning.transfer.views.AbsTransferAliveFragment
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
@@ -28,6 +28,32 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
 
     private var mLastHttpServerPort = 10595
     private var mLastWsServerPort = 15595
+
+    private const val ALIVE_DEAD_TIME = 5 * 60 * 1000L //N分钟不活跃主动关闭服务
+    private const val ALIVE_TS_TOO_FAST = 6 * 1000L //n秒内的更新，只干一次就好。很严谨来讲需要考虑再次post，但是由于相去很远忽略这几秒。
+
+    /**
+     * 如果很久没有从html端请求接口，则主动关闭服务
+     */
+    private var aliveTs = SystemClock.elapsedRealtime()
+    private val aliveCheckRun = Runnable {
+        if (SystemClock.elapsedRealtime() - aliveTs > ALIVE_DEAD_TIME) {
+            logd { "alive Ts timeout, stop server." }
+            MyDroidConst.aliveStoppedData.setValueSafe(Unit)
+        }
+    }
+
+    fun updateAliveTs(from:String) {
+        val cur = SystemClock.elapsedRealtime()
+        if (cur - aliveTs < ALIVE_TS_TOO_FAST) {
+            logdNoFile { "Update alive Ts too fast ignore: $from" }
+            return
+        }
+        aliveTs = cur
+        logd { "Update alive Ts: $from" }
+        Globals.mainHandler.removeCallbacks(aliveCheckRun)
+        Globals.mainHandler.postDelayed(aliveCheckRun, ALIVE_DEAD_TIME)
+    }
 
     fun findAvailablePort(): Int {
         while (mLastHttpServerPort < 65535) {
@@ -106,6 +132,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         for (life in lifeObservers) {
             life.onLifeOpen()
         }
+        updateAliveTs("when liveOpen")
     }
 
     override fun onLifeOpenEach() {
@@ -113,6 +140,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         for (life in lifeObservers) {
             life.onLifeOpenEach()
         }
+        updateAliveTs("when liveOpenEach")
     }
 
     override fun onLifeClose() {
@@ -123,14 +151,15 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         for (life in lifeObservers) {
             life.onLifeClose()
         }
+        Globals.mainHandler.removeCallbacks(aliveCheckRun)
     }
 
     override fun isLifeActivity(activity: Activity): Boolean {
-        return activity is FragmentShellActivity && logicFragments.contains(activity.fragmentClass)
+        val isActivity = activity is FragmentShellActivity
+        if (!isActivity) {
+            return false
+        }
+        val frgClass = activity.fragmentClass
+        return AbsTransferAliveFragment::class.java.isAssignableFrom(frgClass)
     }
-
-    private val logicFragments = listOf<Class<*>>(
-        MyDroidReceiverFragment::class.java,
-        MyDroidSendFragment::class.java,
-    )
 }
