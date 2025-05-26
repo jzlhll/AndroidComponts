@@ -25,6 +25,7 @@ class AndroidUiFragment : BindingFragment<FragmentAndroidUiBinding>() {
         Pair("Components", AndroidUi1Fragment::class.java),
         Pair("Components2", AndroidUi3Fragment::class.java),
         Pair("Action", AndroidUi2Fragment::class.java),
+        Pair("CustomView", AndroidUi4Fragment::class.java),
     )
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
