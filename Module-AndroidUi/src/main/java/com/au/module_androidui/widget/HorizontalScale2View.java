@@ -29,7 +29,7 @@ import java.util.List;
 public class HorizontalScale2View extends View {
 
     public interface OnValueChangeListener {
-        void onValueChanged(int value);
+        void onValueChanged(int value, String action);
     }
 
     private int bigScaleW;//大刻度线宽度
@@ -82,7 +82,7 @@ public class HorizontalScale2View extends View {
         @Override
         public void handleMessage(@NonNull Message msg) {
             if (null != mOnValueChangeListener) {
-                mOnValueChangeListener.onValueChanged(currentValue);
+                mOnValueChangeListener.onValueChanged(currentValue, msg.obj.toString());
             }
         }
     };
@@ -193,11 +193,15 @@ public class HorizontalScale2View extends View {
         var hw = width / 2;
         boundMinLeft = (int) (-mTotalWidth + hw);
         boundMinRight = hw - (max % 5 == 0 ? bigScaleW : smallScaleW);
-        minX = boundMinLeft;
+        var markup = currentValue % 5 == 0 ? bigScaleW/3f : 0; //我也不知道为什么要补上。好在minX的初始化值只需要处理一次。
+        minX = boundMinLeft + cacheAllOffsetXList.get(currentValue - min) + markup;
 
         drawBigStartY = (int) (mInvertedTriangleHeight + px);
         drawBigEndY = drawSmallEndY = drawBigStartY + bigScaleH;
         drawSmallStartY = drawSmallEndY - smallScaleH;
+
+        //计算init的current的x在哪里
+        Log.d("alland", "onMeasure: currentX: " + minX);
     }
 
     @Override
@@ -276,7 +280,7 @@ public class HorizontalScale2View extends View {
                 velocityTracker.addMovement(event);
                 int offsetX = (int) (lastX - x);
                 confirmBoarderWhenMoving(offsetX);
-                calculateCurrentScale();
+                calculateCurrentScale("move");
                 invalidate();
                 lastX = x;
                 break;
@@ -288,13 +292,16 @@ public class HorizontalScale2View extends View {
                 float minVelocity = ViewConfiguration.get(context).getScaledMinimumFlingVelocity();
                 if (Math.abs(velocity) > minVelocity) {
                     continueScroll = true;
-                    continueScroll();
+                    post(mContinueScrollRunnable);
                 } else {
+                    calculateCurrentScale("up");
                     velocityTracker.recycle();
                     velocityTracker = null;
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
+                confirmBorder();
+                calculateCurrentScale("up");
                 velocityTracker.recycle();
                 velocityTracker = null;
                 break;
@@ -303,7 +310,7 @@ public class HorizontalScale2View extends View {
     }
 
     //计算当前刻度
-    private boolean calculateCurrentScale() {
+    private boolean calculateCurrentScale(String action) {
         float offsetTotal = minX - boundMinLeft; //距离左极限的偏移，其实就是整个View的滑动距离
 
         //二分法：在cacheAllOffsetXList中，找到偏移为offsetTotal的刻度
@@ -335,7 +342,7 @@ public class HorizontalScale2View extends View {
                 currentValue = min + m + (deltaX < 0 ? 1 : -1);//根据边界值自然推出来。
             }
         }
-        mHandler.sendEmptyMessage(0);
+        mHandler.sendMessage(mHandler.obtainMessage(0, action));
 
         return isFullMatch;
     }
@@ -359,13 +366,6 @@ public class HorizontalScale2View extends View {
     }
 
     private boolean continueScroll;//是否继续滑动
-    private void ifContinueScroll(float velocityAbs) {
-        if (continueScroll && velocityAbs > 0) {
-            post(mContinueScrollRunnable);
-        } else {
-            continueScroll = false;
-        }
-    }
 
     private final Runnable mContinueScrollRunnable = new Runnable() {
         @Override
@@ -382,15 +382,15 @@ public class HorizontalScale2View extends View {
                 minX -= velocity * velocity / a;
                 velocityAbs = -velocity;
             }
-            calculateCurrentScale();
+            var shouldContinue = velocityAbs > 0;
+            calculateCurrentScale(shouldContinue ? "move" : "up");
             confirmBorder();
             postInvalidate();
-            ifContinueScroll(velocityAbs);
+            if (continueScroll && shouldContinue) {
+                post(mContinueScrollRunnable);
+            } else {
+                continueScroll = false;
+            }
         }
     };
-
-    //手指抬起后继续惯性滑动
-    private void continueScroll() {
-        mContinueScrollRunnable.run();
-    }
 }

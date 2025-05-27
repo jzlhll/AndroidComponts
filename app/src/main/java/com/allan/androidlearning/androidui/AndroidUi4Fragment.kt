@@ -12,13 +12,13 @@ class AndroidUi4Fragment : BindingFragment<FragmentAndroidUi4Binding>() {
         //设置初始化值
         binding.sizeView1.setRange(40, 102)
         binding.sizeView2.apply {
-            setRange(33, 102, 58)
+            setRange(33, 102, 35)
             setTextColor("#6D6D73".toColorInt())
             setIndicatorColor("#FF5252".toColorInt())
             setLineColor("#D9D9D9".toColorInt())
             setOnValueChangeListener(object : HorizontalScale2View.OnValueChangeListener {
-                override fun onValueChanged(value: Int) {
-                    logd { "alland $value" }
+                override fun onValueChanged(value: Int, action:String) {
+                    logd { "alland $value $action" }
                 }
 
             })
