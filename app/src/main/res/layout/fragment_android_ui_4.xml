@@ -2,14 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#f0f0f0"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#1d1d1f"
+    tools:context="com.allan.androidlearning.androidui.AndroidUi4Fragment"
     android:layout_height="match_parent">
     <com.au.module_androidui.widget.HorizontalScaleView
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginTop="12dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:id="@+id/sizeView1"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"/>
+
+    <com.au.module_androidui.widget.HorizontalScale2View
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/sizeView1"
         android:layout_marginHorizontal="@dimen/ui_padding_edge"
         android:id="@+id/sizeView2"
         android:layout_width="match_parent"
-        android:layout_height="180dp"/>
+        android:layout_height="58dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
