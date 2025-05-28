@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.core.graphics.toColorInt
 import com.allan.androidlearning.databinding.FragmentAndroidUi4Binding
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.logd
-import com.au.module_androidui.widget.HorizontalScale2View
+import com.au.module_androidui.widget.HorizontalScale3View
 
 class AndroidUi4Fragment : BindingFragment<FragmentAndroidUi4Binding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
@@ -16,9 +15,9 @@ class AndroidUi4Fragment : BindingFragment<FragmentAndroidUi4Binding>() {
             setTextColor("#6D6D73".toColorInt())
             setIndicatorColor("#FF5252".toColorInt())
             setLineColor("#D9D9D9".toColorInt())
-            setOnValueChangeListener(object : HorizontalScale2View.OnValueChangeListener {
+            setOnValueChangeListener(object : HorizontalScale3View.OnValueChangeListener {
                 override fun onValueChanged(value: Int, action:String) {
-                   // logd { "alland $value $action" }
+                    binding.scaleText.text = "当前值：$value, $action"
                 }
 
             })
