@@ -18,7 +18,7 @@ class AndroidUi4Fragment : BindingFragment<FragmentAndroidUi4Binding>() {
             setLineColor("#D9D9D9".toColorInt())
             setOnValueChangeListener(object : HorizontalScale2View.OnValueChangeListener {
                 override fun onValueChanged(value: Int, action:String) {
-                    logd { "alland $value $action" }
+                   // logd { "alland $value $action" }
                 }
 
             })

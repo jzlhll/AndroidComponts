@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#1d1d1f"
+    tools:background="#ffffff"
     tools:context="com.allan.androidlearning.androidui.AndroidUi4Fragment"
     android:layout_height="match_parent">
     <com.au.module_androidui.widget.HorizontalScaleView
@@ -21,4 +22,37 @@
         android:id="@+id/sizeView2"
         android:layout_width="match_parent"
         android:layout_height="58dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"/>
+
+    <View
+        app:layout_constraintTop_toTopOf="@id/sizeView2"
+        app:layout_constraintBottom_toBottomOf="@id/sizeView2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/linear_gradient_bg_right"
+        app:layout_constraintEnd_toStartOf="@id/leftGuide"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <View
+        app:layout_constraintTop_toTopOf="@id/sizeView2"
+        app:layout_constraintBottom_toBottomOf="@id/sizeView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rightGuide"
+        android:background="@drawable/linear_gradient_bg_left"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
