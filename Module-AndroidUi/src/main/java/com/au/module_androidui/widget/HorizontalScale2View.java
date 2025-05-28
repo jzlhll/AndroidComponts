@@ -193,8 +193,7 @@ public class HorizontalScale2View extends View {
         var hw = width / 2;
         boundMinLeft = (int) (-mTotalWidth + hw);
         boundMinRight = hw - (max % 5 == 0 ? bigScaleW : smallScaleW);
-        var markup = currentValue % 5 == 0 ? bigScaleW/3f : 0; //我也不知道为什么要补上。好在minX的初始化值只需要处理一次。
-        minX = boundMinLeft + cacheAllOffsetXList.get(currentValue - min) + markup;
+        minX = calculateClearlyXByCurrent();
 
         drawBigStartY = (int) (mInvertedTriangleHeight + px);
         drawBigEndY = drawSmallEndY = drawBigStartY + bigScaleH;
@@ -202,6 +201,12 @@ public class HorizontalScale2View extends View {
 
         //计算init的current的x在哪里
         Log.d("alland", "onMeasure: currentX: " + minX);
+    }
+
+    //根据当前值计算当前刻度的x坐标。主要是为了滑动或者初始化的时候，准确匹配到刻度的位置
+    private float calculateClearlyXByCurrent() {
+        var markup = currentValue % 5 == 0 ? bigScaleW/3f : 0; //我也不知道为什么要补上。好在minX的初始化值只需要处理一次。
+        return boundMinLeft + cacheAllOffsetXList.get(currentValue - min) + markup;
     }
 
     @Override
@@ -310,7 +315,7 @@ public class HorizontalScale2View extends View {
     }
 
     //计算当前刻度
-    private boolean calculateCurrentScale(String action) {
+    private void calculateCurrentScale(String action) {
         float offsetTotal = minX - boundMinLeft; //距离左极限的偏移，其实就是整个View的滑动距离
 
         //二分法：在cacheAllOffsetXList中，找到偏移为offsetTotal的刻度
@@ -342,9 +347,14 @@ public class HorizontalScale2View extends View {
                 currentValue = min + m + (deltaX < 0 ? 1 : -1);//根据边界值自然推出来。
             }
         }
-        mHandler.sendMessage(mHandler.obtainMessage(0, action));
 
-        return isFullMatch;
+        if (currentValue < min) {
+            currentValue = min;
+        } else if (currentValue > max) {
+            currentValue = max;
+        }
+
+        mHandler.sendMessage(mHandler.obtainMessage(0, action));
     }
 
     private void confirmBoarderWhenMoving(int offsetX) {
@@ -385,7 +395,6 @@ public class HorizontalScale2View extends View {
             var shouldContinue = velocityAbs > 0;
             calculateCurrentScale(shouldContinue ? "move" : "up");
             confirmBorder();
-            postInvalidate();
             if (continueScroll && shouldContinue) {
                 post(mContinueScrollRunnable);
             } else {
