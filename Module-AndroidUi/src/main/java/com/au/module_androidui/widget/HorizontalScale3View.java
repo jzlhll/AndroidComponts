@@ -22,7 +22,9 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 参考：<a href="https://github.com/GITbiubiubiu/ScaleView">...</a>
@@ -43,8 +45,11 @@ public class HorizontalScale3View extends View {
 
     private int max;//最大刻度
     private int min;//最小刻度
-    private int boundMinLeft, boundMinRight;//滑动条能够走到的极限，左右边界值坐标。
-    private float minX;//最小刻度x坐标,从最小刻度开始画刻度
+    private float mBoundMinLeft;//滑动条能够走到的极限，左右边界值坐标。
+    private float mHalfWidth; //中间的位置
+    private float mBoundMinRight; //滑动到最右边的极限
+
+    private float currentX;//最小刻度x坐标,从最小刻度开始画刻度
 
     private float lastX;
 
@@ -72,7 +77,7 @@ public class HorizontalScale3View extends View {
 
     private VelocityTracker velocityTracker;//速度监测
 
-    private final List<Float> cacheAllOffsetXList = new ArrayList<>(); //缓存所有刻度偏移x值
+    private final Map<Integer, Float> mCacheAllOffsetXMap = new HashMap<>(); //缓存所有刻度偏移x值, key就是我们的刻度数值
 
     private final List<Rect> cacheRectList = new ArrayList<>();
     private final Path mInvertedTrianglePath = new Path();
@@ -133,7 +138,7 @@ public class HorizontalScale3View extends View {
         this.mOnValueChangeListener = mOnValueChangeListener;
     }
 
-    private float calculateAllOffsetX() {
+    private float calculateAllOffsetX(float halfWidth) {
         var allOffsetXList = new ArrayList<Float>();
 
         var total = 0f;
@@ -153,16 +158,22 @@ public class HorizontalScale3View extends View {
                 total += mSpace;
             }
         }
-        allOffsetXList.add(total); //逐步将每个刻度offsetX存入
-        var d = max % 5;
-        total += (d == 0) ? bigScaleW : smallScaleW;
+        allOffsetXList.add(total);
+        var lastScale = (max % 5 == 0) ? bigScaleW : smallScaleW;
+        total += lastScale; //最后一根刻度
+        var sz = allOffsetXList.size();
+
+        mBoundMinLeft = halfWidth + lastScale / 2f - total;
+        mBoundMinRight = halfWidth - lastScale / 2f;
+        Log.d("alland", "AllX halfWidth " + halfWidth + " total " + total + " size " + sz + " boundLeft " + mBoundMinLeft + " boundRight " + mBoundMinRight);
 
         //倒序装入的才是正确的offsetX
-        cacheAllOffsetXList.clear();
-        for (int i = allOffsetXList.size() - 1; i >= 0; i--) {
-            cacheAllOffsetXList.add(allOffsetXList.get(i));
+        mCacheAllOffsetXMap.clear();
+        for (int i = 0; i < sz; i++) { //todo 是否 《=
+            var v = mBoundMinLeft + allOffsetXList.get(i);
+            mCacheAllOffsetXMap.put(min + i, v);
+            Log.d("alland", "mCacheAllOffsetXList k: " + (min + i) + " v: " + v);
         }
-
         return total;
     }
 
@@ -188,23 +199,16 @@ public class HorizontalScale3View extends View {
         mSpace = (px * 8);
         mSpaceCloseBig = (mSpace + px - bigScaleW / 2f);
 
+        var hw = width / 2f;
+        mHalfWidth = hw;
         //整条ruler的长度
-        float mTotalWidth = calculateAllOffsetX();
+        calculateAllOffsetX(hw);
 
-        var hw = width / 2;
-        boundMinLeft = (int) (-mTotalWidth + hw);
-        boundMinRight = hw - (max % 5 == 0 ? bigScaleW : smallScaleW);
-        minX = calculateClearlyXByValue(currentValue);
+        currentX = mCacheAllOffsetXMap.get(currentValue);
 
         drawBigStartY = (int) (mInvertedTriangleHeight + px);
         drawBigEndY = drawSmallEndY = drawBigStartY + bigScaleH;
         drawSmallStartY = drawSmallEndY - smallScaleH;
-    }
-
-    //根据当前值计算当前刻度的x坐标。主要是为了滑动或者初始化的时候，准确匹配到刻度的位置
-    private float calculateClearlyXByValue(int value) {
-        var markup = value % 5 == 0 ? bigScaleW/3f : 0; //我也不知道为什么要补上。好在minX的初始化值只需要处理一次。
-        return boundMinLeft + cacheAllOffsetXList.get(value - min) + markup;
     }
 
     @Override
@@ -213,7 +217,7 @@ public class HorizontalScale3View extends View {
         var hfScaleWidthBig = bigScaleW / 2f;
 
         //画刻度线
-        var drawX = minX;
+        var drawX = currentX;
         for (int i = min; i <= max; i++) {
             var d = i % 5;
             var isBig = d == 0;
@@ -247,16 +251,16 @@ public class HorizontalScale3View extends View {
         //画中刻度线
         paint.setColor(mIndicatorColor);
         paint.setStrokeWidth(bigScaleW);
-        canvas.drawLine(boundMinRight, drawBigStartY, boundMinRight, drawBigEndY, paint);
+        canvas.drawLine(mHalfWidth - bigScaleW/2f, drawBigStartY, mHalfWidth - bigScaleW/2f, drawBigEndY, paint);
 
         //画中间倒三角形指示器
         paint.setStrokeWidth(smallScaleW);
         Path invertedTrianglePath = mInvertedTrianglePath;
         invertedTrianglePath.reset();
         var triangleW = mInvertedTriangleHeight * 2 / 3;
-        invertedTrianglePath.moveTo(boundMinRight -triangleW, 0);
-        invertedTrianglePath.lineTo(boundMinRight + triangleW, 0);
-        invertedTrianglePath.lineTo(boundMinRight, mInvertedTriangleHeight);
+        invertedTrianglePath.moveTo(mHalfWidth - triangleW, 0);
+        invertedTrianglePath.lineTo(mHalfWidth + triangleW, 0);
+        invertedTrianglePath.lineTo(mHalfWidth, mInvertedTriangleHeight);
         invertedTrianglePath.close();
         canvas.drawPath(invertedTrianglePath, paint);
     }
@@ -283,7 +287,7 @@ public class HorizontalScale3View extends View {
             case MotionEvent.ACTION_MOVE:
                 velocityTracker.addMovement(event);
                 int offsetX = (int) (lastX - x);
-                changeMinX(confirmBoarderWhenMoving(minX, offsetX), "move");
+                changeMinX(confirmBoarderWhenMoving(currentX, offsetX), "move");
                 invalidate();
                 lastX = x;
                 break;
@@ -296,16 +300,14 @@ public class HorizontalScale3View extends View {
                     //计算得到滑动目标点
                     var time = new int[1];
                     var targetX = confirmBoarder(calculateTargetX(velocityX, time));
-
-                    var totalTime = Math.max(200, Math.min(time[0], 2000));
-                    //计算得到精确x
                     var clearlyValue = calculateClearlyValue(targetX);
-                    var clearlyTargetX = calculateClearlyXByValue(clearlyValue);
-                    runScroll(minX, clearlyTargetX, totalTime);
+                    var clearlyX = mCacheAllOffsetXMap.get(clearlyValue); //精确x
+                    var totalTime = Math.max(200, Math.min(time[0], 1500));
+                    runScroll(currentX, clearlyX, totalTime);
                 } else {
                     // 慢速滑动时使用直接偏移量
-                    var clearlyTargetX = calculateClearlyXByValue(currentValue);
-                    runScroll(minX, clearlyTargetX, 200);
+                    var clearlyTargetX = mCacheAllOffsetXMap.get(currentValue);
+                    runScroll(currentX, clearlyTargetX, 200);
                 }
 
                 velocityTracker.recycle();
@@ -314,7 +316,7 @@ public class HorizontalScale3View extends View {
             case MotionEvent.ACTION_CANCEL:
                 stopScroll();
 
-                changeMinX(confirmBoarderWhenMoving(minX, 0), "up");
+                changeMinX(confirmBoarderWhenMoving(currentX, 0), "up");
 
                 velocityTracker.recycle();
                 velocityTracker = null;
@@ -324,15 +326,16 @@ public class HorizontalScale3View extends View {
         return true;
     }
 
-    private void changeMinX(float minX, String move) {
-        this.minX = minX;
-        currentValue = calculateClearlyValue(minX);
+    private void changeMinX(float currentX, String move) {
+        this.currentX = currentX;
+        currentValue = calculateClearlyValue(currentX);
+        Log.d("alland", String.format(move + ": chagne currentX " + currentX + ", currentValue=" + currentValue));
         mHandler.sendMessage(mHandler.obtainMessage(0, move));
     }
 
     private float calculateTargetX(float velocity, int[] time) {
         //根据速度计算targetX
-        var targetX = minX;
+        var targetX = currentX;
         var v = velocity;
         time[0] = 200;
         //加速度：数值越大，时间越长。
@@ -361,19 +364,18 @@ public class HorizontalScale3View extends View {
     }
 
     private int calculateClearlyValue(float targetX) {
-        //二分法：在cacheAllOffsetXList中，找到偏移
-        float offsetTotal = targetX - boundMinLeft; //距离左极限的偏移，其实就是整个View的滑动距离
-
+        //在cacheAllOffsetXList中，找到偏移
         //二分法：在cacheAllOffsetXList中，找到偏移为offsetTotal的刻度
-        int l = 0;
-        int r = cacheAllOffsetXList.size() - 1;
-        int m = 0;
+        int l = min;
+        int r = max;
+        int m = currentValue;
         var isFullMatch = false;
         while (l <= r) {
             m = (l + r) / 2;
-            if (cacheAllOffsetXList.get(m) < offsetTotal) {
+            var x = mCacheAllOffsetXMap.get(m);
+            if (x > targetX) {
                 r = m - 1;
-            } else if (cacheAllOffsetXList.get(m) > offsetTotal) {
+            } else if (x < targetX) {
                 l = m + 1;
             } else {
                 //刚刚好
@@ -381,48 +383,32 @@ public class HorizontalScale3View extends View {
                 break;
             }
         }
-        var matchedOffsetX = cacheAllOffsetXList.get(m);
+        var matchedX = mCacheAllOffsetXMap.get(m);
         int targetValue;
         if (isFullMatch) {
-            targetValue = min + m;
+            targetValue = m;
         } else {
-            var deltaX = offsetTotal - matchedOffsetX;
+            var deltaX = targetX - matchedX;
 
             if ((Math.abs(deltaX) + 1e-6f) < mSpaceCloseBig / 2f) {
-                targetValue = min + m;
+                targetValue = m;
             } else {
-                targetValue = min + m + (deltaX < 0 ? 1 : -1);//根据边界值自然推出来。
+                targetValue = m + (deltaX < 0 ? 1 : -1);//根据边界值自然推出来。
             }
         }
 
-        if (targetValue < min) {
-            targetValue = min;
-        } else if (targetValue > max) {
-            targetValue = max;
-        }
+        targetValue = Math.max(min, Math.min(targetValue, max));
+        Log.d("alland", "cal ClearlyValue targetX " + targetX + " targetValue: " + targetValue);
         return targetValue;
     }
 
-    private float confirmBoarderWhenMoving(float minX, int offsetX) {
-        var newMinX = minX - offsetX;
-
-        if (newMinX < boundMinLeft) {
-            return boundMinLeft;
-        } else if (newMinX > boundMinRight) {
-            return boundMinRight;
-        } else {
-            return newMinX;
-        }
+    private float confirmBoarderWhenMoving(float currentX, int offsetX) {
+        var newMinX = currentX - offsetX;
+        return confirmBoarder(newMinX);
     }
 
     private float confirmBoarder(float targetX) {
-        if (targetX < boundMinLeft) {
-            return boundMinLeft;
-        } else if (targetX > boundMinRight) {
-            return boundMinRight;
-        } else {
-            return targetX;
-        }
+        return Math.max(mBoundMinLeft, Math.min(targetX, mBoundMinRight));
     }
 
     private ValueAnimator mAnimator;
