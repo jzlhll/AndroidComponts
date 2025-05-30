@@ -11,8 +11,8 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -22,9 +22,7 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 参考：<a href="https://github.com/GITbiubiubiu/ScaleView">...</a>
@@ -36,10 +34,10 @@ public class HorizontalScale3View extends View {
         void onValueChanged(int value, String action);
     }
 
-    private int bigScaleW;//大刻度线宽度
-    private int smallScaleW;//小刻度线宽度
+    private static final int SCALE_STEP = 5;  // 常量代替魔数
+
+    private int mScaleWidth;//刻度线宽度
     private float mSpace;//刻度间距
-    private float mSpaceCloseBig; //大刻度左右的2格间距
 
     private int height; //View高度
 
@@ -54,17 +52,27 @@ public class HorizontalScale3View extends View {
     private float lastX;
 
     private int currentValue;//当前刻度对应的值
+    public int getCurrentValue() {
+        return currentValue;
+    }
+    public void setCurrentValue(int currentValue) {
+        this.currentValue = Math.max(min, Math.min(currentValue, max));
+        currentX = getClearlyXByValue(currentValue);
+        postInvalidate();
+        mHandler.sendMessage(mHandler.obtainMessage(0, "change"));
+    }
 
     private Paint paint;//画笔
-    private int mTextColor = Color.BLACK;
+    private Paint textPaint; //画下面数字的画笔
     private int mLineColor = Color.GRAY;
     private int mIndicatorColor = Color.RED;
 
-    private int drawSmallStartY, drawSmallEndY;
-    private int drawBigStartY, drawBigEndY;
+    //画短线和长线的起点位置和终点位置
+    private int mSmallLineStartY, mSmallLineEndY;
+    private int mBigLineStartY, mBigLineEndY;
 
     public void setTextColor(int textColor) {
-        this.mTextColor = textColor;
+        textPaint.setColor(textColor);
     }
     public void setLineColor(int lineColor) {
         this.mLineColor = lineColor;
@@ -77,17 +85,15 @@ public class HorizontalScale3View extends View {
 
     private VelocityTracker velocityTracker;//速度监测
 
-    private final Map<Integer, Float> mCacheAllOffsetXMap = new HashMap<>(); //缓存所有刻度偏移x值, key就是我们的刻度数值
-
     private final List<Rect> cacheRectList = new ArrayList<>();
     private final Path mInvertedTrianglePath = new Path();
-    private int mInvertedTriangleHeight;
+    private int mInvertedTriangleHeight; //倒三角形指示器的高度
 
     private OnValueChangeListener mOnValueChangeListener;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            if (null != mOnValueChangeListener) {
+            if (mOnValueChangeListener != null) {
                 mOnValueChangeListener.onValueChanged(currentValue, msg.obj.toString());
             }
         }
@@ -116,6 +122,8 @@ public class HorizontalScale3View extends View {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setDither(true);
+
+        textPaint = new TextPaint(paint);
     }
 
     //设置刻度范围
@@ -138,45 +146,6 @@ public class HorizontalScale3View extends View {
         this.mOnValueChangeListener = mOnValueChangeListener;
     }
 
-    private float calculateAllOffsetX(float halfWidth) {
-        var allOffsetXList = new ArrayList<Float>();
-
-        var total = 0f;
-        //计算总共的长度；先每一根刻度的宽度，再加上后一个相邻的间距
-        for (int i = min; i < max; i++) {
-            allOffsetXList.add(total); //逐步将每个刻度offsetX存入
-
-            var d = i % 5;
-            if (d == 0) {
-                total += bigScaleW;
-                total += mSpaceCloseBig;
-            } else if (d == 4) {
-                total += smallScaleW;
-                total += mSpaceCloseBig;
-            } else {
-                total += smallScaleW;
-                total += mSpace;
-            }
-        }
-        allOffsetXList.add(total);
-        var lastScale = (max % 5 == 0) ? bigScaleW : smallScaleW;
-        total += lastScale; //最后一根刻度
-        var sz = allOffsetXList.size();
-
-        mBoundMinLeft = halfWidth + lastScale / 2f - total;
-        mBoundMinRight = halfWidth - lastScale / 2f;
-        Log.d("alland", "AllX halfWidth " + halfWidth + " total " + total + " size " + sz + " boundLeft " + mBoundMinLeft + " boundRight " + mBoundMinRight);
-
-        //倒序装入的才是正确的offsetX
-        mCacheAllOffsetXMap.clear();
-        for (int i = 0; i < sz; i++) { //todo 是否 《=
-            var v = mBoundMinLeft + allOffsetXList.get(i);
-            mCacheAllOffsetXMap.put(min + i, v);
-            Log.d("alland", "mCacheAllOffsetXList k: " + (min + i) + " v: " + v);
-        }
-        return total;
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -187,80 +156,97 @@ public class HorizontalScale3View extends View {
         float px = height / 46f;
 
         //按照公司的UI计算比例得出。直接用测量的高度来转换。其实更好的是传入。
-        paint.setTextSize(10 * px);
-        mInvertedTriangleHeight = (int) (5 * px);
+        textPaint.setTextSize(10 * px);
 
-        smallScaleW = (int) px;
-        bigScaleW = (int) (px * 3 / 2);
+        mInvertedTriangleHeight = (int) (5 * px); //倒三角形的高度
+
+        mScaleWidth = (int) px;
         //大刻度长度
         int bigScaleH = (int) (px * 18);
         //小刻度长度
         int smallScaleH = (int) (px * 12);
-        mSpace = (px * 8);
-        mSpaceCloseBig = (mSpace + px - bigScaleW / 2f);
+        mSpace = px * 8;
 
-        var hw = width / 2f;
+        var hw = width >> 1;
         mHalfWidth = hw;
-        //整条ruler的长度
-        calculateAllOffsetX(hw);
+        // 计算总刻度数和总宽度
+        int count = max - min + 1;
+        float totalWidth = count * mScaleWidth + (count - 1) * mSpace;
 
-        currentX = mCacheAllOffsetXMap.get(currentValue);
+        // 计算边界位置
+        float halfScale = mScaleWidth / 2f;
+        mBoundMinLeft = hw - totalWidth + halfScale;
+        mBoundMinRight = hw - halfScale;
 
-        drawBigStartY = (int) (mInvertedTriangleHeight + px);
-        drawBigEndY = drawSmallEndY = drawBigStartY + bigScaleH;
-        drawSmallStartY = drawSmallEndY - smallScaleH;
+        currentX = getClearlyXByValue(currentValue);
+
+        mBigLineStartY = (int) (mInvertedTriangleHeight + px);
+        mBigLineEndY = mBigLineStartY + bigScaleH;
+        mSmallLineEndY = mBigLineEndY;
+        mSmallLineStartY = mSmallLineEndY - smallScaleH;
+    }
+
+    private float getClearlyXByValue(int value) {
+        var i = max - value;
+        return mBoundMinLeft + i * (mScaleWidth + mSpace);
     }
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
-        var hfScaleWidthBig = bigScaleW / 2f;
+        var hfScaleWidth = mScaleWidth >> 1;
+        int min = this.min;
+        int max = this.max;
+        int scaleWidth = this.mScaleWidth;
+        int bigLineStartY = this.mBigLineStartY;
+        int bigLineEndY = this.mBigLineEndY;
+        int smallLineStartY = this.mSmallLineStartY;
+        int smallLineEndY = this.mSmallLineEndY;
+        int height = this.height;
+        float space = mSpace;
+        var halfWidth = mHalfWidth;
 
         //画刻度线
         var drawX = currentX;
-        for (int i = min; i <= max; i++) {
-            var d = i % 5;
-            var isBig = d == 0;
-            var is4 = d == 4;
+        //Log.d("ScaleView", "on Draw0: " + drawX);
+        paint.setColor(mLineColor);
+        paint.setStrokeWidth(scaleWidth);
 
-            paint.setColor(mLineColor);
-            if (isBig) {
+        for (int i = min; i <= max; i++) {
+            if (i % SCALE_STEP == 0) {
                 //画大刻度线
-                paint.setStrokeWidth(bigScaleW);
-                canvas.drawLine(drawX, drawBigStartY, drawX, drawBigEndY, paint);
+                canvas.drawLine(drawX, bigLineStartY, drawX, bigLineEndY, paint);
 
                 //画刻度数字
                 Rect rect = cacheRectList.get(i - min);
                 String str = String.valueOf(i);
-                paint.setColor(mTextColor);
-                paint.getTextBounds(str, 0, str.length(), rect);
+                textPaint.getTextBounds(str, 0, str.length(), rect);
                 int w = rect.width();
                 int h = rect.height();
-                canvas.drawText(str, drawX - w / 2f - hfScaleWidthBig, height - h, paint);
-
-                drawX += bigScaleW;
+                canvas.drawText(str, drawX - (w >> 1) - hfScaleWidth, height - h, textPaint);
             } else {
-                //画小刻度线
-                paint.setStrokeWidth(smallScaleW);
-                canvas.drawLine(drawX, drawSmallStartY, drawX, drawSmallEndY, paint);
-                drawX += smallScaleW;
+                canvas.drawLine(drawX, smallLineStartY, drawX, smallLineEndY, paint);
             }
-            drawX += (isBig || is4) ? mSpaceCloseBig : mSpace;
+            drawX += scaleWidth;
+            drawX += space;
         }
 
         //画中刻度线
+        var midLineWidth = mScaleWidth * 2;
+        var halfMidLineWidth = midLineWidth >> 1;
+
         paint.setColor(mIndicatorColor);
-        paint.setStrokeWidth(bigScaleW);
-        canvas.drawLine(mHalfWidth - bigScaleW/2f, drawBigStartY, mHalfWidth - bigScaleW/2f, drawBigEndY, paint);
+        paint.setStrokeWidth(midLineWidth);
+        canvas.drawLine(halfWidth - halfMidLineWidth, bigLineStartY, halfWidth - halfMidLineWidth, bigLineEndY, paint);
 
         //画中间倒三角形指示器
-        paint.setStrokeWidth(smallScaleW);
+        paint.setStrokeWidth(midLineWidth);
         Path invertedTrianglePath = mInvertedTrianglePath;
         invertedTrianglePath.reset();
         var triangleW = mInvertedTriangleHeight * 2 / 3;
-        invertedTrianglePath.moveTo(mHalfWidth - triangleW, 0);
-        invertedTrianglePath.lineTo(mHalfWidth + triangleW, 0);
-        invertedTrianglePath.lineTo(mHalfWidth, mInvertedTriangleHeight);
+        invertedTrianglePath.moveTo(halfWidth - triangleW - halfMidLineWidth, 0);
+        invertedTrianglePath.lineTo(halfWidth + triangleW - halfMidLineWidth, 0);
+        invertedTrianglePath.lineTo(halfWidth - halfMidLineWidth, mInvertedTriangleHeight);
         invertedTrianglePath.close();
         canvas.drawPath(invertedTrianglePath, paint);
     }
@@ -301,12 +287,12 @@ public class HorizontalScale3View extends View {
                     var time = new int[1];
                     var targetX = confirmBoarder(calculateTargetX(velocityX, time));
                     var clearlyValue = calculateClearlyValue(targetX);
-                    var clearlyX = mCacheAllOffsetXMap.get(clearlyValue); //精确x
+                    var clearlyX = getClearlyXByValue(clearlyValue); //精确x
                     var totalTime = Math.max(200, Math.min(time[0], 1500));
                     runScroll(currentX, clearlyX, totalTime);
                 } else {
                     // 慢速滑动时使用直接偏移量
-                    var clearlyTargetX = mCacheAllOffsetXMap.get(currentValue);
+                    var clearlyTargetX = getClearlyXByValue(currentValue);
                     runScroll(currentX, clearlyTargetX, 200);
                 }
 
@@ -329,7 +315,6 @@ public class HorizontalScale3View extends View {
     private void changeMinX(float currentX, String move) {
         this.currentX = currentX;
         currentValue = calculateClearlyValue(currentX);
-        Log.d("alland", String.format(move + ": chagne currentX " + currentX + ", currentValue=" + currentValue));
         mHandler.sendMessage(mHandler.obtainMessage(0, move));
     }
 
@@ -363,43 +348,41 @@ public class HorizontalScale3View extends View {
         return targetX;
     }
 
+    /**
+     * 使用二分查找在刻度坐标数组中查找最接近目标位置的值
+     * @param targetX 目标X坐标位置
+     * @return 最接近的刻度值
+     */
     private int calculateClearlyValue(float targetX) {
-        //在cacheAllOffsetXList中，找到偏移
-        //二分法：在cacheAllOffsetXList中，找到偏移为offsetTotal的刻度
         int l = min;
         int r = max;
         int m = currentValue;
-        var isFullMatch = false;
+
+        // 二分查找最佳匹配值
         while (l <= r) {
-            m = (l + r) / 2;
-            var x = mCacheAllOffsetXMap.get(m);
-            if (x > targetX) {
+            m = (l + r) >> 1;
+            float x = getClearlyXByValue(m);
+            if (x < targetX) {
                 r = m - 1;
-            } else if (x < targetX) {
+            } else if (x > targetX) {
                 l = m + 1;
             } else {
-                //刚刚好
-                isFullMatch = true;
-                break;
-            }
-        }
-        var matchedX = mCacheAllOffsetXMap.get(m);
-        int targetValue;
-        if (isFullMatch) {
-            targetValue = m;
-        } else {
-            var deltaX = targetX - matchedX;
-
-            if ((Math.abs(deltaX) + 1e-6f) < mSpaceCloseBig / 2f) {
-                targetValue = m;
-            } else {
-                targetValue = m + (deltaX < 0 ? 1 : -1);//根据边界值自然推出来。
+                // 精确匹配到坐标点
+                return m;
             }
         }
 
-        targetValue = Math.max(min, Math.min(targetValue, max));
-        Log.d("alland", "cal ClearlyValue targetX " + targetX + " targetValue: " + targetValue);
-        return targetValue;
+        // 检查是否在合理误差范围内
+        float matchedX = getClearlyXByValue(m);
+        float deltaX = targetX - matchedX;
+        float threshold = mSpace * 0.5f;
+
+        if (Math.abs(deltaX) > threshold) {
+            m += (deltaX < 0 ? 1 : -1);
+        }
+
+        // 确保结果在[min,max]范围内
+        return Math.max(min, Math.min(m, max));
     }
 
     private float confirmBoarderWhenMoving(float currentX, int offsetX) {
