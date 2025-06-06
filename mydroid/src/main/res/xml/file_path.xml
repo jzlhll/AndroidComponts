@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 某个目录下的所有子文件夹和文件都可以分享。 -->
+    <external-cache-path
+        name="external_cache_path"
+        path="./logShare" />
+
+    <cache-path
+        name="cache_path"
+        path="./logShare" />
+
+    <files-path
+        name="files_path"
+        path="./shared" />
+
+    <cache-path
+        name="cache_path"
+        path="./shared" />
+
+    <external-files-path
+        name="external_file_path"
+        path="./shared" />
+
+    <external-cache-path
+        name="external_cache_path"
+        path="./shared" />
+</paths>

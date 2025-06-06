@@ -57,8 +57,6 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
-    implementation libs.nanohttpd
-    implementation libs.nanohttpd.websocket
     implementation libs.gson
 
 //    implementation project(":jsbridge")
@@ -74,3 +72,30 @@ dependencies {
     ksp project(':ClassNameAnnotations-ksp')
 //    kapt project(':ClassNameAnnotations-compiler')
 }
+
+
+// 获取所有的.so文件的打包路径
+//tasks.configureEach {
+//    task ->
+//        if (task.name.contains('NativeLibs')) {
+//            task.doFirst {
+//                println("listSo files begin")
+//                it.inputs.files.each { file ->
+//                    printSoPath(new File(file.absolutePath))
+//                }
+//                println("listSo files end")
+//            }
+//        }
+//}
+//
+//def printSoPath(File file) {
+//    if (file != null) {
+//        if (file.isDirectory()) {
+//            file.listFiles().each {
+//                printSoPath(it)
+//            }
+//        } else if (file.absolutePath.endsWith(".so")) {
+//            println "listSo : $file.absolutePath"
+//        }
+//    }
+//}

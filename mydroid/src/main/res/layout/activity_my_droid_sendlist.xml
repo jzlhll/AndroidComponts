@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.allan.mydroid.views.send.SendListSelectorFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/descTitle"
+        android:background="@color/logic_send"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <com.au.module_android.widget.CustomToolbar
+        app:title="@string/send_list"
+        android:id="@+id/toolbar"
+        app:titleCentered="true"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="#ffffff"
+        app:navigationIcon="@drawable/icon_back"
+        app:navigationIconTint="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/descTitle"
+        android:layout_marginTop="4dp"
+        style="@style/StyleFontSecondTitleText"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:textColor="#ffffff"
+        android:textSize="13sp"
+        android:text="@string/select_files_to_send"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv"
+        android:layout_marginVertical="4dp"
+        app:layout_constraintBottom_toTopOf="@id/rcvGuideLine"
+        app:layout_constraintTop_toBottomOf="@id/descTitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/empty"
+        android:visibility="gone"
+        android:text="@string/empty_file_hint"
+        style="@style/StyleFontSecondaryText"
+        android:textSize="21sp"
+        android:gravity="center"
+        android:layout_marginVertical="4dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        app:layout_constraintTop_toBottomOf="@id/descTitle"
+        app:layout_constraintBottom_toTopOf="@id/rcvGuideLine"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rcvGuideLine"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.66"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp" />
+
+    <com.au.module_androidui.widget.ShineView
+        android:background="@color/color_normal_block0"
+        android:id="@+id/adHost"
+        android:layout_marginVertical="8dp"
+        app:layout_constraintTop_toBottomOf="@id/rcvGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <com.au.module_android.widget.CustomFontTextlink
+        android:id="@+id/infoText"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        style="@style/StyleFontSecondTitleText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="12dp"
+        android:textSize="13sp"
+        android:text="@string/disclaimer_title"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

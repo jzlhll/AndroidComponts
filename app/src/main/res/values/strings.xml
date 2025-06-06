@@ -4,51 +4,12 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
     <string name="language">Language</string>
     <string name="language_cn" translatable="false">简体中文</string>
     <string name="language_tw" translatable="false">繁體中文</string>
     <string name="language_en" translatable="false">English</string>
 
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
-        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
-        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
-        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
-        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
-        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
-        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
-        bibendum, vel congue leo egestas.\n\n
-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
-        est.\n\n
-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
-        convallis.\n\n
-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>
-    <string name="title_activity_entro">EntryActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -139,88 +100,10 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="follow_system">Follow System</string>
-    <string name="settings">Settings</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="select_manually">Select manually</string>
     <string name="automatic_desc">When enabled, app will switch dark mode on/off to match your system settings.</string>
-
-    <string name="export_history">Export History</string>
-    <string name="export_history_2">Export History*</string>
-    <string name="transfer_list">Receive List</string>
-    <string name="transfer_list_2">Receive List*</string>
-    <string name="not_close_window">Do not exit or turn off screen: %s</string>
-    <string name="no_received_files">No files received</string>
-
-    <string name="send_list">MyDroid Send List</string>
-    <string name="my_droid_mode_receiver">Send to phone</string>
-    <string name="my_droid_mode_send">Receive from phone</string>
-    <string name="my_droid_mode_middle">Transfer</string>
-    <string name="my_droid_mode_none">None</string>
-    <string name="my_droid_mode_image">Image browsing</string>
-    <string name="my_droid_mode_video">Video on demand</string>
-
-    <string name="unknown_size">Unknown Size</string>
-    <string name="new_webpage_access">%s New Webpage Access!</string>
-    <string name="success_message">Success!</string>
-
-    <string name="server_error_exception">Server Exception Error</string>
-
-    <string name="send_files_to_html">Send files to HTML</string>
-
-    <string name="send_file_start">Send File Start.</string>
-    <string name="send_file_end">Send File End.</string>
-
-    <string name="file_not_exist">File does not exist</string>
-    <string name="file_not_received">File not received.</string>
-    <string name="chunk_receiver_error">chunk receiver error.</string>
-    <string name="error_merge_chunk_params">Error merge chunk params.</string>
-    <string name="no_chunks">No chunks?</string>
-    <string name="chunks_number_not_match">Chunks number not match.</string>
-    <string name="file_merge_success">File merge completed and verified.</string>
-    <string name="md5_check_failed">MD5 check failed.</string>
-    <string name="clear_up">Clear up</string>
-    <string name="invalid_request_from_appserver">Invalid request from AppServer</string>
-    <string name="mydroid_running_only_for_alive">MyDroid is running only for alive</string>
-    <string name="import_to_send_list_hint">Please tap \"Import to send list\" instead of \"Share\"!</string>
-    <string name="share">Share</string>
-    <string name="delete">delete</string>
-    <string name="export">Export</string>
-    <string name="export_and_delete">Export &amp; Delete</string>
-    <string name="import_to_send_list">Import to send list</string>
-    <string name="already_in_sending_list">Already exists in the send list.</string>
-
-    <string name="save_failed">Save failed!</string>
-    <string name="save_to_success">Saved to %s successfully!</string>
-    <string name="keep_recent_records">Keep only the last 80–100 export records.</string>
-    <string name="storage_remaining"> Storage Remaining:</string>
-    <string name="file_received_success_fmt">File received successfully: %s!</string>
-    <string name="connect_wifi_or_hotspot">Please connect to WI-FI or enable hotspot</string>
-    <string name="lan_access_fmt">Local network access: %1$s:%2$s</string>
-    <string name="auto_proceed_fmt">Will automatically proceed in %d s. You can click cancel to deselect some files.</string>
-
-    <string name="select_files_hint">Please select files.</string>
-    <string name="empty_file_prompt">No files yet. Share from gallery, file manager or other apps.</string>
-    <string name="app_management_permission">App Management Permission</string>
-    <string name="global_permission_prompt">This feature requires system settings permission. Redirecting to enable it.</string>
-    <string name="disclaimer_title">Disclaimer</string>
-    <string name="disclaimer_content">Files from system gallery/file manager are only parsed for name/size without copying. Files from other apps are temporarily cached and deleted after use.\nYou need to re-share imports when app restarts.</string>
-    <string name="action_confirm">Got it</string>
-    <string name="action_auto_next">Auto Next</string>
-    <string name="tips">Tips</string>
-    <string name="exit_with_wifi_reminder">The app will exit. Please connect to WI-FI or enable hotspot, then reopen.</string>
-    <string name="app_name_lan_tool">MyDroid LAN Tool</string>
-    <string name="transfer_list_title">Transfer List</string>
-    <string name="file_send">File Send</string>
-    <string name="app_file_send">MyDroid File Send</string>
-    <string name="file_receive">File Receive</string>
-    <string name="app_file_receive">MyDroid File Receive</string>
-    <string name="file_transfer">Transfer</string>
-    <string name="image_preview">Image Preview</string>
-    <string name="video_playback">Video Playback</string>
-    <string name="select_files_to_send">Select files to send</string>
-    <string name="empty_file_hint">No files yet, share from gallery,\nfile manager or other apps</string>
-    <string name="send_success_fmt">%s sent successfully!</string>
-    <string name="inactivity_message">The app has automatically exited due to inactivity.</string>
+    <string name="settings">Settings</string>
 </resources>

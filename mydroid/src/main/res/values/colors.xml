@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_launcher_background">#FFFFFF</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,4 +9,18 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="logic_receiver">#2E7D32</color>
+    <color name="logic_send">#1565C0</color>
+    <color name="logic_middle">#6A1B9A</color>
+    <color name="logic_watch_picture">#00838F</color>
+    <color name="logic_watch_video">#D84315</color>
+    <color name="logic_text_chat_server">#6EB0B0</color>
+    <color name="logic_text_chat_client">#519595</color>
+
+    <color name="client_send_1">#3D7C42</color>
+    <color name="client_send_2">#439999</color>
+    <color name="client_send_3">#4F84CD</color>
+    <color name="client_send_4">#895DF8</color>
+    <color name="client_send_5">#CEBE55</color>
 </resources>

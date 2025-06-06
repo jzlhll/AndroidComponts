@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <color name="logic_receiver">#2E7D32</color>
-    <color name="logic_send">#1565C0</color>
-    <color name="logic_middle">#6A1B9A</color>
-    <color name="logic_watch_picture">#D84315</color>
-    <color name="logic_watch_video">#00838F</color>
-
-    <color name="client_send_1">#3D7C42</color>
-    <color name="client_send_2">#439999</color>
-    <color name="client_send_3">#4F84CD</color>
-    <color name="client_send_4">#895DF8</color>
-    <color name="client_send_5">#CEBE55</color>
 </resources>

@@ -2,4 +2,8 @@
 <resources>
 
     <style name="Theme.AndroidComponts" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="ReceiveStyleTab" parent="StyleTabLayoutNormally">
+        <item name="tabIndicatorColor">@color/logic_receiver</item>
+    </style>
 </resources>

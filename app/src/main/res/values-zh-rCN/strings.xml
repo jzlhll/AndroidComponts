@@ -1,85 +1,10 @@
 <resources>
     <string name="app_name">Android学习</string>
     <string name="follow_system">跟随系统</string>
-    <string name="settings">设置</string>
     <string name="dark_mode">深色模式</string>
     <string name="light">浅色</string>
     <string name="dark">深色</string>
     <string name="select_manually">手动选择</string>
     <string name="automatic_desc">开启后，app将会跟随系统自动切换浅色或者深色模式。</string>
     <string name="language">语言</string>
-    <string name="tips">提示</string>
-
-    <string name="export_history">"导出历史 "</string>
-    <string name="export_history_2">"导出历史*"</string>
-    <string name="transfer_list">"接收列表 "</string>
-    <string name="transfer_list_2">"接收列表*"</string>
-    <string name="not_close_window">不退出，不熄屏 %s</string>
-    <string name="no_received_files">暂无接收到的文件</string>
-
-    <string name="send_list">MyDroid 发送列表</string>
-    <string name="my_droid_mode_receiver">发送给手机</string>
-    <string name="my_droid_mode_send">从手机接收</string>
-    <string name="my_droid_mode_middle">中转</string>
-    <string name="my_droid_mode_none">无</string>
-    <string name="my_droid_mode_image">图片浏览</string>
-    <string name="my_droid_mode_video">视频点播</string>
-    <string name="send_files_to_html">发送文件到HTML</string>
-    <string name="send_file_start">发送文件开始。</string>
-    <string name="send_file_end">发送文件结束。</string>
-
-    <string name="unknown_size">大小未知</string>
-    <string name="new_webpage_access">%s 新的网页接入！</string>
-    <string name="file_not_exist">文件不存在</string>
-    <string name="file_not_received">未接收到文件。</string>
-    <string name="chunk_receiver_error">分块接收错误。</string>
-    <string name="error_merge_chunk_params">合并分块参数错误。</string>
-    <string name="no_chunks">没有分块？</string>
-    <string name="chunks_number_not_match">分块数量不匹配。</string>
-
-    <string name="success_message">成功！</string>
-    <string name="server_error_exception">服务器异常错误</string>
-    <string name="file_merge_success">文件合并完成且校验通过</string>
-    <string name="md5_check_failed">MD5校验失败</string>
-    <string name="clear_up">清理</string>
-    <string name="invalid_request_from_appserver">来自应用服务器的无效请求</string>
-    <string name="mydroid_running_only_for_alive">MyDroid仅作为保活进程运行</string>
-    <string name="import_to_send_list_hint">请点击\"导入到发送列表\"而非\"分享\"！</string>
-    <string name="share">分享</string>
-    <string name="delete">删除</string>
-    <string name="export">导出</string>
-    <string name="export_and_delete">导出 &amp; 删除</string>
-    <string name="import_to_send_list">导入到发送列表</string>
-    <string name="save_failed">转存失败！</string>
-    <string name="save_to_success">已成功转存到 %s！</string>
-    <string name="already_in_sending_list">已经存在发送列表中。</string>
-    <string name="keep_recent_records">只保留最近80–100条导出记录。</string>
-    <string name="storage_remaining"> 存储剩余：</string>
-    <string name="file_received_success_fmt">成功收到文件：%s！</string>
-    <string name="connect_wifi_or_hotspot">请连接WI-FI或者开启热点</string>
-    <string name="lan_access_fmt">局域网内访问：%1$s:%2$s</string>
-    <string name="auto_proceed_fmt">即将在%d秒后自动进入下一步，你可以点击取消，勾掉一些文件。</string>
-
-    <string name="select_files_hint">请勾选文件。</string>
-    <string name="empty_file_prompt">暂无文件，从相册，文件管理器或其他应用分享进来吧。</string>
-    <string name="app_management_permission">应用管理权限</string>
-    <string name="global_permission_prompt">该功能需要全局设置权限，即将跳转，打开该功能。</string>
-    <string name="disclaimer_title">免责申明</string>
-    <string name="disclaimer_content">从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。</string>
-    <string name="action_confirm">知道了</string>
-    <string name="action_auto_next">自动下一步</string>
-    <string name="exit_with_wifi_reminder">即将退出，请连接WI-FI或者开启热点，然后重新进入。</string>
-    <string name="app_name_lan_tool">MyDroid局域网工具</string>
-    <string name="transfer_list_title">传输列表</string>
-    <string name="file_send">文件发送</string>
-    <string name="app_file_send">MyDroid 文件发送</string>
-    <string name="file_receive">文件接收</string>
-    <string name="app_file_receive">MyDroid 文件接收</string>
-    <string name="file_transfer">中转</string>
-    <string name="image_preview">图片预览</string>
-    <string name="video_playback">视频点播</string>
-    <string name="select_files_to_send">选择要发送的文件</string>
-    <string name="empty_file_hint">暂无文件，从相册、文件管理器\n或其他应用分享进来吧。</string>
-    <string name="send_success_fmt">%s 发送成功！</string>
-    <string name="inactivity_message">长时间未操作，App已经主动退出。</string>
 </resources>

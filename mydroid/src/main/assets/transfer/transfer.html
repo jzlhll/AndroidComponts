@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDroid</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-bottom: 5px;
+        }
+        #subtitle {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        #clientId {
+            margin-bottom: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+        #serverId {
+            width: 200px;
+            height: 200px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            font-size: 24px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .server-full {
+            border: 3px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        .client-container {
+            display: inline-block;
+            text-align: center;
+            position: absolute;
+            z-index: 10;
+        }
+        .client-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: move;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            border: 2px solid #333;
+        }
+        .client-label {
+            font-size: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .inside-server {
+            border: 2px solid #333;
+            background-color: transparent !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>MyDroid</h1>
+    <div id="subtitle">中转站</div>
+    <div id="clientId">我192.168.1.2@abcdefg</div>
+    <div id="serverId">服务器</div>
+    <button onclick="generateClient()">生成客户端</button>
+
+    <script>
+        let clientIndex = 1;
+        let activeDragElement = null;
+        let originalColors = {};
+        let circlesInsideServer = 0;
+        const MAX_CIRCLES_INSIDE = 2;
+        
+        function getRandomColor() {
+            return `hsl(${Math.random() * 360}, 70%, 60%)`;
+        }
+
+        function getRandomPosition() {
+            const server = document.getElementById('serverId');
+            const serverRect = server.getBoundingClientRect();
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 150 + Math.random() * 100;
+            return {
+                x: serverRect.left + serverRect.width/2 + Math.cos(angle) * distance - 15,
+                y: serverRect.top + serverRect.height/2 + Math.sin(angle) * distance - 15
+            };
+        }
+
+        function isInsideServer(x, y) {
+            const server = document.getElementById('serverId');
+            const rect = server.getBoundingClientRect();
+            const centerX = rect.left + rect.width/2;
+            const centerY = rect.top + rect.height/2;
+            const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+            return distance <= rect.width/2;
+        }
+
+        function updateServerBorder() {
+            const server = document.getElementById('serverId');
+            if (circlesInsideServer >= MAX_CIRCLES_INSIDE) {
+                server.classList.add('server-full');
+            } else {
+                server.classList.remove('server-full');
+            }
+        }
+
+        function generateClient() {
+            const container = document.createElement('div');
+            container.className = 'client-container';
+            
+            const circle = document.createElement('div');
+            circle.className = 'client-circle';
+            const color = getRandomColor();
+            circle.style.backgroundColor = color;
+            circle.id = `client-${clientIndex}`;
+            originalColors[circle.id] = color;
+            
+            const label = document.createElement('div');
+            label.className = 'client-label';
+            label.textContent = `client${clientIndex}`;
+            
+            const pos = getRandomPosition();
+            container.style.left = pos.x + 'px';
+            container.style.top = pos.y + 'px';
+            
+            circle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+            
+            container.appendChild(circle);
+            container.appendChild(label);
+            document.body.appendChild(container);
+            clientIndex++;
+        }
+
+        function startDrag(e) {
+            if (e.target.classList.contains('client-circle')) {
+                activeDragElement = e.target.parentNode;
+                activeDragElement.style.pointerEvents = 'none';
+                document.body.style.cursor = 'grabbing';
+            }
+        }
+
+        function drag(e) {
+            if (!activeDragElement) return;
+            
+            const x = e.clientX;
+            const y = e.clientY;
+            const circle = activeDragElement.querySelector('.client-circle');
+            
+            activeDragElement.style.left = (x - 15) + 'px';
+            activeDragElement.style.top = (y - 15) + 'px';
+        }
+
+        function endDrag(e) {
+            if (!activeDragElement) return;
+            
+            const x = e.clientX;
+            const y = e.clientY;
+            const circle = activeDragElement.querySelector('.client-circle');
+            const isInside = isInsideServer(x, y);
+            const wasInside = circle.classList.contains('inside-server');
+            
+            if (isInside) {
+                if (circlesInsideServer >= MAX_CIRCLES_INSIDE && !wasInside) {
+                    activeDragElement.style.pointerEvents = 'auto';
+                    activeDragElement = null;
+                    document.body.style.cursor = 'default';
+                    return;
+                }
+                
+                const server = document.getElementById('serverId');
+                const rect = server.getBoundingClientRect();
+                const centerX = rect.left + rect.width/2;
+                const centerY = rect.top + rect.height/2;
+                
+                const maxDistance = rect.width/2 - 20;
+                const dx = x - centerX;
+                const dy = y - centerY;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance > maxDistance) {
+                    const ratio = maxDistance / distance;
+                    const newX = centerX + dx * ratio;
+                    const newY = centerY + dy * ratio;
+                    activeDragElement.style.left = (newX - 15) + 'px';
+                    activeDragElement.style.top = (newY - 15) + 'px';
+                }
+                
+                if (!wasInside) {
+                    circlesInsideServer++;
+                    updateServerBorder();
+                }
+                circle.classList.add('inside-server');
+            } else {
+                if (wasInside) {
+                    circlesInsideServer--;
+                    updateServerBorder();
+                }
+                circle.classList.remove('inside-server');
+                circle.style.backgroundColor = originalColors[circle.id];
+            }
+            
+            activeDragElement.style.pointerEvents = 'auto';
+            activeDragElement = null;
+            document.body.style.cursor = 'default';
+        }
+    </script>
+</body>
+</html>

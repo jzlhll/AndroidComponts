@@ -337,8 +337,11 @@ fun findLaunchActivity(context: Context): Pair<Intent, Boolean> {
     return l to (found != null)
 }
 
-fun findEntryActivity(mainActivityCls: Class<*>): Boolean {
-    val found = Globals.activityList.find { it.javaClass == mainActivityCls}
+/**
+ * 找到是否已经存在的某个activity
+ */
+fun findActivity(activityCls: Class<*>): Boolean {
+    val found = Globals.activityList.find { it.javaClass == activityCls}
     return found != null
 }
 
