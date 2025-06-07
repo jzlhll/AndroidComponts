@@ -38,8 +38,6 @@
         android:layout_height="0dp">
         <com.au.module_android.widget.BgBuildLinearLayout
             android:id="@+id/logicBtnsHost"
-            android:visibility="gone"
-            tools:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -50,13 +48,13 @@
                 android:elevation="4dp"
                 android:id="@+id/textChatServerBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="21dp"
                 android:gravity="center"
                 android:text="@string/text_chat_server"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_text_chat_server"
                 app:cornerRadius="16dp" />
 
@@ -64,13 +62,13 @@
                 android:elevation="4dp"
                 android:id="@+id/textChatClientBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/text_chat_client"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_text_chat_client"
                 app:cornerRadius="16dp" />
 
@@ -78,13 +76,13 @@
                 android:elevation="4dp"
                 android:id="@+id/receiveFileLogicBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/file_receive"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_receiver"
                 app:cornerRadius="16dp" />
 
@@ -92,13 +90,13 @@
                 android:elevation="4dp"
                 android:id="@+id/sendFileLogicBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/file_send"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_send"
                 app:cornerRadius="16dp" />
 
@@ -106,13 +104,13 @@
                 android:elevation="4dp"
                 android:id="@+id/middleLogicBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:text="@string/file_transfer"
+                android:text="@string/transfer_server"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_middle"
                 app:cornerRadius="16dp" />
 
@@ -120,13 +118,13 @@
                 android:elevation="4dp"
                 android:id="@+id/seeImageBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/image_preview"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_watch_picture"
                 app:cornerRadius="16dp" />
 
@@ -134,30 +132,19 @@
                 android:elevation="4dp"
                 android:id="@+id/seeVideoBtn"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/video_playback"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:backgroundNormal="@color/logic_watch_video"
                 app:cornerRadius="16dp" />
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"/>
+                android:layout_height="21dp"/>
         </com.au.module_android.widget.BgBuildLinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loading"
-        tools:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:indeterminate="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

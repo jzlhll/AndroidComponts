@@ -7,7 +7,7 @@ import com.allan.mydroid.benas.UriRealInfoEx
 import com.allan.mydroid.databinding.FragmentMyDroidSendBinding
 import com.allan.mydroid.databinding.MydroidSendClientBinding
 import com.allan.mydroid.globals.MyDroidConst
-import com.allan.mydroid.views.AbsTransferAliveFragment
+import com.allan.mydroid.views.AbsLiveFragment
 import com.au.module_android.Globals
 import com.au.module_android.utils.ViewBackgroundBuilder
 import com.au.module_android.utils.asOrNull
@@ -18,7 +18,7 @@ import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.visible
 import com.au.module_androidcolor.R
 
-class MyDroidSendFragment : AbsTransferAliveFragment<FragmentMyDroidSendBinding>() {
+class MyDroidSendFragment : AbsLiveFragment<FragmentMyDroidSendBinding>() {
     private lateinit var entryFileList: List<UriRealInfoEx>
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {

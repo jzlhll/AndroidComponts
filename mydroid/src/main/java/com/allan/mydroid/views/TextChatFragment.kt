@@ -1,9 +1,9 @@
 package com.allan.mydroid.views
 
 import android.os.Bundle
-import com.allan.mydroid.databinding.FragmentMyDroidTextChatBinding
+import com.allan.mydroid.databinding.FragmentTextChatServerBinding
 
-class TextChatFragment : AbsTransferAliveFragment<FragmentMyDroidTextChatBinding>() {
+class TextChatFragment : AbsLiveFragment<FragmentTextChatServerBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
 

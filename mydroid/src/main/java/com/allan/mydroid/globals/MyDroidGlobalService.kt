@@ -6,7 +6,7 @@ import androidx.annotation.MainThread
 import com.allan.mydroid.benas.IpInfo
 import com.allan.mydroid.nanohttp.MyDroidHttpServer
 import com.allan.mydroid.nanohttp.MyDroidWSServer
-import com.allan.mydroid.views.AbsTransferAliveFragment
+import com.allan.mydroid.views.AbsLiveFragment
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.init.InterestActivityCallbacks
@@ -14,7 +14,6 @@ import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.utils.clearDirOldFiles
 import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.logd
-import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.loge
 import com.au.module_android.utils.logt
 import fi.iki.elonen.NanoHTTPD
@@ -45,7 +44,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     fun updateAliveTs(from:String) {
         val cur = SystemClock.elapsedRealtime()
         if (cur - aliveTs < ALIVE_TS_TOO_FAST) {
-            logdNoFile { "Update alive Ts too fast ignore: $from" }
+            logd { "Update alive Ts too fast ignore: $from" }
             return
         }
         aliveTs = cur
@@ -135,7 +134,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     }
 
     override fun onLifeOpenEach() {
-        logdNoFile { "on life open each" }
+        logd { "on life open each" }
         for (life in lifeObservers) {
             life.onLifeOpenEach()
         }
@@ -143,7 +142,7 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     }
 
     override fun onLifeClose() {
-        logdNoFile { "on life close." }
+        logd { "on life close." }
         stopServer()
         MyDroidConst.ipPortData.setValueSafe(null)
         MyDroidConst.receiverProgressData.setValueSafe(emptyMap())
@@ -159,6 +158,6 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
             return false
         }
         val frgClass = activity.fragmentClass
-        return AbsTransferAliveFragment::class.java.isAssignableFrom(frgClass)
+        return AbsLiveFragment::class.java.isAssignableFrom(frgClass)
     }
 }

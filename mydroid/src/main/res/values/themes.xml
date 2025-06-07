@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.AndroidComponts" parent="android:Theme.Material.Light.NoActionBar" />
-
     <style name="ReceiveStyleTab" parent="StyleTabLayoutNormally">
         <item name="tabIndicatorColor">@color/logic_receiver</item>
+    </style>
+
+    <style name="SplashTheme" parent="AbsStyleSplashTheme">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_playstore</item>
     </style>
 </resources>

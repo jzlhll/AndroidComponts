@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyDroid</string>
+    <string name="app_name">Pigeon Pass</string>
 
     <string name="next">Next</string>
     <string name="tips">Tips</string>
@@ -9,7 +9,7 @@
     <string name="transfer_list_2">Receive List*</string>
     <string name="not_close_window">Do not exit or turn off screen: %s</string>
     <string name="no_received_files">No files received</string>
-    <string name="send_list">MyDroid Send List</string>
+    <string name="send_list">Send List</string>
     <string name="my_droid_mode_receiver">Send to phone</string>
     <string name="my_droid_mode_send">Receive from phone</string>
     <string name="my_droid_mode_middle">Transfer</string>
@@ -33,7 +33,7 @@
     <string name="md5_check_failed">MD5 check failed.</string>
     <string name="clear_up">Clear up</string>
     <string name="invalid_request_from_appserver">Invalid request from AppServer</string>
-    <string name="mydroid_running_only_for_alive">MyDroid is running only for alive</string>
+    <string name="mydroid_running_only_for_alive">Pigeon Pass- running only for alive</string>
     <string name="import_to_send_list_hint">Please tap \"Import to send list\" instead of \"Share\"!</string>
     <string name="share">Share</string>
     <string name="delete">delete</string>
@@ -57,16 +57,17 @@
     <string name="disclaimer_content">Files from system gallery/file manager are only parsed for name/size without copying. Files from other apps are temporarily cached and deleted after use.\nYou need to re-share imports when app restarts.</string>
     <string name="action_confirm">Got it</string>
     <string name="action_auto_next">Auto Next</string>
-    <string name="exit_with_wifi_reminder">The app will exit. Please connect to WI-FI or enable hotspot, then reopen.</string>
-    <string name="app_name_lan_tool">MyDroid LAN Tool</string>
+    <string name="exit_with_wifi_reminder">Click to exit. Please connect to WI-FI or enable hotspot, then enter again.</string>
     <string name="transfer_list_title">Transfer List</string>
     <string name="file_send">File Send</string>
-    <string name="app_file_send">MyDroid File Send</string>
+    <string name="app_file_send">File Send</string>
     <string name="file_receive">File Receive</string>
     <string name="text_chat_server">Text Chat (Server)</string>
+    <string name="text_chat_server_n">Text Chat (Server) ▶</string>
     <string name="text_chat_client">Text Chat (Client)</string>
-    <string name="app_file_receive">MyDroid File Receive</string>
-    <string name="file_transfer">Transfer</string>
+    <string name="text_chat_client_n">Text Chat (Client) ▶</string>
+    <string name="app_file_receive">File Receive</string>
+    <string name="transfer_server">Transit Server</string>
     <string name="image_preview">Image Preview</string>
     <string name="video_playback">Video Playback</string>
     <string name="select_files_to_send">Select files to send</string>

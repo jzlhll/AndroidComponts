@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyDroid</string>
+    <string name="app_name">鴿子傳輸</string>
 
     <string name="next">下一步</string>
     <string name="tips">提示</string>
@@ -9,7 +9,7 @@
     <string name="transfer_list_2">接收清單*</string>
     <string name="not_close_window">不退出，不熄屏：%s</string>
     <string name="no_received_files">暫無接收到的檔案</string>
-    <string name="send_list">MyDroid 發送列表</string>
+    <string name="send_list">發送列表</string>
     <string name="my_droid_mode_receiver">發送給手機</string>
     <string name="my_droid_mode_send">從手機接收</string>
     <string name="my_droid_mode_middle">中轉</string>
@@ -33,7 +33,7 @@
     <string name="md5_check_failed">MD5校驗失敗</string>
     <string name="clear_up">清理</string>
     <string name="invalid_request_from_appserver">來自應用伺服器的無效請求</string>
-    <string name="mydroid_running_only_for_alive">MyDroid僅作為保活進程運行</string>
+    <string name="mydroid_running_only_for_alive">鴿子傳輸-僅作為保活進程運行</string>
     <string name="import_to_send_list_hint">請點擊\"匯入到發送列表\"而非\"分享\"！</string>
     <string name="share">分享</string>
     <string name="delete">刪除</string>
@@ -57,16 +57,17 @@
     <string name="disclaimer_content">從系統相簿、檔案管理員匯入的檔案，僅解析檔名和大小，不會複製。從其他應用匯入的會暫存於快取，使用後自動刪除。\n下次啟動應用時需重新分享匯入。</string>
     <string name="action_confirm">知道了</string>
     <string name="action_auto_next">自動下一步</string>
-    <string name="exit_with_wifi_reminder">即將退出，請連接WI-FI或開啟熱點，然後重新進入。</string>
-    <string name="app_name_lan_tool">MyDroid區域網路工具</string>
+    <string name="exit_with_wifi_reminder">點擊退出，請連接WI-FI或開啟熱點，然後重新進入。</string>
     <string name="transfer_list_title">傳輸清單</string>
     <string name="file_send">檔案傳送</string>
-    <string name="app_file_send">MyDroid 檔案傳送</string>
+    <string name="app_file_send">檔案傳送</string>
     <string name="file_receive">檔案接收</string>
     <string name="text_chat_server">文字聊天(發起)</string>
+    <string name="text_chat_server_n">文字聊天(發起) ▶</string>
     <string name="text_chat_client">文字聊天(接入)</string>
-    <string name="app_file_receive">MyDroid 檔案接收</string>
-    <string name="file_transfer">中轉</string>
+    <string name="text_chat_client_n">文字聊天(接入) ▶</string>
+    <string name="app_file_receive">檔案接收</string>
+    <string name="transfer_server">中轉服務器</string>
     <string name="image_preview">圖片預覽</string>
     <string name="video_playback">影片點播</string>
     <string name="select_files_to_send">選擇要傳送的檔案</string>

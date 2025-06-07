@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyDroid</string>
+    <string name="app_name">鸽子传输</string>
 
     <string name="next">下一步</string>
     <string name="tips">提示</string>
@@ -9,7 +9,7 @@
     <string name="transfer_list_2">"接收列表*"</string>
     <string name="not_close_window">不退出，不熄屏 %s</string>
     <string name="no_received_files">暂无接收到的文件</string>
-    <string name="send_list">MyDroid 发送列表</string>
+    <string name="send_list">发送列表</string>
     <string name="my_droid_mode_receiver">发送给手机</string>
     <string name="my_droid_mode_send">从手机接收</string>
     <string name="my_droid_mode_middle">中转</string>
@@ -33,7 +33,7 @@
     <string name="md5_check_failed">MD5校验失败</string>
     <string name="clear_up">清理</string>
     <string name="invalid_request_from_appserver">来自应用服务器的无效请求</string>
-    <string name="mydroid_running_only_for_alive">MyDroid仅作为保活进程运行</string>
+    <string name="mydroid_running_only_for_alive">鸽子传输-仅作为保活进程运行</string>
     <string name="import_to_send_list_hint">请点击\"导入到发送列表\"而非\"分享\"！</string>
     <string name="share">分享</string>
     <string name="delete">删除</string>
@@ -57,16 +57,17 @@
     <string name="disclaimer_content">从系统相册，文件管理器导入的文件，仅仅做文件名和大小解析，不会复制。从其他应用导入的会临时保存在缓存中，用完也会删除。\n下次app启动时，您需要重新分享导入。</string>
     <string name="action_confirm">知道了</string>
     <string name="action_auto_next">自动下一步</string>
-    <string name="exit_with_wifi_reminder">即将退出，请连接WI-FI或者开启热点，然后重新进入。</string>
-    <string name="app_name_lan_tool">MyDroid局域网工具</string>
+    <string name="exit_with_wifi_reminder">点击退出，请连接WI-FI或者开启热点，然后重新进入。</string>
     <string name="transfer_list_title">传输列表</string>
     <string name="file_send">文件发送</string>
-    <string name="app_file_send">MyDroid 文件发送</string>
+    <string name="app_file_send">文件发送</string>
     <string name="file_receive">文件接收</string>
     <string name="text_chat_server">文字聊天(发起)</string>
+    <string name="text_chat_server_n">文字聊天(发起) ▶</string>
     <string name="text_chat_client">文字聊天(接入)</string>
-    <string name="app_file_receive">MyDroid 文件接收</string>
-    <string name="file_transfer">中转</string>
+    <string name="text_chat_client_n">文字聊天(接入) ▶</string>
+    <string name="app_file_receive">文件接收</string>
+    <string name="transfer_server">中转服务器</string>
     <string name="image_preview">图片预览</string>
     <string name="video_playback">视频点播</string>
     <string name="select_files_to_send">选择要发送的文件</string>

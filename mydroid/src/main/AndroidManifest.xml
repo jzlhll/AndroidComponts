@@ -20,17 +20,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/CustomModuleTheme">
-        <activity
-            android:name=".MyDroidActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AndroidComponts">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--        <activity-->
+<!--            android:name=".MyDroidActivity"-->
+<!--            android:exported="true"-->
+<!--            android:label="@string/app_name"-->
+<!--            android:theme="@style/Theme.MydroidApp">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
 
         <activity
             android:name="com.allan.mydroid.views.ShareImportActivity"
@@ -51,8 +51,20 @@
 
         <service
             android:name="com.allan.mydroid.views.MyDroidKeepLiveService"
-            android:foregroundServiceType="dataSync"
-            />
+            android:foregroundServiceType="dataSync" />
+
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|fontScale|locale|orientation|screenLayout|uiMode|navigation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

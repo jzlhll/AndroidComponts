@@ -9,7 +9,7 @@ import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.benas.MyDroidMode
 import com.allan.mydroid.databinding.FragmentMyDroidReceiveBinding
-import com.allan.mydroid.views.AbsTransferAliveFragment
+import com.allan.mydroid.views.AbsLiveFragment
 import com.allan.mydroid.views.send.SendListSelectorFragment
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -27,7 +27,7 @@ import com.au.module_android.utilsmedia.getExternalFreeSpace
 import com.au.module_androidui.toast.ToastBuilder
 import com.google.android.material.tabs.TabLayout
 
-class MyDroidReceiverFragment : AbsTransferAliveFragment<FragmentMyDroidReceiveBinding>() {
+class MyDroidReceiverFragment : AbsLiveFragment<FragmentMyDroidReceiveBinding>() {
     private val mFileListMgr by unsafeLazy { MyDroidReceiveFileListMgr(this) }
 
     lateinit var receivedFileListTab: TabLayout.Tab

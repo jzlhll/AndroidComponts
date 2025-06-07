@@ -1,7 +1,6 @@
 package com.allan.mydroid.views
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.mydroid.views.receiver.MyDroidReceiverFragment
 import com.allan.mydroid.views.send.SendListSelectorFragment
@@ -10,63 +9,68 @@ import com.allan.mydroid.globals.MY_DROID_SHARE_IMPORT_URIS
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
 import com.au.module_android.ui.FragmentShellActivity
-import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
-import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
-import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.utils.visible
-import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.allan.mydroid.R
+import com.allan.mydroid.globals.SimpleNetworkObserver
+import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_androidui.toast.ToastBuilder
 
 class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
+    private var mIp:String? = null
+    private val netObserver = SimpleNetworkObserver().apply {
+        onChanged = { ip->
+            mIp = ip
+            lifecycleScope.launch {
+                val curIp = mIp
+                if (!curIp.isNullOrEmpty()) {
+                    binding.title.text = curIp
+                } else {
+                    binding.title.setText(R.string.connect_wifi_or_hotspot)
+                }
+            }
+        }
+    }
 
-    var waitDialog:ConfirmBottomSingleDialog? = null
+    private fun runCheckIp(workBlock:()->Unit) {
+        if (!mIp.isNullOrEmpty()) {
+            workBlock()
+        } else {
+            ToastBuilder().setMessage(getString(R.string.connect_wifi_or_hotspot))
+                .setOnTop()
+                .toast()
+        }
+    }
 
-    val viewModel by unsafeLazy {
-        ViewModelProvider(this)[MyDroidAllViewModel::class.java]
+    override fun onStart() {
+        super.onStart()
+        netObserver.netRegister()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        netObserver.netUnregister()
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        super.onBindingCreated(savedInstanceState)
         binding.textChatServerBtn.onClick {
 
         }
         binding.receiveFileLogicBtn.onClick {
-            FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
+            runCheckIp {
+                FragmentShellActivity.start(requireActivity(), MyDroidReceiverFragment::class.java)
+            }
         }
         binding.sendFileLogicBtn.onClick {
-            FragmentShellActivity.start(requireActivity(), SendListSelectorFragment::class.java)
+            runCheckIp {
+                FragmentShellActivity.start(requireActivity(), SendListSelectorFragment::class.java)
+            }
         }
         binding.middleLogicBtn.onClick {
-
-        }
-
-        viewModel.ipData.observe(this) { ip->
-            if (ip.isNullOrEmpty()) {
-                binding.title.setText(R.string.connect_wifi_or_hotspot)
-                if (waitDialog == null) {
-                    ConfirmBottomSingleDialog.show(childFragmentManager, getString(R.string.tips),
-                        getString(R.string.exit_with_wifi_reminder),
-                        "OK",
-                        true) { d->
-                        waitDialog?.dismissAllowingStateLoss()
-                        waitDialog = null
-                        requireActivity().finishAfterTransition()
-                    }.also { d->
-                        d.isCancelable = false
-                        waitDialog = d
-                    }
-                }
-            } else {
-                binding.title.text = ip
-                binding.logicBtnsHost.visible()
-                binding.loading.gone()
-                waitDialog?.dismissAllowingStateLoss()
-                waitDialog = null
-            }
         }
 
         val helper = PermissionStorageHelper()
@@ -98,5 +102,5 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
         }
     }
 
-    override fun toolbarInfo() = ToolbarInfo(getString(R.string.app_name_lan_tool), hasBackIcon = false)
+    override fun toolbarInfo() = ToolbarInfo(getString(R.string.app_name), hasBackIcon = false)
 }

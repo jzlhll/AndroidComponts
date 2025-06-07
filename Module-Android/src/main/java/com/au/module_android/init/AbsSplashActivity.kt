@@ -7,6 +7,7 @@ import com.au.module_android.Globals
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 private var lastLauncherApp = 0L
@@ -20,6 +21,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(createLayout())
         splashScreen.setKeepOnScreenCondition { true }
         launcherApp(intent)
@@ -35,7 +37,7 @@ abstract class AbsSplashActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingSuperCall")
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         launcherApp(intent)
     }
