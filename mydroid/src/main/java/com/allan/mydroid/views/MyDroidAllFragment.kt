@@ -57,8 +57,10 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
-        binding.textChatServerBtn.onClick {
-
+        binding.textChatBtn.onClick {
+            runCheckIp {
+                FragmentShellActivity.start(requireActivity(), TextChatFragment::class.java)
+            }
         }
         binding.receiveFileLogicBtn.onClick {
             runCheckIp {

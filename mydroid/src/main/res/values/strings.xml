@@ -62,16 +62,19 @@
     <string name="file_send">File Send</string>
     <string name="app_file_send">File Send</string>
     <string name="file_receive">File Receive</string>
-    <string name="text_chat_server">Text Chat (Server)</string>
-    <string name="text_chat_server_n">Text Chat (Server) ▶</string>
-    <string name="text_chat_client">Text Chat (Client)</string>
-    <string name="text_chat_client_n">Text Chat (Client) ▶</string>
+    <string name="text_chat_pro">Text Chat (pro)</string>
+    <string name="text_chat_next">Text Chat ▶</string>
     <string name="app_file_receive">File Receive</string>
-    <string name="transfer_server">Transit Server</string>
-    <string name="image_preview">Image Preview</string>
-    <string name="video_playback">Video Playback</string>
+    <string name="transfer_server">Transit Server (pro)</string>
+    <string name="image_preview">Image Preview (pro)</string>
+    <string name="video_playback">Video Playback (pro)</string>
     <string name="select_files_to_send">Select files to send</string>
     <string name="empty_file_hint">No files yet, share from gallery,\nfile manager or other apps</string>
     <string name="send_success_fmt">%s sent successfully!</string>
     <string name="inactivity_message">The app has automatically exited due to inactivity.</string>
+
+    <string name="select_images">Select Images</string>
+    <string name="select_videos">Select Videos</string>
+    <string name="select_files">Select Files</string>
+    <string name="send">Send</string>
 </resources>

@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.au.module_android.widget.CustomFontText
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/title"
@@ -46,39 +45,11 @@
 
             <com.au.module_android.widget.CustomButton
                 android:elevation="4dp"
-                android:id="@+id/textChatServerBtn"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="21dp"
-                android:gravity="center"
-                android:text="@string/text_chat_server"
-                android:textColor="#ffffff"
-                android:textSize="21sp"
-                app:backgroundNormal="@color/logic_text_chat_server"
-                app:cornerRadius="16dp" />
-
-            <com.au.module_android.widget.CustomButton
-                android:elevation="4dp"
-                android:id="@+id/textChatClientBtn"
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/text_chat_client"
-                android:textColor="#ffffff"
-                android:textSize="21sp"
-                app:backgroundNormal="@color/logic_text_chat_client"
-                app:cornerRadius="16dp" />
-
-            <com.au.module_android.widget.CustomButton
-                android:elevation="4dp"
                 android:id="@+id/receiveFileLogicBtn"
                 android:layout_width="match_parent"
                 android:layout_height="62dp"
                 android:layout_marginHorizontal="28dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="21dp"
                 android:gravity="center"
                 android:text="@string/file_receive"
                 android:textColor="#ffffff"
@@ -140,6 +111,20 @@
                 android:textColor="#ffffff"
                 android:textSize="21sp"
                 app:backgroundNormal="@color/logic_watch_video"
+                app:cornerRadius="16dp" />
+
+            <com.au.module_android.widget.CustomButton
+                android:elevation="4dp"
+                android:id="@+id/textChatBtn"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginHorizontal="28dp"
+                android:layout_marginTop="21dp"
+                android:gravity="center"
+                android:text="@string/text_chat_pro"
+                android:textColor="#ffffff"
+                android:textSize="21sp"
+                app:backgroundNormal="@color/logic_text_chat_server"
                 app:cornerRadius="16dp" />
 
             <Space
