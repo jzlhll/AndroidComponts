@@ -6,18 +6,22 @@ import com.allan.mydroid.R
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
 
 class TextChatFragment : AbsLiveFragment<FragmentTextChatBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
 
-        var helper = ImeHelper.assist(requireActivity(), true)
+        binding.edit.setMaxLength(Int.MAX_VALUE)
+
+        val helper = ImeHelper.assist(requireActivity(), true)
         helper?.setOnImeListener { imeOffset: Int,
                                    imeMaxHeight: Int/*包含导航栏和状态栏总高度*/,
                                    statusBarHeight: Int,
                                    navigationBarHeight: Int ->
-
+            //imeOffset 1087 imeMaxH 1090 stH 122 navH 0
+            binding.bottomHost.translationY = -imeOffset.toFloat()
         }
 
         requireActivity().transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->

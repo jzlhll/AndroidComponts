@@ -10,7 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
  * @date :2023/11/7 15:42
  * @description:
  */
-class CustomEditText : TextInputEditText {
+open class CustomEditText : TextInputEditText {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         checkBoldAndSetFont(context, attrs)

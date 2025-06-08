@@ -24,15 +24,20 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
          * 如果是android11+，则禁止自行布局调整。然后来通过键盘动画，来处理位移。
          */
         fun assist(activity: ComponentActivity, forceLegacy:Boolean = false) : ImeHelper? {
-            return if (forceLegacy || Build.VERSION.SDK_INT < 30) {
-                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                null
-            } else {
-                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-                val instance = ImeHelper(activity)
-                activity.lifecycle.addObserver(instance)
-                instance
-            }
+//            return if (forceLegacy || Build.VERSION.SDK_INT < 30) {
+//                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+//                null
+//            } else {
+//                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+//                val instance = ImeHelper(activity)
+//                activity.lifecycle.addObserver(instance)
+//                instance
+//            }
+
+            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+            val instance = ImeHelper(activity)
+            activity.lifecycle.addObserver(instance)
+            return instance
         }
     }
 

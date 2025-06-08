@@ -48,7 +48,7 @@
         android:id="@+id/adHost"
         app:layout_constraintTop_toBottomOf="@id/descTitle"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="75dp"
         android:background="@color/color_normal_block2"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -60,6 +60,7 @@
         android:layout_height="0dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomHost"
         android:paddingBottom="12dp"
         android:paddingTop="16dp"
         android:background="@color/color_normal_block"
@@ -82,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="42dp" />
 
-        <com.au.module_android.widget.CustomEditText
+        <com.au.module_android.widget.AutoResizeEditText
             android:id="@+id/edit"
             style="@style/StyleBlankEditText"
             android:paddingHorizontal="6dp"
@@ -90,6 +91,8 @@
             app:layout_constraintEnd_toStartOf="@id/enterBtn"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
+            android:lineSpacingExtra="2sp"
+            android:maxLines="999"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="0dp"
             android:layout_height="42dp" />
@@ -137,7 +140,7 @@
             android:contentDescription="@string/select_videos"
             app:layout_constraintTop_toBottomOf="@id/edit"
             app:layout_constraintStart_toEndOf="@id/selectVideoBtn"
-            android:layout_marginStart="13dp"
+            android:layout_marginStart="14dp"
             android:src="@drawable/ic_file"
             android:layout_width="33dp"
             android:layout_height="33dp" />
