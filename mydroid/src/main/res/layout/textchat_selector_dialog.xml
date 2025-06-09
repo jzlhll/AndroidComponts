@@ -22,7 +22,7 @@
         android:layout_marginTop="48dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="24dp">
+        android:layout_height="48dp">
 
         <com.au.module_android.widget.BgBuildView
             app:backgroundNormal="@color/logic_text_chat_server"
@@ -42,7 +42,6 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:background="@color/color_line_on_dialog"
         android:layout_height="0.75dp" />
@@ -53,7 +52,7 @@
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="24dp">
+        android:layout_height="48dp">
 
         <com.au.module_android.widget.BgBuildView
             app:backgroundNormal="@color/logic_text_chat_client"
@@ -73,7 +72,6 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:background="@color/color_line_on_dialog"
         android:layout_height="0.75dp" />
@@ -84,7 +82,7 @@
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="24dp">
+        android:layout_height="48dp">
 
         <com.au.module_android.widget.BgBuildView
             app:backgroundNormal="@color/color_text_desc"
@@ -104,7 +102,6 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:background="@color/color_line_on_dialog"
         android:layout_height="0.75dp" />

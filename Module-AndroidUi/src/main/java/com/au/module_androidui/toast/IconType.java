@@ -1,4 +1,4 @@
-package com.au.module_android.toast;
+package com.au.module_androidui.toast;
 
 import androidx.annotation.StringDef;
 

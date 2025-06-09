@@ -2,6 +2,7 @@ package com.au.module_okhttp.interceptors
 
 import com.au.module_android.utils.logdNoFile
 import com.au.module_okhttp.exceptions.AuTimestampErrorException
+import com.au.module_okhttp.exceptions.AuTokenExpiredException
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -23,7 +24,8 @@ import javax.net.ssl.SSLPeerUnverifiedException
  */
 class SimpleRetryInterceptor(
     val headersResetBlock:(Request)-> Request,
-    val timestampOffsetBlock:(Long)->Unit) : Interceptor {
+    val timestampOffsetBlock:(Long)->Unit,
+    val tokenExpiredBlock:((String)->Unit)?=null) : Interceptor {
     private val retryMaxCount = 3
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -51,14 +53,19 @@ class SimpleRetryInterceptor(
                 }
             } catch (e: AuTimestampErrorException) {
                 errorException = e
-                if (e.hasData) {
+                if (e.hasTimestampInfo) {
                     timestampOffsetBlock(e.timestampOffset)
                 }
-                if (isTimestampAlreadyRetry || !e.hasData) {
+                if (isTimestampAlreadyRetry || !e.hasTimestampInfo) {
                     break
                 } else {
                     isTimestampAlreadyRetry = true
                 }
+            } catch (e: AuTokenExpiredException) {
+                errorException = e
+                //处理一下，立刻继续上抛
+                tokenExpiredBlock?.invoke(e.message ?: "")
+                break
             }
 
             logdNoFile { "okhttp: retry url ${request.url} exception: ${errorException?.message}" }

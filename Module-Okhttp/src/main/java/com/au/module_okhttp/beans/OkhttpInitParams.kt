@@ -7,17 +7,21 @@ import okhttp3.OkHttpClient
 
 data class OkhttpInitParams(
     /**
-     * 额外的okhttp builder设置
+     * 额外的okhttp builder设置。必须完整拷贝原来的2个拦截器顺序不变，填充代码部分。
      */
-    var okhttpExtraBuilder : ((OkHttpClient.Builder)->Unit)? = {
-        it.addInterceptor(SimpleRetryInterceptor(
-            headersResetBlock = {
-                it
+    var okhttpExtraBuilder : ((OkHttpClient.Builder)->Unit)? = { builder->
+        builder.addInterceptor(SimpleRetryInterceptor(
+            headersResetBlock = { request->
+                request //填充。更改request的部分参数，比如时间戳等信息
             },
-            timestampOffsetBlock = {
+            timestampOffsetBlock = { timestampOffset->
+                //填充。将timestampOffset进行存储。用于后续请求传参使用。
+            },
+            tokenExpiredBlock = { msg->
+                //填充。仅仅是一个提醒。tokenExpire过期的时候，给出一个全局的通知。具体的那个请求还是抛异常。
             }
         ))
-        it.addInterceptor(PretreatmentInterceptor())
+        builder.addInterceptor(PretreatmentInterceptor())
     },
 
     /**

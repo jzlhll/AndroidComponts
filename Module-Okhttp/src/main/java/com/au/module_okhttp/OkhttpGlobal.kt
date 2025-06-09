@@ -32,7 +32,7 @@ object OkhttpGlobal {
     /**
      * 如果有必要则在application尽早初始化。
      */
-    fun initParams(params: OkhttpInitParams) {
+    fun initBeforeAnyRequest(params: OkhttpInitParams) {
         this._params = params
     }
 
@@ -44,10 +44,7 @@ object OkhttpGlobal {
             .retryOnConnectionFailure(false)
             .also {
                 mParams.okhttpExtraBuilder?.invoke(it)
-                //最后添加日志打印，保证打印最全
-                //                    doOnlyDebug {
-                //                        it.addNetworkInterceptor(::httpRequestLog)
-                //                    }
+                //it.addNetworkInterceptor(::httpRequestLog)
             }
             .build()
     }

@@ -2,27 +2,34 @@ package com.allan.mydroid.views
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.allan.mydroid.views.receiver.MyDroidReceiverFragment
-import com.allan.mydroid.views.send.SendListSelectorFragment
+import com.allan.mydroid.R
 import com.allan.mydroid.databinding.FragmentMyDroidAllBinding
 import com.allan.mydroid.globals.MY_DROID_SHARE_IMPORT_URIS
+import com.allan.mydroid.globals.SimpleNetworkObserver
+import com.allan.mydroid.views.receiver.MyDroidReceiverFragment
+import com.allan.mydroid.views.send.SendListSelectorFragment
+import com.allan.mydroid.views.textchat.TextChatSelectorDialog
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
 import com.au.module_android.ui.FragmentShellActivity
+import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.logdNoFile
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
+import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.allan.mydroid.R
-import com.allan.mydroid.globals.SimpleNetworkObserver
-import com.allan.mydroid.views.textchat.TextChatSelectorDialog
-import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_androidui.toast.ToastBuilder
 
 class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
     private var mIp:String? = null
-    private val netObserver = SimpleNetworkObserver().apply {
+    private val netObserver = object : SimpleNetworkObserver() {
+        public override fun netRegister() {
+            super.netRegister()
+        }
+        public override fun netUnregister() {
+            super.netUnregister()
+        }
+    }.apply {
         onChanged = { ip->
             mIp = ip
             lifecycleScope.launch {

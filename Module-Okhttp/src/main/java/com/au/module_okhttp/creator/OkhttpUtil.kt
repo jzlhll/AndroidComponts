@@ -63,7 +63,7 @@ suspend fun Request.awaitHttpResultStr(
     client: OkHttpClient = okHttpClient(),
     callBlock: ((Call) -> Unit) = { },
 ): String? {
-    return awaitHttpResponse(client, callBlock).parseJsonStr()
+    return awaitHttpResponse(client, callBlock).bodyString()
 }
 
 /**
@@ -88,7 +88,7 @@ inline fun <reified T> Response.parseJson() : T {
 /**
  * 结果转换
  */
-fun Response.parseJsonStr() : String? {
+fun Response.bodyString() : String? {
     return this.body?.string()
 }
 

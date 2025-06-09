@@ -45,7 +45,7 @@ open class SimpleNetworkObserver {
         return null
     }
 
-    fun netRegister() {
+    protected open fun netRegister() {
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
@@ -54,7 +54,7 @@ open class SimpleNetworkObserver {
         manager.registerNetworkCallback(request, netObserver)
     }
 
-    fun netUnregister() {
+    protected open fun netUnregister() {
         val manager = Globals.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         manager.unregisterNetworkCallback(netObserver)
     }

@@ -50,8 +50,11 @@ dependencies {
     implementation libs.nanohttpd.websocket
     implementation libs.gson
 
+    implementation libs.blurview
+
     implementation project(":Module-Android")
     implementation project(':Module-AndroidUi')
     implementation project(":Module-Nested")
     implementation project(":Module-ImageCompressed")
+    implementation project(":Module-Okhttp")
 }
