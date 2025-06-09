@@ -3,6 +3,7 @@ package com.allan.mydroid.nanohttp
 import com.allan.mydroid.benas.ABORT_UPLOAD_CHUNKS
 import com.allan.mydroid.benas.MERGE_CHUNKS
 import com.allan.mydroid.benas.MyDroidMode
+import com.allan.mydroid.benas.READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.benas.UPLOAD_CHUNK
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
@@ -89,6 +90,9 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
                     serveAssetFile("transfer/receiver.html")
                 }
             }
+            url == READ_WEBSOCKET_IP_PORT -> {
+                getWebsocketIpPort()
+            }
             // JS 文件请求
             url.endsWith(".js") -> {
                 val jsName = url.substring(1)
@@ -108,7 +112,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
-            "/read-websocket-ip-port" -> getWebsocketIpPort()
+            READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
             else -> newFixedLengthResponse(com.allan.mydroid.R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }
