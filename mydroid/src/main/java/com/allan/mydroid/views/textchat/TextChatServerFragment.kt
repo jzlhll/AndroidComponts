@@ -9,14 +9,16 @@ import com.allan.mydroid.views.AbsLiveFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.gone
 import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
 
 class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
-
-        binding.toolbar.setTitle(R.string.text_chat_server_next)
+        binding.loadingHost.gone()
+        val titleFmt = getString(R.string.text_chat_server_next)
+        binding.toolbar.setTitle(String.format(titleFmt, 0))
 
         binding.toolbarCenter.onClick {
 

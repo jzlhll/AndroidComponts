@@ -11,7 +11,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:networkSecurityConfig="@xml/network_release"
+        android:networkSecurityConfig="@xml/network_security"
         android:name=".App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"

@@ -22,6 +22,8 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         const val HEARTBEAT_INTERVAL: Long = 60 * 1000
         const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 15 * 1000
 
+        const val WS_CODE_CLOSE_BY_CLIENT = 1000
+
         const val PING_PAYLOAD_TEXT = "myDroid_ping"
         val PING_PAYLOAD = PING_PAYLOAD_TEXT.toByteArray()
     }

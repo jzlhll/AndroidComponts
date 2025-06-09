@@ -146,4 +146,19 @@
             android:layout_width="33dp"
             android:layout_height="33dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/loadingHost"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:layout_marginBottom="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </eightbitlab.com.blurview.BlurView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

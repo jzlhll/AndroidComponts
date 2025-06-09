@@ -1,5 +1,7 @@
 package com.au.module_okhttp.creator
 
+import com.au.module_android.api.ResultBean
+import com.au.module_android.json.fromJson
 import com.au.module_android.json.toJsonString
 import com.au.module_okhttp.OkhttpGlobal
 import com.au.module_okhttp.exceptions.AuNoBaseUrlException
@@ -74,5 +76,23 @@ abstract class AbsOkhttpApi {
             }
         val resultStr = builder.build().awaitHttpResultStr(OkhttpGlobal.okHttpClient(timeOutMode)) ?: "{}"
         return resultStr
+    }
+
+    suspend inline fun <reified T> requestResult(
+        apiUri:String,
+        params: Any? = null,
+        timeOutMode:Int = 0,
+    ): ResultBean<T>? {
+        val resultStr = requestApi(apiUri, params, timeOutMode)
+        return resultStr.fromJson<ResultBean<T>>()
+    }
+
+    suspend inline fun <reified T> requestResultData(
+        apiUri:String,
+        params: Any? = null,
+        timeOutMode:Int = 0,
+    ): T? {
+        val resultStr = requestApi(apiUri, params, timeOutMode)
+        return resultStr.fromJson<ResultBean<T>>()?.data
     }
 }

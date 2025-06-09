@@ -63,7 +63,7 @@
     <string name="app_file_send">文件发送</string>
     <string name="file_receive">文件接收</string>
     <string name="text_chat_pro">文字聊天 pro</string>
-    <string name="text_chat_server_next">文字聊天 (服务) ▶</string>
+    <string name="text_chat_server_next">文字聊天 (服务: %d) ▶</string>
     <string name="text_chat_client_next">文字聊天 ▶</string>
     <string name="app_file_receive">文件接收</string>
     <string name="transfer_server">中转服务器 pro</string>

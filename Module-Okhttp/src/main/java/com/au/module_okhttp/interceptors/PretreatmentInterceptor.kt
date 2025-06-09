@@ -31,10 +31,7 @@ class PretreatmentInterceptor : Interceptor {
         //1. 检查错误码
         val error = checkHttpResponseCode(responseCode)
         if (error != null) {
-            throw AuResponseErrorException(
-                responseCode,
-                "$error($responseCode)"
-            )
+            throw AuResponseErrorException(responseCode, "$error, ($responseCode)")
         }
 
         val responseBody = response.body ?: return response

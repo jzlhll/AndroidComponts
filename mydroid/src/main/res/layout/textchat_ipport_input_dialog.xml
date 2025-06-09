@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/titleTv"
+        style="@style/StyleFontBText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/textchat_input_ipport_title" />
+
+    <LinearLayout
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="48dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_gravity="center_vertical"
+            style="@style/StyleFontText"
+            android:text="IP:"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomEditText
+            android:id="@+id/ipInput"
+            android:paddingHorizontal="8dp"
+            style="@style/StyleBlankEditText"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:layout_height="42dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dp">
+
+        <com.au.module_android.widget.CustomFontText
+            android:layout_gravity="center_vertical"
+            style="@style/StyleFontText"
+            android:text="@string/port_m"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomEditText
+            android:id="@+id/portInput"
+            style="@style/StyleBlankEditText"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:inputType="number"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:layout_height="42dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/sureBtn"
+        style="@style/StyleButtonPrimary"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:textSize="16sp"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/cancelBtn"
+        style="@style/StyleButtonSecondary"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textSize="16sp"/>
+</LinearLayout>

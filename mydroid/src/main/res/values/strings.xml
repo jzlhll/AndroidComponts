@@ -63,7 +63,7 @@
     <string name="app_file_send">File Send</string>
     <string name="file_receive">File Receive</string>
     <string name="text_chat_pro">Text Chat (pro)</string>
-    <string name="text_chat_server_next">Text Chat (Server) ▶</string>
+    <string name="text_chat_server_next">Text Chat (Server: %d) ▶</string>
     <string name="text_chat_client_next">Text Chat ▶</string>
     <string name="app_file_receive">File Receive</string>
     <string name="transfer_server">Transit Server (pro)</string>
@@ -81,5 +81,7 @@
     <string name="as_server">As Server</string>
     <string name="as_client">As Client</string>
     <string name="textchat_selector_desc">Select your Text Chat mode.</string>
+    <string name="textchat_input_ipport_title">Please input Server\'s ip and port.</string>
+    <string name="port_m">Port: </string>
     <string name="something_error">Something error.</string>
 </resources>

@@ -2,6 +2,7 @@ package com.allan.mydroid.views.textchat
 
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.mydroid.R
 import com.allan.mydroid.databinding.FragmentTextChatBinding
@@ -9,24 +10,44 @@ import com.allan.mydroid.globals.LifeSimpleNetworkObserver
 import com.allan.mydroid.utils.BlurViewEx
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
+import com.au.module_android.ui.views.ToolbarInfo
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
+import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 import kotlinx.coroutines.launch
 
 class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
+    private var mIp:String? = null
+
     init {
         LifeSimpleNetworkObserver(this).apply {
             onChanged = { ip->
-                lifecycleScope.launch {
-                    if (!ip.isNullOrEmpty()) {
-                        binding.descTitle.text = ip
-                    } else {
-                        binding.descTitle.setText(R.string.connect_wifi_or_hotspot)
-                    }
-                }
+                mIp = ip
+                uploadMyIp()
+            }
+        }
+    }
+
+    private fun uploadMyIp() {
+        lifecycleScope.launch {
+            if (!mIp.isNullOrEmpty()) {
+                binding.descTitle.text = mIp + " (" + viewModel.serverInfo() + ")"
+            } else {
+                binding.descTitle.setText(R.string.connect_wifi_or_hotspot)
+            }
+        }
+    }
+
+    private val viewModel by lazy { ViewModelProvider(this)[TextChatClientViewModel::class.java] }
+
+    fun connectServer(ip: String, port: Int) {
+        viewModel.connectServer(ip, port) {
+            lifecycleScope.launch {
+                binding.loadingHost.visibility = android.view.View.GONE
+                uploadMyIp()
             }
         }
     }
@@ -34,6 +55,9 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
     override fun onStart() {
         super.onStart()
         logd { "allan onStart" }
+        if (!viewModel.isWSClientConnected()) {
+            FragmentBottomSheetDialog.show<TextChatClientIpPortInputDialog>(childFragmentManager, hasEditText = true)
+        }
     }
 
     override fun onStop() {
@@ -42,6 +66,8 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
+        BlurViewEx(binding.loadingHost, 0).setBlur(binding.root, 20f)
+
         binding.toolbar.setTitle(R.string.text_chat_client_next)
         binding.toolbarCenter.onClick {
         }

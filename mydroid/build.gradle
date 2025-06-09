@@ -20,6 +20,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue "xml", "network_security", "@xml/network_release"
+        }
+        debug {
+            resValue "xml", "network_security", "@xml/network_debug"
         }
     }
     compileOptions {
