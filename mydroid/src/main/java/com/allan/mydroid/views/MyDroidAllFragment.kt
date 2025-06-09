@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.allan.mydroid.R
 import com.allan.mydroid.globals.SimpleNetworkObserver
+import com.allan.mydroid.views.textchat.TextChatSelectorDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_androidui.toast.ToastBuilder
 
@@ -35,7 +36,7 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
         }
     }
 
-    private fun runCheckIp(workBlock:()->Unit) {
+    fun runCheckIp(workBlock:()->Unit) {
         if (!mIp.isNullOrEmpty()) {
             workBlock()
         } else {
@@ -56,10 +57,9 @@ class MyDroidAllFragment : BindingFragment<FragmentMyDroidAllBinding>() {
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        super.onBindingCreated(savedInstanceState)
         binding.textChatBtn.onClick {
             runCheckIp {
-                FragmentShellActivity.start(requireActivity(), TextChatFragment::class.java)
+                TextChatSelectorDialog.show(this)
             }
         }
         binding.receiveFileLogicBtn.onClick {

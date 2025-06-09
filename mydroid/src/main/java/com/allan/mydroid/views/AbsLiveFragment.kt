@@ -46,7 +46,7 @@ abstract class AbsLiveFragment<VB: ViewBinding> : BindingFragment<VB>() {
         }
 
         if (autoExistLongTimeInActive) {
-            MyDroidConst.aliveStoppedData.observe(this) {
+            MyDroidConst.aliveStoppedData.observeUnStick(this) {
                 requireActivity().finishAfterTransition()
                 showExitDialogLater()
             }

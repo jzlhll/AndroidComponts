@@ -13,7 +13,7 @@
 
     <com.au.module_android.widget.CustomToolbar
         android:id="@+id/toolbar"
-        app:title="@string/text_chat_next"
+        tools:title="text_chat_next"
         app:titleCentered="true"
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="#ffffff"
@@ -39,6 +39,7 @@
         style="@style/StyleFontSecondTitleText"
         android:textColor="#ffffff"
         android:textSize="13sp"
+        android:maxLines="2"
         tools:text="不退出，不熄屏"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"

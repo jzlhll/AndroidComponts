@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/titleTv"
+        style="@style/StyleFontBText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/textchat_selector_desc" />
+
+    <LinearLayout
+        android:id="@+id/asServerHost"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="48dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="24dp">
+
+        <com.au.module_android.widget.BgBuildView
+            app:backgroundNormal="@color/logic_text_chat_server"
+            app:cornerRadius="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/asServerBtn"
+            style="@style/StyleFontText"
+            android:layout_marginStart="12dp"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="24dp"
+            android:text="@string/as_server"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:background="@color/color_line_on_dialog"
+        android:layout_height="0.75dp" />
+
+    <LinearLayout
+        android:id="@+id/asClientHost"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="24dp">
+
+        <com.au.module_android.widget.BgBuildView
+            app:backgroundNormal="@color/logic_text_chat_client"
+            app:cornerRadius="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/asClientBtn"
+            style="@style/StyleFontText"
+            android:layout_marginStart="12dp"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="24dp"
+            android:text="@string/as_client"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:background="@color/color_line_on_dialog"
+        android:layout_height="0.75dp" />
+
+    <LinearLayout
+        android:id="@+id/cancelHost"
+        android:paddingHorizontal="@dimen/ui_padding_edge"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="24dp">
+
+        <com.au.module_android.widget.BgBuildView
+            app:backgroundNormal="@color/color_text_desc"
+            app:cornerRadius="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/cancelBtn"
+            style="@style/StyleFontText"
+            android:layout_marginStart="12dp"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="24dp"
+            android:text="@string/cancel"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:background="@color/color_line_on_dialog"
+        android:layout_height="0.75dp" />
+
+    <android.widget.Space
+        android:layout_width="1dp"
+        android:layout_height="28dp"/>
+</LinearLayout>
