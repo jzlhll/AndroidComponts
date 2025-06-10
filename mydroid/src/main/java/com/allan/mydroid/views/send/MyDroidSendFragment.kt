@@ -70,7 +70,7 @@ class MyDroidSendFragment : AbsLiveFragment<FragmentMyDroidSendBinding>() {
                 val item = clientItem(index)
                 item.title.text = clientInfo.clientName
                 item.icon.background = ViewBackgroundBuilder()
-                    .setBackground(requireContext().getColor(clientInfo.colorIcon))
+                    .setBackground(clientInfo.color)
                     .setCornerRadius(32f.dp)
                     .build()
                 if (!item.root.isAttachedToWindow) {
@@ -90,7 +90,7 @@ class MyDroidSendFragment : AbsLiveFragment<FragmentMyDroidSendBinding>() {
     }
 
     override fun onStart() {
-        MyDroidConst.myDroidMode = MyDroidMode.Send
+        MyDroidConst.currentDroidMode = MyDroidMode.Send
         super.onStart()
     }
 

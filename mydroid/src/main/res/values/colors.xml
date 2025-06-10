@@ -19,8 +19,8 @@
     <color name="logic_text_chat_client">#519595</color>
 
     <color name="client_send_1">#3D7C42</color>
-    <color name="client_send_2">#439999</color>
-    <color name="client_send_3">#4F84CD</color>
+    <color name="client_send_2">#FF9E80</color>
+    <color name="client_send_3">#6A3188</color>
     <color name="client_send_4">#895DF8</color>
     <color name="client_send_5">#CEBE55</color>
 

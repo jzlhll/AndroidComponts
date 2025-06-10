@@ -1,7 +1,6 @@
 package com.allan.mydroid.beans
 
 import android.net.Uri
-import androidx.annotation.Keep
 import com.au.module_android.Globals
 import com.au.module_android.utilsmedia.UriRealInfo
 import com.au.module_android.utilsmedia.formatBytes
@@ -42,8 +41,3 @@ data class UriRealInfoEx(val uri: Uri,
         return UriRealInfoHtml(uriUuid, goodName(), fileSizeStr)
     }
 }
-
-/**
- * 转变成传输给前端的对象
- */
-data class UriRealInfoHtml(@Keep val uriUuid:String, @Keep val name:String?, @Keep val fileSizeStr: String)

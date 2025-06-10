@@ -5,13 +5,14 @@ import com.allan.mydroid.beans.MyDroidMode
 import com.allan.mydroid.beans.ReceivingFileInfo
 import com.allan.mydroid.beans.UriRealInfoEx
 import com.allan.mydroid.beans.WebSocketClientInfo
+import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.simplelivedata.RealValueLiveData
 import java.io.File
 
 object MyDroidConst {
     var serverIsOpen = false
-    var myDroidMode = MyDroidMode.None
+    var currentDroidMode = MyDroidMode.None
 
     /**
      * 用于通知界面更新。告知有多少通过WS接入的client。
@@ -27,6 +28,18 @@ object MyDroidConst {
      * first是IP。second是Port。Third是websocket Port。
      */
     val ipPortData = NoStickLiveData<IpInfo?>()
+
+    /**
+     * 通过ipPort组装的服务器名称。
+     */
+    val serverName:String
+        get() {
+            val ipPort = ipPortData.realValue
+            if (ipPort == null) {
+                return Globals.getString(com.allan.mydroid.R.string.server) + "(Error)"
+            }
+            return Globals.getString(com.allan.mydroid.R.string.server) + "(${ipPort.ip}:${ipPort.httpPort})"
+        }
 
     /**
      * 接收模式下的接收文件的进度

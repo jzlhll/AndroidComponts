@@ -32,8 +32,8 @@ import org.json.JSONObject
 import java.io.IOException
 
 class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
-                         var server: WebsocketServer,
-                         val colorIcon: Int) : NanoWSD.WebSocket(httpSession) {
+                         val server: WebsocketServer,
+                         val color: Int) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
 
     /**
@@ -47,7 +47,7 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
     var clientName = "$remoteIpStr@--"
         private set
 
-    var isHtml = true
+    var platform = ""
 
     var openTs:Long = System.currentTimeMillis()
 
@@ -109,8 +109,8 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
         when (api) {
             API_WS_INIT -> {
                 val targetName = json.optString("wsName")
-                val isHtml = json.optBoolean("isHtml")
-                this.isHtml = isHtml
+                val platform = json.optString("platform")
+                this.platform = platform
                 clientName = "$remoteIpStr@$targetName"
                 server.triggerConnectionsList()
 
@@ -126,7 +126,7 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
             }
 
             else -> {
-                messenger.onMessage(api, json)
+                messenger.onMessage(text, api, json)
             }
         }
 
@@ -140,12 +140,14 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
             .setIcon("success")
             .setOnTopLater(200).toast()
 
-        val mode = MyDroidConst.myDroidMode.toName()
+        val mode = MyDroidConst.currentDroidMode.toName()
         val json = WSResultBean(
             CODE_SUC, R.string.success_message.resStr(),
             API_WS_CLIENT_INIT_CALLBACK,
             MyDroidModeResult(
-                mode, clientName,
+                mode,
+                clientName,
+                color,
                 debugReceiver = DEBUG_SLOW_RECEIVER_TRANSFER,
                 debugSend = DEBUG_SLOW_SEND_TRANSFER
             )

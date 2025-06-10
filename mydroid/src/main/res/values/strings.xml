@@ -74,6 +74,7 @@
     <string name="send_success_fmt">%s sent successfully!</string>
     <string name="inactivity_message">The app has automatically exited due to inactivity.</string>
 
+    <string name="server">Server</string>
     <string name="select_images">Select Images</string>
     <string name="select_videos">Select Videos</string>
     <string name="select_files">Select Files</string>

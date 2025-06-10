@@ -254,7 +254,7 @@
                 return true;
             } else if (api == API_WS_CLIENT_INIT_CALLBACK) {
                 window.debugSend = data.debugSend;
-                htmlUpdateIpClient(data.myDroidMode, data.clientName);
+                htmlUpdateIpClient(data.myDroidMode, data.clientName, data.color);
                 return true;
             } else if (api == API_WS_SEND_FILE_LIST) {
                 htmlShowFileList(data.urlRealInfoHtmlList);

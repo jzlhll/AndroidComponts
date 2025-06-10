@@ -1,14 +1,8 @@
-package com.allan.mydroid.nanohttp
+package com.allan.mydroid.nanohttp.wsmsger
 
 import android.net.Uri
 import androidx.lifecycle.Observer
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.UriRealInfoEx
-import com.allan.mydroid.beans.UriRealInfoHtml
-import com.allan.mydroid.globals.CODE_SUC
-import com.allan.mydroid.globals.MyDroidConst
-import com.allan.mydroid.globals.SMALL_FILE_DEFINE_SIZE
-import com.allan.mydroid.globals.getWSSendFileChunkSize
 import com.allan.mydroid.beans.API_WS_FILE_DOWNLOAD_COMPLETE
 import com.allan.mydroid.beans.API_WS_REQUEST_FILE
 import com.allan.mydroid.beans.API_WS_SEND_FILE_CHUNK
@@ -17,10 +11,21 @@ import com.allan.mydroid.beans.API_WS_SEND_FILE_NOT_EXIST
 import com.allan.mydroid.beans.API_WS_SEND_SMALL_FILE_CHUNK
 import com.allan.mydroid.beans.FileListForHtmlResult
 import com.allan.mydroid.beans.NotExistResult
+import com.allan.mydroid.beans.UriRealInfoEx
+import com.allan.mydroid.beans.UriRealInfoHtml
+import com.allan.mydroid.beans.WSApiUuid
 import com.allan.mydroid.beans.WSChunkActionResult
 import com.allan.mydroid.beans.WSResultBean
+import com.allan.mydroid.globals.CODE_SUC
+import com.allan.mydroid.globals.MyDroidConst
+import com.allan.mydroid.globals.SMALL_FILE_DEFINE_SIZE
+import com.allan.mydroid.globals.getWSSendFileChunkSize
+import com.allan.mydroid.nanohttp.AbsWebSocketClientMessenger
+import com.allan.mydroid.nanohttp.BufferManager
+import com.allan.mydroid.nanohttp.WebsocketOneClient
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
+import com.au.module_android.json.fromJson
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.launchOnIOThread
 import com.au.module_android.utils.launchOnThread
@@ -64,15 +69,16 @@ class WebsocketSendModeMessenger(client: WebsocketOneClient) : AbsWebSocketClien
         }
     }
 
-    override fun onMessage(api:String, json: JSONObject) {
+    override fun onMessage(origJsonStr:String, api:String, json: JSONObject) {
+        val wsApiUuid = origJsonStr.fromJson<WSApiUuid>()
         when (api) {
             API_WS_REQUEST_FILE ->{
-                val uriUuid = json.optString("uriUuid")
+                val uriUuid = wsApiUuid?.uriUuid ?: ""
                 val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
                 onSendFile(uriUuid, info)
             }
             API_WS_FILE_DOWNLOAD_COMPLETE -> {
-                val uriUuid = json.optString("uriUuid")
+                val uriUuid = wsApiUuid?.uriUuid ?: ""
                 MyDroidConst.sendUriMap.value?.get(uriUuid)?.let { info->
                     val fmt = R.string.send_success_fmt.resStr()
                     ToastBuilder().setOnTop().setMessage(String.format(fmt, info.goodName())).toast()
@@ -105,13 +111,13 @@ class WebsocketSendModeMessenger(client: WebsocketOneClient) : AbsWebSocketClien
         return null
     }
 
-    fun onFileSendComplete(info: UriRealInfoEx?) {
-        logdNoFile { "${client.clientName} onFile Send Complete : $info" }
-        client.scope?.launchOnIOThread {
-        }
-    }
+//    fun onFileSendComplete(info: UriRealInfoEx?) {
+//        logdNoFile { "${client.clientName} onFile Send Complete : $info" }
+//        client.scope?.launchOnIOThread {
+//        }
+//    }
 
-    fun onSendFile(uriUuid:String, info: UriRealInfoEx?) {
+    private fun onSendFile(uriUuid:String, info: UriRealInfoEx?) {
         logdNoFile { "${client.clientName} onSend File : $info" }
 
         client.scope?.launchOnIOThread {

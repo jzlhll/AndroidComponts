@@ -83,7 +83,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             // 主页面请求
             url == "/" -> {
                 //todo 增加middle页面
-                when (MyDroidConst.myDroidMode) {
+                when (MyDroidConst.currentDroidMode) {
                     MyDroidMode.Send -> {
                         serveAssetFile("transfer/send.html")
                     }

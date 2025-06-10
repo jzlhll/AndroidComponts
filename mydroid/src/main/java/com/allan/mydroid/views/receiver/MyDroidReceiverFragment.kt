@@ -123,7 +123,7 @@ class MyDroidReceiverFragment : AbsLiveFragment<FragmentMyDroidReceiveBinding>()
     }
 
     override fun onStart() {
-        MyDroidConst.myDroidMode = MyDroidMode.Receiver
+        MyDroidConst.currentDroidMode = MyDroidMode.Receiver
         super.onStart()
     }
 

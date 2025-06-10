@@ -54,7 +54,7 @@
                 const wsInit = {};
                 wsInit.api = API_WS_INIT;
                 wsInit.wsName = wsName;
-                wsInit.isHtml = true;
+                wsInit.platform = "html";
                 socket.send(JSON.stringify(wsInit));
             };
     

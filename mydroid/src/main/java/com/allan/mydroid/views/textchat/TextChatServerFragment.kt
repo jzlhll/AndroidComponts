@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.mydroid.R
 import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.MyDroidConst
+import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.views.AbsLiveFragment
+import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
@@ -15,6 +18,24 @@ import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
 
 class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
+    private fun clickOnSendBtn() {
+        val text = binding.edit.text.toString()
+        if (text.isNotEmpty()) {
+            binding.edit.clearFocus()
+            binding.edit.setText("")
+            //todo 现在就发送文字，附件先不管
+            val sender = WSChatMessageBean.Sender().apply {
+                name = MyDroidConst.serverName
+                color = Globals.getColor(R.color.logic_text_chat_server)
+                isServer = true
+                platform = "androidApp" //todo 增加服务平台
+            }
+            val content = WSChatMessageBean.Content(text, null)
+            val bean = WSChatMessageBean(sender, content, "delivered")
+            MyDroidGlobalService.websocketServer?.serverSendTextChatMessage(bean)
+        }
+    }
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
         binding.loadingHost.gone()
@@ -28,6 +49,10 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
 
         binding.toolbarCenter.onClick {
 
+        }
+
+        binding.enterBtn.onClick {
+            clickOnSendBtn()
         }
 
         binding.edit.setMaxLength(Int.MAX_VALUE)
@@ -74,6 +99,6 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
 
     override fun onStart() {
         super.onStart()
-        MyDroidConst.myDroidMode = MyDroidMode.TextChat
+        MyDroidConst.currentDroidMode = MyDroidMode.TextChat
     }
 }
