@@ -3,6 +3,7 @@ package com.allan.mydroid.views.textchat
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.allan.mydroid.R
+import com.allan.mydroid.beans.MyDroidMode
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.views.AbsLiveFragment
@@ -17,8 +18,13 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         super.onBindingCreated(savedInstanceState)
         binding.loadingHost.gone()
+
         val titleFmt = getString(R.string.text_chat_server_next)
         binding.toolbar.setTitle(String.format(titleFmt, 0))
+        MyDroidConst.clientListLiveData.observe(this) { clientList->
+            val titleFmt = getString(R.string.text_chat_server_next)
+            binding.toolbar.setTitle(String.format(titleFmt, clientList.size))
+        }
 
         binding.toolbarCenter.onClick {
 
@@ -65,4 +71,9 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
     }
 
     override fun isAutoHideIme() = true
+
+    override fun onStart() {
+        super.onStart()
+        MyDroidConst.myDroidMode = MyDroidMode.TextChat
+    }
 }

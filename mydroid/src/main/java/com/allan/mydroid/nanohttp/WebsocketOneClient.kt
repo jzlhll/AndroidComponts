@@ -18,7 +18,6 @@ import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.launchOnThread
-import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_android.utilsmedia.getExternalFreeSpace
@@ -47,6 +46,8 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
      */
     var clientName = "$remoteIpStr@--"
         private set
+
+    var isHtml = true
 
     var openTs:Long = System.currentTimeMillis()
 
@@ -108,6 +109,8 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
         when (api) {
             API_WS_INIT -> {
                 val targetName = json.optString("wsName")
+                val isHtml = json.optBoolean("isHtml")
+                this.isHtml = isHtml
                 clientName = "$remoteIpStr@$targetName"
                 server.triggerConnectionsList()
 

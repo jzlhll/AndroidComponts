@@ -10,7 +10,7 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
-import com.au.module_androidui.toast.toastOnTop
+import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import com.github.lzyzsd.jsbridge.BridgeUtil
 import com.github.lzyzsd.jsbridge.DefaultHandler
 import com.google.gson.Gson

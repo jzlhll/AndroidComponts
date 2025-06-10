@@ -10,6 +10,7 @@ enum class MyDroidMode {
     Middle,
     Image,
     Video,
+    TextChat
 }
 
 /**
@@ -23,5 +24,6 @@ fun MyDroidMode.toName(): String {
         MyDroidMode.None -> Globals.getString(R.string.my_droid_mode_none)
         MyDroidMode.Image -> Globals.getString(R.string.my_droid_mode_image)
         MyDroidMode.Video -> Globals.getString(R.string.my_droid_mode_video)
+        MyDroidMode.TextChat -> Globals.getString(R.string.text_chat_pro)
     }
 }

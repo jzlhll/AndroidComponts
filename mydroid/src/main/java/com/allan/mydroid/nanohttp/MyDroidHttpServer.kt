@@ -4,7 +4,7 @@ import com.allan.mydroid.R
 import com.allan.mydroid.beans.ABORT_UPLOAD_CHUNKS
 import com.allan.mydroid.beans.MERGE_CHUNKS
 import com.allan.mydroid.beans.MyDroidMode
-import com.allan.mydroid.beans.READ_WEBSOCKET_IP_PORT
+import com.allan.mydroid.beans.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.beans.UPLOAD_CHUNK
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
@@ -83,13 +83,22 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             // 主页面请求
             url == "/" -> {
                 //todo 增加middle页面
-                if (MyDroidConst.myDroidMode == MyDroidMode.Send) {
-                    serveAssetFile("transfer/send.html")
-                } else {
-                    serveAssetFile("transfer/receiver.html")
+                when (MyDroidConst.myDroidMode) {
+                    MyDroidMode.Send -> {
+                        serveAssetFile("transfer/send.html")
+                    }
+                    MyDroidMode.Receiver -> {
+                        serveAssetFile("transfer/receiver.html")
+                    }
+                    MyDroidMode.TextChat -> { //客户端直接请求是通过TEXT_CHAT_READ_WEBSOCKET_IP_PORT请求得到的。
+                        newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support TextChat yet. Coming soon.")
+                    }
+                    else -> {
+                        newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support Get E02.")
+                    }
                 }
             }
-            url == READ_WEBSOCKET_IP_PORT -> {
+            url == TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> {
                 getWebsocketIpPort()
             }
             // JS 文件请求
@@ -99,8 +108,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
                 serverJsFile("transfer/$jsName")
             }
             else -> {
-                logdNoFile { "handle get request $url" }
-                newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")
+                newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support Get E01.")
             }
         }
     }
@@ -111,7 +119,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
-            READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
+            TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
             else -> newFixedLengthResponse(R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }

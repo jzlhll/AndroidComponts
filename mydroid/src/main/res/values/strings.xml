@@ -63,7 +63,7 @@
     <string name="app_file_send">File Send</string>
     <string name="file_receive">File Receive</string>
     <string name="text_chat_pro">Text Chat (pro)</string>
-    <string name="text_chat_server_next">Text Chat (Server: %d) ▶</string>
+    <string name="text_chat_server_next">Text Chat Server: %d ▶</string>
     <string name="text_chat_client_next">Text Chat ▶</string>
     <string name="app_file_receive">File Receive</string>
     <string name="transfer_server">Transit Server (pro)</string>

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.mydroid.api.Api
 import com.allan.mydroid.api.IpPortBean
-import com.allan.mydroid.beans.READ_WEBSOCKET_IP_PORT
+import com.allan.mydroid.beans.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.loge
 import kotlinx.coroutines.launch
@@ -24,8 +24,7 @@ class TextChatClientViewModel : ViewModel() {
         logd { "currentBaseUrl ${Api.currentBaseUrl}" }
         viewModelScope.launch {
             try {
-                val data = Api.requestResultData<IpPortBean>(READ_WEBSOCKET_IP_PORT)
-                logd { "data $data" }
+                val data = Api.requestResultData<IpPortBean>(TEXT_CHAT_READ_WEBSOCKET_IP_PORT)
                 if (data != null) {
                     wsClient?.shutdown()
                     val newClient = TextChatWsClient(ip, port, successOpenBlock)

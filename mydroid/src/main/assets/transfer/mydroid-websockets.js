@@ -50,10 +50,11 @@
                 console.log('WebSocket 连接已建立');
                 // 发送初始数据
                 const n = generateUUID();
-                const wsName = n.substring(0, 8);
+                const wsName = n.substring(0, 6);
                 const wsInit = {};
                 wsInit.api = API_WS_INIT;
                 wsInit.wsName = wsName;
+                wsInit.isHtml = true;
                 socket.send(JSON.stringify(wsInit));
             };
     

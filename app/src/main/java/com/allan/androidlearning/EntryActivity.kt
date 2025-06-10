@@ -16,7 +16,7 @@ import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.bindings.BindingActivity
 import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
-import com.au.module_androidui.toast.toastOnTop
+import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

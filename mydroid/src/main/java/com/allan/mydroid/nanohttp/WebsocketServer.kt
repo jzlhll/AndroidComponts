@@ -76,7 +76,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     fun triggerConnectionsList() {
         val list = ArrayList<WebSocketClientInfo>()
         connections.forEach {
-            list.add(WebSocketClientInfo(it.clientName, it.openTs, it.colorIcon))
+            list.add(WebSocketClientInfo(it.clientName, it.isHtml, it.openTs, it.colorIcon))
         }
         list.sortByDescending { it.enterTs }
         logdNoFile { "after change websocket client size ${list.size}" }
@@ -95,6 +95,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
             MyDroidMode.Middle -> WebsocketSendModeMessenger(client)
             MyDroidMode.None,
             MyDroidMode.Image,
+            MyDroidMode.TextChat,
             MyDroidMode.Video -> WebsocketReceiverModeMessenger(client)
         }
         client.messenger = parser

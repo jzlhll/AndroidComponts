@@ -16,7 +16,7 @@ import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.visible
 import com.au.module_android.utilsmedia.shareFile
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
-import com.au.module_androidui.toast.toastOnTop
+import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
