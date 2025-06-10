@@ -1,4 +1,4 @@
-package com.allan.mydroid.nanohttp.h5client
+package com.allan.mydroid.nanohttp
 
 import com.au.module_android.utils.logd
 import java.nio.ByteBuffer

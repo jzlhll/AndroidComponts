@@ -1,4 +1,4 @@
-package com.allan.mydroid.htmlbeans
+package com.allan.mydroid.beans
 
 import androidx.annotation.Keep
 import com.au.module_android.api.ResultBean

@@ -1,4 +1,4 @@
-package com.allan.mydroid.benas
+package com.allan.mydroid.beans
 
 const val PROCESS_CHUNK = "chunk"
 const val PROCESS_MERGING = "merging"

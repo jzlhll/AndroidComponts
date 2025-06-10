@@ -3,9 +3,9 @@ package com.allan.mydroid.globals
 import android.app.Activity
 import android.os.SystemClock
 import androidx.annotation.MainThread
-import com.allan.mydroid.benas.IpInfo
+import com.allan.mydroid.beans.IpInfo
 import com.allan.mydroid.nanohttp.MyDroidHttpServer
-import com.allan.mydroid.nanohttp.MyDroidWSServer
+import com.allan.mydroid.nanohttp.WebsocketServer
 import com.allan.mydroid.views.AbsLiveFragment
 import com.au.module_android.Globals
 import com.au.module_android.init.IInterestLife
@@ -22,7 +22,7 @@ import java.net.ServerSocket
 
 object MyDroidGlobalService : InterestActivityCallbacks() {
     private var httpServer: MyDroidHttpServer?= null
-    var websocketServer: MyDroidWSServer?= null
+    var websocketServer: WebsocketServer?= null
 
     private var mLastHttpServerPort = 10595
     private var mLastWsServerPort = 15595
@@ -78,14 +78,13 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
         val p = findAvailablePort()
         val wsPort = findAvailableWsPort()
         httpServer = MyDroidHttpServer(p)
-        websocketServer = MyDroidWSServer(wsPort)
-        httpServer?.webSocketServer = websocketServer
+        websocketServer = WebsocketServer(wsPort)
 
         logd { "start server with port: $p, wsPort: $wsPort" }
 
         try {
             httpServer?.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
-            websocketServer?.start(MyDroidWSServer.Companion.WEBSOCKET_READ_TIMEOUT.toInt(), false)
+            websocketServer?.start(WebsocketServer.WEBSOCKET_READ_TIMEOUT.toInt(), false)
 
             MyDroidConst.serverIsOpen = true
             val realValue = MyDroidConst.ipPortData.realValue ?: IpInfo("", null, null)

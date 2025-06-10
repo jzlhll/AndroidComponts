@@ -1,13 +1,11 @@
 package com.allan.mydroid.nanohttp
 
 import androidx.annotation.ColorRes
-import com.allan.mydroid.benas.MyDroidMode
-import com.allan.mydroid.benas.WebSocketClientInfo
+import com.allan.mydroid.R
+import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.beans.WebSocketClientInfo
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
-import com.allan.mydroid.nanohttp.h5client.ClientWebSocket
-import com.allan.mydroid.nanohttp.h5client.MsgParserReceiverMode
-import com.allan.mydroid.nanohttp.h5client.MsgParserSendMode
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -17,15 +15,19 @@ import kotlinx.coroutines.cancel
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 
-class MyDroidWSServer(port:Int) : NanoWSD(port) {
+class WebsocketServer(port:Int) : NanoWSD(port) {
     companion object {
-        const val HEARTBEAT_INTERVAL: Long = 60 * 1000
-        const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL + 15 * 1000
+        /**
+         * 心跳时间
+         */
+        const val HEARTBEAT_INTERVAL: Long = 45 * 1000
+
+        /**
+         * 服务端开启的一条webSocket通道的最长心跳时间。因此设置的心跳要比这个值短。
+         */
+        const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL * 2 + HEARTBEAT_INTERVAL / 2
 
         const val WS_CODE_CLOSE_BY_CLIENT = 1000
-
-        const val PING_PAYLOAD_TEXT = "myDroid_ping"
-        val PING_PAYLOAD = PING_PAYLOAD_TEXT.toByteArray()
     }
 
     private val executor = Executors.newSingleThreadExecutor()
@@ -34,17 +36,17 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
     /**
      * 多个websocket客户端共享同一线程、scope
      */
-    val heartbeatScope = CoroutineScope(singleThreadDispatcher)
+    val scope = CoroutineScope(singleThreadDispatcher)
 
-    private val connections: MutableList<ClientWebSocket> = CopyOnWriteArrayList()
+    private val connections: MutableList<WebsocketOneClient> = CopyOnWriteArrayList()
 
     private var currentColorIconIndex = 0
     private val colorIconList = listOf(
-        com.allan.mydroid.R.color.client_send_1,
-        com.allan.mydroid.R.color.client_send_2,
-        com.allan.mydroid.R.color.client_send_3,
-        com.allan.mydroid.R.color.client_send_4,
-        com.allan.mydroid.R.color.client_send_5,
+        R.color.client_send_1,
+        R.color.client_send_2,
+        R.color.client_send_3,
+        R.color.client_send_4,
+        R.color.client_send_5,
         )
 
     @ColorRes
@@ -57,13 +59,13 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         }
     }
 
-    fun addIntoConnections(websocket: ClientWebSocket) {
+    fun addIntoConnections(websocket: WebsocketOneClient) {
         MyDroidGlobalService.updateAliveTs("when new client add")
         connections.add(websocket)
         triggerConnectionsList()
     }
 
-    fun removeFromConnections(websocket: ClientWebSocket) {
+    fun removeFromConnections(websocket: WebsocketOneClient) {
         connections.remove(websocket)
         triggerConnectionsList()
     }
@@ -77,6 +79,7 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
             list.add(WebSocketClientInfo(it.clientName, it.openTs, it.colorIcon))
         }
         list.sortByDescending { it.enterTs }
+        logdNoFile { "after change websocket client size ${list.size}" }
         MyDroidConst.clientListLiveData.setValueSafe(list)
     }
 
@@ -85,14 +88,14 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
         val nextColorIcon = nextColorIcon()
         logdNoFile { "open web Socket handshake uri: $uri nextColorIcon $nextColorIcon" }
         //uri = uri.replaceFirst("/", "", true)
-        val client = ClientWebSocket(handshake, this, nextColorIcon())
+        val client = WebsocketOneClient(handshake, this, nextColorIcon())
         val parser = when (MyDroidConst.myDroidMode) {
-            MyDroidMode.Receiver -> MsgParserReceiverMode(client)
-            MyDroidMode.Send -> MsgParserSendMode(client)
-            MyDroidMode.Middle -> MsgParserSendMode(client)
+            MyDroidMode.Receiver -> WebsocketReceiverModeMessenger(client)
+            MyDroidMode.Send -> WebsocketSendModeMessenger(client)
+            MyDroidMode.Middle -> WebsocketSendModeMessenger(client)
             MyDroidMode.None,
             MyDroidMode.Image,
-            MyDroidMode.Video -> MsgParserReceiverMode(client)
+            MyDroidMode.Video -> WebsocketReceiverModeMessenger(client)
         }
         client.messenger = parser
         return client
@@ -106,7 +109,7 @@ class MyDroidWSServer(port:Int) : NanoWSD(port) {
     override fun stop() {
         super.stop()
         logdNoFile { "stopped and cancel heartbeat scope" }
-        heartbeatScope.cancel()
+        scope.cancel()
         executor.shutdown()
         MyDroidConst.clientListLiveData.setValueSafe(emptyList())
     }

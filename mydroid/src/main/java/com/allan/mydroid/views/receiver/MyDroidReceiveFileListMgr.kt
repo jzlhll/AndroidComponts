@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.mydroid.R
 import com.allan.mydroid.globals.MyDroidGlobalService
-import com.allan.mydroid.nanohttp.MyDroidMess
+import com.allan.mydroid.globals.MyDroidMess
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.utils.asOrNull

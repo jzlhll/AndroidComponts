@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.allan.mydroid.api.Api
 import com.allan.mydroid.api.IpPortBean
-import com.allan.mydroid.benas.READ_WEBSOCKET_IP_PORT
+import com.allan.mydroid.beans.READ_WEBSOCKET_IP_PORT
 import com.au.module_android.utils.logd
 import com.au.module_android.utils.loge
 import kotlinx.coroutines.launch

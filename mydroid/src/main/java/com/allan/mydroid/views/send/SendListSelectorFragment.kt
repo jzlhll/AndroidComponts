@@ -9,7 +9,7 @@ import com.allan.mydroid.R
 import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.views.MyDroidKeepLiveService
-import com.allan.mydroid.benas.UriRealInfoEx
+import com.allan.mydroid.beans.UriRealInfoEx
 import com.allan.mydroid.databinding.ActivityMyDroidSendlistBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick

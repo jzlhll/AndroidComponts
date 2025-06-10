@@ -1,24 +1,24 @@
-package com.allan.mydroid.nanohttp.h5client
+package com.allan.mydroid.nanohttp
 
 import android.net.Uri
 import androidx.lifecycle.Observer
-import com.allan.mydroid.benas.UriRealInfoEx
-import com.allan.mydroid.benas.UriRealInfoHtml
+import com.allan.mydroid.R
+import com.allan.mydroid.beans.UriRealInfoEx
+import com.allan.mydroid.beans.UriRealInfoHtml
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.SMALL_FILE_DEFINE_SIZE
 import com.allan.mydroid.globals.getWSSendFileChunkSize
-import com.allan.mydroid.htmlbeans.API_WS_FILE_DOWNLOAD_COMPLETE
-import com.allan.mydroid.htmlbeans.API_WS_REQUEST_FILE
-import com.allan.mydroid.htmlbeans.API_WS_SEND_FILE_CHUNK
-import com.allan.mydroid.htmlbeans.API_WS_SEND_FILE_LIST
-import com.allan.mydroid.htmlbeans.API_WS_SEND_FILE_NOT_EXIST
-import com.allan.mydroid.htmlbeans.API_WS_SEND_SMALL_FILE_CHUNK
-import com.allan.mydroid.htmlbeans.FileListForHtmlResult
-import com.allan.mydroid.htmlbeans.NotExistResult
-import com.allan.mydroid.htmlbeans.WSChunkActionResult
-import com.allan.mydroid.htmlbeans.WSResultBean
-import com.allan.mydroid.nanohttp.AbsMsgParser
+import com.allan.mydroid.beans.API_WS_FILE_DOWNLOAD_COMPLETE
+import com.allan.mydroid.beans.API_WS_REQUEST_FILE
+import com.allan.mydroid.beans.API_WS_SEND_FILE_CHUNK
+import com.allan.mydroid.beans.API_WS_SEND_FILE_LIST
+import com.allan.mydroid.beans.API_WS_SEND_FILE_NOT_EXIST
+import com.allan.mydroid.beans.API_WS_SEND_SMALL_FILE_CHUNK
+import com.allan.mydroid.beans.FileListForHtmlResult
+import com.allan.mydroid.beans.NotExistResult
+import com.allan.mydroid.beans.WSChunkActionResult
+import com.allan.mydroid.beans.WSResultBean
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.json.toJsonString
@@ -33,17 +33,17 @@ import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.InputStream
 
-class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
+class WebsocketSendModeMessenger(client: WebsocketOneClient) : AbsWebSocketClientMessenger(client) {
     private val sendUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
-        override fun onChanged(map: HashMap<String, UriRealInfoEx>) {
+        override fun onChanged(value: HashMap<String, UriRealInfoEx>) {
             val cvtList = mutableListOf<UriRealInfoHtml>()
-            map.values.forEach { urlRealInfoEx->
+            value.values.forEach { urlRealInfoEx->
                 if (urlRealInfoEx.isChecked) {
                     cvtList.add(urlRealInfoEx.copyToHtml())
                 }
             }
-            client.server.heartbeatScope.launchOnThread {
-                val ret = WSResultBean(CODE_SUC, com.allan.mydroid.R.string.send_files_to_html.resStr(), API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
+            client.server.scope.launchOnThread {
+                val ret = WSResultBean(CODE_SUC, R.string.send_files_to_html.resStr(), API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
                 logt { "send:$json" }
@@ -74,7 +74,7 @@ class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
             API_WS_FILE_DOWNLOAD_COMPLETE -> {
                 val uriUuid = json.optString("uriUuid")
                 MyDroidConst.sendUriMap.value?.get(uriUuid)?.let { info->
-                    val fmt = com.allan.mydroid.R.string.send_success_fmt.resStr()
+                    val fmt = R.string.send_success_fmt.resStr()
                     ToastBuilder().setOnTop().setMessage(String.format(fmt, info.goodName())).toast()
                 }
             }
@@ -108,7 +108,6 @@ class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
     fun onFileSendComplete(info: UriRealInfoEx?) {
         logdNoFile { "${client.clientName} onFile Send Complete : $info" }
         client.scope?.launchOnIOThread {
-
         }
     }
 
@@ -147,7 +146,7 @@ class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
                 client.send(
                     WSResultBean(
                         CODE_SUC,
-                        com.allan.mydroid.R.string.file_not_exist.resStr(),
+                        R.string.file_not_exist.resStr(),
                         API_WS_SEND_FILE_NOT_EXIST, NotExistResult(uriUuid)
                     ).toJsonString())
             }
@@ -173,7 +172,7 @@ class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
 
         val startJson = WSResultBean(
             CODE_SUC,
-            com.allan.mydroid.R.string.send_file_start.resStr(), api,
+            R.string.send_file_start.resStr(), api,
             WSChunkActionResult(
                 "start",
                 uriUuid, fileSize ?: 0,
@@ -192,7 +191,7 @@ class MsgParserSendMode(client: ClientWebSocket) : AbsMsgParser(client) {
         delay(1000)
         val endJson = WSResultBean(
             CODE_SUC,
-            Globals.getString(com.allan.mydroid.R.string.send_file_end),
+            Globals.getString(R.string.send_file_end),
             api,
             WSChunkActionResult("end", uriUuid, offset, index, fileName ?: "")
         ).toJsonString()

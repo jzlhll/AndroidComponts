@@ -2,8 +2,8 @@ package com.allan.mydroid.views.send
 
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.allan.mydroid.benas.MyDroidMode
-import com.allan.mydroid.benas.UriRealInfoEx
+import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.beans.UriRealInfoEx
 import com.allan.mydroid.databinding.FragmentMyDroidSendBinding
 import com.allan.mydroid.databinding.MydroidSendClientBinding
 import com.allan.mydroid.globals.MyDroidConst

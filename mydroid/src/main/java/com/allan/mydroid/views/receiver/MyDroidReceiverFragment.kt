@@ -7,7 +7,7 @@ import androidx.core.os.bundleOf
 import com.allan.mydroid.R
 import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.mydroid.globals.MyDroidConst
-import com.allan.mydroid.benas.MyDroidMode
+import com.allan.mydroid.beans.MyDroidMode
 import com.allan.mydroid.databinding.FragmentMyDroidReceiveBinding
 import com.allan.mydroid.views.AbsLiveFragment
 import com.allan.mydroid.views.send.SendListSelectorFragment

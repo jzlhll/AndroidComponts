@@ -1,15 +1,16 @@
 package com.allan.mydroid.nanohttp
 
-import com.allan.mydroid.benas.ABORT_UPLOAD_CHUNKS
-import com.allan.mydroid.benas.MERGE_CHUNKS
-import com.allan.mydroid.benas.MyDroidMode
-import com.allan.mydroid.benas.READ_WEBSOCKET_IP_PORT
-import com.allan.mydroid.benas.UPLOAD_CHUNK
+import com.allan.mydroid.R
+import com.allan.mydroid.beans.ABORT_UPLOAD_CHUNKS
+import com.allan.mydroid.beans.MERGE_CHUNKS
+import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.beans.READ_WEBSOCKET_IP_PORT
+import com.allan.mydroid.beans.UPLOAD_CHUNK
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.globals.okJsonResponse
-import com.allan.mydroid.htmlbeans.IpPortResult
+import com.allan.mydroid.beans.IpPortResult
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean
@@ -40,8 +41,6 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
     }
 
     private val chunksMgr: IChunkMgr = MyDroidHttpChunksMgr()
-
-    var webSocketServer : MyDroidWSServer? = null
 
     override fun serve(session: IHTTPSession): Response {
         // 处理跨域预检请求 (OPTIONS)
@@ -113,7 +112,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
             READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
-            else -> newFixedLengthResponse(com.allan.mydroid.R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
+            else -> newFixedLengthResponse(R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }
 
@@ -127,7 +126,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             logdNoFile { "get websocket ipPort $info" }
             ResultBean(CODE_SUC, "Success!", info).okJsonResponse()
         } else {
-            newFixedLengthResponse(com.allan.mydroid.R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
+            newFixedLengthResponse(R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }
     }
 

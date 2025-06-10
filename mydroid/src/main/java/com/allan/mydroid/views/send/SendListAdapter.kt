@@ -1,7 +1,7 @@
 package com.allan.mydroid.views.send
 
 import android.view.ViewGroup
-import com.allan.mydroid.benas.UriRealInfoEx
+import com.allan.mydroid.beans.UriRealInfoEx
 import com.allan.mydroid.databinding.HolderMydroidSendlistItemBinding
 import com.allan.mydroid.globals.getIcon
 import com.au.module_nested.recyclerview.BindRcvAdapter

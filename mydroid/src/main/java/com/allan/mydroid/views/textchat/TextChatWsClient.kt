@@ -1,6 +1,6 @@
 package com.allan.mydroid.views.textchat
 
-import com.allan.mydroid.nanohttp.MyDroidWSServer.Companion.WS_CODE_CLOSE_BY_CLIENT
+import com.allan.mydroid.nanohttp.WebsocketServer.Companion.WS_CODE_CLOSE_BY_CLIENT
 import com.au.module_android.utils.logdNoFile
 import okhttp3.Response
 import okhttp3.WebSocket

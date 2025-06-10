@@ -1,4 +1,4 @@
-package com.allan.mydroid.benas
+package com.allan.mydroid.beans
 
 /**
  * 不需要keep

@@ -1,6 +1,5 @@
-package com.allan.mydroid.htmlbeans
+package com.allan.mydroid.beans
 
 import androidx.annotation.Keep
-import com.allan.mydroid.benas.UriRealInfoHtml
 
 data class FileListForHtmlResult(@Keep val urlRealInfoHtmlList:List<UriRealInfoHtml>)

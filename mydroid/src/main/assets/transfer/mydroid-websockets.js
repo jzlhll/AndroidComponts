@@ -3,6 +3,8 @@
     let wsCntInterval = 1000;
     let wsCntIntervalId = null;
 
+    let wsHeartBeatIntervalId = null;
+
     window.WS = null;
 
     window.API_WS_SEND_FILE_LIST = "s_sendFileList";
@@ -15,12 +17,27 @@
     window.API_WS_INIT = "c_wsInit";
     window.API_WS_REQUEST_FILE = "c_requestFile";
     window.API_WS_FILE_DOWNLOAD_COMPLETE = "c_downloadFileComplete";
+    window.API_WS_PING = "c_ping";
+
+    window.HEARTBEAT_INTERVAL = 12000;
+
+    const heartbeatFrame = JSON.stringify({
+                api: window.API_WS_PING
+        });
 
     function stopWebSocketInterval() {
         if (wsCntIntervalId) {
             console.log('停止start WebSocket ConnectInterval');
             clearInterval(wsCntIntervalId);
             wsCntIntervalId = null;
+        }
+    }
+
+    function stopHeartbeatInterval() {
+        if (wsHeartBeatIntervalId) {
+            console.log('停止 HeartBeat Interval');
+            clearInterval(wsHeartBeatIntervalId);
+            wsHeartBeatIntervalId = null;
         }
     }
 
@@ -58,6 +75,7 @@
             // 错误处理
             socket.onerror = (error) => {
                 console.error('WebSocket 错误 todo 占据关闭:', error);
+                
             };
     
             // 连接关闭
@@ -114,6 +132,12 @@
 
         if (isSuc || shouldStopInterval) {
             stopWebSocketInterval();
+        }
+
+        if (isSuc) {
+            wsHeartBeatIntervalId = setInterval(() => {
+                    WS?.send(heartbeatFrame);
+            }, window.HEARTBEAT_INTERVAL);
         }
     }
 

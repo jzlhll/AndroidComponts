@@ -1,22 +1,24 @@
-package com.allan.mydroid.nanohttp.h5client
+package com.allan.mydroid.nanohttp
 
-import com.allan.mydroid.benas.toName
+import com.allan.mydroid.R
+import com.allan.mydroid.beans.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.mydroid.beans.API_WS_INIT
+import com.allan.mydroid.beans.API_WS_LEFT_SPACE
+import com.allan.mydroid.beans.API_WS_PING
+import com.allan.mydroid.beans.LeftSpaceResult
+import com.allan.mydroid.beans.MyDroidModeResult
+import com.allan.mydroid.beans.WSResultBean
+import com.allan.mydroid.beans.toName
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.DEBUG_SLOW_RECEIVER_TRANSFER
 import com.allan.mydroid.globals.DEBUG_SLOW_SEND_TRANSFER
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
-import com.allan.mydroid.htmlbeans.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.mydroid.htmlbeans.API_WS_INIT
-import com.allan.mydroid.htmlbeans.API_WS_LEFT_SPACE
-import com.allan.mydroid.htmlbeans.LeftSpaceResult
-import com.allan.mydroid.htmlbeans.MyDroidModeResult
-import com.allan.mydroid.htmlbeans.WSResultBean
-import com.allan.mydroid.nanohttp.AbsMsgParser
-import com.allan.mydroid.nanohttp.MyDroidWSServer
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.logt
 import com.au.module_android.utilsmedia.getExternalFreeSpace
@@ -24,22 +26,21 @@ import com.au.module_androidui.toast.ToastBuilder
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
 
-class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
-                      var server: MyDroidWSServer,
-                      val colorIcon: Int) : NanoWSD.WebSocket(httpSession) {
+class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
+                         var server: WebsocketServer,
+                         val colorIcon: Int) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
 
     /**
      * 初始化的同时赋值
      */
-    lateinit var messenger : AbsMsgParser
+    lateinit var messenger : AbsWebSocketClientMessenger
 
     /**
      * 客户端名字；就像 192.168.0.6@abde1234
@@ -51,38 +52,35 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     private var isActive = true
 
+    private var mFreeSpaceJob : Job? = null
+
     var scope: CoroutineScope? = null
 
     override fun onOpen() {
         scope = MainScope()
-
         logdNoFile { "$clientName on open:" }
         openTs = System.currentTimeMillis() //必须在前面
         server.addIntoConnections(this)
 
-        heartbeat()
 
         messenger.onOpen()
+        getFreeSpaceJob()
     }
 
-    private fun heartbeat() {
-        server.heartbeatScope.launch {
+    private fun getFreeSpaceJob() {
+        mFreeSpaceJob = scope?.launchOnThread {
             var leftSpaceCount = 0L
             while (isActive) {
                 logdNoFile { "${Thread.currentThread()} $clientName heartbeat!" }
                 leftSpaceCount++
                 try {
-                    if (leftSpaceCount % 3 == 1L) { //隔久一点再告知leftSpace
+                    if (leftSpaceCount * 5 == 1L) { //隔久一点再告知leftSpace
                         val leftSpace = getExternalFreeSpace(Globals.app)
-                        val suc = com.allan.mydroid.R.string.success_message.resStr()
+                        val suc = R.string.success_message.resStr()
                         val json = WSResultBean(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
-                        logt { "send: $json" }
+                        logt { "$clientName send: $json" }
                         send(json)
                     }
-
-                    //心跳 websocket必须ping。浏览器则自动实现了pong。
-                    ping(MyDroidWSServer.Companion.PING_PAYLOAD)
-                    delay(MyDroidWSServer.Companion.HEARTBEAT_INTERVAL)
                 } catch (e: IOException) {
                     onException(e)
                 }
@@ -95,7 +93,7 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
         isActive = false
         server.removeFromConnections(this)
         messenger.onClose()
-
+        mFreeSpaceJob?.cancel()
         scope?.cancel()
         scope = null
     }
@@ -116,6 +114,14 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
                 clientInit()
             }
 
+            API_WS_PING -> {
+                logdNoFile { "$clientName get client ping " }
+                //later 是否要响应，client定时发过来就行。不需要处理。
+//                sendFrame(NanoWSD.WebSocketFrame(NanoWSD.WebSocketFrame.OpCode.Pong,
+//                    true,
+//                    PING_PLAY_LOAD_DATA))
+            }
+
             else -> {
                 messenger.onMessage(api, json)
             }
@@ -126,14 +132,14 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     private fun clientInit() {
         //通过later则不需要注意线程
-        val message = String.format(com.allan.mydroid.R.string.new_webpage_access.resStr(), clientName)
+        val message = String.format(R.string.new_webpage_access.resStr(), clientName)
         ToastBuilder().setMessage(message)
             .setIcon("success")
             .setOnTopLater(200).toast()
 
         val mode = MyDroidConst.myDroidMode.toName()
         val json = WSResultBean(
-            CODE_SUC, com.allan.mydroid.R.string.success_message.resStr(),
+            CODE_SUC, R.string.success_message.resStr(),
             API_WS_CLIENT_INIT_CALLBACK,
             MyDroidModeResult(
                 mode, clientName,
@@ -147,16 +153,17 @@ class ClientWebSocket(httpSession: NanoHTTPD.IHTTPSession,
 
     override fun onPong(pong: NanoWSD.WebSocketFrame) {
         logdNoFile { "$clientName on Pong: " + pong.textPayload }
-        if (pong.textPayload != MyDroidWSServer.Companion.PING_PAYLOAD_TEXT) {
-            onException(IOException("WS: pong is not same!"))
-        }
+//        if (pong.textPayload != WebsocketServer.Companion.PING_PAYLOAD_TEXT) {
+//            onException(IOException("WS: pong is not same!"))
+//        }
     }
 
     override fun onException(exception: IOException) {
         logdNoFile{"$clientName on Exception: " + exception.message}
+        mFreeSpaceJob?.cancel()
         try {
             // 主动发送关闭帧并终止连接
-            close(NanoWSD.WebSocketFrame.CloseCode.InternalServerError, Globals.getString(com.allan.mydroid.R.string.server_error_exception), false)
+            close(NanoWSD.WebSocketFrame.CloseCode.InternalServerError, Globals.getString(R.string.server_error_exception), false)
         } catch (e: IOException) {
             e.printStackTrace()
         }

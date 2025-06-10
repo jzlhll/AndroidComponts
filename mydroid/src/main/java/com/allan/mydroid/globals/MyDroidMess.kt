@@ -1,7 +1,6 @@
-package com.allan.mydroid.nanohttp
+package com.allan.mydroid.globals
 
-import com.allan.mydroid.benas.MergedFileInfo
-import com.allan.mydroid.globals.nanoTempCacheMergedDir
+import com.allan.mydroid.beans.MergedFileInfo
 import com.au.module_android.utils.getFileMD5
 import com.au.module_cached.AppDataStore
 import kotlinx.coroutines.delay

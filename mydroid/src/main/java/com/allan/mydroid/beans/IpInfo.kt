@@ -1,4 +1,4 @@
-package com.allan.mydroid.benas
+package com.allan.mydroid.beans
 
 data class IpInfo(var ip:String,
                   var httpPort:Int?,

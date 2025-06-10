@@ -1,12 +1,13 @@
 package com.allan.mydroid.nanohttp
 
-import com.allan.mydroid.benas.ChunkInfoResult
-import com.allan.mydroid.benas.PROCESS_CHUNK
-import com.allan.mydroid.benas.PROCESS_CHUNK_ERROR
-import com.allan.mydroid.benas.PROCESS_COMPLETED
-import com.allan.mydroid.benas.PROCESS_MERGE_ERROR
-import com.allan.mydroid.benas.PROCESS_MERGING
-import com.allan.mydroid.benas.ReceivingFileInfo
+import com.allan.mydroid.R
+import com.allan.mydroid.beans.ChunkInfoResult
+import com.allan.mydroid.beans.PROCESS_CHUNK
+import com.allan.mydroid.beans.PROCESS_CHUNK_ERROR
+import com.allan.mydroid.beans.PROCESS_COMPLETED
+import com.allan.mydroid.beans.PROCESS_MERGE_ERROR
+import com.allan.mydroid.beans.PROCESS_MERGING
+import com.allan.mydroid.beans.ReceivingFileInfo
 import com.allan.mydroid.globals.CODE_FAIL
 import com.allan.mydroid.globals.CODE_FAIL_MD5_CHECK
 import com.allan.mydroid.globals.CODE_FAIL_MERGE_CHUNK
@@ -80,7 +81,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
             // 2. 获取文件块内容（核心）
             val tmpFileStr = parseBodyFileMap["chunk"]
             if (tmpFileStr.isNullOrEmpty()) {
-                val s = com.allan.mydroid.R.string.file_not_received.resStr()
+                val s = R.string.file_not_received.resStr()
                 return ResultBean<ChunkInfoResult>(CODE_FAIL, s, null).badRequestJsonResponse()
             }
 
@@ -123,7 +124,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
                         chunkIndex,
                         totalChunks,
                         PROCESS_CHUNK_ERROR,
-                        com.allan.mydroid.R.string.chunk_receiver_error.resStr()
+                        R.string.chunk_receiver_error.resStr()
                     )
                 )
             )
@@ -145,7 +146,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         if (md5.isNullOrEmpty() || fileName.isNullOrEmpty()) {
             return ResultBean<ChunkInfoResult>(
                 CODE_FAIL,
-                com.allan.mydroid.R.string.error_merge_chunk_params.resStr(), null).badRequestJsonResponse()
+                R.string.error_merge_chunk_params.resStr(), null).badRequestJsonResponse()
         }
         logt { "handle Merge Chunk $fileName , $md5 , totalChunks:$totalChunks" }
 
@@ -163,7 +164,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
 
         val chunkInfoList = removeChunkInfoList(fileName, md5)
         if (chunkInfoList == null) {
-            val noChunkStr = com.allan.mydroid.R.string.no_chunks.resStr()
+            val noChunkStr = R.string.no_chunks.resStr()
 
             MyDroidConst.receiverProgressData.setValueSafe(
                 mapOf(
@@ -182,7 +183,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         }
         chunkInfoList.sortBy { it.chunkIndex }
         if (chunkInfoList.size != totalChunks) {
-            val chunkNumNotMatchStr = com.allan.mydroid.R.string.chunks_number_not_match.resStr()
+            val chunkNumNotMatchStr = R.string.chunks_number_not_match.resStr()
             MyDroidConst.receiverProgressData.setValueSafe(
                 mapOf(
                     "$fileName-$md5" to ReceivingFileInfo(
@@ -235,11 +236,11 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
             )
             return ResultBean<ChunkInfoResult>(
                 CODE_SUC,
-                com.allan.mydroid.R.string.file_merge_success.resStr()
+                R.string.file_merge_success.resStr()
                 , null).okJsonResponse()
         } else {
             outputFile.delete()
-            val md5FailStr = com.allan.mydroid.R.string.md5_check_failed.resStr()
+            val md5FailStr = R.string.md5_check_failed.resStr()
             MyDroidConst.receiverProgressData.setValueSafe(
                 mapOf(
                     "$fileName-$md5" to ReceivingFileInfo(
@@ -273,7 +274,7 @@ class MyDroidHttpChunksMgr() : IChunkMgr{
         }
         return ResultBean<String>(
             CODE_SUC,
-            com.allan.mydroid.R.string.clear_up.resStr(), null).jsonResponse(Status.OK)
+            R.string.clear_up.resStr(), null).jsonResponse(Status.OK)
     }
 
     // 辅助方法：将请求体转为字符串

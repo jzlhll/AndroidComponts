@@ -1,9 +1,8 @@
 package com.allan.mydroid.nanohttp
 
-import com.allan.mydroid.nanohttp.h5client.ClientWebSocket
 import org.json.JSONObject
 
-abstract class AbsMsgParser(val client: ClientWebSocket) {
+abstract class AbsWebSocketClientMessenger(val client: WebsocketOneClient) {
     abstract fun onOpen()
     abstract fun onClose()
 

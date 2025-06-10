@@ -1,4 +1,4 @@
-package com.allan.mydroid.benas
+package com.allan.mydroid.beans
 
 import android.net.Uri
 import androidx.annotation.Keep
