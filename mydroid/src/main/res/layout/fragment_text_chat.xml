@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.au.module_android.widget.BgBuildCustomFontText
-            android:id="@+id/enterBtn"
+            android:id="@+id/sendBtn"
             android:paddingHorizontal="6dp"
             android:layout_marginEnd="16dp"
             android:gravity="center"
@@ -89,7 +89,7 @@
             style="@style/StyleBlankEditText"
             android:paddingHorizontal="6dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/enterBtn"
+            app:layout_constraintEnd_toStartOf="@id/sendBtn"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
             android:lineSpacingExtra="2sp"
@@ -149,6 +149,7 @@
 
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/loadingHost"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"

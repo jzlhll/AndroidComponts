@@ -26,6 +26,11 @@ class TextChatWsClient(val vmScope: CoroutineScope,
     private val wsName = UUID.randomUUID().toString().substring(0, 6)
 
     /**
+     * 被关闭后的回调
+     */
+    var onClosed:((reason:String)->Unit) = {}
+
+    /**
      * 服务端随机得到的color
      */
     var color:Int? = null
@@ -36,10 +41,18 @@ class TextChatWsClient(val vmScope: CoroutineScope,
         return webSocket?.send(text) ?: false
     }
 
-    fun shutdown() {
+    fun shutdown(reason:String) {
+        manualShutdown()
+        onClosed(reason)
+    }
+
+    fun manualShutdown() {
         isLive = false
-        webSocket?.cancel()
-        webSocket?.close(WS_CODE_CLOSE_BY_CLIENT, null)
+        if (webSocket != null) {
+            webSocket?.cancel()
+            webSocket?.close(WS_CODE_CLOSE_BY_CLIENT, null)
+            webSocket = null
+        }
     }
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -80,15 +93,16 @@ class TextChatWsClient(val vmScope: CoroutineScope,
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
         logdNoFile{"Closing: " + code + " / " + reason}
 //        webSocket.close(WS_CODE_CLOSE_BY_CLIENT, null)
-        shutdown()
+        shutdown(reason)
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         logdNoFile{"Closed: " + code + " / " + reason}
-        shutdown()
+        shutdown(reason)
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         logdNoFile{"onFailure: " + t.message}
+        shutdown("onFailure " + t.message)
     }
 }

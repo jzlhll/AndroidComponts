@@ -32,9 +32,9 @@ import kotlinx.coroutines.delay
 import org.json.JSONObject
 import java.io.IOException
 
-class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
-                         val server: WebsocketServer,
-                         val color: Int) : NanoWSD.WebSocket(httpSession) {
+class WebsocketClientInServer(httpSession: NanoHTTPD.IHTTPSession,
+                              val server: WebsocketServer,
+                              val color: Int) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
 
     /**

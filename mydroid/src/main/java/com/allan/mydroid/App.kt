@@ -1,9 +1,9 @@
 package com.allan.mydroid
 
-import android.widget.Toast
 import com.allan.mydroid.api.Api
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.globals.cacheImportCopyDir
+import com.au.logsystem.DefaultActivitiesFollowCallback
 import com.au.module_android.Globals
 import com.au.module_android.InitApplication
 import com.au.module_android.utils.clearDirOldFiles
@@ -56,6 +56,7 @@ class App : InitApplication() {
         })
 
         registerActivityLifecycleCallbacks(MyDroidGlobalService)
+        registerActivityLifecycleCallbacks(DefaultActivitiesFollowCallback())
 
         //一上来直接强制移除所有临时import的文件。
         Globals.mainScope.launchOnIOThread {

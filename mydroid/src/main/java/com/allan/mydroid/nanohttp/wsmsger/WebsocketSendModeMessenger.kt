@@ -22,7 +22,7 @@ import com.allan.mydroid.globals.SMALL_FILE_DEFINE_SIZE
 import com.allan.mydroid.globals.getWSSendFileChunkSize
 import com.allan.mydroid.nanohttp.AbsWebSocketClientMessenger
 import com.allan.mydroid.nanohttp.BufferManager
-import com.allan.mydroid.nanohttp.WebsocketOneClient
+import com.allan.mydroid.nanohttp.WebsocketClientInServer
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.json.fromJson
@@ -38,7 +38,7 @@ import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.InputStream
 
-class WebsocketSendModeMessenger(client: WebsocketOneClient) : AbsWebSocketClientMessenger(client) {
+class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocketClientMessenger(client) {
     private val sendUriMapOb = object : Observer<HashMap<String, UriRealInfoEx>> {
         override fun onChanged(value: HashMap<String, UriRealInfoEx>) {
             val cvtList = mutableListOf<UriRealInfoHtml>()

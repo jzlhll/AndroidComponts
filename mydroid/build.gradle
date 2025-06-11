@@ -62,4 +62,5 @@ dependencies {
     implementation project(":Module-Nested")
     implementation project(":Module-ImageCompressed")
     implementation project(":Module-Okhttp")
+    implementation project(":Module-AndroidLogSystem")
 }

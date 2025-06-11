@@ -29,12 +29,12 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
         /**
          * 心跳时间
          */
-        const val HEARTBEAT_INTERVAL: Long = 45 * 1000
+        const val HEARTBEAT_INTERVAL: Long = 15 * 1000 //45 * 1000
 
         /**
          * 服务端开启的一条webSocket通道的最长心跳时间。因此设置的心跳要比这个值短。
          */
-        const val WEBSOCKET_READ_TIMEOUT = HEARTBEAT_INTERVAL * 2 + HEARTBEAT_INTERVAL / 2
+        const val WEBSOCKET_READ_TIMEOUT = 22 * 1000 //HEARTBEAT_INTERVAL * 2 + HEARTBEAT_INTERVAL / 2
 
         const val WS_CODE_CLOSE_BY_CLIENT = 1000
     }
@@ -47,15 +47,15 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
      */
     val scope = CoroutineScope(singleThreadDispatcher)
 
-    private val clients: MutableList<WebsocketOneClient> = CopyOnWriteArrayList()
+    private val clients: MutableList<WebsocketClientInServer> = CopyOnWriteArrayList()
 
-    fun addIntoConnections(websocket: WebsocketOneClient) {
+    fun addIntoConnections(websocket: WebsocketClientInServer) {
         MyDroidGlobalService.updateAliveTs("when new client add")
         clients.add(websocket)
         triggerConnectionsList()
     }
 
-    fun removeFromConnections(websocket: WebsocketOneClient) {
+    fun removeFromConnections(websocket: WebsocketClientInServer) {
         clients.remove(websocket)
         triggerConnectionsList()
     }
@@ -78,7 +78,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
         val nextColor = nextColor()
         logdNoFile { "open web Socket handshake uri: $uri nextColor $nextColor" }
         //uri = uri.replaceFirst("/", "", true)
-        val client = WebsocketOneClient(handshake, this, nextColor)
+        val client = WebsocketClientInServer(handshake, this, nextColor)
         val parser = when (MyDroidConst.currentDroidMode) {
             MyDroidMode.Receiver -> WebsocketNoneModeMessenger(client) //接受文件，都走http而非ws。所以给空实现即可。
             MyDroidMode.TextChat -> WebsocketTextChatModeMessenger(client)
@@ -109,7 +109,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     /**
      * 当新的客户端消息来了。
      */
-    fun onTextChatMessageArrived(client:WebsocketOneClient, message: WSChatMessageBean) {
+    fun onTextChatMessageArrived(client:WebsocketClientInServer, message: WSChatMessageBean) {
         logdNoFile { "${client.clientName} arrived $message" }
         message.timestamp = System.currentTimeMillis()
         message.setStatusToDelivered()
