@@ -2,15 +2,22 @@ package com.allan.mydroid.views.textchat
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.databinding.FragmentTextChatBinding
+import com.allan.mydroid.views.textchat.uibean.AbsItem
+import com.allan.mydroid.views.textchat.uibean.MeItem
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
+import kotlinx.coroutines.launch
 
 abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBinding) {
+    private lateinit var adapter: TextChatRcvAdapter
+
     fun onCreate() {
         binding.edit.setMaxLength(Int.MAX_VALUE)
 
@@ -33,11 +40,51 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         }
 
         initSendButton()
+
+        initRcv()
     }
 
-    abstract fun send(bean : WSChatMessageBean)
+    abstract fun buttonSend(bean : WSChatMessageBean)
 
     abstract fun createBean(content: WSChatMessageBean.Content) : WSChatMessageBean
+
+    /**
+     * 当发送后，即可将该条bean添加显示
+     */
+    fun onAddChatItem(newItem: AbsItem) {
+        f.lifecycleScope.launch {
+            var foundIndex = -1
+            //找到之前的发送中的item。todo ui上的转圈变化。
+            if (newItem is MeItem) {
+                run loop@ {
+                    adapter.datas.forEachIndexed { index, item ->
+                        if (item is MeItem) {
+                            item.message.messageId == newItem.message.messageId
+                            foundIndex = index
+                            return@loop
+                        } else {
+                            false
+                        }
+                    }
+                }
+            }
+
+            if (foundIndex >= 0) {
+                adapter.updateItem(foundIndex, newItem)
+            } else {
+                adapter.addItem(newItem)
+            }
+        }
+    }
+
+    private fun initRcv() {
+        binding.rcv.adapter = TextChatRcvAdapter().also { adapter = it }
+        binding.rcv.layoutManager = LinearLayoutManager(f.requireContext()).apply {
+            orientation = LinearLayoutManager.VERTICAL
+        }
+        binding.rcv.setHasFixedSize(false)
+        binding.rcv.itemAnimator = null
+    }
 
     private fun initSendButton() {
         binding.sendBtn.onClick {
@@ -45,7 +92,7 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
             if (text.isNotEmpty()) {
                 binding.edit.clearFocus()
                 binding.edit.setText("")
-                send(createBean(WSChatMessageBean.Content(text, null))) //todo file
+                buttonSend(createBean(WSChatMessageBean.Content(text, null))) //todo file
             }
         }
     }

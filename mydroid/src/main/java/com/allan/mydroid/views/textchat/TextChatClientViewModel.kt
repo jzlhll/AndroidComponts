@@ -26,7 +26,10 @@ class TextChatClientViewModel : ViewModel() {
      * 输入ip和port，这是看到server手机上的ip/port是http。
      * 需要请求获取websocket的ip和port。
      */
-    fun connectServer(ip: String, port: Int, cannotOpenBlock:(String)->Unit, successOpenBlock:()->Unit) {
+    fun connectServer(ip: String, port: Int,
+                      cannotOpenBlock:(String)->Unit,
+                      onTransferClientMsgCallback:((message: WSChatMessageBean)->Unit),
+                      successOpenBlock:()->Unit) {
         Api.currentBaseUrl = "http://$ip:$port"
         logd { "currentBaseUrl ${Api.currentBaseUrl}" }
         viewModelScope.launch {
@@ -39,6 +42,7 @@ class TextChatClientViewModel : ViewModel() {
                         logd { "reason: $reason" }
                         closedData.setValueSafe(reason)
                     }
+                    newClient.onTransferClientMsgCallback = onTransferClientMsgCallback
                     Api.connectWSServer(data.ip, data.port, newClient)
                     wsClient = newClient
                 }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="12dp"
+    android:paddingBottom="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/edgeGuide"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edgeGuide"
+        tools:src="@drawable/ic_head_client"
+        android:tint="@color/color_text_normal"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+
+    <com.au.module_android.widget.CustomFontText
+        android:id="@+id/nameTv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/icon"
+        android:maxLines="1"
+        android:layout_marginEnd="4dp"
+        style="@style/StyleFontSecondaryText"
+        tools:text="192.168.0.3:5555 | @xx2x2d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.BgBuildConstraintLayout
+        android:id="@+id/contentHost"
+        app:layout_constraintEnd_toStartOf="@id/icon"
+        app:layout_constraintStart_toStartOf="@id/startGuide"
+        app:layout_constraintTop_toBottomOf="@id/nameTv"
+        app:backgroundNormal="@color/color_normal_block"
+        app:cornerRadius="8dp"
+        android:padding="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/text"
+            android:paddingHorizontal="2dp"
+            style="@style/StyleFontText"
+            app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
+            android:maxLength="1999"
+            tools:text="This is a text for show. A long long long a a long long\n can your see\n I do anything"
+            android:layout_width="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fileTypeIcon"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:src="@drawable/ic_filetype_archive"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/fileNameTv"
+            style="@style/StyleFontText"
+            app:layout_constraintEnd_toStartOf="@id/fileTypeIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="end"
+            android:paddingHorizontal="4dp"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="start"
+            tools:text="xx xxx xxx.zip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/fileSizeAndMD5Tv"
+            android:paddingHorizontal="4dp"
+            style="@style/StyleFontSecondTitleText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:maxLines="3"
+            android:gravity="end"
+            app:layout_constraintEnd_toStartOf="@id/fileTypeIcon"
+            app:layout_constraintTop_toBottomOf="@id/fileNameTv"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="text ajdkfjfdkfaklfd jakfjkad fjadjkfkjd f89fjkadsfjk " />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/fileGroup"
+            android:visibility="gone"
+            app:constraint_referenced_ids="fileNameTv, fileSizeAndMD5Tv, fileTypeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.au.module_android.widget.BgBuildConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

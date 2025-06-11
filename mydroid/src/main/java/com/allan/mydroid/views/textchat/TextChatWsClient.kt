@@ -2,6 +2,7 @@ package com.allan.mydroid.views.textchat
 
 import com.allan.mydroid.beans.API_WS_CLIENT_INIT_CALLBACK
 import com.allan.mydroid.beans.API_WS_INIT
+import com.allan.mydroid.beans.API_WS_TEXT_CHAT_MSG
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.beans.WSInitBean
 import com.allan.mydroid.nanohttp.WebsocketServer.Companion.WS_CODE_CLOSE_BY_CLIENT
@@ -9,6 +10,7 @@ import com.au.module_android.json.fromJson
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -20,10 +22,16 @@ import java.util.UUID
  * 运行在客户端中的通过okhttp WebSocket client实例。
  */
 class TextChatWsClient(val vmScope: CoroutineScope,
-                       val ip: String, val port: Int,
+                       val ip: String,
+                       val port: Int,
                        private val successOpenBlock: () -> Unit) : WebSocketListener() {
     private var webSocket: WebSocket? = null
     private val wsName = UUID.randomUUID().toString().substring(0, 6)
+
+    /**
+     * 将服务器发送过来的消息进行转发到UI中去
+     */
+    var onTransferClientMsgCallback:((message: WSChatMessageBean)->Unit)? = null
 
     /**
      * 被关闭后的回调
@@ -48,6 +56,8 @@ class TextChatWsClient(val vmScope: CoroutineScope,
 
     fun manualShutdown() {
         isLive = false
+        onTransferClientMsgCallback = null
+
         if (webSocket != null) {
             webSocket?.cancel()
             webSocket?.close(WS_CODE_CLOSE_BY_CLIENT, null)
@@ -77,12 +87,18 @@ class TextChatWsClient(val vmScope: CoroutineScope,
             API_WS_CLIENT_INIT_CALLBACK -> {
                 color = json.optInt("color")
             }
-        }
-        val bean = text.fromJson<WSChatMessageBean>()
-        if (bean != null) {
-            logdNoFile{ "Message received1: $text" }
-        } else {
-            logdNoFile{ "Message received0: $text" }
+
+            API_WS_TEXT_CHAT_MSG -> {
+                val bean = text.fromJson<WSChatMessageBean>()
+                if (bean != null) {
+                    logdNoFile{ "Message received1: $text" }
+                    vmScope.launch {
+                        onTransferClientMsgCallback?.invoke(bean)
+                    }
+                } else {
+                    logdNoFile{ "Message received0: $text" }
+                }
+            }
         }
     }
         

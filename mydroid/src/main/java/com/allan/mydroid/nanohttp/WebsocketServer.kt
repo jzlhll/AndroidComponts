@@ -15,6 +15,7 @@ import com.au.module_android.Globals
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.isMainThread
 import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.launchOnUi
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -48,6 +49,11 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     val scope = CoroutineScope(singleThreadDispatcher)
 
     private val clients: MutableList<WebsocketClientInServer> = CopyOnWriteArrayList()
+
+    /**
+     * 将客户端的消息往外通知，主要是给到UI做追加显示
+     */
+    var onTransferClientMsgCallback:((message: WSChatMessageBean)->Unit)? = null
 
     fun addIntoConnections(websocket: WebsocketClientInServer) {
         MyDroidGlobalService.updateAliveTs("when new client add")
@@ -126,11 +132,18 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
                 clients.forEach { c->
                     c.send(json)
                 }
+
+                scope.launchOnUi {
+                    onTransferClientMsgCallback?.invoke(message)
+                }
             }
         } else {
             val json = message.toJsonString()
             clients.forEach { c->
                 c.send(json)
+            }
+            scope.launchOnUi {
+                onTransferClientMsgCallback?.invoke(message)
             }
         }
     }

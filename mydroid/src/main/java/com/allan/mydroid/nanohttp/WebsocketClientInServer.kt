@@ -64,7 +64,6 @@ class WebsocketClientInServer(httpSession: NanoHTTPD.IHTTPSession,
         openTs = System.currentTimeMillis() //必须在前面
         server.addIntoConnections(this)
 
-
         messenger.onOpen()
         getFreeSpaceJob()
     }

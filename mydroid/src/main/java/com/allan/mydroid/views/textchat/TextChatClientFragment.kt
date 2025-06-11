@@ -10,6 +10,8 @@ import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.LifeSimpleNetworkObserver
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.utils.BlurViewEx
+import com.allan.mydroid.views.textchat.uibean.MeItem
+import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
@@ -44,8 +46,9 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
     private val viewModel by lazy { ViewModelProvider(this)[TextChatClientViewModel::class.java] }
 
     private val common by unsafeLazy { object : TextChatCommon(this, binding) {
-        override fun send(bean: WSChatMessageBean) {
+        override fun buttonSend(bean: WSChatMessageBean) {
             viewModel.wsClient?.sendText(bean.toJsonString())
+            onAddChatItem(MeItem().also { it.message = bean })
         }
 
         override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
@@ -101,7 +104,14 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
      * 连接服务器。
      */
     fun connectServer(ip: String, port: Int) {
-        viewModel.connectServer(ip, port, cannotOpenBlock = {
+        viewModel.connectServer(ip, port,
+            onTransferClientMsgCallback = { bean->
+                logd { "onTransferClientMsg from: ${bean.sender}" }
+                var isMe = false //todo 判断是不是自己
+                 val item = if(isMe) MeItem().also { it.message = bean } else OtherItem().also { it.message = bean }
+                common.onAddChatItem(item)
+            },
+            cannotOpenBlock = {
             toastOnTop(it, icon = "fail")
             showLoadingAndInputDialog()
         }) {

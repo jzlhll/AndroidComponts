@@ -1,0 +1,75 @@
+package com.allan.mydroid.views.textchat
+
+import android.content.res.ColorStateList
+import com.allan.mydroid.databinding.TextchatItemMeBinding
+import com.allan.mydroid.databinding.TextchatItemOtherBinding
+import com.allan.mydroid.databinding.TextchatItemStatusNotifyBinding
+import com.allan.mydroid.globals.getIcon
+import com.allan.mydroid.views.textchat.uibean.AbsItem
+import com.allan.mydroid.views.textchat.uibean.MeItem
+import com.allan.mydroid.views.textchat.uibean.OtherItem
+import com.allan.mydroid.views.textchat.uibean.StatusItem
+import com.au.module_android.utils.gone
+import com.au.module_android.utils.visible
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
+
+class TextChatRcvHolderStatus(binding: TextchatItemStatusNotifyBinding) : BindViewHolder<AbsItem, TextchatItemStatusNotifyBinding>(binding) {
+    override fun bindData(bean: AbsItem) {
+        super.bindData(bean)
+        bean as StatusItem
+        binding.statusTv.text = bean.status
+    }
+}
+
+class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsItem, TextchatItemMeBinding>(binding) {
+    override fun bindData(bean: AbsItem) {
+        super.bindData(bean)
+        bean as MeItem
+        binding.icon.setImageResource(com.allan.mydroid.R.drawable.ic_head_client)
+        binding.icon.imageTintList = ColorStateList.valueOf(bean.message.sender.color)
+        binding.nameTv.text = bean.message.sender.name
+        //todo 文件和文字共存
+        if (bean.message.content.text.isNotEmpty()) {
+            binding.text.text = bean.message.content.text
+            binding.text.visible()
+        } else {
+            binding.text.gone()
+        }
+
+        val file = bean.message.content.file
+        if (file != null) {
+            binding.fileTypeIcon.setImageResource(getIcon(file.name))
+            binding.fileNameTv.text = file.name
+            binding.fileSizeAndMD5Tv.text = file.fileSizeStr
+            binding.fileGroup.visible()
+        } else {
+            binding.fileGroup.gone()
+        }
+    }
+}
+
+class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder<AbsItem, TextchatItemOtherBinding>(binding) {
+    override fun bindData(bean: AbsItem) {
+        super.bindData(bean)
+        bean as OtherItem
+        binding.icon.setImageResource(com.allan.mydroid.R.drawable.ic_head_host)
+        binding.nameTv.text = bean.message.sender.name
+        //todo 文件和文字共存
+        if (bean.message.content.text.isNotEmpty()) {
+            binding.text.text = bean.message.content.text
+            binding.text.visible()
+        } else {
+            binding.text.gone()
+        }
+
+        val file = bean.message.content.file
+        if (file != null) {
+            binding.fileTypeIcon.setImageResource(getIcon(file.name))
+            binding.fileNameTv.text = file.name
+            binding.fileSizeAndMD5Tv.text = file.fileSizeStr
+            binding.fileGroup.visible()
+        } else {
+            binding.fileGroup.gone()
+        }
+    }
+}

@@ -8,6 +8,8 @@ import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.views.AbsLiveFragment
+import com.allan.mydroid.views.textchat.uibean.MeItem
+import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.gone
@@ -26,8 +28,10 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
                 return WSChatMessageBean(sender, content, "delivered")
             }
 
-            override fun send(bean: WSChatMessageBean) {
+            override fun buttonSend(bean: WSChatMessageBean) {
+                //我自己的点击消息
                 MyDroidGlobalService.websocketServer?.serverSendTextChatMessage(bean)
+                onAddChatItem(MeItem().also { it.message = bean })
             }
         }
     }
@@ -35,6 +39,15 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
     override fun onStart() {
         super.onStart()
         MyDroidConst.currentDroidMode = MyDroidMode.TextChat
+        //接收中转的msg
+        MyDroidGlobalService.websocketServer?.onTransferClientMsgCallback = { bean->
+            common.onAddChatItem(OtherItem().also { it.message = bean })
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        MyDroidGlobalService.websocketServer?.onTransferClientMsgCallback = null
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
