@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.au.logsystem.view.DragRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dragRoot"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.au.module_android.widget.BgBuildCustomFontText
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        app:backgroundNormal="#66CAE1E8"
+        android:alpha="0.75"
+        app:cornerRadius="6dp"
+        android:text="LogSys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</com.au.logsystem.view.DragRelativeLayout>

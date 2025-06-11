@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 import java.io.IOException
 
@@ -70,21 +71,19 @@ class WebsocketOneClient(httpSession: NanoHTTPD.IHTTPSession,
 
     private fun getFreeSpaceJob() {
         mFreeSpaceJob = scope?.launchOnThread {
-            var leftSpaceCount = 0L
+            delay(1000L)
             while (isActive) {
-                logdNoFile { "${Thread.currentThread()} $clientName heartbeat!" }
-                leftSpaceCount++
+                logdNoFile { "${Thread.currentThread()} $clientName send free space job!" }
                 try {
-                    if (leftSpaceCount * 5 == 1L) { //隔久一点再告知leftSpace
-                        val leftSpace = getExternalFreeSpace(Globals.app)
-                        val suc = R.string.success_message.resStr()
-                        val json = WSResultBean(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
-                        logt { "$clientName send: $json" }
-                        send(json)
-                    }
+                    val leftSpace = getExternalFreeSpace(Globals.app)
+                    val suc = R.string.success_message.resStr()
+                    val json = WSResultBean(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
+                    logt { "$clientName send: $json" }
+                    send(json)
                 } catch (e: IOException) {
                     onException(e)
                 }
+                delay(5 * 60 * 1000L)
             }
         }
     }
