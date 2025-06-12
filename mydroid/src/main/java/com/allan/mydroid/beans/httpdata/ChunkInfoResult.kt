@@ -1,4 +1,4 @@
-package com.allan.mydroid.beans
+package com.allan.mydroid.beans.httpdata
 
 import androidx.annotation.Keep
 import java.io.File

@@ -1,7 +1,7 @@
 package com.allan.mydroid.views.receiver
 
 import android.annotation.SuppressLint
-import com.allan.mydroid.beans.MergedFileInfo
+import com.allan.mydroid.beansinner.MergedFileInfo
 import com.allan.mydroid.databinding.HolderMydroidReceiverFileitemBinding
 import com.allan.mydroid.globals.getIcon
 import com.au.module_android.click.onClick

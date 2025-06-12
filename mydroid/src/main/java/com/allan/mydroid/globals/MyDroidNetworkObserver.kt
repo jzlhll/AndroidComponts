@@ -1,6 +1,6 @@
 package com.allan.mydroid.globals
 
-import com.allan.mydroid.beans.IpInfo
+import com.allan.mydroid.beansinner.IpInfo
 import com.au.module_android.init.IInterestLife
 import com.au.module_android.utils.logt
 import com.au.module_androidui.toast.ToastBuilder

@@ -2,8 +2,9 @@ package com.allan.mydroid.views.send
 
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.allan.mydroid.beans.MyDroidMode
-import com.allan.mydroid.beans.UriRealInfoEx
+import androidx.core.graphics.toColorInt
+import com.allan.mydroid.api.MyDroidMode
+import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.databinding.FragmentMyDroidSendBinding
 import com.allan.mydroid.databinding.MydroidSendClientBinding
 import com.allan.mydroid.globals.MyDroidConst
@@ -70,7 +71,7 @@ class MyDroidSendFragment : AbsLiveFragment<FragmentMyDroidSendBinding>() {
                 val item = clientItem(index)
                 item.title.text = clientInfo.clientName
                 item.icon.background = ViewBackgroundBuilder()
-                    .setBackground(clientInfo.color)
+                    .setBackground(clientInfo.color.toColorInt())
                     .setCornerRadius(32f.dp)
                     .build()
                 if (!item.root.isAttachedToWindow) {

@@ -1,4 +1,4 @@
-package com.allan.mydroid.beans
+package com.allan.mydroid.beansinner
 
 import androidx.annotation.Keep
 

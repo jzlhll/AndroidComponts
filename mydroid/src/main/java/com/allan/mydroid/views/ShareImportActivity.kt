@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import com.allan.mydroid.beans.UriRealInfoEx
+import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.databinding.ActivityImportBinding
 import com.allan.mydroid.globals.CACHE_IMPORT_COPY_DIR
 import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW

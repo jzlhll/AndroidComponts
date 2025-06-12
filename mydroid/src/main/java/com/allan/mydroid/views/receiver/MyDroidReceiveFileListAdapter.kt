@@ -1,7 +1,7 @@
 package com.allan.mydroid.views.receiver
 
 import android.view.ViewGroup
-import com.allan.mydroid.beans.MergedFileInfo
+import com.allan.mydroid.beansinner.MergedFileInfo
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import java.io.File
 

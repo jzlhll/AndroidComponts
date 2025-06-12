@@ -2,16 +2,14 @@ package com.allan.mydroid.views.textchat
 
 import android.os.Bundle
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.api.MyDroidMode
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.views.AbsLiveFragment
-import com.allan.mydroid.views.textchat.uibean.MeItem
 import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.au.module_android.Globals
-import com.au.module_android.click.onClick
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.unsafeLazy
 
@@ -21,7 +19,7 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
             override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
                 val sender = WSChatMessageBean.Sender().apply {
                     name = MyDroidConst.serverName
-                    color = Globals.getColor(R.color.logic_text_chat_server)
+                    color = Globals.getString(com.au.module_androidcolor.R.string.color_text_normal_str)
                     isServer = true
                     platform = "androidApp" //todo 增加服务平台
                 }

@@ -1,16 +1,16 @@
 package com.allan.mydroid.nanohttp
 
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.ABORT_UPLOAD_CHUNKS
-import com.allan.mydroid.beans.MERGE_CHUNKS
-import com.allan.mydroid.beans.MyDroidMode
-import com.allan.mydroid.beans.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
-import com.allan.mydroid.beans.UPLOAD_CHUNK
+import com.allan.mydroid.api.ABORT_UPLOAD_CHUNKS
+import com.allan.mydroid.api.MERGE_CHUNKS
+import com.allan.mydroid.api.MyDroidMode
+import com.allan.mydroid.api.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
+import com.allan.mydroid.api.UPLOAD_CHUNK
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.globals.okJsonResponse
-import com.allan.mydroid.beans.IpPortResult
+import com.allan.mydroid.beans.httpdata.IpPortResult
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean

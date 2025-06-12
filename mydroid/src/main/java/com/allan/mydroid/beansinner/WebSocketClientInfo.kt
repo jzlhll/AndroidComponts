@@ -1,4 +1,4 @@
-package com.allan.mydroid.beans
+package com.allan.mydroid.beansinner
 
 /**
  * 不需要keep
@@ -6,4 +6,4 @@ package com.allan.mydroid.beans
 data class WebSocketClientInfo(val clientName:String,
                                val platform: String,
                                val enterTs:Long,
-                               val color:Int)
+                               val color:String)

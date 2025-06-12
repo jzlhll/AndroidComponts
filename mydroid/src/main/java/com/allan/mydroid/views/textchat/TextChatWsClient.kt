@@ -1,14 +1,16 @@
 package com.allan.mydroid.views.textchat
 
-import com.allan.mydroid.beans.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.mydroid.beans.API_WS_INIT
-import com.allan.mydroid.beans.API_WS_TEXT_CHAT_MSG
-import com.allan.mydroid.beans.MyDroidModeResult
+import com.allan.mydroid.api.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.mydroid.api.API_WS_INIT
+import com.allan.mydroid.api.API_WS_TEXT_CHAT_MSG
+import com.allan.mydroid.beans.wsdata.MyDroidModeData
 import com.allan.mydroid.beans.WSChatMessageBean
-import com.allan.mydroid.beans.WSInitBean
+import com.allan.mydroid.beans.wsdata.WSInitData
 import com.allan.mydroid.nanohttp.WebsocketServer.Companion.WS_CODE_CLOSE_BY_CLIENT
+import com.au.module_android.Globals
 import com.au.module_android.json.fromJson
 import com.au.module_android.json.toJsonString
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.unsafeLazy
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +20,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import org.json.JSONObject
+import java.io.EOFException
 import java.util.UUID
 
 /**
@@ -47,7 +50,7 @@ class TextChatWsClient(val vmScope: CoroutineScope,
     /**
      * 服务端随机得到的color
      */
-    var color:Int? = null
+    var color:String? = null
 
     var isLive = false
 
@@ -76,7 +79,7 @@ class TextChatWsClient(val vmScope: CoroutineScope,
         this.webSocket = webSocket
         isLive = true
 
-        val bean = WSInitBean(API_WS_INIT, wsName, "androidApp")
+        val bean = WSInitData(API_WS_INIT, wsName, "androidApp")
         webSocket.send(bean.toJsonString())
 
         successOpenBlock()
@@ -92,8 +95,8 @@ class TextChatWsClient(val vmScope: CoroutineScope,
         val data = json?.optString("data")
         when (api) {
             API_WS_CLIENT_INIT_CALLBACK -> {
-                val dataBean = data?.fromJson<MyDroidModeResult>()
-                color = dataBean?.color ?: android.graphics.Color.BLACK
+                val dataBean = data?.fromJson<MyDroidModeData>()
+                color = (dataBean?.color ?: "#212121")
                 logdNoFile { "client get init color $color" }
             }
 
@@ -127,7 +130,11 @@ class TextChatWsClient(val vmScope: CoroutineScope,
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-        logdNoFile{"onFailure: " + t.message}
-        shutdown("onFailure " + t.message)
+        logd{"onFailure: " + t}
+        if (t is EOFException) {
+            shutdown(Globals.getString(com.allan.mydroid.R.string.server_is_closed))
+        } else {
+            shutdown("onFailure " + t.message)
+        }
     }
 }

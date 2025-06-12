@@ -3,14 +3,19 @@ package com.allan.mydroid.views.textchat
 import android.os.Bundle
 import com.allan.mydroid.databinding.TextchatIpportInputDialogBinding
 import com.au.module_android.click.onClick
+import com.au.module_android.postToMainHandler
 import com.au.module_android.ui.base.findDialog
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.unsafeLazy
+import com.au.module_androidui.toast.ToastBuilder
 import com.au.module_cached.delegate.SharedPrefStringCache
 
 class TextChatClientIpPortInputDialog : BindingFragment<TextchatIpportInputDialogBinding>() {
     private var ipCache by SharedPrefStringCache("textchat_server_ip", "")
     private var portCache by SharedPrefStringCache("textchat_server_port", "")
+
+    val errorToast by unsafeLazy { arguments?.getString("errorToast") }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.ipInput.setText(ipCache)
@@ -33,6 +38,12 @@ class TextChatClientIpPortInputDialog : BindingFragment<TextchatIpportInputDialo
 
         binding.cancelBtn.onClick {
             parentFragment?.parentFragment?.requireActivity()?.finishAfterTransition()
+        }
+
+        if (errorToast != null) {
+            postToMainHandler {
+                ToastBuilder().setMessage(errorToast).setOnFragmentDialog(this).setIcon("fail").toast()
+            }
         }
     }
 }

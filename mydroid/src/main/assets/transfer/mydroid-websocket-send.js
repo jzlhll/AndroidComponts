@@ -8,14 +8,14 @@
     window.startDownloadUri = function(uriUuid) {
         const json = {};
         json.api = API_WS_REQUEST_FILE;
-        json.uriUuid = uriUuid;
+        json.data = {uriUuid: uriUuid};
         WS.send(JSON.stringify(json));
     }
 
     window.downloadUriComplete = function(uriUuid) {
         const json = {};
         json.api = API_WS_FILE_DOWNLOAD_COMPLETE;
-        json.uriUuid = uriUuid;
+        json.data = {uriUuid: uriUuid};
         WS.send(JSON.stringify(json));
     }
 

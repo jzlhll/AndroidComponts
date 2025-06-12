@@ -1,6 +1,6 @@
 package com.allan.mydroid.globals
 
-import com.allan.mydroid.beans.MergedFileInfo
+import com.allan.mydroid.beansinner.MergedFileInfo
 import com.au.module_android.utils.getFileMD5
 import com.au.module_cached.AppDataStore
 import kotlinx.coroutines.delay

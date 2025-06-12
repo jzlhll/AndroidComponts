@@ -1,10 +1,10 @@
 package com.allan.mydroid.globals
 
-import com.allan.mydroid.beans.IpInfo
-import com.allan.mydroid.beans.MyDroidMode
-import com.allan.mydroid.beans.ReceivingFileInfo
-import com.allan.mydroid.beans.UriRealInfoEx
-import com.allan.mydroid.beans.WebSocketClientInfo
+import com.allan.mydroid.beansinner.IpInfo
+import com.allan.mydroid.api.MyDroidMode
+import com.allan.mydroid.beansinner.ReceivingFileInfo
+import com.allan.mydroid.beansinner.UriRealInfoEx
+import com.allan.mydroid.beansinner.WebSocketClientInfo
 import com.au.module_android.Globals
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.simplelivedata.RealValueLiveData

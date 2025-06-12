@@ -1,4 +1,4 @@
-package com.allan.mydroid.beans
+package com.allan.mydroid.api
 
 import com.au.module_android.Globals
 import com.allan.mydroid.R

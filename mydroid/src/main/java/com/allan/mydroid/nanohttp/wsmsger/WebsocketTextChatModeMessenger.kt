@@ -1,6 +1,6 @@
 package com.allan.mydroid.nanohttp.wsmsger
 
-import com.allan.mydroid.beans.API_WS_TEXT_CHAT_MSG
+import com.allan.mydroid.api.API_WS_TEXT_CHAT_MSG
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.nanohttp.AbsWebSocketClientMessenger
 import com.allan.mydroid.nanohttp.WebsocketClientInServer

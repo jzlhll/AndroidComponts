@@ -1,14 +1,13 @@
 package com.allan.mydroid.views.textchat
 
-import android.graphics.Color
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.allan.mydroid.R
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.LifeSimpleNetworkObserver
-import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.utils.BlurViewEx
 import com.allan.mydroid.views.textchat.uibean.MeItem
 import com.allan.mydroid.views.textchat.uibean.OtherItem
@@ -18,7 +17,6 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
-import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import kotlinx.coroutines.launch
 
 class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
@@ -56,7 +54,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
         override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
             val sender = WSChatMessageBean.Sender().apply {
                 name = viewModel.wsClient?.goodName() ?: "unknown"
-                color = viewModel.wsClient?.color ?: Color.BLACK
+                color = (viewModel.wsClient?.color ?: "#212121")
                 isServer = false
                 platform = "androidApp" //todo 增加服务平台
             }
@@ -78,11 +76,13 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
         showLoadingAndInputDialog()
     }
 
-    private fun showLoadingAndInputDialog() {
+    private fun showLoadingAndInputDialog(errorToast:String? = null) {
         binding.loadingHost.visible()
 
         if (!viewModel.isWSClientConnected()) {
-            FragmentBottomSheetDialog.show<TextChatClientIpPortInputDialog>(childFragmentManager, hasEditText = true)
+            FragmentBottomSheetDialog.show<TextChatClientIpPortInputDialog>(childFragmentManager,
+                bundleOf("errorToast" to errorToast),
+                hasEditText = true)
         }
     }
 
@@ -99,8 +99,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
 
         viewModel.closedData.observe(this) {
             logd { "get closedData $it" }
-            toastOnTop(it, icon = "fail")
-            showLoadingAndInputDialog()
+            showLoadingAndInputDialog(it)
         }
 
         val fmt = getString(R.string.not_close_window)
@@ -116,8 +115,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
         viewModel.connectServer(ip, port,
             onTransferClientMsgCallback = onServerMsg,
             cannotOpenBlock = {
-            toastOnTop(it, icon = "fail")
-            showLoadingAndInputDialog()
+            showLoadingAndInputDialog(it)
         }) {
             lifecycleScope.launch {
                 binding.loadingHost.visibility = android.view.View.GONE

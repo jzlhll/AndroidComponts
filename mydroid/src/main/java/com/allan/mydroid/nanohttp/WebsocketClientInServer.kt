@@ -1,14 +1,14 @@
 package com.allan.mydroid.nanohttp
 
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.mydroid.beans.API_WS_INIT
-import com.allan.mydroid.beans.API_WS_LEFT_SPACE
-import com.allan.mydroid.beans.API_WS_PING
-import com.allan.mydroid.beans.LeftSpaceResult
-import com.allan.mydroid.beans.MyDroidModeResult
-import com.allan.mydroid.beans.WSResultBean
-import com.allan.mydroid.beans.toName
+import com.allan.mydroid.api.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.mydroid.api.API_WS_INIT
+import com.allan.mydroid.api.API_WS_LEFT_SPACE
+import com.allan.mydroid.api.API_WS_PING
+import com.allan.mydroid.beans.wsdata.LeftSpaceData
+import com.allan.mydroid.beans.wsdata.MyDroidModeData
+import com.allan.mydroid.beans.WSResultBox
+import com.allan.mydroid.api.toName
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.DEBUG_SLOW_RECEIVER_TRANSFER
 import com.allan.mydroid.globals.DEBUG_SLOW_SEND_TRANSFER
@@ -34,7 +34,7 @@ import java.io.IOException
 
 class WebsocketClientInServer(httpSession: NanoHTTPD.IHTTPSession,
                               val server: WebsocketServer,
-                              val color: Int) : NanoWSD.WebSocket(httpSession) {
+                              val color: String) : NanoWSD.WebSocket(httpSession) {
     private val remoteIpStr: String? = httpSession.remoteIpAddress
 
     /**
@@ -76,7 +76,7 @@ class WebsocketClientInServer(httpSession: NanoHTTPD.IHTTPSession,
                 try {
                     val leftSpace = getExternalFreeSpace(Globals.app)
                     val suc = R.string.success_message.resStr()
-                    val json = WSResultBean(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceResult(leftSpace)).toJsonString()
+                    val json = WSResultBox(CODE_SUC, suc, API_WS_LEFT_SPACE, LeftSpaceData(leftSpace)).toJsonString()
                     logt { "$clientName send: $json" }
                     send(json)
                 } catch (e: IOException) {
@@ -139,10 +139,10 @@ class WebsocketClientInServer(httpSession: NanoHTTPD.IHTTPSession,
             .setOnTopLater(200).toast()
 
         val mode = MyDroidConst.currentDroidMode.toName()
-        val json = WSResultBean(
-            CODE_SUC, R.string.success_message.resStr(),
+        val json = WSResultBox(
+            CODE_SUC, null,
             API_WS_CLIENT_INIT_CALLBACK,
-            MyDroidModeResult(
+            MyDroidModeData(
                 mode,
                 clientName,
                 color,

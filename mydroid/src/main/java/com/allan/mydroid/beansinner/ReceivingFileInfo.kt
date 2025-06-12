@@ -1,11 +1,4 @@
-package com.allan.mydroid.beans
-
-const val PROCESS_CHUNK = "chunk"
-const val PROCESS_MERGING = "merging"
-const val PROCESS_ABORTED = "aborted"
-const val PROCESS_COMPLETED = "completed"
-const val PROCESS_CHUNK_ERROR = "chunkError"
-const val PROCESS_MERGE_ERROR = "mergeError"
+package com.allan.mydroid.beansinner
 
 /**
  * process可选：chunk, merging, aborted, completed, chunkError, mergeError

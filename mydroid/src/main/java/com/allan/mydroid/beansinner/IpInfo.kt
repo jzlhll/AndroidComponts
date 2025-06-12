@@ -1,4 +1,4 @@
-package com.allan.mydroid.beans
+package com.allan.mydroid.beansinner
 
 data class IpInfo(var ip:String,
                   var httpPort:Int?,

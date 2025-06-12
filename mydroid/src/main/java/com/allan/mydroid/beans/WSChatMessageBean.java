@@ -1,13 +1,18 @@
 package com.allan.mydroid.beans;
 
-import static com.allan.mydroid.beans.WSApisKt.API_WS_TEXT_CHAT_MSG;
+import static com.allan.mydroid.api.WSApisConstStrsKt.API_WS_TEXT_CHAT_MSG;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.allan.mydroid.beansinner.UriRealInfoHtml;
+
 import java.util.UUID;
 
+/**
+ * 这个暂定与WSResultBox相同级别。
+ */
 @Keep
 public class WSChatMessageBean {
     public WSChatMessageBean(@NonNull Sender sender, @NonNull Content content, @NonNull String status) {
@@ -22,7 +27,7 @@ public class WSChatMessageBean {
         //public String userId;
         public String name;
         //public String avatar;
-        public int color;
+        public String color;
         public boolean isServer;
 
         /**

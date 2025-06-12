@@ -17,6 +17,7 @@
 
     <!-- 文字颜色 -->
     <color name="color_text_normal">#ffffff</color>
+    <string name="color_text_normal_str" translatable="false">"#ffffff"</string>
     <color name="color_text_normal_press">#ccffffff</color>
     <color name="color_text_reverse">#212121</color>
     <color name="color_text_reverse_press">#cc212121</color>

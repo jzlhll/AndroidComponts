@@ -1,13 +1,13 @@
 package com.allan.mydroid.nanohttp
 
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.ChunkInfoResult
-import com.allan.mydroid.beans.PROCESS_CHUNK
-import com.allan.mydroid.beans.PROCESS_CHUNK_ERROR
-import com.allan.mydroid.beans.PROCESS_COMPLETED
-import com.allan.mydroid.beans.PROCESS_MERGE_ERROR
-import com.allan.mydroid.beans.PROCESS_MERGING
-import com.allan.mydroid.beans.ReceivingFileInfo
+import com.allan.mydroid.beans.httpdata.ChunkInfoResult
+import com.allan.mydroid.api.PROCESS_CHUNK
+import com.allan.mydroid.api.PROCESS_CHUNK_ERROR
+import com.allan.mydroid.api.PROCESS_COMPLETED
+import com.allan.mydroid.api.PROCESS_MERGE_ERROR
+import com.allan.mydroid.api.PROCESS_MERGING
+import com.allan.mydroid.beansinner.ReceivingFileInfo
 import com.allan.mydroid.globals.CODE_FAIL
 import com.allan.mydroid.globals.CODE_FAIL_MD5_CHECK
 import com.allan.mydroid.globals.CODE_FAIL_MERGE_CHUNK

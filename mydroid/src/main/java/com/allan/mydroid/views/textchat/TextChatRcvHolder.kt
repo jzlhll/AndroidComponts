@@ -1,6 +1,7 @@
 package com.allan.mydroid.views.textchat
 
 import android.content.res.ColorStateList
+import androidx.core.graphics.toColorInt
 import com.allan.mydroid.databinding.TextchatItemMeBinding
 import com.allan.mydroid.databinding.TextchatItemOtherBinding
 import com.allan.mydroid.databinding.TextchatItemStatusNotifyBinding
@@ -11,6 +12,7 @@ import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.allan.mydroid.views.textchat.uibean.StatusItem
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.unsafeLazy
 import com.au.module_android.utils.visible
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
@@ -30,7 +32,7 @@ class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsIt
         val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
         binding.icon.setImageResource(headIcon)
         logdNoFile { "colorcolor1 ${bean.message.sender.color}" }
-        binding.icon.imageTintList = ColorStateList.valueOf(bean.message.sender.color)
+        binding.icon.imageTintList = colorStateListMap(bean.message.sender.color)
         binding.nameTv.text = bean.message.sender.name
         //todo 文件和文字共存
         if (bean.message.content.text.isNotEmpty()) {
@@ -60,7 +62,7 @@ class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder
         val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
         binding.icon.setImageResource(headIcon)
         logdNoFile { "colorcolor2 ${bean.message.sender.color}" }
-        binding.icon.imageTintList = ColorStateList.valueOf(bean.message.sender.color)
+        binding.icon.imageTintList = colorStateListMap(bean.message.sender.color)
         binding.nameTv.text = bean.message.sender.name
         //todo 文件和文字共存
         if (bean.message.content.text.isNotEmpty()) {
@@ -80,4 +82,19 @@ class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder
             binding.fileGroup.gone()
         }
     }
+}
+
+/**
+ * key是color的String形式；value是ColorStateList
+ */
+private val colorStateMap by unsafeLazy { HashMap<String, ColorStateList>() }
+
+private fun colorStateListMap(color:String): ColorStateList {
+    val csl = colorStateMap[color]
+    if (csl == null) {
+        val newCsl = ColorStateList.valueOf(color.toColorInt())
+        colorStateMap[color] = newCsl
+        return newCsl
+    }
+    return csl
 }

@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.UriRealInfoEx
+import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.globals.MyDroidConst
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr

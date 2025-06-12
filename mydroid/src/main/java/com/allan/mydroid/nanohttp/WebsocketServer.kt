@@ -1,18 +1,13 @@
 package com.allan.mydroid.nanohttp
 
-import android.annotation.SuppressLint
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.core.graphics.toColorInt
-import com.allan.mydroid.beans.MyDroidMode
+import com.allan.mydroid.api.MyDroidMode
 import com.allan.mydroid.beans.WSChatMessageBean
-import com.allan.mydroid.beans.WebSocketClientInfo
+import com.allan.mydroid.beansinner.WebSocketClientInfo
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.nanohttp.wsmsger.WebsocketNoneModeMessenger
 import com.allan.mydroid.nanohttp.wsmsger.WebsocketSendModeMessenger
 import com.allan.mydroid.nanohttp.wsmsger.WebsocketTextChatModeMessenger
-import com.au.module_android.Globals
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.isMainThread
 import com.au.module_android.utils.launchOnThread
@@ -151,19 +146,18 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
 
     //color示例////
     private val colorIconList = listOf(
-        "#3D7C42".toColorInt(),
-        "#FF9E80".toColorInt(),
-        "#6A3188".toColorInt(),
-        "#895DF8".toColorInt(),
-        "#CEBE55".toColorInt(),
-        "#5CCE99".toColorInt(),
-        "#ce626e".toColorInt(),
-        "#71a3ce".toColorInt(),
+        "#3D7C42",
+        "#FF9E80",
+        "#6A3188",
+        "#895DF8",
+        "#CEBE55",
+        "#5CCE99",
+        "#ce626e",
+        "#71a3ce",
     )
     private var currentColorIconIndex = (Math.random() * colorIconList.size).toInt()
 
-    @ColorInt
-    private fun nextColor() : Int{
+    private fun nextColor() : String{
         return if(currentColorIconIndex >= colorIconList.size) {
             currentColorIconIndex = 0
             colorIconList[currentColorIconIndex]

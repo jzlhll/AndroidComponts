@@ -3,19 +3,18 @@ package com.allan.mydroid.nanohttp.wsmsger
 import android.net.Uri
 import androidx.lifecycle.Observer
 import com.allan.mydroid.R
-import com.allan.mydroid.beans.API_WS_FILE_DOWNLOAD_COMPLETE
-import com.allan.mydroid.beans.API_WS_REQUEST_FILE
-import com.allan.mydroid.beans.API_WS_SEND_FILE_CHUNK
-import com.allan.mydroid.beans.API_WS_SEND_FILE_LIST
-import com.allan.mydroid.beans.API_WS_SEND_FILE_NOT_EXIST
-import com.allan.mydroid.beans.API_WS_SEND_SMALL_FILE_CHUNK
-import com.allan.mydroid.beans.FileListForHtmlResult
-import com.allan.mydroid.beans.NotExistResult
-import com.allan.mydroid.beans.UriRealInfoEx
-import com.allan.mydroid.beans.UriRealInfoHtml
-import com.allan.mydroid.beans.WSApiUuid
-import com.allan.mydroid.beans.WSChunkActionResult
-import com.allan.mydroid.beans.WSResultBean
+import com.allan.mydroid.api.API_WS_FILE_DOWNLOAD_COMPLETE
+import com.allan.mydroid.api.API_WS_REQUEST_FILE
+import com.allan.mydroid.api.API_WS_SEND_FILE_CHUNK
+import com.allan.mydroid.api.API_WS_SEND_FILE_LIST
+import com.allan.mydroid.api.API_WS_SEND_FILE_NOT_EXIST
+import com.allan.mydroid.api.API_WS_SEND_SMALL_FILE_CHUNK
+import com.allan.mydroid.beans.WSResultBox
+import com.allan.mydroid.beans.wsdata.FileListForHtmlData
+import com.allan.mydroid.beans.wsdata.UriUuidData
+import com.allan.mydroid.beans.wsdata.WSChunkActionData
+import com.allan.mydroid.beansinner.UriRealInfoEx
+import com.allan.mydroid.beansinner.UriRealInfoHtml
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.SMALL_FILE_DEFINE_SIZE
@@ -48,7 +47,7 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
                 }
             }
             client.server.scope.launchOnThread {
-                val ret = WSResultBean(CODE_SUC, R.string.send_files_to_html.resStr(), API_WS_SEND_FILE_LIST, FileListForHtmlResult(cvtList))
+                val ret = WSResultBox(CODE_SUC, R.string.send_files_to_html.resStr(), API_WS_SEND_FILE_LIST, FileListForHtmlData(cvtList))
                 val json = ret.toJsonString()
                 logt { "${Thread.currentThread()} on map changed. send file list to html" }
                 logt { "send:$json" }
@@ -70,15 +69,15 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
     }
 
     override fun onMessage(origJsonStr:String, api:String, json: JSONObject) {
-        val wsApiUuid = origJsonStr.fromJson<WSApiUuid>()
+        val wsApiUuid = origJsonStr.fromJson<WSResultBox<UriUuidData>>()
         when (api) {
             API_WS_REQUEST_FILE ->{
-                val uriUuid = wsApiUuid?.uriUuid ?: ""
+                val uriUuid = wsApiUuid?.data?.uriUuid ?: ""
                 val info = MyDroidConst.sendUriMap.value?.get(uriUuid)
                 onSendFile(uriUuid, info)
             }
             API_WS_FILE_DOWNLOAD_COMPLETE -> {
-                val uriUuid = wsApiUuid?.uriUuid ?: ""
+                val uriUuid = wsApiUuid?.data?.uriUuid ?: ""
                 MyDroidConst.sendUriMap.value?.get(uriUuid)?.let { info->
                     val fmt = R.string.send_success_fmt.resStr()
                     ToastBuilder().setOnTop().setMessage(String.format(fmt, info.goodName())).toast()
@@ -150,10 +149,11 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
                 sendFile(info.uriUuid, info.fileSize, info.goodName(), inputStream)
             } else {
                 client.send(
-                    WSResultBean(
+                    WSResultBox(
                         CODE_SUC,
                         R.string.file_not_exist.resStr(),
-                        API_WS_SEND_FILE_NOT_EXIST, NotExistResult(uriUuid)
+                        API_WS_SEND_FILE_NOT_EXIST,
+                        UriUuidData(uriUuid)
                     ).toJsonString())
             }
         }
@@ -176,10 +176,10 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
             (fileSize / chunkSize).toInt() + (if(isNotFull) 1 else 0)
         } else 0
 
-        val startJson = WSResultBean(
+        val startJson = WSResultBox(
             CODE_SUC,
             R.string.send_file_start.resStr(), api,
-            WSChunkActionResult(
+            WSChunkActionData(
                 "start",
                 uriUuid, fileSize ?: 0,
                 totalChunks, ""
@@ -195,11 +195,11 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
             client.send(arr)
         }
         delay(1000)
-        val endJson = WSResultBean(
+        val endJson = WSResultBox(
             CODE_SUC,
             Globals.getString(R.string.send_file_end),
             api,
-            WSChunkActionResult("end", uriUuid, offset, index, fileName ?: "")
+            WSChunkActionData("end", uriUuid, offset, index, fileName ?: "")
         ).toJsonString()
         client.send(endJson)
         logt { "send file end $endJson" }

@@ -3,7 +3,7 @@ package com.allan.mydroid.globals
 import android.app.Activity
 import android.os.SystemClock
 import androidx.annotation.MainThread
-import com.allan.mydroid.beans.IpInfo
+import com.allan.mydroid.beansinner.IpInfo
 import com.allan.mydroid.nanohttp.MyDroidHttpServer
 import com.allan.mydroid.nanohttp.WebsocketServer
 import com.allan.mydroid.views.AbsLiveFragment
