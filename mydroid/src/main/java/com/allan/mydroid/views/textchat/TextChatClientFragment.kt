@@ -47,13 +47,15 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
 
     private val common by unsafeLazy { object : TextChatCommon(this, binding) {
         override fun buttonSend(bean: WSChatMessageBean) {
-            viewModel.wsClient?.sendText(bean.toJsonString())
+            val json = bean.toJsonString()
+            viewModel.wsClient?.sendText(json)
+            logd { "client send: $json" }
             onAddChatItem(MeItem().also { it.message = bean })
         }
 
         override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
             val sender = WSChatMessageBean.Sender().apply {
-                name = MyDroidConst.serverName
+                name = viewModel.wsClient?.goodName() ?: "unknown"
                 color = viewModel.wsClient?.color ?: Color.TRANSPARENT
                 isServer = false
                 platform = "androidApp" //todo 增加服务平台
@@ -62,6 +64,13 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
         }
 
     } }
+
+    private val onServerMsg:(message: WSChatMessageBean)->Unit = { bean->
+        logd { "onTransferClientMsg from: ${bean.sender}" }
+        var isMe = bean.sender.name == viewModel.wsClient?.goodName()
+        val item = if(isMe) MeItem().also { it.message = bean } else OtherItem().also { it.message = bean }
+        common.onAddChatItem(item)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -105,12 +114,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
      */
     fun connectServer(ip: String, port: Int) {
         viewModel.connectServer(ip, port,
-            onTransferClientMsgCallback = { bean->
-                logd { "onTransferClientMsg from: ${bean.sender}" }
-                var isMe = false //todo 判断是不是自己
-                 val item = if(isMe) MeItem().also { it.message = bean } else OtherItem().also { it.message = bean }
-                common.onAddChatItem(item)
-            },
+            onTransferClientMsgCallback = onServerMsg,
             cannotOpenBlock = {
             toastOnTop(it, icon = "fail")
             showLoadingAndInputDialog()

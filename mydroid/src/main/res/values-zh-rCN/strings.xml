@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">鸽子传输</string>
+    <string name="app_name">快鸽传输</string>
 
     <string name="next">下一步</string>
     <string name="tips">提示</string>
@@ -33,7 +33,7 @@
     <string name="md5_check_failed">MD5校验失败</string>
     <string name="clear_up">清理</string>
     <string name="invalid_request_from_appserver">来自应用服务器的无效请求</string>
-    <string name="mydroid_running_only_for_alive">鸽子传输-仅作为保活进程运行</string>
+    <string name="mydroid_running_only_for_alive">快鸽传输-仅作为保活进程运行</string>
     <string name="import_to_send_list_hint">请点击\"导入到发送列表\"而非\"分享\"！</string>
     <string name="share">分享</string>
     <string name="delete">删除</string>

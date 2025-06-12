@@ -9,6 +9,7 @@ import com.allan.mydroid.nanohttp.WebsocketServer.Companion.WS_CODE_CLOSE_BY_CLI
 import com.au.module_android.json.fromJson
 import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.unsafeLazy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.Response
@@ -27,6 +28,10 @@ class TextChatWsClient(val vmScope: CoroutineScope,
                        private val successOpenBlock: () -> Unit) : WebSocketListener() {
     private var webSocket: WebSocket? = null
     private val wsName = UUID.randomUUID().toString().substring(0, 6)
+
+    private val _goodName by unsafeLazy { "$ip@$wsName" }
+
+    fun goodName() = _goodName
 
     /**
      * 将服务器发送过来的消息进行转发到UI中去
