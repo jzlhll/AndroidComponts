@@ -106,7 +106,7 @@
         let response = null;
         let shouldStopInterval = false;
         try {
-            response = await fetch('/read-websocket-ip-port', {
+            response = await fetch('/text-chat-read-websocket-ip-port', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

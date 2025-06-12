@@ -39,7 +39,6 @@ class TextChatClientViewModel : ViewModel() {
                     wsClient?.manualShutdown()
                     val newClient = TextChatWsClient(viewModelScope, ip, port, successOpenBlock)
                     newClient.onClosed = { reason->
-                        logd { "reason: $reason" }
                         closedData.setValueSafe(reason)
                     }
                     newClient.onTransferClientMsgCallback = onTransferClientMsgCallback

@@ -75,7 +75,6 @@ public class WSChatMessageBean {
     @NonNull
     public String status;
 
-
     public void setStatusToSending() {
         status = "sending";
     }

@@ -45,18 +45,11 @@
         android:layout_width="match_parent"
         android:layout_height="26dp"/>
 
-    <com.au.module_androidui.widget.ShineView
-        android:id="@+id/adHost"
-        app:layout_constraintTop_toBottomOf="@id/descTitle"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/color_normal_block2"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
-        app:layout_constraintTop_toBottomOf="@id/adHost"
+        app:layout_constraintTop_toBottomOf="@id/descTitle"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

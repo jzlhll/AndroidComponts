@@ -56,7 +56,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
         override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
             val sender = WSChatMessageBean.Sender().apply {
                 name = viewModel.wsClient?.goodName() ?: "unknown"
-                color = viewModel.wsClient?.color ?: Color.TRANSPARENT
+                color = viewModel.wsClient?.color ?: Color.BLACK
                 isServer = false
                 platform = "androidApp" //todo 增加服务平台
             }

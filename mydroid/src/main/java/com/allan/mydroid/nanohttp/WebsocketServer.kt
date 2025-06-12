@@ -1,8 +1,9 @@
 package com.allan.mydroid.nanohttp
 
 import android.annotation.SuppressLint
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import com.allan.mydroid.R
+import androidx.core.graphics.toColorInt
 import com.allan.mydroid.beans.MyDroidMode
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.beans.WebSocketClientInfo
@@ -149,24 +150,25 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     }
 
     //color示例////
-    private var currentColorIconIndex = 0
     private val colorIconList = listOf(
-        R.color.client_send_1,
-        R.color.client_send_2,
-        R.color.client_send_3,
-        R.color.client_send_4,
-        R.color.client_send_5,
+        "#3D7C42".toColorInt(),
+        "#FF9E80".toColorInt(),
+        "#6A3188".toColorInt(),
+        "#895DF8".toColorInt(),
+        "#CEBE55".toColorInt(),
+        "#5CCE99".toColorInt(),
+        "#ce626e".toColorInt(),
+        "#71a3ce".toColorInt(),
     )
+    private var currentColorIconIndex = (Math.random() * colorIconList.size).toInt()
 
-    @SuppressLint("ResourceType")
-    @ColorRes
+    @ColorInt
     private fun nextColor() : Int{
-        val colorRes = if(currentColorIconIndex >= colorIconList.size) {
+        return if(currentColorIconIndex >= colorIconList.size) {
             currentColorIconIndex = 0
             colorIconList[currentColorIconIndex]
         } else {
             colorIconList[currentColorIconIndex++]
         }
-        return Globals.getColor(colorRes)
     }
 }

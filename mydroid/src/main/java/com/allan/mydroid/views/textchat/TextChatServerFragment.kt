@@ -31,7 +31,6 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
             override fun buttonSend(bean: WSChatMessageBean) {
                 //我自己的点击消息
                 MyDroidGlobalService.websocketServer?.serverSendTextChatMessage(bean)
-                onAddChatItem(MeItem().also { it.message = bean })
             }
         }
     }

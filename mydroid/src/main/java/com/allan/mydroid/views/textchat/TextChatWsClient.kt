@@ -3,6 +3,7 @@ package com.allan.mydroid.views.textchat
 import com.allan.mydroid.beans.API_WS_CLIENT_INIT_CALLBACK
 import com.allan.mydroid.beans.API_WS_INIT
 import com.allan.mydroid.beans.API_WS_TEXT_CHAT_MSG
+import com.allan.mydroid.beans.MyDroidModeResult
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.beans.WSInitBean
 import com.allan.mydroid.nanohttp.WebsocketServer.Companion.WS_CODE_CLOSE_BY_CLIENT
@@ -88,9 +89,12 @@ class TextChatWsClient(val vmScope: CoroutineScope,
             null
         }
         val api = json?.optString("api")
+        val data = json?.optString("data")
         when (api) {
             API_WS_CLIENT_INIT_CALLBACK -> {
-                color = json.optInt("color")
+                val dataBean = data?.fromJson<MyDroidModeResult>()
+                color = dataBean?.color ?: android.graphics.Color.BLACK
+                logdNoFile { "client get init color $color" }
             }
 
             API_WS_TEXT_CHAT_MSG -> {

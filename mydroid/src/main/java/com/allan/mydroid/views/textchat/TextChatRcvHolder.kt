@@ -10,6 +10,7 @@ import com.allan.mydroid.views.textchat.uibean.MeItem
 import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.allan.mydroid.views.textchat.uibean.StatusItem
 import com.au.module_android.utils.gone
+import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.visible
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
@@ -25,7 +26,10 @@ class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsIt
     override fun bindData(bean: AbsItem) {
         super.bindData(bean)
         bean as MeItem
-        binding.icon.setImageResource(com.allan.mydroid.R.drawable.ic_head_client)
+        val isServer = bean.message.sender.isServer
+        val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
+        binding.icon.setImageResource(headIcon)
+        logdNoFile { "colorcolor1 ${bean.message.sender.color}" }
         binding.icon.imageTintList = ColorStateList.valueOf(bean.message.sender.color)
         binding.nameTv.text = bean.message.sender.name
         //todo 文件和文字共存
@@ -52,7 +56,11 @@ class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder
     override fun bindData(bean: AbsItem) {
         super.bindData(bean)
         bean as OtherItem
-        binding.icon.setImageResource(com.allan.mydroid.R.drawable.ic_head_host)
+        val isServer = bean.message.sender.isServer
+        val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
+        binding.icon.setImageResource(headIcon)
+        logdNoFile { "colorcolor2 ${bean.message.sender.color}" }
+        binding.icon.imageTintList = ColorStateList.valueOf(bean.message.sender.color)
         binding.nameTv.text = bean.message.sender.name
         //todo 文件和文字共存
         if (bean.message.content.text.isNotEmpty()) {
