@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="http_202">The server has accepted the request but has not processed it yet</string>
+    <string name="http_400">The server did not understand the request syntax</string>
+    <string name="http_401">Request authentication</string>
+    <string name="http_403">The server refused the request</string>
+    <string name="http_404">The server could not find the requested page</string>
+    <string name="http_405">The server disabled the specified request method</string>
+    <string name="http_408">The server timed out while waiting for the request</string>
+    <string name="http_500">The server encountered an error and could not complete the request</string>
+    <string name="http_501">The server does not recognize the request method</string>
+    <string name="http_502">The server, acting as a gateway or proxy, received an invalid response from the upstream server</string>
+    <string name="http_503">The server is being upgraded</string>
+    <string name="http_504">The server, acting as a gateway or proxy, did not receive a timely request from the upstream server</string>
+    <string name="http_505">The server does not support the HTTP version protocol used in the request</string>
+    <string name="http_unknown">Unknown error</string>
+</resources>

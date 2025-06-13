@@ -1,0 +1,16 @@
+<resources>
+    <string name="http_202">服务器已经接收请求，但尚未处理</string>
+    <string name="http_400">服务器不理解请求的语法</string>
+    <string name="http_401">请求身份验证</string>
+    <string name="http_403">服务器拒绝了请求</string>
+    <string name="http_404">服务器找不到请求网页</string>
+    <string name="http_405">服务器禁用了请求指定的方法</string>
+    <string name="http_408">服务器等候请求，发生了超时</string>
+    <string name="http_500">服务器遇到错误，无法去完成请求</string>
+    <string name="http_501">服务器无法识别请求方法</string>
+    <string name="http_502">服务器作为网关或代理，从上游服务器收到无效的响应</string>
+    <string name="http_503">服务器正在升级</string>
+    <string name="http_504">服务器作为网关或代理，没能及时从上游服务器收到请求</string>
+    <string name="http_505">服务器不支持请求所用的http版本协议</string>
+    <string name="http_unknown">未知错误</string>
+</resources>

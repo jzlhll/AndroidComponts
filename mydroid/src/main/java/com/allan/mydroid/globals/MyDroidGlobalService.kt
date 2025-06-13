@@ -24,8 +24,8 @@ object MyDroidGlobalService : InterestActivityCallbacks() {
     private var httpServer: MyDroidHttpServer?= null
     var websocketServer: WebsocketServer?= null
 
-    private var mLastHttpServerPort = 10595
-    private var mLastWsServerPort = 15595
+    private var mLastHttpServerPort = 15555
+    private var mLastWsServerPort = 16555
 
     private const val ALIVE_DEAD_TIME = 5 * 60 * 1000L //N分钟不活跃主动关闭服务
     private const val ALIVE_TS_TOO_FAST = 6 * 1000L //n秒内的更新，只干一次就好。很严谨来讲需要考虑再次post，但是由于相去很远忽略这几秒。

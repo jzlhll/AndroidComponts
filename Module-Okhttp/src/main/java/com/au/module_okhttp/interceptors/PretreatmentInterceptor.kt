@@ -1,4 +1,5 @@
 package com.au.module_okhttp.interceptors
+import com.au.module_android.Globals
 import com.au.module_okhttp.exceptions.AuApiException
 import com.au.module_okhttp.exceptions.AuResponseErrorException
 import com.au.module_okhttp.exceptions.AuTokenExpiredException
@@ -154,21 +155,21 @@ class PretreatmentInterceptor : Interceptor {
     /**
      *检查响应码，没错错误，返回null
      */
-    fun checkHttpResponseCode(code: Int) : String? = when (code) {
+    fun checkHttpResponseCode(code: Int): String? = when (code) {
         200 -> null
-        202 -> "服务器已经接收请求，但尚未处理"
-        400 -> "服务器不理解请求的语法"
-        401 -> "请求身份验证"
-        403 -> "服务器拒绝了请求"
-        404 -> "服务器找不到请求网页"
-        405 -> "服务器禁用了请求指定的方法"
-        408 -> "服务器等候请求，发生了超时"
-        500 -> "服务器遇到错误，无法去完成请求"
-        501 -> "服务器无法识别请求方法"
-        502 -> "服务器作为网关或代理，从上游服务器收到无效的响应"
-        503 -> "服务器正在升级"
-        504 -> "服务器作为网关或代理，没能及时从上游服务器收到请求"
-        505 -> "服务器不支持请求所用的http版本协议"
-        else -> "未知错误"
+        202 -> Globals.getString(com.au.module_okhttp.R.string.http_202)
+        400 -> Globals.getString(com.au.module_okhttp.R.string.http_400)
+        401 -> Globals.getString(com.au.module_okhttp.R.string.http_401)
+        403 -> Globals.getString(com.au.module_okhttp.R.string.http_403)
+        404 -> Globals.getString(com.au.module_okhttp.R.string.http_404)
+        405 -> Globals.getString(com.au.module_okhttp.R.string.http_405)
+        408 -> Globals.getString(com.au.module_okhttp.R.string.http_408)
+        500 -> Globals.getString(com.au.module_okhttp.R.string.http_500)
+        501 -> Globals.getString(com.au.module_okhttp.R.string.http_501)
+        502 -> Globals.getString(com.au.module_okhttp.R.string.http_502)
+        503 -> Globals.getString(com.au.module_okhttp.R.string.http_503)
+        504 -> Globals.getString(com.au.module_okhttp.R.string.http_504)
+        505 -> Globals.getString(com.au.module_okhttp.R.string.http_505)
+        else -> Globals.getString(com.au.module_okhttp.R.string.http_unknown)
     }
 }

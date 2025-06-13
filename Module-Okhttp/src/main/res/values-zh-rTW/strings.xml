@@ -1,0 +1,16 @@
+<resources>
+    <string name="http_202">伺服器已經接收請求，但尚未處理</string>
+    <string name="http_400">伺服器不理解請求的語法</string>
+    <string name="http_401">請求身份驗證</string>
+    <string name="http_403">伺服器拒絕了請求</string>
+    <string name="http_404">伺服器找不到請求網頁</string>
+    <string name="http_405">伺服器禁用了請求指定的方法</string>
+    <string name="http_408">伺服器等候請求，發生了超時</string>
+    <string name="http_500">伺服器遇到錯誤，無法去完成請求</string>
+    <string name="http_501">伺服器無法識別請求方法</string>
+    <string name="http_502">伺服器作為網關或代理，從上遊伺服器收到無效的響應</string>
+    <string name="http_503">伺服器正在升級</string>
+    <string name="http_504">伺服器作為網關或代理，沒能及時從上遊伺服器收到請求</string>
+    <string name="http_505">伺服器不支持請求所用的http版本協議</string>
+    <string name="http_unknown">未知錯誤</string>
+</resources>

@@ -88,7 +88,7 @@
     <string name="someone_online">%s is online.</string>
     <string name="someone_offline">%s is offline.</string>
     <string name="server_is_closed">Server is closed!</string>
-    <string name="server_is_not_textchat">Server is not \"Text Chat\"!</string>
+    <string name="server_is_not_textchat">Server is not \"Text Chat\" mode!</string>
     <string name="server_not_support">Not support.</string>
 
 </resources>

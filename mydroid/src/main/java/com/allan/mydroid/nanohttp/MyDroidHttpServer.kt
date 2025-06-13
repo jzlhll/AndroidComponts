@@ -14,6 +14,7 @@ import com.allan.mydroid.beans.httpdata.IpPortResult
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
@@ -96,11 +97,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
                 }
             }
             url == TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> {
-                if (MyDroidConst.currentDroidMode == MyDroidMode.TextChat) {
-                    return getWebsocketIpPort()
-                } else {
-                    error = Globals.getString(R.string.server_is_not_textchat)
-                }
+                return getWebsocketIpPortWrap()
             }
             // JS 文件请求
             url.endsWith(".js") -> {
@@ -122,8 +119,17 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
-            TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
+            TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> getWebsocketIpPortWrap()
             else -> newFixedLengthResponse(R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
+        }
+    }
+
+    private fun getWebsocketIpPortWrap(): Response {
+        if (MyDroidConst.currentDroidMode == MyDroidMode.TextChat) {
+            return getWebsocketIpPort()
+        } else {
+            val error = Globals.getString(R.string.server_is_not_textchat)
+            return newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, error)
         }
     }
 

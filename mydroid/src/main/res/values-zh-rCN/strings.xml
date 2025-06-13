@@ -73,4 +73,22 @@
     <string name="empty_file_hint">暂无文件，从相册、文件管理器\n或其他应用分享进来吧。</string>
     <string name="send_success_fmt">%s 发送成功！</string>
     <string name="inactivity_message">长时间未操作，App已经主动退出。</string>
+
+    <string name="server">服务器</string>
+    <string name="select_images">选择图片</string>
+    <string name="select_videos">选择视频</string>
+    <string name="select_files">选择文件</string>
+    <string name="send">发送</string>
+    <string name="as_server">作为服务器</string>
+    <string name="as_client">作为客户端</string>
+    <string name="textchat_selector_desc">选择您的文本聊天模式</string>
+    <string name="textchat_input_ipport_title">请输入服务器的IP和端口</string>
+    <string name="port_m">端口：</string>
+    <string name="something_error">发生错误</string>
+    <string name="someone_online">%s 在线</string>
+    <string name="someone_offline">%s 离线</string>
+    <string name="server_is_closed">服务器已关闭！</string>
+    <string name="server_is_not_textchat">服务器不是\"文本聊天\"模式！</string>
+    <string name="server_not_support">不支持</string>
+
 </resources>
