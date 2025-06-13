@@ -79,38 +79,41 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
         val url = session.uri ?: ""
         logdNoFile { "handle Get Request $url" }
         MyDroidGlobalService.updateAliveTs("http get request")
-        return when {
+        val error:String
+        when {
             // 主页面请求
             url == "/" -> {
-                //todo 增加middle页面
                 when (MyDroidConst.currentDroidMode) {
                     MyDroidMode.Send -> {
-                        serveAssetFile("transfer/send.html")
+                        return serveAssetFile("transfer/send.html")
                     }
                     MyDroidMode.Receiver -> {
-                        serveAssetFile("transfer/receiver.html")
-                    }
-                    MyDroidMode.TextChat -> { //客户端直接请求是通过TEXT_CHAT_READ_WEBSOCKET_IP_PORT请求得到的。
-                        newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support TextChat yet. Coming soon.")
+                        return serveAssetFile("transfer/receiver.html")
                     }
                     else -> {
-                        newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support Get E02.")
+                        error = Globals.getString(R.string.server_not_support) + "(E02)"
                     }
                 }
             }
             url == TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> {
-                getWebsocketIpPort()
+                if (MyDroidConst.currentDroidMode == MyDroidMode.TextChat) {
+                    return getWebsocketIpPort()
+                } else {
+                    error = Globals.getString(R.string.server_is_not_textchat)
+                }
             }
             // JS 文件请求
             url.endsWith(".js") -> {
                 val jsName = url.substring(1)
 //                serveAssetFile("transfer/$jsName")
-                serverJsFile("transfer/$jsName")
+                return serverJsFile("transfer/$jsName")
             }
             else -> {
-                newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "Not Support Get E01.")
+                error = Globals.getString(R.string.server_not_support) + "(E01)"
             }
         }
+
+        return newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, error)
     }
 
     private fun handlePostRequest(session: IHTTPSession): Response {
