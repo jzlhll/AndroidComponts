@@ -5,16 +5,16 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module_android'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.module_android'
+    compileSdk=gradle.ext.compileSdk
 
     def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
     def supportLocales = Boolean.parseBoolean(findProperty("app.supportLocales"))
     def supportDarkMode = Boolean.parseBoolean(findProperty("app.supportDarkMode"))
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
-        targetSdk gradle.ext.targetSdk
+        minSdk=gradle.ext.minSdk
+        targetSdk=gradle.ext.targetSdk
 
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
@@ -25,7 +25,7 @@ android {
     buildTypes {
         release {
             //是否混淆
-            minifyEnabled true
+            minifyEnabled=true
             //压缩资源，必须开启minifyEnabled才有用
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -44,9 +44,9 @@ android {
         }
         debug {
             //是否混淆
-            minifyEnabled false
+            minifyEnabled=false
             //压缩资源，必须开启minifyEnabled才有用
-            shrinkResources false
+            shrinkResources=false
 
             buildConfigField("boolean", "ENABLE_LOGCAT", "true")
             buildConfigField("boolean", "ENABLE_FILE_LOG_DEFAULT", "true")
@@ -54,16 +54,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
         freeCompilerArgs = ["-Xstring-concat=inline"]
     }
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding=true
+        buildConfig=true
     }
 }
 

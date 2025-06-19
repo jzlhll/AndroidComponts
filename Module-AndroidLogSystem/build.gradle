@@ -4,28 +4,28 @@ plugins {
 }
 
 android {
-    namespace 'com.au.logsystem'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.logsystem'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility=JavaVersion.VERSION_17
+        targetCompatibility=JavaVersion.VERSION_17
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding=true
     }
 
     kotlinOptions {

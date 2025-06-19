@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace 'com.allan.autoclickfloat'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.allan.autoclickfloat'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
         applicationId "com.allan.autoclickfloat"
-        minSdk 31
+        minSdk=31
         targetSdk gradle.ext.targetSdk
         versionCode 1
         versionName "1.0"
@@ -18,20 +18,20 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding=true
+        buildConfig=true
     }
 }
 

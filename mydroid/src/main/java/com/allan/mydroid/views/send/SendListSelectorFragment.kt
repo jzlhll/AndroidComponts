@@ -2,9 +2,11 @@ package com.allan.mydroid.views.send
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.allan.mydroid.R
 import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.mydroid.globals.MyDroidConst
@@ -33,7 +35,14 @@ import kotlinx.coroutines.launch
 import kotlin.collections.find
 
 class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>() {
-    private val adapter = SendListAdapter()
+    private val common = object : SendListSelectorCommon(this) {
+        override fun rcv() = binding.rcv
+
+        override fun empty() = binding.empty
+
+        override fun itemClick(bean: UriRealInfoEx?) {
+        }
+    }
 
     private var mAutoNextJob: Job? = null
     private var mDelayCancelDialog: ConfirmBottomSingleDialog? = null
@@ -158,8 +167,7 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
             insets
         }
 
-        initRcv()
-
+        common.onBindingCreated()
         if (autoImport) autoImportAction()
     }
 
@@ -185,20 +193,4 @@ class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>
         }
     }
 
-    private fun initRcv() {
-        binding.rcv.adapter = adapter
-        binding.rcv.layoutManager = LinearLayoutManager(binding.rcv.context)
-        binding.rcv.setHasFixedSize(true)
-
-        MyDroidConst.sendUriMap.observe(this) { map->
-            val list = ArrayList<UriRealInfoEx>()
-            list.addAll(map.values)
-            adapter.submitList(list, false)
-            if (list.isEmpty()) {
-                binding.empty.visible()
-            } else {
-                binding.empty.gone()
-            }
-        }
-    }
 }

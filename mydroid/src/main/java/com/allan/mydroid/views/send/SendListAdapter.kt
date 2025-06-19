@@ -4,22 +4,27 @@ import android.view.ViewGroup
 import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.databinding.HolderMydroidSendlistItemBinding
 import com.allan.mydroid.globals.getIcon
+import com.au.module_android.click.onClick
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
-class SendListAdapter : BindRcvAdapter<UriRealInfoEx, SendListAdapter.ShareReceiverHolder>() {
+class SendListAdapter(val itemClick: (UriRealInfoEx?) -> Unit) : BindRcvAdapter<UriRealInfoEx, SendListAdapter.ShareReceiverHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareReceiverHolder {
-        return ShareReceiverHolder(create(parent))
+        return ShareReceiverHolder(create(parent), itemClick)
     }
 
-    class ShareReceiverHolder(binding: HolderMydroidSendlistItemBinding) : BindViewHolder<UriRealInfoEx, HolderMydroidSendlistItemBinding>(binding) {
+    class ShareReceiverHolder(binding: HolderMydroidSendlistItemBinding, val itemClick: (UriRealInfoEx?) -> Unit) : BindViewHolder<UriRealInfoEx, HolderMydroidSendlistItemBinding>(binding) {
         private val targetAlpha = 0.5f
 
         init {
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
                 currentData?.isChecked = isChecked
                 binding.root.alpha = if (isChecked) 1f else targetAlpha
+            }
+
+            binding.root.onClick {
+                itemClick(currentData)
             }
         }
 

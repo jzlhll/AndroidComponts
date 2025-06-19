@@ -1,8 +1,8 @@
 package com.allan.mydroid.views.textchat
 
-import com.allan.mydroid.api.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.mydroid.api.API_WS_INIT
-import com.allan.mydroid.api.API_WS_TEXT_CHAT_MSG
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_INIT
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_TEXT_CHAT_MSG
 import com.allan.mydroid.beans.wsdata.MyDroidModeData
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.beans.wsdata.WSInitData

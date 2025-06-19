@@ -4,22 +4,22 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module_androidcolor'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.module_androidcolor'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
     }
 
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
+        viewBinding=true
     }
 }
 

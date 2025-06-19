@@ -4,31 +4,31 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module_okhttp'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.module_okhttp'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding=true
+        buildConfig=true
     }
 }
 

@@ -4,16 +4,18 @@ import android.os.Bundle
 import com.allan.mydroid.R
 import com.allan.mydroid.api.MyDroidMode
 import com.allan.mydroid.beans.WSChatMessageBean
+import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.views.AbsLiveFragment
+import com.allan.mydroid.views.send.SendListSelectorDialog
 import com.allan.mydroid.views.textchat.uibean.OtherItem
 import com.au.module_android.Globals
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.unsafeLazy
 
-class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
+class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>(), SendListSelectorDialog.ISelectItemClick {
     private val common : TextChatCommon by unsafeLazy {
         object : TextChatCommon(this, binding) {
             override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
@@ -84,4 +86,7 @@ class TextChatServerFragment : AbsLiveFragment<FragmentTextChatBinding>() {
 
     override fun isAutoHideIme() = true
 
+    override fun onItemClick(bean: UriRealInfoEx) {
+        common.buttonSend(common.createBean(WSChatMessageBean.Content("", bean.copyToHtml())))
+    }
 }

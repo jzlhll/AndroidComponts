@@ -60,7 +60,7 @@
     
             // 接收消息
             socket.onmessage = (event) => {
-                console.log(`${nowTimeStr()} on message`, event.data);
+                //console.log(`${nowTimeStr()} on message`, event.data);
                 const result = parseMessage(event.data);
                 if (!result) {
                     // 处理数据（JSON 示例）
@@ -106,7 +106,7 @@
         let response = null;
         let shouldStopInterval = false;
         try {
-            response = await fetch('/text-chat-read-websocket-ip-port', {
+            response = await fetch('/read-websocket-ip-port', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

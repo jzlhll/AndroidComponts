@@ -32,7 +32,7 @@
         const offset = dataView.getBigUint64(40, false);
         const dataSize = dataView.getUint32(48, false);
         const data = blob.slice(52, 52 + dataSize);
-        console.log(`handle Chunk ${uuid} index:${index}/${total} offset:${offset} dataSize:${dataSize}`);
+        //console.log(`handle Chunk ${uuid} index:${index}/${total} offset:${offset} dataSize:${dataSize}`);
 
         await mFileSaver?.handleChunk(uuid, index, total, offset, dataSize, data);
     }
@@ -236,7 +236,7 @@
             const api = jsonData.api;
             const msg = jsonData.msg;
 
-            if (api == API_WS_SEND_SMALL_FILE_CHUNK) {
+            if (api == API_WS_SEND_SMALL_FILE_CHUNK || api == API_WS_SEND_FILE_CHUNK) {
                 if (data.action == "start") {
                     console.log(api, msg, data);
                     if (!mFileSaver) {

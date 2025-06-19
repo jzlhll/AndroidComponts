@@ -4,6 +4,7 @@ import com.allan.mydroid.R
 import com.allan.mydroid.api.ABORT_UPLOAD_CHUNKS
 import com.allan.mydroid.api.MERGE_CHUNKS
 import com.allan.mydroid.api.MyDroidMode
+import com.allan.mydroid.api.READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.api.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.api.UPLOAD_CHUNK
 import com.allan.mydroid.globals.CODE_SUC
@@ -14,7 +15,6 @@ import com.allan.mydroid.beans.httpdata.IpPortResult
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean
-import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
@@ -96,6 +96,8 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
                     }
                 }
             }
+            url == READ_WEBSOCKET_IP_PORT ->
+                return getWebsocketIpPort()
             url == TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> {
                 return getWebsocketIpPortWrap()
             }
@@ -119,6 +121,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
             UPLOAD_CHUNK -> chunksMgr.handleUploadChunk(session)
             MERGE_CHUNKS -> chunksMgr.handleMergeChunk(session)
             ABORT_UPLOAD_CHUNKS -> chunksMgr.handleAbortChunk(session)
+            READ_WEBSOCKET_IP_PORT -> getWebsocketIpPort()
             TEXT_CHAT_READ_WEBSOCKET_IP_PORT -> getWebsocketIpPortWrap()
             else -> newFixedLengthResponse(R.string.invalid_request_from_appserver.resStr()) // 或者其他默认响应
         }

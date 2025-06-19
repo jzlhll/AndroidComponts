@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.test'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.example.test'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -16,13 +16,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility=JavaVersion.VERSION_17
+        targetCompatibility=JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget

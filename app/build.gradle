@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace 'com.allan.androidlearning'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.allan.androidlearning'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
         applicationId "com.allan.androidlearning"
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
         targetSdk gradle.ext.targetSdk
         versionCode 2
         versionName "2.0.0"
@@ -28,20 +28,20 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled=true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding=true
+        buildConfig=true
     }
 
 }

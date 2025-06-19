@@ -1,6 +1,6 @@
 package com.allan.mydroid.beans;
 
-import static com.allan.mydroid.api.WSApisConstStrsKt.API_WS_TEXT_CHAT_MSG;
+import static com.allan.mydroid.api.WSApisConst.API_WS_TEXT_CHAT_MSG;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;

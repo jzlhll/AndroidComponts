@@ -4,23 +4,23 @@ plugins {
 }
 
 android {
-    namespace 'com.au.module_imagecompressed'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.module_imagecompressed'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
         consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
+        viewBinding=true
     }
 }
 

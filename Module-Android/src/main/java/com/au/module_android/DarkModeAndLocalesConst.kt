@@ -21,7 +21,7 @@ object DarkModeAndLocalesConst {
     /**
      * 左值并非标准的构建Locales的参数，仅仅用于sp存储标记。右侧Locales也可以不带country。
      */
-    var supportLocales = mapOf("en_US" to Locale("en", "US"))
+    var supportLocales = mapOf("en_US" to Locale("en", "US", ""))
 
     @Volatile
     var themedContext:Context? = null

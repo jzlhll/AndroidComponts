@@ -13,8 +13,8 @@ properties.load(inputStream)
 gradle.ext.selfUserName = properties.getProperty('username')
 gradle.ext.selfPassword = properties.getProperty('password')
 gradle.ext.jvmTarget           = "17"
-gradle.ext.sourceCompatibility = JavaVersion.VERSION_17
-gradle.ext.targetCompatibility = JavaVersion.VERSION_17
+gradle.ext.sourceCompatibility= JavaVersion.VERSION_17
+gradle.ext.targetCompatibility= JavaVersion.VERSION_17
 gradle.ext.compileSdk          = 36
 gradle.ext.targetSdk           = 35
 gradle.ext.minSdk              = 26
@@ -40,7 +40,6 @@ include ':Module-Okhttp'
 include ':Module-Nested'
 //include ':jsbridge'
 
-include ':studyjob'
 include ':jobstudy'
 //include ':AuLiteSql'
 //include ':AuLiteSqlKt'

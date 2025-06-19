@@ -5,20 +5,20 @@ plugins {
 }
 
 android {
-    namespace 'com.allan.mydroid'
-    compileSdk 36
+    namespace='com.allan.mydroid'
+    compileSdk=36
 
     defaultConfig {
-        applicationId "com.allan.mydroid"
-        minSdk 26
-        targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        applicationId="com.allan.mydroid"
+        minSdk=26
+        targetSdk=36
+        versionCode=1
+        versionName="1.0"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             resValue "xml", "network_security", "@xml/network_release"
@@ -28,16 +28,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility=JavaVersion.VERSION_17
+        targetCompatibility=JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = '17'
     }
     buildFeatures {
-        compose true
-        viewBinding true
-        buildConfig true
+        compose=true
+        viewBinding=true
+        buildConfig=true
     }
 }
 

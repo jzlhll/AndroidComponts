@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace 'com.au.jobstudy'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.au.jobstudy'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
         applicationId "com.au.jobstudy"
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
         targetSdk gradle.ext.targetSdk
         versionCode 1
         versionName "1.0"
@@ -20,20 +20,20 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility gradle.ext.sourceCompatibility
-        targetCompatibility gradle.ext.targetCompatibility
+        sourceCompatibility=gradle.ext.sourceCompatibility
+        targetCompatibility=gradle.ext.targetCompatibility
     }
     kotlinOptions {
         jvmTarget = gradle.ext.jvmTarget
     }
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding=true
+        buildConfig=true
     }
 }
 

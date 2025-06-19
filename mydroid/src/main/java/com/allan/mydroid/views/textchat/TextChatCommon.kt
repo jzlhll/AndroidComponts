@@ -1,22 +1,51 @@
 package com.allan.mydroid.views.textchat
 
+import android.net.Uri
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.allan.mydroid.beans.WSChatMessageBean
+import com.allan.mydroid.beansinner.UriRealInfoEx
+import com.allan.mydroid.beansinner.UriRealInfoHtml
 import com.allan.mydroid.databinding.FragmentTextChatBinding
+import com.allan.mydroid.views.send.SendListSelectorDialog
 import com.allan.mydroid.views.textchat.uibean.AbsItem
 import com.allan.mydroid.views.textchat.uibean.MeItem
+import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.asOrNull
+import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
+import com.au.module_android.utilsmedia.getRealInfo
+import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
+import com.au.module_imagecompressed.TakeAndSelectMediaPermissionHelper
 import kotlinx.coroutines.launch
 
 abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBinding) {
     private lateinit var adapter: TextChatRcvAdapter
+
+    private fun cvtUri(uri: Uri): UriRealInfoHtml {
+        val real = uri.getRealInfo(Globals.app)
+        if (real.goodPath() == null) {
+            logd { "allan no good path? $real" }
+        }
+        val bean = UriRealInfoEx.Companion.copyFrom(real)
+        return bean.copyToHtml()
+    }
+
+    private val photoVideoPicker = TakeAndSelectMediaPermissionHelper(f, 1).also {
+        it.allResultsAction = { results->
+            logd { "allan photoVideoPicker $results" }
+            for (uri in results) {
+                val uriRealInfoHtml = cvtUri(uri.uri)
+                buttonSend(createBean(WSChatMessageBean.Content("", uriRealInfoHtml)))
+            }
+        }
+    }
 
     fun onCreate() {
         binding.edit.setMaxLength(Int.MAX_VALUE)
@@ -42,6 +71,18 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         initSendButton()
 
         initRcv()
+
+        binding.selectImagesBtn.onClick {
+            photoVideoPicker.onClickSelectPhoto()
+        }
+
+        binding.selectVideoBtn.onClick {
+            photoVideoPicker.onClickSelectVideo()
+        }
+        binding.sendListBtn.onClick {
+            val height = f.requireActivity().getScreenFullSize().second
+            FragmentBottomSheetDialog.show<SendListSelectorDialog>(f.childFragmentManager, height = height / 2)
+        }
     }
 
     abstract fun buttonSend(bean : WSChatMessageBean)
@@ -95,5 +136,21 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
                 buttonSend(createBean(WSChatMessageBean.Content(text, null))) //todo file
             }
         }
+    }
+
+    fun selectPics() {
+
+    }
+
+    fun selectVideos() {
+
+    }
+
+    fun selectFiles() {
+
+    }
+
+    fun showImportSendList() {
+
     }
 }

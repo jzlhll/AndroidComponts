@@ -8,11 +8,11 @@ def APP_ID = "abcdefghij1234567"
 def APP_KEY = "abcdefghijklmnopkqjjd0129347578928"
 
 android {
-    namespace 'com.example.module_native'
-    compileSdk gradle.ext.compileSdk
+    namespace='com.example.module_native'
+    compileSdk=gradle.ext.compileSdk
 
     defaultConfig {
-        minSdk gradle.ext.minSdk
+        minSdk=gradle.ext.minSdk
 
         consumerProguardFiles "consumer-rules.pro"
         externalNativeBuild {
@@ -32,7 +32,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             // Release 模式下的配置
@@ -50,8 +50,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility=JavaVersion.VERSION_17
+        targetCompatibility=JavaVersion.VERSION_17
     }
 }
 

@@ -1,10 +1,10 @@
 package com.allan.mydroid.nanohttp
 
 import com.allan.mydroid.R
-import com.allan.mydroid.api.API_WS_CLIENT_INIT_CALLBACK
-import com.allan.mydroid.api.API_WS_INIT
-import com.allan.mydroid.api.API_WS_LEFT_SPACE
-import com.allan.mydroid.api.API_WS_PING
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_CLIENT_INIT_CALLBACK
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_INIT
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_LEFT_SPACE
+import com.allan.mydroid.api.WSApisConst.Companion.API_WS_PING
 import com.allan.mydroid.beans.wsdata.LeftSpaceData
 import com.allan.mydroid.beans.wsdata.MyDroidModeData
 import com.allan.mydroid.beans.WSResultBox

@@ -12,6 +12,7 @@ import com.au.module_android.json.toJsonString
 import com.au.module_android.utils.isMainThread
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.launchOnUi
+import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoWSD
@@ -124,23 +125,22 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     fun serverSendTextChatMessage(message: WSChatMessageBean) {
         if (isMainThread) {
             scope.launchOnThread {
-                val json = message.toJsonString()
-                clients.forEach { c->
-                    c.send(json)
-                }
-
-                scope.launchOnUi {
-                    onTransferClientMsgCallback?.invoke(message)
-                }
+                serverSendMsgInner(message)
             }
         } else {
-            val json = message.toJsonString()
-            clients.forEach { c->
-                c.send(json)
-            }
-            scope.launchOnUi {
-                onTransferClientMsgCallback?.invoke(message)
-            }
+            serverSendMsgInner(message)
+        }
+    }
+
+    private fun serverSendMsgInner(message: WSChatMessageBean) {
+        val json = message.toJsonString()
+        logd { "serverSendMsg: $json" }
+        clients.forEach { c ->
+            c.send(json)
+        }
+
+        scope.launchOnUi {
+            onTransferClientMsgCallback?.invoke(message)
         }
     }
 
