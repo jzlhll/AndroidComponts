@@ -11,7 +11,7 @@ import com.allan.mydroid.beansinner.UriRealInfoHtml
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.views.send.SendListSelectorDialog
 import com.allan.mydroid.views.textchat.uibean.AbsItem
-import com.allan.mydroid.views.textchat.uibean.MeItem
+import com.allan.mydroid.views.textchat.uibean.NormalItem
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.utils.ImeHelper
@@ -96,11 +96,10 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         f.lifecycleScope.launch {
             var foundIndex = -1
             //找到之前的发送中的item。todo ui上的转圈变化。
-            if (newItem is MeItem) {
+            if (newItem is NormalItem && newItem.isMe) {
                 run loop@ {
                     adapter.datas.forEachIndexed { index, item ->
-                        if (item is MeItem) {
-                            item.message.messageId == newItem.message.messageId
+                        if (item is NormalItem && item.isMe && item.message.messageId == newItem.message.messageId) {
                             foundIndex = index
                             return@loop
                         } else {

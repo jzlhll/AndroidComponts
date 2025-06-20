@@ -9,8 +9,7 @@ import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.databinding.FragmentTextChatBinding
 import com.allan.mydroid.globals.LifeSimpleNetworkObserver
 import com.allan.mydroid.utils.BlurViewEx
-import com.allan.mydroid.views.textchat.uibean.MeItem
-import com.allan.mydroid.views.textchat.uibean.OtherItem
+import com.allan.mydroid.views.textchat.uibean.NormalItem
 import com.au.module_android.json.toJsonString
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.logd
@@ -48,7 +47,8 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
             val json = bean.toJsonString()
             viewModel.wsClient?.sendText(json)
             logd { "client send: $json" }
-            onAddChatItem(MeItem().also { it.message = bean })
+            //刚刚点击的事件，肯定就是自己。
+            onAddChatItem(NormalItem(true).also { it.message = bean })
         }
 
         override fun createBean(content: WSChatMessageBean.Content): WSChatMessageBean {
@@ -66,8 +66,7 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
     private val onServerMsg:(message: WSChatMessageBean)->Unit = { bean->
         logd { "onTransferClientMsg from: ${bean.sender}" }
         var isMe = bean.sender.name == viewModel.wsClient?.goodName()
-        val item = if(isMe) MeItem().also { it.message = bean } else OtherItem().also { it.message = bean }
-        common.onAddChatItem(item)
+        common.onAddChatItem(NormalItem(isMe).also { it.message = bean })
     }
 
     override fun onStart() {

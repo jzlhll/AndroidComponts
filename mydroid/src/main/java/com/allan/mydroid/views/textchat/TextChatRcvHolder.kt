@@ -7,8 +7,7 @@ import com.allan.mydroid.databinding.TextchatItemOtherBinding
 import com.allan.mydroid.databinding.TextchatItemStatusNotifyBinding
 import com.allan.mydroid.globals.getIcon
 import com.allan.mydroid.views.textchat.uibean.AbsItem
-import com.allan.mydroid.views.textchat.uibean.MeItem
-import com.allan.mydroid.views.textchat.uibean.OtherItem
+import com.allan.mydroid.views.textchat.uibean.NormalItem
 import com.allan.mydroid.views.textchat.uibean.StatusItem
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
@@ -27,7 +26,7 @@ class TextChatRcvHolderStatus(binding: TextchatItemStatusNotifyBinding) : BindVi
 class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsItem, TextchatItemMeBinding>(binding) {
     override fun bindData(bean: AbsItem) {
         super.bindData(bean)
-        bean as MeItem
+        bean as NormalItem
         val isServer = bean.message.sender.isServer
         val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
         binding.icon.setImageResource(headIcon)
@@ -57,7 +56,7 @@ class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsIt
 class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder<AbsItem, TextchatItemOtherBinding>(binding) {
     override fun bindData(bean: AbsItem) {
         super.bindData(bean)
-        bean as OtherItem
+        bean as NormalItem
         val isServer = bean.message.sender.isServer
         val headIcon = if(isServer) com.allan.mydroid.R.drawable.ic_head_host else com.allan.mydroid.R.drawable.ic_head_client
         binding.icon.setImageResource(headIcon)

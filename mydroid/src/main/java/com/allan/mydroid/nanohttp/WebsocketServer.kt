@@ -50,7 +50,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
     /**
      * 将客户端的消息往外通知，主要是给到UI做追加显示
      */
-    var onTransferClientMsgCallback:((message: WSChatMessageBean)->Unit)? = null
+    var onTransferBothMsgCallback:((message: WSChatMessageBean)->Unit)? = null
 
     fun addIntoConnections(websocket: WebsocketClientInServer) {
         MyDroidGlobalService.updateAliveTs("when new client add")
@@ -121,18 +121,19 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
 
     /**
      * 服务器发送消息给所有客户端
+     * 从客户端或者自己发出去的都会经过这里
      */
     fun serverSendTextChatMessage(message: WSChatMessageBean) {
         if (isMainThread) {
             scope.launchOnThread {
-                serverSendMsgInner(message)
+                serverSendMsgBoth(message)
             }
         } else {
-            serverSendMsgInner(message)
+            serverSendMsgBoth(message)
         }
     }
 
-    private fun serverSendMsgInner(message: WSChatMessageBean) {
+    private fun serverSendMsgBoth(message: WSChatMessageBean) {
         val json = message.toJsonString()
         logd { "serverSendMsg: $json" }
         clients.forEach { c ->
@@ -140,7 +141,7 @@ class WebsocketServer(port:Int) : NanoWSD(port) {
         }
 
         scope.launchOnUi {
-            onTransferClientMsgCallback?.invoke(message)
+            onTransferBothMsgCallback?.invoke(message)
         }
     }
 
