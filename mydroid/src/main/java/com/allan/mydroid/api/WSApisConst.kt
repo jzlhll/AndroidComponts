@@ -1,8 +1,5 @@
 package com.allan.mydroid.api
 
-import com.au.annos.EncryptString
-
-@EncryptString
 class WSApisConst {
     companion object {
         const val API_WS_SEND_FILE_LIST = "s_sendFileList"

@@ -1,6 +1,9 @@
 package com.allan.mydroid
 
 import com.allan.mydroid.api.Api
+import com.allan.mydroid.api.MERGE_CHUNKS
+import com.allan.mydroid.api.UPLOAD_CHUNK
+import com.allan.mydroid.api.WSApisConst2
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.globals.cacheImportCopyDir
 import com.au.logsystem.DefaultActivitiesFollowCallback
@@ -8,6 +11,7 @@ import com.au.module_android.Globals
 import com.au.module_android.InitApplication
 import com.au.module_android.utils.clearDirOldFiles
 import com.au.module_android.utils.launchOnIOThread
+import com.au.module_android.utils.logd
 import com.au.module_androidui.toast.ToastBuilder
 import com.au.module_cached.AppDataStore
 import com.au.module_okhttp.OkhttpGlobal
@@ -26,6 +30,10 @@ class App : InitApplication() {
     }
     override fun onCreate() {
         super.onCreate()
+
+        logd { "WSApiConstTop ${MERGE_CHUNKS} ${UPLOAD_CHUNK}" }
+        logd { "WSApisConst2 ${WSApisConst2.PROCESS_CHUNK} ${WSApisConst2.PROCESS_MERGING}" }
+
         OkhttpGlobal.initBeforeAnyRequest(OkhttpInitParams().also {
             it.okHttpCookieJar = object : AbsCookieJar() {
                 override fun saveToDisk(host: String, data: String) {

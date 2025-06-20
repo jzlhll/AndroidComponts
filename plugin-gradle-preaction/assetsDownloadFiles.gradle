@@ -1,0 +1,61 @@
+//matchFileChecker会给你传递file。你返回true表示此类文件是符合我们需要下载的类型文件, 也避免将其他文件删除。
+def ifDeleteOldFiles(String from, List<String> needDownAllUrls, Closure matchFileChecker) {
+    var downloadDir = file("src/main/assets")
+    if (!downloadDir.exists()) {
+        return
+    }
+
+    println("assetDownFile: delete other files $from")
+
+    var needDownNames = needDownAllUrls.collect {it.substring(it.lastIndexOf("/") + 1)}
+    var files = downloadDir.listFiles()
+    for (file in files) {
+        if (matchFileChecker.call(file)) {
+            if (!needDownNames.contains(file.name)) {
+                println("assetDownFile: delete $file")
+                file.delete()
+            } else {
+                println("assetDownFile: no need delete $file")
+            }
+        }
+    }
+    Thread.sleep(20)
+}
+
+def downloadFile(String url) {
+    var downloadDir = file("src/main/assets")
+    // 确保目标文件夹存在
+    if (!downloadDir.exists()) {
+        throw new RuntimeException("assetDownFile: download file error.")
+    }
+
+    var downloadUrlFileName = url.substring(url.lastIndexOf("/") + 1)
+    var outputFile = file(downloadDir.absolutePath + File.separator + downloadUrlFileName)
+    if (outputFile.exists()) {
+        println("assetDownFile: download file " + downloadUrlFileName + " exist.")
+        return
+    }
+
+    println "assetDownFile: Start download: $url"
+    new URL(url).withInputStream { input ->
+        outputFile.withOutputStream { output ->
+            output << input
+        }
+    }
+    println "assetDownFile: Download success: $outputFile"
+    Thread.sleep(20)
+}
+
+// 自定义下载文件的任务
+tasks.register('downloadFile') {
+    doLast {
+        //1. first is a zip demo 开头都是h5结尾都是.zip
+        String zipDownUrl = "https://xxx.com/xxx/ui-xxx2025-06-20-ad23mj.zip"
+        var zips = new ArrayList<String>()
+        zips.add(H5ZipDownloadUrl)
+        ifDeleteOldFiles("zips", zips) { File file->
+            return file.name.endsWith("zip") && file.name.startsWith("ui-")
+        }
+        downloadFile(zipDownUrl)
+    }
+}

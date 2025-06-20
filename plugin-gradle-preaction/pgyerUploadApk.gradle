@@ -1,0 +1,131 @@
+import groovy.json.JsonSlurper
+
+// 蒲公英上传debug包
+tasks.register('pgyerUploadApk') {
+    doLast {
+        do {
+            //配置参数#####
+            var GET_TOKEN_URL = "https://www.pgyer.com/apiv2/app/getCOSToken"
+            var API_KEY_DEV = "xxxxx" //todo
+            var apkDir = file("build/outputs/apk/debug") //todo
+            //配置参数##### end
+
+            //1. find apk
+            File uploadFile = null
+            var files = apkDir.listFiles()
+            var apkCount = 0
+            for (file in files) {
+                if (file.name.endsWith(".apk")) {
+                    uploadFile = file
+                    apkCount++
+                }
+            }
+            if (apkCount == 1) {
+                println("找到ApkFile: $uploadFile")
+            } else {
+                println("错误: 找到了APK数量为: $apkCount, 结束。")
+                break
+            }
+
+            //2. 获取token
+            def response = ""
+            def jsonPayload = "_api_key=$API_KEY_DEV&buildType=android" //("buildInstallType", buildInstallType+"")
+
+            HttpURLConnection connection0 = null
+            try {
+                // 创建 URL 对象
+                connection0 = (HttpURLConnection) new URL(GET_TOKEN_URL).openConnection()
+
+                // 设置请求方法和头
+                connection0.setRequestMethod("POST")
+                connection0.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                connection0.setDoOutput(true)
+                // 发送请求
+                connection0.getOutputStream().write(jsonPayload.getBytes("UTF-8"))
+
+                // 读取响应
+                int responseCode = connection0.getResponseCode()
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    response = connection0.getInputStream().getText("UTF-8")
+                    println "得到Token Response: \n${response}"
+                } else {
+                    println "请求token Error: HTTP ${responseCode}"
+                }
+            } catch (Exception e) {
+                println "错误：请求token Error: ${e.message}"
+            } finally {
+                if (connection0 != null) {
+                    connection0.disconnect()
+                }
+            }
+
+            if (response.isEmpty()) {
+                break
+            }
+
+            //3. 解析response
+            def backData = new JsonSlurper().parseText(response)
+            def code = backData["code"].toString().toInteger()
+
+            def jsonObject = backData["data"]
+            if (code != 0 || jsonObject == null) {
+                println "错误：请求token 有误。$code"
+                break
+            }
+            def jsonObjectParams = jsonObject["params"]
+            String url = jsonObject["endpoint"].toString()
+            def key = jsonObjectParams["key"].toString()
+            def signature = jsonObjectParams["signature"].toString()
+            def xCosToken = jsonObjectParams["x-cos-security-token"].toString()
+
+            //4. 上传
+            String boundary = "===" + System.currentTimeMillis() + "==="
+            String lineEnd = "\r\n"
+            String charset = "UTF-8"
+
+            def fileName = uploadFile.name
+            // 创建连接
+            println("开始上传...$fileName")
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection()
+            connection.setDoOutput(true)
+            connection.setRequestMethod("POST")
+            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=${boundary}")
+
+            // 上传文件和参数
+            connection.outputStream.withStream { outputStream ->
+                // 添加文本参数
+                outputStream.write("--${boundary}${lineEnd}".getBytes(charset))
+                outputStream.write("Content-Disposition: form-data; name=\"key\"${lineEnd}${lineEnd}".getBytes(charset))
+                outputStream.write("${key}${lineEnd}".getBytes(charset))
+
+                outputStream.write("--${boundary}${lineEnd}".getBytes(charset))
+                outputStream.write("Content-Disposition: form-data; name=\"signature\"${lineEnd}${lineEnd}".getBytes(charset))
+                outputStream.write("${signature}${lineEnd}".getBytes(charset))
+
+                outputStream.write("--${boundary}${lineEnd}".getBytes(charset))
+                outputStream.write("Content-Disposition: form-data; name=\"x-cos-security-token\"${lineEnd}${lineEnd}".getBytes(charset))
+                outputStream.write("${xCosToken}${lineEnd}".getBytes(charset))
+
+                // 添加文件
+                outputStream.write("--${boundary}${lineEnd}".getBytes(charset))
+                outputStream.write("Content-Disposition: form-data; name=\"file\"; filename=\"${fileName}\"${lineEnd}".getBytes(charset))
+                outputStream.write("Content-Type: application/octet-stream${lineEnd}${lineEnd}".getBytes(charset))
+                outputStream.write(uploadFile.bytes)
+                outputStream.write(lineEnd.getBytes(charset))
+
+                // 结束边界
+                outputStream.write("--${boundary}--${lineEnd}".getBytes(charset))
+            }
+
+            // 获取响应
+            int responseCode = connection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK || responseCode == 204) {
+                println ">>>上传蒲公英成功! $fileName"
+            } else {
+                println "错误：上传失败： ${responseCode} ${connection.responseMessage}"
+            }
+
+            connection.disconnect()
+        } while(false)
+    }
+}

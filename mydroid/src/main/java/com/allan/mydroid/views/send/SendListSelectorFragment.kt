@@ -2,45 +2,45 @@ package com.allan.mydroid.views.send
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.allan.mydroid.R
+import com.allan.mydroid.beansinner.UriRealInfoEx
+import com.allan.mydroid.databinding.ActivityMyDroidSendlistBinding
 import com.allan.mydroid.globals.KEY_AUTO_ENTER_SEND_VIEW
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.views.MyDroidKeepLiveService
-import com.allan.mydroid.beansinner.UriRealInfoEx
-import com.allan.mydroid.databinding.ActivityMyDroidSendlistBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.PermissionStorageHelper
+import com.au.module_android.simplelivedata.asNoStickLiveData
 import com.au.module_android.ui.FragmentShellActivity
 import com.au.module_android.ui.ToolbarMenuManager
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.utils.NotificationUtil
 import com.au.module_android.utils.asOrNull
-import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utils.unsafeLazy
-import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomSingleDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
 import com.au.module_androidui.toast.ToastBuilder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.collections.find
 
 class SendListSelectorFragment : BindingFragment<ActivityMyDroidSendlistBinding>() {
-    private val common = object : SendListSelectorCommon(this) {
+    private val common = object : SendListSelectorCommon(this, false) {
         override fun rcv() = binding.rcv
 
         override fun empty() = binding.empty
 
-        override fun itemClick(bean: UriRealInfoEx?) {
+        override fun itemClick(bean: UriRealInfoEx?, mode:String) {
+            if (mode == "delete" && bean != null) {
+                val data = MyDroidConst.sendUriMap.realValue
+                data?.remove(bean.uriUuid)
+                MyDroidConst.updateSendUriMap(data)
+            }
         }
     }
 

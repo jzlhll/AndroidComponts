@@ -9,15 +9,15 @@ import com.allan.mydroid.globals.MyDroidConst
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.visible
 
-abstract class SendListSelectorCommon(val f : Fragment) {
-    private val adapter = SendListAdapter {
-        itemClick(it)
+abstract class SendListSelectorCommon(val f : Fragment, noSelectBtns:Boolean) {
+    private val adapter = SendListAdapter(noSelectBtns) {it, mode->
+        itemClick(it, mode)
     }
 
     abstract fun rcv(): RecyclerView
     abstract fun empty(): TextView
 
-    abstract fun itemClick(bean: UriRealInfoEx?)
+    abstract fun itemClick(bean: UriRealInfoEx?, mode:String)
     
     fun onBindingCreated() {
         initRcv()
@@ -31,7 +31,7 @@ abstract class SendListSelectorCommon(val f : Fragment) {
         rcv.layoutManager = LinearLayoutManager(rcv.context)
         rcv.setHasFixedSize(true)
 
-        MyDroidConst.sendUriMap.observe(f) { map->
+        MyDroidConst.sendUriMap.observe(f) { map-> //监听没问题
             val list = ArrayList<UriRealInfoEx>()
             list.addAll(map.values)
             adapter.submitList(list, false)

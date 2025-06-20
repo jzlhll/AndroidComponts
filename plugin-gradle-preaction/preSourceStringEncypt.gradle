@@ -1,0 +1,22 @@
+static File combinePath(File projectDir, String... fromRootNames) {
+    def rootDir = projectDir.parentFile.absolutePath
+    for (String name : fromRootNames) {
+        rootDir += File.separatorChar
+        rootDir += name
+    }
+    return new File(rootDir)
+}
+
+// 假设你在处理 Java 代码
+tasks.register("processSources") {
+    doLast {
+        def srcDir = file("$buildDir/processedSources")
+        srcDir.mkdirs()
+
+        // 示例：复制并修改源码
+        fileTree("src/main/java").each { file ->
+            def targetFile = new File(srcDir, file.name)
+            targetFile.text = file.text.replace("original", "modified")
+        }
+    }
+}

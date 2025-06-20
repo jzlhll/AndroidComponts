@@ -6,8 +6,16 @@ import com.allan.mydroid.beansinner.ReceivingFileInfo
 import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.beansinner.WebSocketClientInfo
 import com.au.module_android.Globals
+import com.au.module_android.json.fromJson
+import com.au.module_android.json.fromJsonList
+import com.au.module_android.json.fromJsonLv2
+import com.au.module_android.json.toJsonString
 import com.au.module_android.simplelivedata.NoStickLiveData
 import com.au.module_android.simplelivedata.RealValueLiveData
+import com.au.module_android.simplelivedata.asNoStickLiveData
+import com.au.module_android.utils.launchOnThread
+import com.au.module_android.utils.logdNoFile
+import com.au.module_cached.AppDataStore
 import java.io.File
 
 object MyDroidConst {
@@ -52,7 +60,32 @@ object MyDroidConst {
      * 从shareReceiver activity处接收数据
      * key是uriUuid
      */
-    val sendUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(hashMapOf())
+    val sendUriMap: RealValueLiveData<HashMap<String, UriRealInfoEx>> = NoStickLiveData(loadCacheSendUriMap())
+
+    private fun loadCacheSendUriMap() : HashMap<String, UriRealInfoEx>{
+        var time = System.currentTimeMillis()
+        try {
+            val json = AppDataStore.readBlocked("mydroid_sendUriMap", "")
+            logdNoFile{"load cache sendUriMap json: $json"}
+            if (json.isEmpty()) {
+                return hashMapOf()
+            }
+            val list: HashMap<String, UriRealInfoEx>? = json.fromJson()
+            logdNoFile{"load cache sendUriMap json2: $list"}
+            return list ?: hashMapOf()
+        } finally {
+            time = System.currentTimeMillis() - time
+            logdNoFile{"load cache sendUriMap time: $time"}
+        }
+    }
+
+    fun updateSendUriMap(map: HashMap<String, UriRealInfoEx>?) {
+        val fixMap = map ?: hashMapOf()
+        sendUriMap.asNoStickLiveData().setValueSafe(fixMap)
+        Globals.mainScope.launchOnThread {
+            AppDataStore.save("mydroid_sendUriMap", fixMap.toJsonString())
+        }
+    }
 
     val aliveStoppedData = NoStickLiveData<Unit>()
 }

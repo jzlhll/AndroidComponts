@@ -131,7 +131,7 @@ class ShareImportActivity : BindingActivity<ActivityImportBinding>() {
     private fun importMapAndJumpFinish(newImportList: MutableList<UriRealInfoEx>) {
         val map = MyDroidConst.sendUriMap.realValue ?: hashMapOf()
         map.putAll(newImportList.map { it.uriUuid to it })
-        MyDroidConst.sendUriMap.asNoStickLiveData().setValueSafe(map)
+        MyDroidConst.updateSendUriMap(map)
         jumpNext()
         finish()
     }

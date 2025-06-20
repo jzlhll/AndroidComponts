@@ -1,0 +1,93 @@
+//apply from:"../plugin-gradle-preaction/pgyerUploadApk.gradle"
+//apply from:"../plugin-gradle-preaction/assetsEncrypt.gradle"
+//apply from:"../plugin-gradle-preaction/assetsDownloadFiles.gradle"
+
+def XOR_KEY = "abcd123"
+
+static File combinePath(File projectDir, String... fromRootNames) {
+    def rootDir = projectDir.parentFile.absolutePath
+    for (String name : fromRootNames) {
+        rootDir += File.separatorChar
+        rootDir += name
+    }
+    return new File(rootDir)
+}
+
+/**
+ * 混淆文件内容并保存
+ * @param sourceFile 原始文件
+ * @param targetFile 混淆后的目标文件
+ * @param xorKey 混淆密钥
+ * @throws IOException 如果发生I/O错误
+ */
+static def obfuscateFile(File sourceFile, File targetFile, String xorKey) throws IOException {
+    byte[] fileContent = sourceFile.bytes
+    byte[] keyBytes = xorKey.getBytes('UTF-8')
+    xorTransform(fileContent, keyBytes)
+
+    targetFile.withOutputStream { os ->
+        os.write(fileContent)
+    }
+}
+
+/**
+ * XOR转换（加密和解密使用相同方法）
+ * @param data 要处理的数据
+ * @param key 混淆密钥字节数组
+ */
+private static def xorTransform(byte[] data, byte[] key) {
+    for (int i = 0; i < data.length; i++) {
+        data[i] = (data[i] ^ key[i % key.length]) as byte
+    }
+}
+
+// 自定义下载文件的任务
+tasks.register('assetsEncrypt') {
+    doLast {
+        def targetDir = combinePath(projectDir, "app", "src", "main", "assets")
+        targetDir.mkdirs()
+
+        // 获取源目录下所有文件（不包括子目录）
+        def count = 0
+        //自行修改此处的目录结构，用于放置asset文件。
+        combinePath(projectDir, "plugin-gradle-preaction", "assets").eachFile { file ->
+            def targetFile = new File(targetDir.absolutePath, file.name)
+            try {
+                obfuscateFile(file, targetFile, XOR_KEY)
+                println "已处理文件: ${file.name} → ${targetFile.path}"
+                count++
+            } catch (IOException e) {
+                println "处理文件 ${file.name} 时出错: ${e.message}"
+            }
+        }
+        println("处理完成：$count 个！")
+    }
+}
+
+/*
+
+//配套的kotlin代码，用于将json文件反转。注意保护xOrKey的来源。
+fun decryptAssetJson(fileName:String, xOrKey:String) : String {
+    return try {
+        context.assets.open(fileName).use {
+            decryptString(it, xOrKey)
+        }
+    } catch(_:Exception) {
+        null
+    }
+}
+
+fun decryptString(source: InputStream, xorKey: String): String {
+    val keyBytes = xorKey.toByteArray(StandardCharsets.UTF_8)
+    val data = source.readBytes() // 一次性读取所有字节
+    xorTransform(data, keyBytes)// 执行 XOR 变换
+    return data.toString(StandardCharsets.UTF_8) // 还原UTF-8 字符串
+}
+
+private fun xorTransform(data: ByteArray, key: ByteArray) {
+    for (i in data.indices) {
+        data[i] = (data[i] xor key[i % key.size])
+    }
+}
+
+ */

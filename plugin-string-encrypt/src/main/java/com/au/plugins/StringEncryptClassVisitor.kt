@@ -1,13 +1,20 @@
 package com.au.plugins
 
+import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
 class StringEncryptClassVisitor(cv: ClassVisitor) : ClassVisitor(Opcodes.ASM9, cv) {
     private var className: String? = null
     private val fieldsToEncrypt: MutableList<FieldInfo> = ArrayList()
     private var isCompanionObject = false
+
+    private val mStaticFinalFields = java.util.ArrayList<ClassStringField>()
+    private val mStaticFields = java.util.ArrayList<ClassStringField>()
+    private val mFinalFields = java.util.ArrayList<ClassStringField>()
+    private val mFields = java.util.ArrayList<ClassStringField>()
 
     override fun visit(
         version: Int, access: Int, name: String?,
@@ -17,20 +24,53 @@ class StringEncryptClassVisitor(cv: ClassVisitor) : ClassVisitor(Opcodes.ASM9, c
         className = name
         // 检查是否是伴生对象类
         isCompanionObject = name?.endsWith("\$Companion") == true
-        pluginPrintln("Class: $name | Companion: $isCompanionObject")
+        pluginPrintln("${className}: | Companion: $isCompanionObject")
     }
 
-    override fun visitField(
-        access: Int, name: String?, descriptor: String?,
-        signature: String?, value: Any?
-    ): FieldVisitor {
-        val isTarget = isTargetField(access, descriptor)
-        pluginPrintln("$className: visitField descriptor $descriptor access $access isTarget $isTarget")
-        // 收集需要加密的字段
-        if (isTarget) {
-            fieldsToEncrypt.add(FieldInfo(name, descriptor, value))
+    override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor? {
+        return super.visitAnnotation(descriptor, visible)
+    }
+
+    override fun visitMethod(access: Int, name: String?, descriptor: String?, signature: String?, exceptions: Array<out String?>?): MethodVisitor? {
+        val mv: MethodVisitor? = super.visitMethod(access, name, descriptor, signature, exceptions)
+        if (mv == null) {
+            return mv
         }
-        return super.visitField(access, name, descriptor, signature, value)
+        pluginPrintln("${className}: visit method $name")
+        return null
+    }
+
+    override fun visitField(access: Int, name: String?, desc: String?, signature: String?, value: Any?): FieldVisitor? {
+        var value = value
+        if (ClassStringField.STRING_DESC == desc && name != null) {
+            // static final, in this condition, the value is null or not null.
+            if ((access and Opcodes.ACC_STATIC) != 0 && (access and Opcodes.ACC_FINAL) != 0) {
+                pluginPrintln("${className}: visit field $name static final")
+                mStaticFinalFields.add(ClassStringField(name, value as String?))
+                value = null
+            }
+            // static, in this condition, the value is null.
+            if ((access and Opcodes.ACC_STATIC) != 0 && (access and Opcodes.ACC_FINAL) == 0) {
+                pluginPrintln("${className}: visit field $name static ")
+                mStaticFields.add(ClassStringField(name, value as String?))
+                value = null
+            }
+
+            // final, in this condition, the value is null or not null.
+            if ((access and Opcodes.ACC_STATIC) == 0 && (access and Opcodes.ACC_FINAL) != 0) {
+                pluginPrintln("${className}: visit field $name final ")
+                mFinalFields.add(ClassStringField(name, value as String?))
+                value = null
+            }
+
+            // normal, in this condition, the value is null.
+            if ((access and Opcodes.ACC_STATIC) == 0 && (access and Opcodes.ACC_FINAL) == 0) {
+                pluginPrintln("${className}: visit field $name normal")
+                mFields.add(ClassStringField(name, value as String?))
+                value = null
+            }
+        }
+        return super.visitField(access, name, desc, signature, value)
     }
 
     private fun isTargetField(access: Int, descriptor: String?): Boolean {

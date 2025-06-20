@@ -141,7 +141,7 @@ class ExportSelectActionDialog(private var file: File? = null) : AbsActionDialog
                 val info = fileUri.getRealInfo(Globals.app)
                 val infoEx = UriRealInfoEx.Companion.copyFrom(info)
                 map.put(infoEx.uriUuid, infoEx)
-                MyDroidConst.sendUriMap.asNoStickLiveData().setValueSafe(map)
+                MyDroidConst.updateSendUriMap(map)
 
                 importSendCallback?.get()?.invoke()
             }

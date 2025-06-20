@@ -85,7 +85,7 @@ class MyDroidSendFragment : AbsLiveFragment<FragmentMyDroidSendBinding>() {
 //            }
         }
 
-        MyDroidConst.sendUriMap.observe(this) {
+        MyDroidConst.sendUriMap.observe(this) { //监听没问题
             parseEntryFileList()
         }
     }

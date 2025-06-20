@@ -15,11 +15,11 @@ class SendListSelectorDialog : BindingFragment<DialogMyDroidSendlistBinding>() {
         fun onItemClick(bean: UriRealInfoEx)
     }
 
-    private val common = object : SendListSelectorCommon(this) {
+    private val common = object : SendListSelectorCommon(this, true) {
         override fun rcv() = binding.rcv
         override fun empty() = binding.empty
 
-        override fun itemClick(bean: UriRealInfoEx?) {
+        override fun itemClick(bean: UriRealInfoEx?, mode:String) {
             bean ?: return
             var parent = parentFragment as? ISelectItemClick
             if (parent == null) {

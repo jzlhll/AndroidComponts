@@ -27,9 +27,25 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
     abstract fun isLifeActivity(activity: Activity) : Boolean
 
     final override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        if (isLifeActivity(activity)) {
+            lifeCount++
+            onLifeOpenEach()
+            if (lifeCount == 1) {
+                mScope = MainScope()
+                onLifeOpen()
+            }
+        }
     }
 
     final override fun onActivityDestroyed(activity: Activity) {
+        if (isLifeActivity(activity)) {
+            lifeCount--
+            if (lifeCount == 0) {
+                onLifeClose()
+                mScope?.cancel()
+                mScope = null
+            }
+        }
     }
 
     final override fun onActivityPaused(activity: Activity) {
@@ -42,24 +58,8 @@ abstract class InterestActivityCallbacks : Application.ActivityLifecycleCallback
     }
 
     final override fun onActivityStarted(activity: Activity) {
-        if (isLifeActivity(activity)) {
-            lifeCount++
-            onLifeOpenEach()
-            if (lifeCount == 1) {
-                mScope = MainScope()
-                onLifeOpen()
-            }
-        }
     }
 
     final override fun onActivityStopped(activity: Activity) {
-        if (isLifeActivity(activity)) {
-            lifeCount--
-            if (lifeCount == 0) {
-                onLifeClose()
-                mScope?.cancel()
-                mScope = null
-            }
-        }
     }
 }

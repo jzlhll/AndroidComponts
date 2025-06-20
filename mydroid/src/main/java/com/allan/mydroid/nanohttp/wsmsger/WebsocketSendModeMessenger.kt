@@ -58,7 +58,7 @@ class WebsocketSendModeMessenger(client: WebsocketClientInServer) : AbsWebSocket
 
     override fun onOpen() {
         Globals.mainScope.launch {
-            MyDroidConst.sendUriMap.observeForever(sendUriMapOb)
+            MyDroidConst.sendUriMap.observeForever(sendUriMapOb) //监听没问题
         }
     }
 
