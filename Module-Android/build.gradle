@@ -8,7 +8,6 @@ android {
     namespace='com.au.module_android'
     compileSdk=gradle.ext.compileSdk
 
-    def enableEdgeToEdge = Boolean.parseBoolean(findProperty("app.activity.enableEdgeToEdge"))
     def supportLocales = Boolean.parseBoolean(findProperty("app.supportLocales"))
     def supportDarkMode = Boolean.parseBoolean(findProperty("app.supportDarkMode"))
 
@@ -17,7 +16,6 @@ android {
         targetSdk=gradle.ext.targetSdk
 
         consumerProguardFiles "consumer-rules.pro"
-        buildConfigField("boolean", "ENABLE_EDGE_TO_EDGE", "" + enableEdgeToEdge)
         buildConfigField("boolean", "SUPPORT_LOCALES", "" + supportLocales)
         buildConfigField("boolean", "SUPPORT_DARKMODE", "" + supportDarkMode)
     }

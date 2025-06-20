@@ -15,7 +15,7 @@ interface IFullWindow {
      *    所以子类不得再调用window.decorView
      *    ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
      */
-    fun isPaddingStatusBar() = BuildConfig.ENABLE_EDGE_TO_EDGE
+    fun isPaddingStatusBar() = true
 
     /**
      * 由于新框架默认全面屏: 是否将底部navigationBar padding到合理的位置
@@ -23,7 +23,7 @@ interface IFullWindow {
      *    所以子类不得再调用window.decorView
      *    ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
      */
-    fun isPaddingNavBar() = BuildConfig.ENABLE_EDGE_TO_EDGE
+    fun isPaddingNavBar() = true
 
     /**
      * android15已经默认要求设置了。这里就强制处理。
