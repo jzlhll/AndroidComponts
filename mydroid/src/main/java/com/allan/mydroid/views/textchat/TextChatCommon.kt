@@ -118,7 +118,9 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
     }
 
     private fun initRcv() {
-        binding.rcv.adapter = TextChatRcvAdapter().also { adapter = it }
+        binding.rcv.adapter = TextChatRcvAdapter{
+
+        }.also { adapter = it }
         binding.rcv.layoutManager = LinearLayoutManager(f.requireContext()).apply {
             orientation = LinearLayoutManager.VERTICAL
         }

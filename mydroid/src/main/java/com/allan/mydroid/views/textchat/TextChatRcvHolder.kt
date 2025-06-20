@@ -9,6 +9,8 @@ import com.allan.mydroid.globals.getIcon
 import com.allan.mydroid.views.textchat.uibean.AbsItem
 import com.allan.mydroid.views.textchat.uibean.NormalItem
 import com.allan.mydroid.views.textchat.uibean.StatusItem
+import com.au.module_android.click.onClick
+import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.gone
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.unsafeLazy
@@ -53,7 +55,15 @@ class TextChatRcvHolderMe(binding: TextchatItemMeBinding) : BindViewHolder<AbsIt
     }
 }
 
-class TextChatRcvHolderOther(binding: TextchatItemOtherBinding) : BindViewHolder<AbsItem, TextchatItemOtherBinding>(binding) {
+class TextChatRcvHolderOther(binding: TextchatItemOtherBinding, val itemClick: (NormalItem) -> Unit) : BindViewHolder<AbsItem, TextchatItemOtherBinding>(binding) {
+    init {
+        binding.contentHost.onClick {
+            currentData.asOrNull<NormalItem>()?.let {
+                itemClick(it)
+            }
+        }
+    }
+
     override fun bindData(bean: AbsItem) {
         super.bindData(bean)
         bean as NormalItem

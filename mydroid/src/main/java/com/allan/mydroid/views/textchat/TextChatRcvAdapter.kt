@@ -5,11 +5,12 @@ import com.allan.mydroid.views.textchat.uibean.AbsItem
 import com.allan.mydroid.views.textchat.uibean.AbsItem.VIEW_TYPE_ME
 import com.allan.mydroid.views.textchat.uibean.AbsItem.VIEW_TYPE_OTHER
 import com.allan.mydroid.views.textchat.uibean.AbsItem.VIEW_TYPE_STATUS
+import com.allan.mydroid.views.textchat.uibean.NormalItem
 import com.au.module_android.utils.NoWayException
 import com.au.module_nested.recyclerview.BindRcvAdapter
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
-class TextChatRcvAdapter : BindRcvAdapter<AbsItem, BindViewHolder<AbsItem, *>>() {
+class TextChatRcvAdapter(val otherItemClick: (NormalItem) -> Unit) : BindRcvAdapter<AbsItem, BindViewHolder<AbsItem, *>>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -22,7 +23,7 @@ class TextChatRcvAdapter : BindRcvAdapter<AbsItem, BindViewHolder<AbsItem, *>>()
                 TextChatRcvHolderMe(create(parent))
             }
             VIEW_TYPE_OTHER -> {
-                TextChatRcvHolderOther(create(parent))
+                TextChatRcvHolderOther(create(parent), otherItemClick)
             }
             else -> {
                 throw NoWayException()

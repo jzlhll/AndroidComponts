@@ -36,6 +36,7 @@
     <string name="mydroid_running_only_for_alive">快鸽传输-仅作为保活进程运行</string>
     <string name="import_to_send_list_hint">请点击\"导入到发送列表\"而非\"分享\"！</string>
     <string name="share">分享</string>
+    <string name="download">下载</string>
     <string name="delete">删除</string>
     <string name="export">导出</string>
     <string name="export_and_delete">导出 &amp; 删除</string>

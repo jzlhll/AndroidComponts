@@ -36,6 +36,7 @@
     <string name="mydroid_running_only_for_alive">Pigeon Pass- running only for alive</string>
     <string name="import_to_send_list_hint">Please tap \"Import to send list\" instead of \"Share\"!</string>
     <string name="share">Share</string>
+    <string name="download">Download</string>
     <string name="delete">delete</string>
     <string name="export">Export</string>
     <string name="export_and_delete">Export &amp; Delete</string>
