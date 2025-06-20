@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal() // 本地仓库
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -52,9 +53,9 @@ include ':Module-ImageCompressed'
 
 //自定义apt
 include ':ClassNameAnnotations'
-include ':ClassNameAnnotations-compiler'
+//include ':ClassNameAnnotations-compiler'
 include ':ClassNameAnnotations-ksp'
 include ':Module-Native'
-include ':test'
 include ':Module-AndroidLogSystem'
 include ':mydroid'
+include ':plugin-string-encrypt'

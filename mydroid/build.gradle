@@ -22,9 +22,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             resValue "xml", "network_security", "@xml/network_release"
+            //apply plugin: 'com.au.plugins.plugin-string-encrypt'
         }
         debug {
             resValue "xml", "network_security", "@xml/network_debug"
+            //apply plugin: 'com.au.plugins.plugin-string-encrypt'
         }
     }
     compileOptions {
