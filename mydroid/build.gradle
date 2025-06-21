@@ -65,4 +65,12 @@ dependencies {
     implementation project(":Module-ImageCompressed")
     implementation project(":Module-Okhttp")
     implementation project(":Module-AndroidLogSystem")
+
+    compileOnly("com.github.javaparser:javaparser-symbol-solver-core:3.27.0")
+}
+
+apply from:"../plugin-gradle-preaction/preSourceStringEncypt.gradle"
+
+tasks.named('preBuild').configure {
+    dependsOn tasks.named('encyptString')
 }

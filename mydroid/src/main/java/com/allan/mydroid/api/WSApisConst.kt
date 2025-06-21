@@ -1,5 +1,8 @@
 package com.allan.mydroid.api
 
+import com.au.annos.EncryptString
+
+@EncryptString
 class WSApisConst {
     companion object {
         const val API_WS_SEND_FILE_LIST = "s_sendFileList"
@@ -17,6 +20,21 @@ class WSApisConst {
         const val API_WS_FILE_DOWNLOAD_COMPLETE = "c_downloadFileComplete"
 
         //textChat相关api
-        const val API_WS_TEXT_CHAT_MSG = "cs_text_chat_msg"
+        public const val API_WS_TEXT_CHAT_MSG = "cs_text_chat_msg"
+
+        protected val testFinal = "test final"
+
+        val encypt = com.au.stringprotect.StringCrypto.decrypt("ss", "")
     }
+
+    private var testNormal = " test normal "
+
+    fun funcNormal() {
+        val testValInFun = "test val in fun"
+        var testVarInFun = "test var in fun"
+
+        "test ex".testEx()
+    }
+
+    fun String.testEx() {}
 }

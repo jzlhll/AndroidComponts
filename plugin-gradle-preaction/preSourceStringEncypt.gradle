@@ -1,22 +1,251 @@
-static File combinePath(File projectDir, String... fromRootNames) {
-    def rootDir = projectDir.parentFile.absolutePath
-    for (String name : fromRootNames) {
-        rootDir += File.separatorChar
-        rootDir += name
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.security.SecureRandom
+
+def ANNOTATIONS = ["@EncryptString", "@file:EncryptString"]
+def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
+
+def FORCE = false //如果你修改了下面的key，则需要强制调用一次。
+def SECRET_KEY = "abcde12345hijklm".getBytes("UTF-8") //16位密码，妥善保管
+
+class AESGCMUtil {
+    private static final String ALGORITHM = "AES/GCM/NoPadding"
+    private static final int TAG_LENGTH_BIT = 128  // GCM认证标签长度（固定128位）
+    private static final int IV_LENGTH_BYTE = 12   // 推荐IV长度（12字节）
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom()
+
+    /**
+     * 加密数据
+     * @param plaintext 明文
+     * @param key 密钥（16/24/32字节对应AES-128/192/256）
+     * @return Base64编码的字符串，格式为：IV + 密文
+     */
+    static String encrypt(String plaintext, byte[] key) {
+        // 生成随机IV（12字节）
+        byte[] iv = new byte[IV_LENGTH_BYTE]
+        SECURE_RANDOM.nextBytes(iv)
+
+        // 创建密钥对象
+        SecretKey secretKey = new SecretKeySpec(key, "AES")
+
+        // 初始化加密器
+        Cipher cipher = Cipher.getInstance(ALGORITHM)
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH_BIT, iv))
+
+        // 执行加密
+        byte[] ciphertext = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8))
+
+        // 组合IV和密文：IV + 密文
+        byte[] combined = new byte[iv.length + ciphertext.length]
+        System.arraycopy(iv, 0, combined, 0, iv.length)
+        System.arraycopy(ciphertext, 0, combined, iv.length, ciphertext.length)
+
+        return Base64.encoder.encodeToString(combined)
     }
-    return new File(rootDir)
+
+    /**
+     * 解密数据
+     * @param encryptedData Base64编码的加密数据（IV + 密文）
+     * @param key 密钥（必须与加密时使用的相同）
+     * @return 解密后的原始字符串
+     */
+    static String decrypt(String encryptedData, byte[] key) {
+        // 解码Base64
+        byte[] combined = Base64.decoder.decode(encryptedData)
+
+        // 提取IV（前12字节）
+        byte[] iv = new byte[IV_LENGTH_BYTE]
+        System.arraycopy(combined, 0, iv, 0, iv.length)
+
+        // 提取密文（剩余部分）
+        byte[] ciphertext = new byte[combined.length - IV_LENGTH_BYTE]
+        System.arraycopy(combined, IV_LENGTH_BYTE, ciphertext, 0, ciphertext.length)
+
+        // 创建密钥对象
+        SecretKey secretKey = new SecretKeySpec(key, "AES")
+
+        // 初始化解密器
+        Cipher cipher = Cipher.getInstance(ALGORITHM)
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH_BIT, iv))
+
+        // 执行解密
+        byte[] plaintext = cipher.doFinal(ciphertext)
+
+        return new String(plaintext, StandardCharsets.UTF_8)
+    }
+}
+
+//用来替代源字符串
+def DECRYPT_FUNC = "com.au.stringprotect.StringEncryptUtil.decrypt(%s) /*Encrypted: %s*/"
+
+void scanAllJavaDirs(File directory, List<File> allMainSrcDirs) {
+    def files = directory.listFiles()
+    for (def file in files) {
+        if (file.isDirectory()) {
+            def dir = file
+            def name = dir.getName()
+            if (name == "build") {
+                continue
+            }
+            if ((name == "java" || name == "kotlin")
+                    && dir.parentFile.getName() == "main") {
+                allMainSrcDirs.add(dir)
+                continue
+            }
+            scanAllJavaDirs(dir, allMainSrcDirs)
+        }
+    }
+}
+
+void scanAllCodeFile(File directory, List<File> allCodeFiles) {
+    def files = directory.listFiles()
+    for (def file in files) {
+        if (file.isFile()) {
+            if (file.name.endsWith(".java") || file.name.endsWith(".kt")) {
+                allCodeFiles.add(file)
+            }
+        } else {
+            scanAllCodeFile(file, allCodeFiles)
+        }
+    }
+}
+
+static def detectStringDefinitionKt(String line) {
+    // 支持public/private修饰符、const修饰符、val/var声明、任意变量名
+    def pattern = ~/((public|private|protected)\s+)?(const\s+)?(val|var)\s+([a-zA-Z_]\w*)\s*=\s*"([^"]+)"/
+    def matcher = pattern.matcher(line)
+
+    if (matcher.find()) {
+        return [
+                accessModifier: matcher.group(2),
+                isConst: matcher.group(3) != null,
+                isVal: matcher.group(4) == 'val',
+                name: matcher.group(5),
+                value: matcher.group(6)
+        ]
+    }
+    return null
+}
+
+static def detectStringDefinitionJ(String line) {
+    // 改进后的正则表达式
+    def pattern = ~/((public|private|protected)\s+)?(static\s+)?(final\s+)?String\s+(\w+)\s*=\s*"([^"]+)"\s*;/
+    def matcher = pattern.matcher(line)
+
+    if (matcher.find()) {
+        return [
+                accessModifier: matcher.group(2),
+                isStatic: matcher.group(3) != null,
+                isFinal: matcher.group(4) != null,
+                name: matcher.group(5),
+                value: matcher.group(6)
+        ]
+    }
+    return null
+}
+
+def extractFromFirstValidChar(String input) {
+    if (input == null || input.isEmpty()) return ""
+    char char_ = '_'
+
+    for (int i = 0; i < input.length(); i++) {
+        char c = input.charAt(i)
+        // 检查字符是否是字母、数字或下划线
+        if (Character.isLetter(c) || c == char_) {
+            return input.substring(0, i)
+        }
+    }
+
+    // 如果没有任何符合条件的字符，返回空字符串
+    return ""
 }
 
 // 假设你在处理 Java 代码
-tasks.register("processSources") {
+tasks.register("encyptString") {
     doLast {
-        def srcDir = file("$buildDir/processedSources")
-        srcDir.mkdirs()
+        println("encyptString...")
+        def allJavaDirs = new ArrayList<File>()
+        scanAllJavaDirs(projectDir.parentFile, allJavaDirs)
+        def subAllJavaDirs = allJavaDirs.stream().filter {
+            def isGood = false
+            for (def moduleName in MODULE_NAMES) {
+                if (it.absolutePath.contains(moduleName + "/src")
+                        || it.absolutePath.contains(moduleName + "\\src")) {
+                    isGood = true
+                }
+            }
+            return isGood
+        }
 
-        // 示例：复制并修改源码
-        fileTree("src/main/java").each { file ->
-            def targetFile = new File(srcDir, file.name)
-            targetFile.text = file.text.replace("original", "modified")
+        def allCodeFiles = new ArrayList<File>()
+        for (def javaDir in subAllJavaDirs) {
+            //println("javaDir: " + javaDir)
+            scanAllCodeFile(javaDir, allCodeFiles)
+        }
+
+        def allAnnotationFiles = new ArrayList<File>()
+
+        for (def file in allCodeFiles) {
+            //println("code: $file")
+            def code = Files.readString(file.toPath())
+            for (def ann in ANNOTATIONS) {
+                if (code.contains(ann)) {
+                    allAnnotationFiles.add(file)
+                }
+            }
+        }
+
+        for (def file : allAnnotationFiles) {
+            def isKt = file.getName().endsWith("kt")
+            println("annotation code: $file")
+            def allLines = Files.readAllLines(file.toPath())
+            def count = allLines.size()
+
+            def isChanged = false
+
+            for (int i = 0; i < count;i++) {
+                def line = allLines.get(i)
+                if (line.contains("/*Encrypted:")) { //已经处理过的。
+                    continue
+                }
+                if (isKt) {
+                    def result = detectStringDefinitionKt(line)
+                    if (result != null) {
+                        println("resultKt: " + result)
+                        if (result.isVal) { //目前就只处理const val的变量
+                            def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
+                            def changedLine = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            allLines.set(i,
+                                    extractFromFirstValidChar(line)
+                                    + "val " + result.name + " = " + changedLine
+                                    )
+                            isChanged = true
+                        }
+                    }
+                } else {
+                    def result = detectStringDefinitionJ(line)
+                    if (result != null) {
+                        println("resultJ: " + result)
+                        if (result.isStatic && result.isFinal) { //目前就只处理static final的变量
+                            def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
+                            def changedLine = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            allLines.set(i,
+                                    extractFromFirstValidChar(line)
+                                            + "val " + result.name + " = " + changedLine
+                            )
+                            isChanged = true
+                        }
+                    }
+                }
+            }
+
+            if (isChanged) {
+                Files.write(file.toPath(), allLines)
+            }
         }
     }
 }

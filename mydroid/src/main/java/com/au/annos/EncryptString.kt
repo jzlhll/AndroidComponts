@@ -1,6 +1,6 @@
 package com.au.annos
 
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FILE)
 /**
  * @param mode  替换模式 可选0或者1，默认0。
