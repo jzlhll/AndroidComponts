@@ -112,38 +112,6 @@ class OtherItemActionDialog(private var file: File? = null) : AbsActionDialogFra
 
     override fun notify(tag: Any) {
         when (tag.toString()) {
-            TAG_SHARE -> {
-                shareFile(Globals.app, file)
-            }
-            TAG_EXPORT_ONLY -> {
-                export(false)
-            }
-            TAG_EXPORT_AND_DOWNLOAD -> {
-                export(true)
-            }
-            TAG_SEND_IMPORT -> {
-                val map = MyDroidConst.sendUriMap.realValue ?: hashMapOf()
-                val oldValues = map.values
-
-                val fileUri = Uri.fromFile(file!!)
-                if (oldValues.find { it.uri == fileUri } != null) {
-                    ToastBuilder().setMessage(R.string.already_in_sending_list.resStr()).setIcon("info").setOnTopLater(200).toast()
-                    return
-                }
-                val info = fileUri.getRealInfo(Globals.app)
-                val infoEx = UriRealInfoEx.Companion.copyFrom(info)
-                map.put(infoEx.uriUuid, infoEx)
-                MyDroidConst.updateSendUriMap(map)
-
-                importSendCallback?.get()?.invoke()
-            }
-            TAG_DELETE -> {
-                Globals.mainScope.launchOnThread {
-                    ignoreError { file?.delete() }
-                    delay(100)
-                    refreshFileListCallback?.get()?.invoke()
-                }
-            }
         }
     }
 }

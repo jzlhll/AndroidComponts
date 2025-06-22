@@ -1,4 +1,4 @@
-package com.module_native;
+package com.modulenative;
 
 import android.content.Context;
 
@@ -26,5 +26,8 @@ public final class AppNative {
     public static native String appIdAndKey(Context context);
 
     @Keep
-    public static native String simpleDecoder(int[] indexes);
+    public static native String simpleDecoder(Context context, int[] indexes);
+
+    @Keep
+    public static native String stringEncryptSecret(Context context);
 }

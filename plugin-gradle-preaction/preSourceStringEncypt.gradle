@@ -9,7 +9,7 @@ import java.security.SecureRandom
 def ANNOTATIONS = ["@EncryptString", "@file:EncryptString"]
 def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
 
-def FORCE = false //如果你修改了下面的key，则需要强制调用一次。
+def FORCE = true //如果你修改了下面的key，则需要强制调用一次。
 def SECRET_KEY = "abcde12345hijklm".getBytes("UTF-8") //16位密码，妥善保管
 
 class AESGCMUtil {
@@ -131,7 +131,7 @@ static def detectStringDefinitionKt(String line) {
     return null
 }
 
-static def detectStringDefinitionJ(String line) {
+private static def detectStringDefinitionJ(String line) {
     // 改进后的正则表达式
     def pattern = ~/((public|private|protected)\s+)?(static\s+)?(final\s+)?String\s+(\w+)\s*=\s*"([^"]+)"\s*;/
     def matcher = pattern.matcher(line)
@@ -148,7 +148,7 @@ static def detectStringDefinitionJ(String line) {
     return null
 }
 
-def extractFromFirstValidChar(String input) {
+private static def extractFromFirstValidChar(String input) {
     if (input == null || input.isEmpty()) return ""
     char char_ = '_'
 
@@ -216,12 +216,12 @@ tasks.register("encyptString") {
                     def result = detectStringDefinitionKt(line)
                     if (result != null) {
                         println("resultKt: " + result)
-                        if (result.isVal) { //目前就只处理const val的变量
+                        if (result.isVal && result.isConst) { //目前就只处理const val的变量
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
-                            def changedLine = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
                             allLines.set(i,
                                     extractFromFirstValidChar(line)
-                                    + "val " + result.name + " = " + changedLine
+                                    + "val " + result.name + " = " + changedFun
                                     )
                             isChanged = true
                         }
@@ -232,11 +232,8 @@ tasks.register("encyptString") {
                         println("resultJ: " + result)
                         if (result.isStatic && result.isFinal) { //目前就只处理static final的变量
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
-                            def changedLine = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
-                            allLines.set(i,
-                                    extractFromFirstValidChar(line)
-                                            + "val " + result.name + " = " + changedLine
-                            )
+                            def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            allLines.set(i, line.replace("\"" + result.value + "\"", changedFun))
                             isChanged = true
                         }
                     }

@@ -15,7 +15,7 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.myHideSystemUI
 import com.au.module_android.utils.startOutActivity
-import com.module_native.AppNative
+import com.modulenative.AppNative
 
 class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
     private var jump = true

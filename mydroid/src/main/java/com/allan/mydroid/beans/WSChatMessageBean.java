@@ -1,11 +1,10 @@
 package com.allan.mydroid.beans;
 
-import static com.allan.mydroid.api.WSApisConst.API_WS_TEXT_CHAT_MSG;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.allan.mydroid.api.WSApisConst;
 import com.allan.mydroid.beansinner.UriRealInfoHtml;
 
 import java.util.UUID;
@@ -66,7 +65,7 @@ public class WSChatMessageBean {
     public long timestamp;
 
     @NonNull
-    public final String api = API_WS_TEXT_CHAT_MSG;
+    public final String api = WSApisConst.Companion.getAPI_WS_TEXT_CHAT_MSG();
 
     @NonNull
     public final Sender sender;

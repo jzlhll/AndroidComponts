@@ -2,10 +2,53 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
-def APP_SIGN_REL = "FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF".toUpperCase()
-def APP_SIGN_DEBUG = "EE:EE:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:EE:EE".toUpperCase()
-def APP_ID = "abcdefghij1234567"
-def APP_KEY = "abcdefghijklmnopkqjjd0129347578928"
+
+//简单移位加密。避免原始数据暴露
+private static char char2char(char c) {
+    char c9 = '9'
+    char c0 = '0'
+    char ca = 'a'
+    char cz = 'z'
+    char cA = 'A'
+    char cZ = 'Z'
+
+    if (c >= c0 && c <= c9) {
+        if (c == c9) {
+            return c0
+        }
+        return (char) (c + 1)
+    }
+
+    if (c >= cA && c <= cZ) {
+        if (c == cZ) {
+            return cA
+        }
+        return (char) (c + 1)
+    }
+
+    if (c >= ca && c <= cz) {
+        if (c == cz) {
+            return ca
+        }
+        return (char) (c + 1)
+    }
+
+    return c
+}
+private static String cvt(String s) {
+    def chars = s.toCharArray()
+    def sb = new StringBuilder()
+    for (char c in chars) {
+        sb.append(char2char(c))
+    }
+    return sb.toString()
+}
+
+def APP_SIGN_REL = cvt("FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF".toUpperCase())
+def APP_SIGN_DEBUG = cvt("EE:EE:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:EE:EE".toUpperCase())
+def APP_ID = cvt("abcdefghij1234567")
+def APP_KEY = cvt("abcdefghijklmnopkqjjd0129347578928")
+def STRING_ENCRYPT_SECRET_KEY = cvt("abcde12345hijklm")
 
 android {
     namespace='com.example.module_native'
@@ -23,7 +66,8 @@ android {
                         "-DAPP_SIGN_REL=$APP_SIGN_REL",
                         "-DAPP_SIGN_DEBUG=$APP_SIGN_DEBUG",
                         "-DAPP_ID=$APP_ID",
-                        "-DAPP_KEY=$APP_KEY"
+                        "-DAPP_KEY=$APP_KEY",
+                        "-DSTRING_ENCRYPT_SECRET_KEY=$STRING_ENCRYPT_SECRET_KEY"
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             }
         }

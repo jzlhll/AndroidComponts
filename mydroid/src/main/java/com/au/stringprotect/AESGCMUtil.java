@@ -73,24 +73,4 @@ public class AESGCMUtil {
         
         return new String(plaintext, StandardCharsets.UTF_8);
     }
-
-    public static void main(String[] args) throws Exception {
-        // 示例密钥（实际应用中应使用安全方式生成和存储）
-        // 注意：密钥长度必须是16(AES-128)、24(AES-192)或32字节(AES-256)
-        byte[] key = "ASecretForAES256".getBytes(StandardCharsets.UTF_8);
-        
-        // 测试数据
-        String originalText = "这是一个需要加密的敏感信息！";
-        
-        // 加密
-        String encrypted = encrypt(originalText, key);
-        System.out.println("加密结果: " + encrypted);
-        
-        // 解密
-        String decrypted = decrypt(encrypted, key);
-        System.out.println("解密结果: " + decrypted);
-        
-        // 验证
-        System.out.println("解密是否成功: " + originalText.equals(decrypted));
-    }
 }
