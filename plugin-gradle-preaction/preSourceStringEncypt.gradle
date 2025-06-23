@@ -10,7 +10,7 @@ def ANNOTATIONS = ["@EncryptString", "@file:EncryptString"]
 def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
 
 def FORCE = true //如果你修改了下面的key，则需要强制调用一次。
-def SECRET_KEY = "abcde12345hijklm".getBytes("UTF-8") //16位密码，妥善保管
+def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8") //16位密码，妥善保管
 
 class AESGCMUtil {
     private static final String ALGORITHM = "AES/GCM/NoPadding"

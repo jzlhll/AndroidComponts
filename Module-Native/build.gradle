@@ -48,7 +48,8 @@ def APP_SIGN_REL = cvt("FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF
 def APP_SIGN_DEBUG = cvt("EE:EE:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:EE:EE".toUpperCase())
 def APP_ID = cvt("abcdefghij1234567")
 def APP_KEY = cvt("abcdefghijklmnopkqjjd0129347578928")
-def STRING_ENCRYPT_SECRET_KEY = cvt("abcde12345hijklm")
+
+def STRING_ENCRYPT_SECRET_KEY = cvt(findProperty("string.encrypt.key"))
 
 android {
     namespace='com.example.module_native'
