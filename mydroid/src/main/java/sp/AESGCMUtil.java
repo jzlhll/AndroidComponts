@@ -1,4 +1,4 @@
-package com.au.stringprotect;
+package sp;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

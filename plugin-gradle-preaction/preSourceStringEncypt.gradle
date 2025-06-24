@@ -12,6 +12,9 @@ def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
 def FORCE = true //如果你修改了下面的key，则需要强制调用一次。
 def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8") //16位密码，妥善保管
 
+//用来替代源字符串
+def DECRYPT_FUNC = "/*Encrypted: %s*/ sp.StringEncrypt.decrypt(%s)"
+
 class AESGCMUtil {
     private static final String ALGORITHM = "AES/GCM/NoPadding"
     private static final int TAG_LENGTH_BIT = 128  // GCM认证标签长度（固定128位）
@@ -78,9 +81,6 @@ class AESGCMUtil {
         return new String(plaintext, StandardCharsets.UTF_8)
     }
 }
-
-//用来替代源字符串
-def DECRYPT_FUNC = "com.au.stringprotect.StringEncryptUtil.decrypt(%s) /*Encrypted: %s*/"
 
 void scanAllJavaDirs(File directory, List<File> allMainSrcDirs) {
     def files = directory.listFiles()
@@ -165,7 +165,7 @@ private static def extractFromFirstValidChar(String input) {
 }
 
 // 假设你在处理 Java 代码
-tasks.register("encyptString") {
+tasks.register("aaEncyptString") {
     doLast {
         println("encyptString...")
         def allJavaDirs = new ArrayList<File>()
@@ -209,7 +209,7 @@ tasks.register("encyptString") {
 
             for (int i = 0; i < count;i++) {
                 def line = allLines.get(i)
-                if (line.contains("/*Encrypted:")) { //已经处理过的。
+                if (!FORCE && line.contains("/*Encrypted:")) { //已经处理过的。
                     continue
                 }
                 if (isKt) {

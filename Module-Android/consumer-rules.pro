@@ -1,20 +1,10 @@
-#-keep public class * extends android.app.Fragment
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.preference.Preference
--keep public class * extends android.content.ContentProvider
-
 #ViewBinding不混淆
 -keep class * implements androidx.viewbinding.ViewBinding {
   ** bind(...);
   ** inflate(...);
 }
 
-#保留基础库
--keep class com.au.module_android.widget.** { *;}
--keep class com.au.module_android.ui.** { *;}
+#与泛型相关的反射不混淆
 
 -keep class * extends android.app.Dialog {
  <init>(...);
@@ -28,12 +18,19 @@ void set*(***);
 -keep class * implements com.au.module_android.widget.* {
  <init>(...);
 }
+-keep class * implements com.au.module_androidui.widget.* {
+ <init>(...);
+}
+-keep class * implements com.au.module_androidui.dialogs.* {
+ <init>(...);
+}
 
 -keepclassmembers public class * extends android.view.View {
 void set*(***);
 *** get*();
 }
 
+#banner
 -keep class androidx.viewpager2.widget.ViewPager2{
 androidx.viewpager2.widget.PageTransformerAdapter mPageTransformerAdapter;
 androidx.viewpager2.widget.ScrollEventAdapter mScrollEventAdapter;
@@ -98,3 +95,62 @@ androidx.recyclerview.widget.LinearLayoutManager mLayoutManager;
 
 # lifecycle
 -keep class androidx.lifecycle.** { *;}
+
+-flattenpackagehierarchy
+-allowaccessmodification
+-keepattributes Exceptions,InnerClasses,Signature,SourceFile,LineNumberTable
+-ignorewarnings
+
+#kotlin 相关
+-dontwarn kotlin.**
+-keep class kotlin.** { *; }
+-keep interface kotlin.** { *; }
+#-keepclassmembers class kotlin.Metadata {
+#    public <methods>;
+#}
+#-keepclasseswithmembers @kotlin.Metadata class * { *; }
+#-keepclassmembers class **.WhenMappings {
+#    <fields>;
+#}
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
+}
+
+-keep class kotlinx.** { *; }
+-keep interface kotlinx.** { *; }
+-dontwarn kotlinx.**
+
+-keep class org.jetbrains.** { *; }
+-keep interface org.jetbrains.** { *; }
+
+-keep class com.google.firebase.** { *; }
+-keep interface com.google.firebase.** { *; }
+
+-keep class com.google.android.gms.** { *; }
+-keep interface com.google.android.gms.** { *; }
+
+-dontwarn org.jetbrains.**
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+-keepclassmembers class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+-keep class **.R$* {*;}
+-keepclassmembers enum * { *;}
+
+-keep class android.databinding.** { *; }
+
+#gson 继承module-android即可
+
+#Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+-dontwarn com.bumptech.glide.**

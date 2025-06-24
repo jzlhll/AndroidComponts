@@ -6,27 +6,62 @@ plugins {
 
 android {
     namespace='com.allan.mydroid'
-    compileSdk=36
+    compileSdk=gradle.ext.compileSdk
+
+    sourceSets {
+        main {
+            // 确保所有模块都正确设置优先级
+            //java.srcDirs = ['build/modifiedSrc'] + android.sourceSets.main.java.srcDirs
+        }
+    }
+
+    signingConfigs {
+        auRelease {
+            //hash   T7LTu+1fnKR6h07nvnrIH/v68aY=
+            //md5    03:7D:CB:D6:E1:4A:13:89:3A:57:20:F7:72:45:44:C3
+            //sha1   4F:B2:D3:BB:ED:5F:9C:A4:7A:87:4E:E7:BE:7A:C8:1F:FB:FA:F1:A6
+            //sha256 87:86:F5:95:3C:3C:7E:3D:15:BA:58:BF:9A:F2:25:36:FB:38:86:CA:E1:30:78:34:23:79:3A:D1:4B:FD:89:FC
+            keyAlias='au'
+            keyPassword='a12345'
+            storeFile=file('../auReleaseA12345.jks')
+            storePassword='a12345'
+        }
+    }
 
     defaultConfig {
         applicationId="com.allan.mydroid"
         minSdk=26
-        targetSdk=36
+        targetSdk=gradle.ext.targetSdk
         versionCode=1
         versionName="1.0"
     }
 
     buildTypes {
         release {
-            minifyEnabled=false
+            debuggable false
+            //是否混淆
+            minifyEnabled true
+            //压缩资源，必须开启minifyEnabled才有用
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
+            signingConfig signingConfigs.auRelease
             resValue "xml", "network_security", "@xml/network_release"
             //apply plugin: 'com.au.plugins.plugin-string-encrypt'
+            // 上传bundle包所需的原生调试符号
+            ndk {
+                debugSymbolLevel = 'FULL'//或者 'SYMBOL_TABLE'
+            }
         }
         debug {
+            debuggable true
+            //是否混淆
+            minifyEnabled false
+            //压缩资源，必须开启minifyEnabled才有用
+            shrinkResources false
             resValue "xml", "network_security", "@xml/network_debug"
 //            apply plugin: 'com.au.plugins.plugin-string-encrypt'
+            //signingConfig signingConfigs.auRelease
         }
     }
     compileOptions {
