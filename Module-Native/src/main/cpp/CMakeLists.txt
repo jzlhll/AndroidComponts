@@ -39,17 +39,10 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
 # 将参数传递给 C/C++ 代码（通过编译定义）
 add_compile_definitions(
-        APP_SIGN_REL="${APP_SIGN_REL}"
-        APP_SIGN_DEBUG="${APP_SIGN_DEBUG}"
+        APP_SIGN="${APP_SIGN}"
         APP_ID="${APP_ID}"
         APP_KEY="${APP_KEY}"
         STRING_ENCRYPT_SECRET_KEY="${STRING_ENCRYPT_SECRET_KEY}"
 )
 
-#移除调试符号（Release 自动生效）
-# CMakeLists.txt 中设置 strip
-#if(ANDROID_ABI AND CMAKE_BUILD_TYPE STREQUAL "Release")
-#    add_custom_command(TARGET native-lib POST_BUILD
-#            COMMAND ${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip --strip-unneeded $<TARGET_FILE:native-lib>)
-#endif()
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3") # 或 -Os

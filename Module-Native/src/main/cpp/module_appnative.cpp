@@ -2,12 +2,10 @@
 #define MODULE_NATIVE_CODE
 
 #include <jni.h>
+#include <vector>
+#include <sstream>
 #include <android/log.h>
 #include <string>
-#include <jni.h>
-#include <jni.h>
-#include <jni.h>
-#include <jni.h>
 
 #ifdef IS_RELEASE
 #define REL
@@ -115,45 +113,82 @@ const char* getAppSign(JNIEnv *env, jobject contextObject) {
     return signString;
 }
 
-char char2charReverse(char c) {
-    if (c >= '0' && c <= '9') {
-        if (c == '0') {
-            return '9';
-        }
-        return static_cast<char>(c-1);
+//std::string back(const std::string& ciphertext) {
+//    // 分割加密文本
+//    std::vector<std::string> mParts;
+//    std::istringstream iss(ciphertext);
+//    std::string token;
+//
+//    while (std::getline(iss, token, ',')) {
+//        mParts.push_back(token);
+//    }
+//
+//    if (mParts.size() < 2) {
+//        throw std::invalid_argument("无效的加密文本");
+//    }
+//    // 提取偏移量
+//    int offset = std::stoi(mParts[0]);
+//    // 解密每个值
+//    std::string decrypted;
+//    for (size_t i = 1; i < mParts.size(); i++) {
+//        int encrypted_val = std::stoi(mParts[i]);
+//        int original_ascii = encrypted_val - offset;
+//        decrypted += static_cast<char>(original_ascii);
+//    }
+//
+//    return decrypted;
+//}
+
+std::string back(const std::string& ciphertext) {
+    // 检查输入有效性
+    if (ciphertext.empty()) {
+        throw std::invalid_argument("无效的加密文本");
     }
 
-    if (c >= 'A' && c <= 'Z') {
-        if (c == 'A') {
-            return 'Z';
-        }
-        return static_cast<char>(c-1);
-    }
-    if (c >= 'a' && c <= 'z') {
-        if (c == 'a') {
-            return 'z';
-        }
-        return static_cast<char>(c-1);
-    }
-    return c;
-}
+    // 查找第一个逗号位置
+    size_t start = 0;
+    size_t comma_pos = ciphertext.find(',');
 
-std::string back(const std::string& s) {
-    std::string result;
-    result.reserve(s.length());
-    for (char c : s) {
-        result += char2charReverse(c);
+    // 若找不到逗号或逗号在末尾则无效
+    if (comma_pos == std::string::npos || comma_pos == ciphertext.length() - 1) {
+        throw std::invalid_argument("无效的加密文本");
     }
-    return result;
+
+    // 提取偏移量（第一个逗号前的子串）
+    int offset = std::stoi(ciphertext.substr(0, comma_pos));
+    std::string decrypted;
+    start = comma_pos + 1; // 移动到第一个加密值起始位置
+
+    // 遍历剩余字符串解析每个加密值
+    while (start < ciphertext.length()) {
+        // 查找下一个逗号
+        comma_pos = ciphertext.find(',', start);
+
+        // 提取当前加密值子串（到逗号或字符串结尾）
+        std::string num_str;
+        if (comma_pos == std::string::npos) {
+            num_str = ciphertext.substr(start);
+            start = ciphertext.length(); // 结束循环
+        } else {
+            num_str = ciphertext.substr(start, comma_pos - start);
+            start = comma_pos + 1; // 移动到下一个加密值
+        }
+
+        // 转换并解密当前值
+        if (!num_str.empty()) {
+            int encrypted_val = std::stoi(num_str);
+            decrypted += static_cast<char>(encrypted_val - offset);
+        } else {
+            throw std::invalid_argument("加密值不能为空");
+        }
+    }
+
+    return decrypted;
 }
 
 bool isMatch;
 
 bool checkSign(JNIEnv *env, jobject context) {
-    if (true) {
-        return true;
-    }
-
     if (isMatch) {
         log("isMatch %d", isMatch);
         return isMatch;
@@ -162,13 +197,15 @@ bool checkSign(JNIEnv *env, jobject context) {
     std::string signString = reflectGetSha1(env, context);
     log("app sign: %s", signString.c_str());
 
-    std::string appSignRel = APP_SIGN_REL;
-    std::string appSignDebug = APP_SIGN_DEBUG;
-    auto realAppSignRel = back(appSignRel);
-    auto realAppSignDebug = back(appSignDebug);
-    isMatch = signString == realAppSignRel || signString == realAppSignDebug;
-    log("set sign: REL %s, DEBUG %s isMatch %d", realAppSignRel.c_str(), realAppSignDebug.c_str(), isMatch);
+    std::string appSign = APP_SIGN;
+    auto realAppSignRel = back(appSign);
+    isMatch = signString == realAppSignRel;
+    log("set sign: REL %s, isMatch %d", realAppSignRel.c_str(), isMatch);
+#ifdef REL
     return isMatch;
+#else
+    return true;
+#endif
 }
 
 extern "C"
@@ -183,51 +220,6 @@ Java_com_modulenative_AppNative_appIdAndKey(JNIEnv *env, jclass clazz, jobject c
     }
     //随便给个假的出去。
     return (env)->NewStringUTF("ab2132389jd44f283j\nadfjk2389248918ddz2f3329vv238jdf");
-}
-
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_modulenative_AppNative_simpleDecoder(JNIEnv *env, jclass clazz, jobject context, jintArray indexes) {
-    auto m = checkSign(env, context);
-    if (!m) {
-        return env->NewStringUTF(""); // 不对劲
-    }
-
-    // 获取数组长度
-    jsize len = env->GetArrayLength(indexes);
-    if (len == 0) {
-        return env->NewStringUTF(""); // 空数组返回空字符串
-    }
-
-// 获取数组元素指针
-    jint *indexes_arr = env->GetIntArrayElements(indexes, nullptr);
-    if (!indexes_arr) {
-        return env->NewStringUTF(""); // 空数组返回空字符串
-    }
-
-// 计算偏移量
-    jint offset = indexes_arr[0] - 100;
-
-// 准备结果字符数组
-    auto *result_chars = new (std::nothrow) jchar[len - 1];
-    if (!result_chars) {
-        env->ReleaseIntArrayElements(indexes, indexes_arr, JNI_ABORT);
-        return nullptr; // 内存分配失败
-    }
-
-// 解码字符
-    for (jsize i = 1; i < len; ++i) {
-        result_chars[i - 1] = static_cast<jchar>(indexes_arr[i] + offset);
-    }
-
-// 构建 Java 字符串
-    jstring result = env->NewString(result_chars, len - 1);
-
-// 清理资源
-    delete[] result_chars;
-    env->ReleaseIntArrayElements(indexes, indexes_arr, JNI_ABORT);
-
-    return result;
 }
 
 extern "C"

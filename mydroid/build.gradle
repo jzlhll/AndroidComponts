@@ -17,10 +17,8 @@ android {
 
     signingConfigs {
         auRelease {
-            //hash   T7LTu+1fnKR6h07nvnrIH/v68aY=
-            //md5    03:7D:CB:D6:E1:4A:13:89:3A:57:20:F7:72:45:44:C3
-            //sha1   4F:B2:D3:BB:ED:5F:9C:A4:7A:87:4E:E7:BE:7A:C8:1F:FB:FA:F1:A6
-            //sha256 87:86:F5:95:3C:3C:7E:3D:15:BA:58:BF:9A:F2:25:36:FB:38:86:CA:E1:30:78:34:23:79:3A:D1:4B:FD:89:FC
+            //sha1   C3:66:E7:5D:0B:8F:59:64:3B:8D:22:3E:E3:EB:E2:DF:C8:8E:EC:CD
+            //sha256 44:70:2D:3F:D6:6A:4A:82:4E:C4:5D:EC:AB:57:4A:75:13:F2:78:A5:FB:72:A0:6B:5A:DE:6E:CD:B1:87:98:74
             keyAlias='au'
             keyPassword='a12345'
             storeFile=file('../auReleaseA12345.jks')

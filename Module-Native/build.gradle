@@ -2,54 +2,46 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
+class ASCIICipher {
+    private Random random
+    private List<Character> asciiTable
 
-//简单移位加密。避免原始数据暴露
-private static char char2char(char c) {
-    char c9 = '9'
-    char c0 = '0'
-    char ca = 'a'
-    char cz = 'z'
-    char cA = 'A'
-    char cZ = 'Z'
+    ASCIICipher(Long seed = null) {
+        this.random = seed ? new Random(seed) : new Random()
+        this.asciiTable = generateAsciiTable()
+    }
 
-    if (c >= c0 && c <= c9) {
-        if (c == c9) {
-            return c0
+    private static List<Character> generateAsciiTable() {
+        List<Character> table = []
+        for (int i = 0; i < 128; i++) {
+            table.add((char) i)
         }
-        return (char) (c + 1)
+        return table
     }
 
-    if (c >= cA && c <= cZ) {
-        if (c == cZ) {
-            return cA
+    String encrypt(String text) {
+        // 生成随机偏移量 (1-100)
+        int offset = random.nextInt(9) + 1
+
+        // 加密每个字符
+        List<String> encryptedChars = []
+        for (char c : text.toCharArray()) {
+            int asciiVal = (int) c
+            int encryptedVal = asciiVal + offset
+            encryptedChars.add(encryptedVal.toString())
         }
-        return (char) (c + 1)
-    }
 
-    if (c >= ca && c <= cz) {
-        if (c == cz) {
-            return ca
-        }
-        return (char) (c + 1)
+        // 返回格式: "偏移量,加密值1,加密值2,..."
+        return "${offset},${encryptedChars.join(',')}"
     }
-
-    return c
-}
-private static String cvt(String s) {
-    def chars = s.toCharArray()
-    def sb = new StringBuilder()
-    for (char c in chars) {
-        sb.append(char2char(c))
-    }
-    return sb.toString()
 }
 
-def APP_SIGN_REL = cvt("FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF".toUpperCase())
-def APP_SIGN_DEBUG = cvt("EE:EE:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:EE:EE".toUpperCase())
-def APP_ID = cvt("abcdefghij1234567")
-def APP_KEY = cvt("abcdefghijklmnopkqjjd0129347578928")
+def cipher = new ASCIICipher(System.currentTimeMillis()) // 可选的种子值
 
-def STRING_ENCRYPT_SECRET_KEY = cvt(findProperty("string.encrypt.key"))
+def APP_SIGN = cipher.encrypt("C3:66:E7:5D:0B:8F:59:64:3B:8D:22:3E:E3:EB:E2:DF:C8:8E:EC:CD".toUpperCase())
+def APP_ID = cipher.encrypt("abcdefghij1234567")
+def APP_KEY = cipher.encrypt("abcdefghijklmnopkqjjd0129347578928")
+def STRING_ENCRYPT_SECRET_KEY = cipher.encrypt(findProperty("string.encrypt.key"))
 
 android {
     namespace='com.example.module_native'
@@ -64,8 +56,7 @@ android {
                 cppFlags ""
                 // 添加多个参数
                 arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        "-DAPP_SIGN_REL=$APP_SIGN_REL",
-                        "-DAPP_SIGN_DEBUG=$APP_SIGN_DEBUG",
+                        "-DAPP_SIGN=$APP_SIGN",
                         "-DAPP_ID=$APP_ID",
                         "-DAPP_KEY=$APP_KEY",
                         "-DSTRING_ENCRYPT_SECRET_KEY=$STRING_ENCRYPT_SECRET_KEY"

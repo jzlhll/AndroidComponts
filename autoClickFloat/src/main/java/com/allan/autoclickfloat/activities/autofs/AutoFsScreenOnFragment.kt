@@ -64,8 +64,7 @@ class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
             val context = Globals.app
             val pm = context.packageManager
 
-            val originalStr = AppNative.simpleDecoder(intArrayOf(104, 95, 107, 105, 42, 111, 111, 42, 93, 106, 96, 110, 107, 101, 96, 42, 104, 93, 110, 103))
-            val intent = pm.getLaunchIntentForPackage(originalStr)
+            val intent = pm.getLaunchIntentForPackage("com.ss.android.lark")
             if (intent != null) {
                 logd { "allanAlarm delay toast lanch!!!" }
                 context.startOutActivity(intent)

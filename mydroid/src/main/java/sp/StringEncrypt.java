@@ -1,7 +1,5 @@
 package sp;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.au.module_android.Globals;
@@ -17,7 +15,6 @@ public class StringEncrypt {
     public static String decrypt(String encoded) {
         //自行将保存的密钥进行提取和解析。
         try {
-            Log.d("au", "decode " + SECRET_KEY_STR);
             return AESGCMUtil.decrypt(encoded, SECRET_KEY);
         } catch (Exception e) {
             //
