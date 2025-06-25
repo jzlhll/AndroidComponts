@@ -8,13 +8,6 @@ android {
     namespace='com.allan.mydroid'
     compileSdk=gradle.ext.compileSdk
 
-    sourceSets {
-        main {
-            // 确保所有模块都正确设置优先级
-            //java.srcDirs = ['build/modifiedSrc'] + android.sourceSets.main.java.srcDirs
-        }
-    }
-
     signingConfigs {
         auRelease {
             //sha1   C3:66:E7:5D:0B:8F:59:64:3B:8D:22:3E:E3:EB:E2:DF:C8:8E:EC:CD

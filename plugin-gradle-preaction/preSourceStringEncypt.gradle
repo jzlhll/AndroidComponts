@@ -6,12 +6,14 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.security.SecureRandom
 
-def ANNOTATIONS = ["@EncryptString", "@file:EncryptString"]
+//标记类需要处理的注解或者注释
+def ANNOTATIONS = ["@EncryptString", "@file:EncryptString", "/*EncryptString*/"]
+//扫描的模块
 def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
-
-def FORCE = true //如果你修改了下面的key，则需要强制调用一次。
-def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8") //16位密码，妥善保管
-
+//如果你修改了下面的key，则必须强制调用一次。
+def FORCE = true
+//16位密码，妥善保管
+def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8")
 //用来替代源字符串
 def DECRYPT_FUNC = "/*Encrypted: %s*/ sp.StringEncrypt.decrypt(%s)"
 
@@ -82,97 +84,103 @@ class AESGCMUtil {
     }
 }
 
-void scanAllJavaDirs(File directory, List<File> allMainSrcDirs) {
-    def files = directory.listFiles()
-    for (def file in files) {
-        if (file.isDirectory()) {
-            def dir = file
-            def name = dir.getName()
-            if (name == "build") {
-                continue
+class ScanCode {
+    List<String> annotations
+    List<String> moduleNames
+
+    ScanCode(List<String> annotations, List<String> moduleNames) {
+        this.annotations = annotations
+        this.moduleNames = moduleNames
+    }
+
+    void scanAllJavaDirs(File directory, List<File> allMainSrcDirs) {
+        def files = directory.listFiles()
+        for (def file in files) {
+            if (file.isDirectory()) {
+                def dir = file
+                def name = dir.getName()
+                if (name == "build") {
+                    continue
+                }
+                if ((name == "java" || name == "kotlin")
+                        && dir.parentFile.getName() == "main") {
+                    allMainSrcDirs.add(dir)
+                    continue
+                }
+                scanAllJavaDirs(dir, allMainSrcDirs)
             }
-            if ((name == "java" || name == "kotlin")
-                    && dir.parentFile.getName() == "main") {
-                allMainSrcDirs.add(dir)
-                continue
-            }
-            scanAllJavaDirs(dir, allMainSrcDirs)
-        }
-    }
-}
-
-void scanAllCodeFile(File directory, List<File> allCodeFiles) {
-    def files = directory.listFiles()
-    for (def file in files) {
-        if (file.isFile()) {
-            if (file.name.endsWith(".java") || file.name.endsWith(".kt")) {
-                allCodeFiles.add(file)
-            }
-        } else {
-            scanAllCodeFile(file, allCodeFiles)
-        }
-    }
-}
-
-static def detectStringDefinitionKt(String line) {
-    // 支持public/private修饰符、const修饰符、val/var声明、任意变量名
-    def pattern = ~/((public|private|protected)\s+)?(const\s+)?(val|var)\s+([a-zA-Z_]\w*)\s*=\s*"([^"]+)"/
-    def matcher = pattern.matcher(line)
-
-    if (matcher.find()) {
-        return [
-                accessModifier: matcher.group(2),
-                isConst: matcher.group(3) != null,
-                isVal: matcher.group(4) == 'val',
-                name: matcher.group(5),
-                value: matcher.group(6)
-        ]
-    }
-    return null
-}
-
-private static def detectStringDefinitionJ(String line) {
-    // 改进后的正则表达式
-    def pattern = ~/((public|private|protected)\s+)?(static\s+)?(final\s+)?String\s+(\w+)\s*=\s*"([^"]+)"\s*;/
-    def matcher = pattern.matcher(line)
-
-    if (matcher.find()) {
-        return [
-                accessModifier: matcher.group(2),
-                isStatic: matcher.group(3) != null,
-                isFinal: matcher.group(4) != null,
-                name: matcher.group(5),
-                value: matcher.group(6)
-        ]
-    }
-    return null
-}
-
-private static def extractFromFirstValidChar(String input) {
-    if (input == null || input.isEmpty()) return ""
-    char char_ = '_'
-
-    for (int i = 0; i < input.length(); i++) {
-        char c = input.charAt(i)
-        // 检查字符是否是字母、数字或下划线
-        if (Character.isLetter(c) || c == char_) {
-            return input.substring(0, i)
         }
     }
 
-    // 如果没有任何符合条件的字符，返回空字符串
-    return ""
-}
+    void scanAllCodeFile(File directory, List<File> allCodeFiles) {
+        def files = directory.listFiles()
+        for (def file in files) {
+            if (file.isFile()) {
+                if (file.name.endsWith(".java") || file.name.endsWith(".kt")) {
+                    allCodeFiles.add(file)
+                }
+            } else {
+                scanAllCodeFile(file, allCodeFiles)
+            }
+        }
+    }
 
-// 假设你在处理 Java 代码
-tasks.register("aaEncyptString") {
-    doLast {
-        println("encyptString...")
+    static def detectStringDefinitionKt(String line) {
+        // 支持public/private修饰符、const修饰符、val/var声明、任意变量名
+        def pattern = ~/((public|private|protected)\s+)?(const\s+)?(val|var)\s+([a-zA-Z_]\w*)\s*=\s*"([^"]+)"/
+        def matcher = pattern.matcher(line)
+
+        if (matcher.find()) {
+            return [
+                    accessModifier: matcher.group(2),
+                    isConst: matcher.group(3) != null,
+                    isVal: matcher.group(4) == 'val',
+                    name: matcher.group(5),
+                    value: matcher.group(6)
+            ]
+        }
+        return null
+    }
+
+    static def detectStringDefinitionJ(String line) {
+        // 改进后的正则表达式
+        def pattern = ~/((public|private|protected)\s+)?(static\s+)?(final\s+)?String\s+(\w+)\s*=\s*"([^"]+)"\s*;/
+        def matcher = pattern.matcher(line)
+
+        if (matcher.find()) {
+            return [
+                    accessModifier: matcher.group(2),
+                    isStatic: matcher.group(3) != null,
+                    isFinal: matcher.group(4) != null,
+                    name: matcher.group(5),
+                    value: matcher.group(6)
+            ]
+        }
+        return null
+    }
+
+    static def extractFromFirstValidChar(String input) {
+        if (input == null || input.isEmpty()) return ""
+        char char_ = '_'
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i)
+            // 检查字符是否是字母、数字或下划线
+            if (Character.isLetter(c) || c == char_) {
+                return input.substring(0, i)
+            }
+        }
+
+        // 如果没有任何符合条件的字符，返回空字符串
+        return ""
+    }
+
+    ArrayList<File> scanAnnotatedCode(File projectDir) {
         def allJavaDirs = new ArrayList<File>()
         scanAllJavaDirs(projectDir.parentFile, allJavaDirs)
         def subAllJavaDirs = allJavaDirs.stream().filter {
             def isGood = false
-            for (def moduleName in MODULE_NAMES) {
+            for (def moduleName in moduleNames) {
                 if (it.absolutePath.contains(moduleName + "/src")
                         || it.absolutePath.contains(moduleName + "\\src")) {
                     isGood = true
@@ -192,12 +200,23 @@ tasks.register("aaEncyptString") {
         for (def file in allCodeFiles) {
             //println("code: $file")
             def code = Files.readString(file.toPath())
-            for (def ann in ANNOTATIONS) {
+            for (def ann in annotations) {
                 if (code.contains(ann)) {
                     allAnnotationFiles.add(file)
                 }
             }
         }
+
+        return allAnnotationFiles
+    }
+}
+
+// 假设你在处理 Java 代码
+tasks.register("aaEncyptString") {
+    doLast {
+        println("encyptString...")
+        def scanCode = new ScanCode(ANNOTATIONS, MODULE_NAMES)
+        def allAnnotationFiles = scanCode.scanAnnotatedCode(projectDir)
 
         for (def file : allAnnotationFiles) {
             def isKt = file.getName().endsWith("kt")
@@ -207,27 +226,27 @@ tasks.register("aaEncyptString") {
 
             def isChanged = false
 
-            for (int i = 0; i < count;i++) {
+            for (int i = 0; i < count; i++) {
                 def line = allLines.get(i)
                 if (!FORCE && line.contains("/*Encrypted:")) { //已经处理过的。
                     continue
                 }
                 if (isKt) {
-                    def result = detectStringDefinitionKt(line)
+                    def result = ScanCode.detectStringDefinitionKt(line)
                     if (result != null) {
                         println("resultKt: " + result)
                         if (result.isVal && result.isConst) { //目前就只处理const val的变量
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
                             def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
                             allLines.set(i,
-                                    extractFromFirstValidChar(line)
+                                    ScanCode.extractFromFirstValidChar(line)
                                     + "val " + result.name + " = " + changedFun
                                     )
                             isChanged = true
                         }
                     }
                 } else {
-                    def result = detectStringDefinitionJ(line)
+                    def result = ScanCode.detectStringDefinitionJ(line)
                     if (result != null) {
                         println("resultJ: " + result)
                         if (result.isStatic && result.isFinal) { //目前就只处理static final的变量
