@@ -27,85 +27,23 @@ class FontTestFragment : BindingFragment<FragmentFontTestBinding>() {
 //        }
         logd { "alland onCreate2" }
 
-        UIStepExecutor(Globals.mainHandler).apply {
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 20000) {
-                        binding.text.text = "changed: $index"
-                    }
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 40000) {
-                        binding.text.text = "changed: $index"
-                    }
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 60000) {
-                        binding.text.text = "changed: $index"
-                    }
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 80000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 100000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 120000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 140000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 160000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 180000) {
-                        binding.text.text = "changed: $index"
-                    }
-
-                }
-            })
-            addStep(object : UIStepExecutor.Step() {
-                override fun onExecute() {
-                    while(index++ <= 200000) {
-                        binding.text.text = "changed: $index"
-                    }
-                    logd { "alland init over!!" }
-                }
-            })
-        }.start()
+        UIStepExecutor(Globals.mainHandler, {
+            while(index++ <= 20000) {
+                binding.text.text = "changed: $index"
+            }
+        }, {
+            while(index++ <= 40000) {
+                binding.text.text = "changed: $index"
+            }
+        }, {
+            while(index++ <= 60000) {
+                binding.text.text = "changed: $index"
+            }
+        }, {
+            while(index++ <= 80000) {
+                binding.text.text = "changed: $index"
+            }
+        }).start()
     }
 
     override fun onResume() {
