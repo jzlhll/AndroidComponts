@@ -9,7 +9,7 @@ import com.allan.autoclickfloat.databinding.FragmentHongbaoScreenBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.permissions.createActivityForResult
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_androidui.toast.toastOnTop
+import com.au.module_androidui.toast.ToastUtil
 
 class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding>() {
     private var mediaProjectionManager:MediaProjectionManager? = null
@@ -38,7 +38,7 @@ class HongbaoScreenDetectFragment : BindingFragment<FragmentHongbaoScreenBinding
                     }
                 } else {
                     // 用户未授权
-                    toastOnTop("没有授予录屏权限。")
+                    ToastUtil.toastOnTop("没有授予录屏权限。")
                 }
             }
         }

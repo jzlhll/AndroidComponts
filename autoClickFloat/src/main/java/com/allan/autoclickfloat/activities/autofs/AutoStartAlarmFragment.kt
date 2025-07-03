@@ -16,7 +16,7 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.visible
 import com.au.module_androidui.dialogs.ConfirmBottomDialog
 import com.au.module_androidui.dialogs.ConfirmCenterDialog
-import com.au.module_androidui.toast.toastOnTop
+import com.au.module_androidui.toast.ToastUtil
 import com.au.module_cached.AppDataStore
 import com.au.module_nested.decoration.VertPaddingItemDecoration
 import kotlinx.coroutines.delay
@@ -144,7 +144,7 @@ class AutoStartAlarmFragment : BindingFragment<FragmentAutoStartupNewBinding>(),
                 if (goToAutoStartSettings(requireContext())) {
                     binding.dingInfoHost.gone()
                 } else {
-                    toastOnTop("暂时无法跳转到自启动设置界面，请手动去系统中设置。")
+                    ToastUtil.toastOnTop("暂时无法跳转到自启动设置界面，请手动去系统中设置。")
                 }
             }
         } else {

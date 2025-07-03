@@ -1,6 +1,7 @@
 package com.allan.autoclickfloat.activities.autofs.spider
 
-import com.au.module_android.utils.logt
+import android.util.Log
+
 fun log(s:String) {
-    logt { "alland-$s" }
+    Log.d("autoclick", s)
 }

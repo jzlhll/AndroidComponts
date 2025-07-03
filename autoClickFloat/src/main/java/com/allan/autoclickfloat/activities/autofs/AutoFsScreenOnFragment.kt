@@ -2,6 +2,8 @@ package com.allan.autoclickfloat.activities.autofs
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.WindowManager
 import com.allan.autoclickfloat.activities.autofs.spider.SpiderFragment
@@ -59,17 +61,17 @@ class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
     }
 
     private fun delayWork() {
-        logd { "allanAlarm delay do launch!!! jump $jump" }
+        logd { "delay do launch jump=$jump, " + isNetworkAvailable(requireActivity()) }
         if (jump) {
             val context = Globals.app
             val pm = context.packageManager
 
             val intent = pm.getLaunchIntentForPackage("com.ss.android.lark")
             if (intent != null) {
-                logd { "allanAlarm delay toast lanch!!!" }
+                logd { "delay toast launch success!!!" }
                 context.startOutActivity(intent)
             } else {
-                logd { "allanAlarm delay toast no lanch!!!" }
+                logd { "delay toast no launch!!!" }
             }
         }
 
@@ -86,32 +88,39 @@ class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
         val ac = requireActivity()
         val km = ac.getSystemService(Context.KEYGUARD_SERVICE) as (KeyguardManager)
         km.requestDismissKeyguard(ac, object : KeyguardManager.KeyguardDismissCallback() {
-            override fun onDismissCancelled() {
-                super.onDismissCancelled()
-                logd { "allan-alarm onDismissCancelled" }
-            }
-
-            override fun onDismissSucceeded() {
-                super.onDismissSucceeded()
-                logd { "allan-alarm onDismissSucceeded" }
-            }
-
-            override fun onDismissError() {
-                super.onDismissError()
-                logd { "allan-alarm onDismissError" }
-            }
         })
     }
 
-//        val wifiManager = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
-//        if (wifiManager.isWifiEnabled) {
-//            logd { "allanAlarm hasWifi..." }
-//        } else {
-//            logd { "allanAlarm no wifi..." }
-////            val panelIntent = Intent(Settings.Panel.ACTION_WIFI)
-////            startActivityFix(panelIntent)
-//          //android12失效  wifiManager.setWifiEnabled(true)
-//            // 直接修改系统设置 需要系统权限
-////            Settings.Global.putInt(requireContext().contentResolver,  "wifi_on", 1);
-//        }
+    fun isNetworkAvailable(context: Context): String {
+        try {
+            val connectivityManager = context.getSystemService(
+                Context.CONNECTIVITY_SERVICE
+            ) as ConnectivityManager
+
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    return "Has TRANSPORT_WIFI"
+                }
+            }
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    return "Has TRANSPORT_CELLULAR"
+                }
+            }
+
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    return "Has TRANSPORT_ETHERNET"
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "No Network " + e.message
+        }
+
+        return "No Network!"
+    }
+
 }
