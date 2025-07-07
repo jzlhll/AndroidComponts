@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/leftTvHost"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="40dp"
+        android:paddingStart="20dp">
+        <com.au.module_android.widget.BgBuildCustomFontText
+            android:id="@+id/leftTv"
+            style="@style/StyleFontText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textIsSelectable="true"
+            android:textSize="15sp"
+            app:backgroundNormal="@color/color_line"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="This is a text for show. A long long long a a long long can your see I do anything" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightTvHost"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="20dp"
+        android:paddingStart="40dp">
+        <com.au.module_android.widget.BgBuildCustomFontText
+            android:id="@+id/rightTv"
+            style="@style/StyleFontText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textIsSelectable="true"
+            android:textSize="15sp"
+            app:backgroundNormal="@color/color_line"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="This is a text for show. A long long long a a long long can your see I do anything" />
+    </LinearLayout>
+
+</FrameLayout>

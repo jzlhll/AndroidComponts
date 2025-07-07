@@ -62,6 +62,7 @@
     <string name="transfer_list_title">Transfer List</string>
     <string name="file_send">File Send</string>
     <string name="app_file_send">File Send</string>
+    <string name="app_simple_text">Simple Text Chat</string>
     <string name="file_receive">File Receive</string>
     <string name="text_chat_pro">Text Chat (pro)</string>
     <string name="text_chat_server_next">Text Chat Server: %d ▶</string>

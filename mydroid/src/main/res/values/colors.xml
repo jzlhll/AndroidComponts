@@ -12,6 +12,7 @@
 
     <color name="logic_receiver">#2E7D32</color>
     <color name="logic_send">#1565C0</color>
+    <color name="logic_simple_text">#A8875A</color>
     <color name="logic_middle">#6A1B9A</color>
     <color name="logic_watch_picture">#00838F</color>
     <color name="logic_watch_video">#D84315</color>
