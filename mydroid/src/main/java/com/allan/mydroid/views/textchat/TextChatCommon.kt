@@ -51,13 +51,17 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         binding.edit.setMaxLength(Int.MAX_VALUE)
 
         val ac = f.requireActivity()
-        val helper = ImeHelper.assist(ac, true)
+        val helper = ImeHelper.assist(ac)
         helper?.setOnImeListener { imeOffset: Int,
                                    imeMaxHeight: Int/*包含导航栏和状态栏总高度*/,
                                    statusBarHeight: Int,
                                    navigationBarHeight: Int ->
             //imeOffset 1087 imeMaxH 1090 stH 122 navH 0
             binding.bottomHost.translationY = -imeOffset.toFloat()
+        }
+        helper?.setOnImeMaxHeightListener { imeMaxHeight->
+            //imeOffset 1087 imeMaxH 1090 stH 122 navH 0
+            binding.bottomHost.translationY = -imeMaxHeight.toFloat()
         }
 
         ac.transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->

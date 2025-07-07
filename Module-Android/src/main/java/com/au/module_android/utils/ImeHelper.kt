@@ -3,6 +3,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -19,21 +20,7 @@ import androidx.lifecycle.LifecycleOwner
  */
 class ImeHelper private constructor(private val activity: ComponentActivity) : DefaultLifecycleObserver {
     companion object {
-        /**
-         * 如果是老版本低于android11，则仅仅adjustPan，效果能达到80分。
-         * 如果是android11+，则禁止自行布局调整。然后来通过键盘动画，来处理位移。
-         */
-        fun assist(activity: ComponentActivity, forceLegacy:Boolean = false) : ImeHelper? {
-//            return if (forceLegacy || Build.VERSION.SDK_INT < 30) {
-//                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-//                null
-//            } else {
-//                activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-//                val instance = ImeHelper(activity)
-//                activity.lifecycle.addObserver(instance)
-//                instance
-//            }
-
+        fun assist(activity: ComponentActivity) : ImeHelper? {
             activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
             val instance = ImeHelper(activity)
             activity.lifecycle.addObserver(instance)
@@ -54,6 +41,7 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
      * 第四个参数：navigationBarHeight
      */
     private var imeChangeListener: ((Int, Int, Int, Int)->Unit)? = null
+    private var onImeMaxHeightListener: ((Int)->Unit)? = null
 
     /**
      * 设置监听
@@ -67,6 +55,10 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
         ) -> Unit)?
     ) {
         this.imeChangeListener = listener
+    }
+
+    fun setOnImeMaxHeightListener(listener: ((Int)->Unit)?) {
+        this.onImeMaxHeightListener = listener
     }
 
     fun calculate(rootHeight:Int,
@@ -85,6 +77,11 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
         return (finalY * percentage).toInt()
     }
 
+    /**
+     * 动画进行中的高度
+     */
+    private var _currentOffsetY = 0
+
     private val mAnimCallback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
         override fun onProgress(insets: WindowInsetsCompat, runningAnimations: MutableList<WindowInsetsAnimationCompat>): WindowInsetsCompat {
             val imeMaxHeight = _imeMaxHeight
@@ -93,6 +90,9 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
             }
             //键盘高度
             val imeCurrentHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+
+            _currentOffsetY = imeCurrentHeight
+
             //状态栏高度
             val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             //导航栏高度
@@ -110,6 +110,17 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
         }
     }
 
+    private val mApplyCallback = OnApplyWindowInsetsListener { v, insets ->
+        val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val imeHeight = imeInsets.bottom
+        // 检测高度变化
+        if (imeHeight != _imeMaxHeight && imeHeight > 0) {
+            _imeMaxHeight = imeHeight
+            if(_currentOffsetY != 0) onImeMaxHeightListener?.invoke(_imeMaxHeight)
+        }
+        ViewCompat.onApplyWindowInsets(v, insets)
+    }
+
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         this.imeChangeListener = null
@@ -118,5 +129,6 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
 
     init {
         ViewCompat.setWindowInsetsAnimationCallback(decorView, mAnimCallback)
+        ViewCompat.setOnApplyWindowInsetsListener(decorView, mApplyCallback)
     }
 }
