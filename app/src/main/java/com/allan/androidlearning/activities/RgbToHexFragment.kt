@@ -2,20 +2,44 @@ package com.allan.androidlearning.activities
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.annotation.ColorInt
+import androidx.core.view.updatePadding
 import com.allan.androidlearning.R
 import com.allan.androidlearning.databinding.FragmentRgb2HexBinding
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.bindings.BindingFragment
 import com.au.module_android.ui.views.ToolbarInfo
+import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.hideImeNew
+import kotlinx.coroutines.flow.combine
 import okhttp3.internal.toHexString
 
 @EntryFrgName(priority = 10)
 class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
+    private var doOncePaddingTop = false
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().title = "RGB to Hex"
+        ImeHelper.assist(requireActivity())?.let {
+            it.setOnImeListener { imeOffset,_,statusBarHeight,_->
+                binding.root.translationY = -imeOffset.toFloat()
+
+                if (!doOncePaddingTop) {
+                    requireActivity().window.decorView.updatePadding(top = statusBarHeight)
+                    doOncePaddingTop = true
+                }
+            }
+        }
+
+        binding.intToBitsBtn.onClick {
+            val num = binding.intToBitsEdit.text.toString().toInt()
+            //将num转成8bit的二进制
+            val binaryString = Integer.toBinaryString(num)
+            hideImeNew(requireActivity().window, binding.intToBitsBtn)
+            binding.intToBitsEdit.setText(binaryString)
+        }
 
         binding.rgbBtn.onClick {
             hideImeNew(requireActivity().window, binding.hexStartBtn)
@@ -82,6 +106,10 @@ class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
 
     override fun toolbarInfo(): ToolbarInfo? {
         return ToolbarInfo()
+    }
+
+    override fun isPaddingStatusBar(): Boolean {
+        return true
     }
 
     @ColorInt

@@ -70,18 +70,19 @@ tasks.register('assetsEncrypt') {
 fun decryptAssetJson(fileName:String, xOrKey:String) : String {
     return try {
         context.assets.open(fileName).use {
-            decryptString(it, xOrKey)
+            val data = decryptBytes(it, xOrKey)
+            data.toString(StandardCharsets.UTF_8) // 还原UTF-8 字符串
         }
     } catch(_:Exception) {
         null
     }
 }
 
-fun decryptString(source: InputStream, xorKey: String): String {
+fun decryptBytes(source: InputStream, xorKey: String): String {
     val keyBytes = xorKey.toByteArray(StandardCharsets.UTF_8)
     val data = source.readBytes() // 一次性读取所有字节
     xorTransform(data, keyBytes)// 执行 XOR 变换
-    return data.toString(StandardCharsets.UTF_8) // 还原UTF-8 字符串
+    return data
 }
 
 private fun xorTransform(data: ByteArray, key: ByteArray) {

@@ -14,7 +14,7 @@ def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
 def FORCE = true
 //16位密码，妥善保管
 def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8")
-//用来替代源字符串
+//用来替代源字符串的代码中的函数
 def DECRYPT_FUNC = "/*Encrypted: %s*/ sp.StringEncrypt.decrypt(%s)"
 
 class AESGCMUtil {

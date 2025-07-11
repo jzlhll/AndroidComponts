@@ -254,4 +254,35 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:paddingHorizontal="8dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center"
+            android:layout_marginStart="18dp"
+            android:text="IntToBits"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_marginStart="18dp"
+            android:gravity="center"
+            android:id="@+id/intToBitsEdit"
+            android:textSize="22dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginStart="22dp"
+            android:id="@+id/intToBitsBtn"
+            android:text="Run"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 </LinearLayout>

@@ -17,13 +17,17 @@ import com.au.module_android.utils.logd
 import com.au.module_android.utils.logdNoFile
 import com.au.module_android.utils.myHideSystemUI
 import com.au.module_android.utils.startOutActivity
-import com.modulenative.AppNative
 
 class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
     private var jump = true
 
+    private val launchTargetPkg = "com.ss.android.lark"
+    private val parseUrl = "https://blog.csdn.net/jzlhll123/article/details/145456286"
+
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        requireActivity().apply {
+        val activity = requireActivity()
+
+        activity.apply {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -49,24 +53,24 @@ class AutoFsScreenOnFragment : BindingFragment<FragmentFsScreenOnBinding>() {
                         return CheckHtmlArgs(false)
                     }
                 }
-                spiderWebView.loadUrl("https://blog.csdn.net/jzlhll123/article/details/145456286")
+                spiderWebView.loadUrl(parseUrl)
             }
         }
 
-        AutoFsObj.checkAndStartNextAlarm(requireContext())
+        AutoFsObj.checkAndStartNextAlarm(activity)
 
+        logd { "delay do launch jump=$jump, " + isNetworkAvailable(activity) }
         Globals.mainHandler.postDelayed({
             delayWork()
         }, 8 * 1000)
     }
 
     private fun delayWork() {
-        logd { "delay do launch jump=$jump, " + isNetworkAvailable(requireActivity()) }
         if (jump) {
             val context = Globals.app
             val pm = context.packageManager
 
-            val intent = pm.getLaunchIntentForPackage("com.ss.android.lark")
+            val intent = pm.getLaunchIntentForPackage(launchTargetPkg)
             if (intent != null) {
                 logd { "delay toast launch success!!!" }
                 context.startOutActivity(intent)
