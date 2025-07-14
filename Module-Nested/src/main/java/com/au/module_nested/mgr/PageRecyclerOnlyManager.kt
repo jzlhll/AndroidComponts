@@ -28,8 +28,6 @@ open class PageRecyclerOnlyManager<Bean:Any>(
     val adapter: AutoLoadMoreBindRcvAdapter<Bean, *>,
     private val supportLoadMore: Boolean = true,
 ) {
-
-
     /**
      * 当回调请求数据，成功的时候，
      * "data"  表示有数据；
@@ -37,7 +35,7 @@ open class PageRecyclerOnlyManager<Bean:Any>(
      *
      * 你可以额外做一些信息的显示，adapter和recyclerView相关的更新不用管。
      */
-    var onSuccess: ((OnSuccessInfo)->Unit)? = null
+    var onSuccess: ((OnSuccessInfo, page:Int)->Unit)? = null
 
     /**
      * 你可以额外做一些信息的显示，adapter和recyclerView相关的更新不用管。
@@ -126,7 +124,7 @@ open class PageRecyclerOnlyManager<Bean:Any>(
                     val data = dataWrap.data
                     if (data == null || (data.isFirst && data.getPageByIndex(1).isNullOrEmpty())) {
                         adapter.initDatas(listOf(), false)
-                        onSuccess?.invoke(OnSuccessInfo.Empty)
+                        onSuccess?.invoke(OnSuccessInfo.Empty, data?.currentPageIndex ?: 1)
                     } else {
                         val onSuccessInfo:OnSuccessInfo
                         if (data.isFirst) {
@@ -138,7 +136,7 @@ open class PageRecyclerOnlyManager<Bean:Any>(
                             onSuccessInfo = OnSuccessInfo.HasDataAppend
                         }
 
-                        onSuccess?.invoke(onSuccessInfo)
+                        onSuccess?.invoke(onSuccessInfo, data.currentPageIndex)
                     }
                 }
 
