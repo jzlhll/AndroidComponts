@@ -92,6 +92,9 @@ dependencies {
     implementation project(":Module-Okhttp")
     implementation project(":Module-AndroidLogSystem")
     implementation project(":Module-Native")
+
+    implementation libs.jsbridgev2
 }
 
 apply from:"../plugin-gradle-preaction/preSourceStringEncypt.gradle"
+apply from:"../plugin-gradle-preaction/assetsEncryptAction.gradle"

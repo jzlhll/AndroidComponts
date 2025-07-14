@@ -1,0 +1,55 @@
+//按照如下规则进行转换。
+//文件小于1MB，通过xorTransform算法，一次性读入文件的所有字节进行转换。
+//代码中还原也是如此。
+
+//文件大于1MB，进行分块
+
+
+android {
+    applicationVariants.all { variant ->
+
+        def variantName = variant.name
+        def capitalized = variantName.capitalize()
+        println("allan variantName: " + variantName)
+        def modifyTaskName = "prepareModifiedAssetsFor${capitalized}"
+        def modifiedDir = layout.buildDirectory.dir("tmp/assets_modified/${variantName}").get().asFile
+
+        tasks.register(modifyTaskName) {
+            doLast {
+                def sourceDirs = variant.sourceSets*.assets.srcDirs.flatten()
+
+                if (modifiedDir.exists()) {
+                    modifiedDir.deleteDir()
+                }
+                modifiedDir.mkdirs()
+
+                sourceDirs.each { srcDir ->
+                    if (srcDir.exists()) {
+                        println("allan Copying from: ${srcDir}")
+                        project.copy {
+                            from srcDir
+                            into modifiedDir
+                        }
+                    }
+                }
+
+                //遍历modifiedDir文件夹
+                println("allan modifiedDir " + modifiedDir)
+                modifiedDir.eachFileRecurse { file ->
+                    if (file.isFile()) {
+                        println("allan file each " + file)
+                    }
+                }
+            }
+        }
+
+        // 用旧方式修改 sourceSets 的 assets.srcDirs
+        android.sourceSets.named(variantName) {
+            assets.srcDirs = [modifiedDir]
+        }
+
+        variant.mergeAssetsProvider.configure {
+            dependsOn tasks.named(modifyTaskName)
+        }
+    }
+}
