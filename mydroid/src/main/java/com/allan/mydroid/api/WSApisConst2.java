@@ -5,10 +5,10 @@ import sp.StringEncrypt;
 
 @EncryptString
 public class WSApisConst2 {
-    public static final String PROCESS_CHUNK = sp.StringEncrypt.decrypt("rZVmjTNppHhSDpMILas8zz0gHH8r+XujQjIYF1TjBh8a") /*Encrypted: chunk*/;
-    public static final String PROCESS_MERGING = StringEncrypt.decrypt("Rrv6vnEOOXp/CknbXXXYgJAw9MqH51MgHxPD8Bh9gFkfDbg=") /*Encrypted: merging*/;
-    public static final String PROCESS_ABORTED = StringEncrypt.decrypt("K7Kv4VUqN9ufSGnFL+lW8By8gNNZZWMh3KdEVo2tSyu0cTY=") /*Encrypted: aborted*/;
-    public static final String PROCESS_COMPLETED = StringEncrypt.decrypt("7vsfCBRYdVC9C7kfkv03q/WIKBQnE2B4xHOe+UMUMXM0I/VXZw==") /*Encrypted: completed*/;
-    public static final String PROCESS_CHUNK_ERROR = StringEncrypt.decrypt("UDSlOtU9STNCSNwW1FkK5sGmehDsbGGl5xVPsadklWwNCZLRBTc=") /*Encrypted: chunkError*/;
-    public static final String PROCESS_MERGE_ERROR = StringEncrypt.decrypt("V6hp8+7164r8NgoRBlzWS/WrErBevFUqLyBsNZoFTzqqZT32sBE=") /*Encrypted: mergeError*/;
+public static final String PROCESS_CHUNK = /*Encrypted: chunk*/ sp.StringEncrypt.decrypt("Wyg16uzJHS86myVeMvkyW8FVAfuM3D+6YJEczZ5QjxC3");
+public static final String PROCESS_MERGING = /*Encrypted: merging*/ sp.StringEncrypt.decrypt("X9+C4bjuvfkNH9Ep5hBBRlGbVY7HXoqmNUmChkNA+5MTQ+M=");
+public static final String PROCESS_ABORTED = /*Encrypted: aborted*/ sp.StringEncrypt.decrypt("0S4v8DzyLKr4+Dkgs6i+POEngR/FfXAem0eueb5kiMIi0w8=");
+public static final String PROCESS_COMPLETED = /*Encrypted: completed*/ sp.StringEncrypt.decrypt("loTCWRHVqalrMQobf3XSJdiRWYuJriqmY3aX81okXuyviTy4eA==");
+public static final String PROCESS_CHUNK_ERROR = /*Encrypted: chunkError*/ sp.StringEncrypt.decrypt("CuSXUHfMBhLhvXiXL6lRFGDUs8M2oiO8sYZjKBHk8zGPYiRt0Vk=");
+public static final String PROCESS_MERGE_ERROR = /*Encrypted: mergeError*/ sp.StringEncrypt.decrypt("n9ON1Wm3S7sqSQVqeNEVyiNY9EwbhvPt3u89hr/sPyIEhF8MYvg=");
 }

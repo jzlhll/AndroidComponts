@@ -239,7 +239,7 @@ tasks.register("preSourceStringEncrypt") {
                         println("resultKt: " + result)
                         if (result.isVal) { // || result.isConst
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
-                            def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            def changedFun = String.format(DECRYPT_FUNC, result.value, "\"" + changedValue + "\"")
                             allLines.set(i,
                                     ScanCode.extractFromFirstValidChar(line)
                                     + "val " + result.name + " = " + changedFun
@@ -253,7 +253,7 @@ tasks.register("preSourceStringEncrypt") {
                         println("resultJ: " + result)
                         if (result.isFinal) { //result.isStatic &&
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
-                            def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
+                            def changedFun = String.format(DECRYPT_FUNC, result.value, "\"" + changedValue + "\"")
                             allLines.set(i, line.replace("\"" + result.value + "\"", changedFun))
                             isChanged = true
                         }
@@ -280,26 +280,26 @@ tasks.register("preSourceStringRestore") {
             def count = allLines.size()
             def isChanged = false
 
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < allLines.size(); i++) {
                 def line = allLines.get(i)
+
+                // 只处理标记过的加密行
                 if (line.contains("/*Encrypted:")) {
-                    // 提取加密字符串
-                    def matcher = line =~ /\/\*Encrypted:\s*"(.+?)"\s*\*\//
-                    if (matcher.find()) {
-                        def encryptedBase64 = matcher.group(1)
-                        try {
-                            def decryptedValue = AESGCMUtil.decrypt(encryptedBase64, SECRET_KEY)
+                    // 提取注释中的原始字符串
+                    def commentMatcher = line =~ /\/\*Encrypted:\s*(.+?)\s*\*\//
+                    if (commentMatcher.find()) {
+                        def originalString = commentMatcher.group(1)
+                        // 替换 StringEncrypt.decrypt(...) 为明文
+                        def newLine = line
+                                .replaceAll(/sp\.StringEncrypt\.decrypt\(".*?"\)/, "\"${originalString}\"")
+                                .replaceAll(/StringEncrypt\.decrypt\(".*?"\)/, "\"${originalString}\"")
+                                .replaceAll(/\/\*Encrypted:.*?\*\//, "") // 删除注释
+                                .replaceAll(/\s+;/, ";") // 清理多余空格
+                                .trim()
 
-                            // 替换 sp.StringEncrypt.decrypt(...) 为原始字符串字面量
-                            def newLine = line.replaceAll(/\/\*Encrypted:\s*".+?"\s*\*\//, "")
-                                    .replaceAll(/sp\.StringEncrypt\.decrypt\([^)]+\)/, "\"${decryptedValue}\"")
-
-                            allLines.set(i, newLine)
-                            println("✔ Restored line $i: $file")
-                            isChanged = true
-                        } catch (Exception e) {
-                            println("解密失败: $encryptedBase64 → $file 第 $i 行")
-                        }
+                        allLines.set(i, newLine)
+                        println("✔ Restored line $i: $file " + originalString)
+                        isChanged = true
                     }
                 }
             }
