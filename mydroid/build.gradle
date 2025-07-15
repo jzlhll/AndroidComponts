@@ -97,4 +97,4 @@ dependencies {
 }
 
 apply from:"../plugin-gradle-preaction/preSourceStringEncypt.gradle"
-apply from:"../plugin-gradle-preaction/assetsEncryptAction.gradle"
+apply from:"../plugin-gradle-preaction/assetsEncryptRules.gradle"

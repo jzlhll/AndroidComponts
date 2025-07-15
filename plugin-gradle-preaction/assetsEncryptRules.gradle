@@ -1,55 +1,91 @@
-//按照如下规则进行转换。
-//文件小于1MB，通过xorTransform算法，一次性读入文件的所有字节进行转换。
-//代码中还原也是如此。
+String XOR_KEY = findProperty("encrypt.assets.key").getBytes("UTF-8") // 建议使用更长的密钥增强安全性
+int CHUNK_SIZE = 2048
+/**
+ * XOR转换（加密和解密使用相同方法）
+ * @param data 要处理的数据
+ * @param key 混淆密钥字节数组
+ */
+private static def xorTransform(byte[] data, byte[] key) {
+    for (int i = 0; i < data.length; i++) {
+        data[i] = (data[i] ^ key[i % key.length]) as byte
+    }
+}
 
-//文件大于1MB，进行分块
+/**
+ * 加密文件
+ * @param sourceFile 源文件
+ * @param targetFile 目标文件
+ * @param xorKey 加密密钥
+ */
+static def encryptFile(File sourceFile, File targetFile, String xorKey, int chunkSize) throws IOException {
+    byte[] keyBytes = xorKey.getBytes('UTF-8')
 
+    targetFile.withOutputStream { os ->
+        sourceFile.withInputStream { is ->
+            byte[] buffer = new byte[chunkSize]
+            int bytesRead
+
+            while ((bytesRead = is.read(buffer)) != -1) {
+                // 只处理实际读取到的字节
+                byte[] actualData = bytesRead == buffer.length ? buffer : Arrays.copyOf(buffer, bytesRead)
+                xorTransform(actualData, keyBytes)
+                os.write(actualData)
+            }
+        }
+    }
+}
 
 android {
     applicationVariants.all { variant ->
 
         def variantName = variant.name
         def capitalized = variantName.capitalize()
-        println("allan variantName: " + variantName)
-        def modifyTaskName = "prepareModifiedAssetsFor${capitalized}"
         def modifiedDir = layout.buildDirectory.dir("tmp/assets_modified/${variantName}").get().asFile
 
-        tasks.register(modifyTaskName) {
+        def copyTask = tasks.register("copyAssetsFor${capitalized}", Copy) {
+            // 排除掉目标目录本身
+            def sourceDirs = variant.sourceSets*.assets.srcDirs.flatten().findAll {
+                !it.absolutePath.startsWith(modifiedDir.absolutePath)
+            }
+
+            //println("[au-assetsEncryptRules] sourceDirs: " + sourceDirs)
+
+            from(sourceDirs)
+            into(modifiedDir)
+
+            // 遇到重复 asset 名字就跳过
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
+        // 2. 注册 Modify 任务，对 copied 文件进行修改
+        def modifyTask = tasks.register("modifyCopiedAssetsFor${capitalized}") {
+            dependsOn(copyTask)
+
             doLast {
-                def sourceDirs = variant.sourceSets*.assets.srcDirs.flatten()
-
-                if (modifiedDir.exists()) {
-                    modifiedDir.deleteDir()
-                }
-                modifiedDir.mkdirs()
-
-                sourceDirs.each { srcDir ->
-                    if (srcDir.exists()) {
-                        println("allan Copying from: ${srcDir}")
-                        project.copy {
-                            from srcDir
-                            into modifiedDir
-                        }
-                    }
-                }
-
-                //遍历modifiedDir文件夹
-                println("allan modifiedDir " + modifiedDir)
+                //println("[au-assetsEncryptRules] modifying: ${modifiedDir}")
                 modifiedDir.eachFileRecurse { file ->
                     if (file.isFile()) {
-                        println("allan file each " + file)
+                        // 创建临时加密文件
+                        def tmpFile = new File(file.parent, file.name + ".tmp")
+                        // 调用你定义的加密方法
+                        encryptFile(file, tmpFile, XOR_KEY, CHUNK_SIZE)
+                        // 替换原始文件
+                        file.delete()
+                        def isSuc = tmpFile.renameTo(file)
+                        println("[au-assetsEncryptRules] modifying file: ${file} isSuc ${isSuc}")
                     }
                 }
             }
         }
 
-        // 用旧方式修改 sourceSets 的 assets.srcDirs
+        // 3. 替换原始 sourceSet 的 assets 输入路径
         android.sourceSets.named(variantName) {
             assets.srcDirs = [modifiedDir]
         }
 
+        // 4. 确保 mergeAssets 依赖于我们修改任务
         variant.mergeAssetsProvider.configure {
-            dependsOn tasks.named(modifyTaskName)
+            dependsOn(modifyTask)
         }
     }
 }

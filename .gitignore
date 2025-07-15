@@ -12,6 +12,6 @@ ClassNameAnnotations-ksp/build/
 /captures
 /jsbridge
 .externalNativeBuild
-.cxx
+Module-Native/.cxx/*
 .scannerwork/
 local.properties

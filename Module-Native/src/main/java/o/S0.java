@@ -1,4 +1,4 @@
-package com.sign;
+package o;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -17,29 +17,29 @@ import java.util.Locale;
  * 通过自行故意命名来避免查看到该代码名字。
  */
 @Keep
-public final class Signer {
+public final class S0 {
     /**
      * 获取app的签名sha1
      */
     @Keep
-    public static String sha1(Context context) {
-        var list = func(context, "SHA1");
-        return (list != null && !list.isEmpty()) ? list.get(0) : "";
-    }
-    
-    @Keep
-    public static String sha256(Context context) {
-        var list = func(context, "SHA256");
+    public static String s1(Context context) {
+        var list = c0(context, "SHA1");
         return (list != null && !list.isEmpty()) ? list.get(0) : "";
     }
 
     @Keep
-    public static String md5(Context context) {
-        var list = func(context, "MD5");
+    public static String s6(Context context) {
+        var list = c0(context, "SHA256");
         return (list != null && !list.isEmpty()) ? list.get(0) : "";
     }
 
-    private static List<String> func(Context context, String algo) {
+    @Keep
+    public static String m5(Context context) {
+        var list = c0(context, "MD5");
+        return (list != null && !list.isEmpty()) ? list.get(0) : "";
+    }
+
+    private static List<String> c0(Context context, String algo) {
         List<String> shals = new ArrayList<>();
         try {
             Signature[] signatures;

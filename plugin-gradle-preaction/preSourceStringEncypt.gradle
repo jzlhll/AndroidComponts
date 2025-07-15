@@ -6,14 +6,17 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.security.SecureRandom
 
+//16位密码，妥善保管
+def SECRET_KEY = findProperty("encrypt.string.key").getBytes("UTF-8")
+
+////////////////////////////////////////
+
 //标记类需要处理的注解或者注释
 def ANNOTATIONS = ["@EncryptString", "@file:EncryptString", "/*EncryptString*/"]
 //扫描的模块
 def MODULE_NAMES = ["mydroid", "Module-AndroidLogSystem"]
 //如果你修改了下面的key，则必须强制调用一次。
 def FORCE = true
-//16位密码，妥善保管
-def SECRET_KEY = findProperty("string.encrypt.key").getBytes("UTF-8")
 //用来替代源字符串的代码中的函数
 def DECRYPT_FUNC = "/*Encrypted: %s*/ sp.StringEncrypt.decrypt(%s)"
 
@@ -211,10 +214,9 @@ class ScanCode {
     }
 }
 
-// 假设你在处理 Java 代码
-tasks.register("aaEncyptString") {
+tasks.register("preSourceStringEncrypt") {
     doLast {
-        println("encyptString...")
+        println("pre Source String Encrypt...")
         def scanCode = new ScanCode(ANNOTATIONS, MODULE_NAMES)
         def allAnnotationFiles = scanCode.scanAnnotatedCode(projectDir)
 
@@ -235,7 +237,7 @@ tasks.register("aaEncyptString") {
                     def result = ScanCode.detectStringDefinitionKt(line)
                     if (result != null) {
                         println("resultKt: " + result)
-                        if (result.isVal && result.isConst) { //目前就只处理const val的变量
+                        if (result.isVal) { // || result.isConst
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
                             def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
                             allLines.set(i,
@@ -249,7 +251,7 @@ tasks.register("aaEncyptString") {
                     def result = ScanCode.detectStringDefinitionJ(line)
                     if (result != null) {
                         println("resultJ: " + result)
-                        if (result.isStatic && result.isFinal) { //目前就只处理static final的变量
+                        if (result.isFinal) { //result.isStatic &&
                             def changedValue = AESGCMUtil.encrypt(result.value, SECRET_KEY)
                             def changedFun = String.format(DECRYPT_FUNC, "\"" + changedValue + "\"", result.value)
                             allLines.set(i, line.replace("\"" + result.value + "\"", changedFun))
@@ -263,5 +265,50 @@ tasks.register("aaEncyptString") {
                 Files.write(file.toPath(), allLines)
             }
         }
+    }
+}
+
+tasks.register("preSourceStringRestore") {
+    doLast {
+        println("Restoring Encrypted Strings...")
+
+        def scanCode = new ScanCode(ANNOTATIONS, MODULE_NAMES)
+        def allAnnotationFiles = scanCode.scanAnnotatedCode(projectDir)
+
+        for (def file : allAnnotationFiles) {
+            def allLines = Files.readAllLines(file.toPath())
+            def count = allLines.size()
+            def isChanged = false
+
+            for (int i = 0; i < count; i++) {
+                def line = allLines.get(i)
+                if (line.contains("/*Encrypted:")) {
+                    // 提取加密字符串
+                    def matcher = line =~ /\/\*Encrypted:\s*"(.+?)"\s*\*\//
+                    if (matcher.find()) {
+                        def encryptedBase64 = matcher.group(1)
+                        try {
+                            def decryptedValue = AESGCMUtil.decrypt(encryptedBase64, SECRET_KEY)
+
+                            // 替换 sp.StringEncrypt.decrypt(...) 为原始字符串字面量
+                            def newLine = line.replaceAll(/\/\*Encrypted:\s*".+?"\s*\*\//, "")
+                                    .replaceAll(/sp\.StringEncrypt\.decrypt\([^)]+\)/, "\"${decryptedValue}\"")
+
+                            allLines.set(i, newLine)
+                            println("✔ Restored line $i: $file")
+                            isChanged = true
+                        } catch (Exception e) {
+                            println("解密失败: $encryptedBase64 → $file 第 $i 行")
+                        }
+                    }
+                }
+            }
+
+            if (isChanged) {
+                Files.write(file.toPath(), allLines)
+            }
+        }
+
+        println("Restore completed.")
     }
 }

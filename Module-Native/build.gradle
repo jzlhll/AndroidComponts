@@ -38,10 +38,12 @@ class ASCIICipher {
 
 def cipher = new ASCIICipher(System.currentTimeMillis()) // 可选的种子值
 
-def APP_SIGN = cipher.encrypt("C3:66:E7:5D:0B:8F:59:64:3B:8D:22:3E:E3:EB:E2:DF:C8:8E:EC:CD".toUpperCase())
-def APP_ID = cipher.encrypt("abcdefghij1234567")
-def APP_KEY = cipher.encrypt("abcdefghijklmnopkqjjd0129347578928")
-def STRING_ENCRYPT_SECRET_KEY = cipher.encrypt(findProperty("string.encrypt.key"))
+def APP_SIGN = cipher.encrypt(findProperty("app.sha1"))
+def APP_ID = cipher.encrypt(findProperty("app.appid"))
+def APP_KEY = cipher.encrypt(findProperty("app.appkey"))
+
+def ENCRYPT_STRING_KEY = cipher.encrypt(findProperty("encrypt.string.key"))
+def ENCRYPT_ASSETS_KEY = cipher.encrypt(findProperty("encrypt.assets.key"))
 
 android {
     namespace='com.example.module_native'
@@ -59,7 +61,8 @@ android {
                         "-DAPP_SIGN=$APP_SIGN",
                         "-DAPP_ID=$APP_ID",
                         "-DAPP_KEY=$APP_KEY",
-                        "-DSTRING_ENCRYPT_SECRET_KEY=$STRING_ENCRYPT_SECRET_KEY"
+                        "-DENCRYPT_STRING_KEY=$ENCRYPT_STRING_KEY",
+                        "-DENCRYPT_ASSETS_KEY=$ENCRYPT_ASSETS_KEY"
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             }
         }
@@ -92,6 +95,8 @@ android {
 }
 
 dependencies {
+    implementation project(":Module-Android")
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material

@@ -1,14 +1,13 @@
 package sp;
 
 import androidx.annotation.NonNull;
-
 import com.au.module_android.Globals;
 import com.modulenative.AppNative;
 
 import java.nio.charset.StandardCharsets;
 
 public class StringEncrypt {
-    private static final String SECRET_KEY_STR = AppNative.stringEncryptSecret(Globals.internalApp);
+    private static final String SECRET_KEY_STR = AppNative.ses(Globals.internalApp);
     private static final byte[] SECRET_KEY = SECRET_KEY_STR.getBytes(StandardCharsets.UTF_8);
 
     @NonNull

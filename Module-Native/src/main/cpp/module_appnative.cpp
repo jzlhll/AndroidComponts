@@ -24,9 +24,20 @@ const char *TAG = "appnative_d";
 /// 简单来讲函数体内jobject都不用释放；（没有newGlobalRef，没有全局，没有循环）
 /// GetStringUTFChars GetCharArrayElements，GetByteArrayElements需要调用ReleaseXXX释放。
 
-std::string reflectGetSha1(JNIEnv *env, jobject contextObject) {
-    jclass cls = (env)->FindClass("o/C01");
-    jmethodID mid = (env)->GetStaticMethodID(cls, "co00", "(Landroid/content/Context;)Ljava/lang/String;");
+//反射调用得到sha1签名
+std::string refS1(JNIEnv *env, jobject contextObject) {
+    char clazzName[5];
+    clazzName[0] = 'o';
+    clazzName[1] = '/';
+    clazzName[2] = 'S';
+    clazzName[3] = '0';
+    clazzName[4] = '\0';
+    jclass cls = (env)->FindClass(clazzName);
+    char funName[3];
+    funName[0] = 's';
+    funName[1] = '1';
+    funName[2] = '\0';
+    jmethodID mid = (env)->GetStaticMethodID(cls, funName, "(Landroid/content/Context;)Ljava/lang/String;");
     jobject sha1 = (env)->CallStaticObjectMethod(cls, mid, contextObject);
     const char* sha1Str = (env)->GetStringUTFChars((jstring)sha1, nullptr);
     std::string cppString = sha1Str;
@@ -194,7 +205,7 @@ bool checkSign(JNIEnv *env, jobject context) {
         return isMatch;
     }
 
-    std::string signString = reflectGetSha1(env, context);
+    std::string signString = refS1(env, context);
     log("app sign: %s", signString.c_str());
 
     std::string appSign = APP_SIGN;
@@ -211,7 +222,7 @@ bool checkSign(JNIEnv *env, jobject context) {
 extern "C"
 JNIEXPORT jstring
 JNICALL
-Java_com_modulenative_AppNative_appIdAndKey(JNIEnv *env, jclass clazz, jobject context) {
+Java_com_modulenative_AppNative_ik(JNIEnv *env, jclass clazz, jobject context) {
     auto m = checkSign(env, context);
     if (m) {
         std::string appId = APP_ID;
@@ -225,14 +236,41 @@ Java_com_modulenative_AppNative_appIdAndKey(JNIEnv *env, jclass clazz, jobject c
 extern "C"
 JNIEXPORT jstring
 JNICALL
-Java_com_modulenative_AppNative_stringEncryptSecret(JNIEnv *env, jclass clazz, jobject context) {
+Java_com_modulenative_AppNative_ses(JNIEnv *env, jclass clazz, jobject context) {
     auto m = checkSign(env, context);
     if (!m) {
         return env->NewStringUTF(""); // 不对劲
     }
 
-    std::string secretKey = STRING_ENCRYPT_SECRET_KEY;
+    std::string secretKey = ENCRYPT_STRING_KEY;
     return (env)->NewStringUTF((back(secretKey)).c_str());
 }
 
+extern "C"
+JNIEXPORT jstring
+JNICALL
+Java_com_modulenative_AppNative_t1(JNIEnv *env, jclass clazz, jobject context, jstring af) {
+    auto m = checkSign(env, context);
+    if (!m) {
+        return env->NewStringUTF(""); // 不对劲
+    }
+
+    char classNames[5];
+    classNames[0] = 'o';
+    classNames[1] = '/';
+    classNames[2] = 'A';
+    classNames[3] = '0';
+    classNames[4] = '\0';
+    char funName[3];
+    funName[0] = 't';
+    funName[1] = '1';
+    funName[2] = '\0';
+    jclass cls = env->FindClass(classNames);
+    jmethodID mid = env->GetStaticMethodID(cls, funName, "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+    std::string k = ENCRYPT_ASSETS_KEY;
+    jstring jK = (env)->NewStringUTF((back(k)).c_str());
+
+    // 直接返回 jstring（无需中转 std::string）
+    return (jstring) env->CallStaticObjectMethod(cls, mid, context, af, jK);
+}
 #endif

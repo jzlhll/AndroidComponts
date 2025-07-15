@@ -61,7 +61,7 @@ class App : InitApplication() {
 
         //一上来直接强制移除所有临时import的文件。
         Globals.mainScope.launchOnIOThread {
-            AppNative.stringEncryptSecret(this@App)
+            AppNative.ses(this@App)
             clearDirOldFiles(cacheImportCopyDir(), 0)
         }
     }
