@@ -7,7 +7,7 @@ import com.modulenative.AppNative;
 import java.nio.charset.StandardCharsets;
 
 public class StringEncrypt {
-    private static final String SECRET_KEY_STR = AppNative.ses(Globals.internalApp);
+    private static final String SECRET_KEY_STR = AppNative.strEk(Globals.internalApp);
     private static final byte[] SECRET_KEY = SECRET_KEY_STR.getBytes(StandardCharsets.UTF_8);
 
     @NonNull

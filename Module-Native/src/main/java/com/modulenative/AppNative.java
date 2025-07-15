@@ -23,7 +23,7 @@ public final class AppNative {
      * @return 结果为：appId\nappKey
      */
     @Keep
-    public static native String ik(Context context);
+    public static native String appIdKey(Context context);
 
     /**
      * preSourceStringEncypt.gradle 里面 进行了AES/GCM/NoPadding 加密
@@ -31,13 +31,22 @@ public final class AppNative {
      * 参考掉用处实现。
      */
     @Keep
-    public static native String ses(Context context);
+    public static native String strEk(Context context);
 
     /**
-     * 在native，通过反射调用asset manager，将参数af
+     * 在native，通过反射调用asset manager，读取文件原始text。
      * @param af asset的file path
      * @return assets的原文字
      */
     @Keep
-    public static native String t1(Context c, String af);
+    public static native String asts(Context c, String af);
+
+    /**
+     * 在native，通过反射调用asset manager，将文件进行解密到目标文件tp下。
+     * @param af asset文件的file path
+     * @param tp 目标文件路径
+     * @return 是否成功
+     */
+    @Keep
+    public static native boolean astf(Context c, String af, String tp);
 }

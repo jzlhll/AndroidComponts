@@ -2,69 +2,21 @@ package o;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 
 import androidx.annotation.Keep;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 @Keep
 public class A0 {
-//    public static final String XOR_KEY = "allan123"; // 建议更复杂的密钥
-
-    /**
-     * XOR 加密/解密核心逻辑（对称）
-     */
-    @Keep
-    private static void x(byte[] data, byte[] key) {
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte)(data[i] ^ key[i % key.length]);
-        }
-    }
-
-    //加密文件
-    //    public static void encryptFile(File sourceFile, File targetFile) throws IOException {
-//        c(sourceFile, targetFile, XOR_KEY);
-//    }
-
-    /**
-     * 解密文件（其实就是再次 XOR）
-     * @param ef 加密文件
-     * @param df 解密文件
-     * @param k  密钥
-     */
-    @Keep
-    public static void dc(File ef, File df, String k) throws IOException {
-        c(ef, df, k);
-    }
-
-    /**
-     * 统一处理函数（加密/解密）
-     */
-    @Keep
-    private static void c(File sourceFile, File targetFile, String key) throws IOException {
-        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        try (
-                InputStream is = new FileInputStream(sourceFile);
-                OutputStream os = new FileOutputStream(targetFile)
-        ) {
-            byte[] buffer = new byte[2048]; //与assetsEncryptRules.gradle脚本一致
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                byte[] actualData = (bytesRead == buffer.length) ? buffer : Arrays.copyOf(buffer, bytesRead);
-                x(actualData, keyBytes);
-                os.write(actualData);
-            }
-        }
-    }
-
+    private static final int DEFAULT_BUFFER_SIZE = 4096;
     /**
      * 从 assets 读取文件，使用 XOR 解密为字符串 文本文件一次，直接读完，并返回String。
      * @param c  Context
@@ -75,12 +27,53 @@ public class A0 {
     @Keep
     public static String t1(Context c, String af, String k) {
         if (af == null) return null;
-
         AssetManager assetManager = c.getAssets();
         try (InputStream is = assetManager.open(af)) {
             return os(is, k);
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    /**
+     * asset manager，将asset源文件af，进行解密到目标文件。
+     * @param af assets文件名
+     * @param tp 目标文件路径
+     * @param k XOR 密钥
+     * @return 是否成功
+     */
+    @Keep
+    public static boolean fc(Context context, String af, String tp, String k) {
+        if (af == null || k == null) return false;
+        // 准备密钥字节
+        byte[] kb = k.getBytes(StandardCharsets.UTF_8);
+        // 确保输出文件的父目录存在
+        File outFile = new File(tp);
+        File parent = outFile.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            return false;
+        }
+
+        AssetManager assetManager = context.getAssets();
+
+        // 单一 try-with-resources 块，统一管理 InputStream 和 OutputStream
+        try (InputStream is = assetManager.open(af);
+             OutputStream os = new FileOutputStream(outFile)) {
+
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                // 只对本次读取的 bytesRead 个字节做 XOR
+                for (int i = 0; i < bytesRead; i++) {
+                    buffer[i] = (byte) (buffer[i] ^ kb[i % kb.length]);
+                }
+                os.write(buffer, 0, bytesRead);
+            }
+            // 确保数据刷出
+            os.flush();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
@@ -93,23 +86,23 @@ public class A0 {
      */
     @Keep
     private static String os(InputStream s, String k) throws IOException {
-        byte[] data = rb(s);
-        x(data, k.getBytes(StandardCharsets.UTF_8));
-        return new String(data, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 读取 InputStream 中所有字节
-     */
-    @Keep
-    private static byte[] rb(InputStream i) throws IOException {
-        byte[] bf = new byte[4096];
-        int c;
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream()) {
-            while ((c = i.read(bf)) != -1) {
-                b.write(bf, 0, c);
+        byte[] kb = k.getBytes(StandardCharsets.UTF_8);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int bytesRead;
+        while ((bytesRead = s.read(buffer)) != -1) {
+            // 只对本次读取的 bytesRead 个字节做 XOR
+            for (int i = 0; i < bytesRead; i++) {
+                buffer[i] = (byte) (buffer[i] ^ kb[i % kb.length]);
             }
-            return b.toByteArray();
+            baos.write(buffer, 0, bytesRead);
+        }
+        // 最后整体转换为 UTF-8 字符串
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return baos.toString(StandardCharsets.UTF_8);
+        } else {
+            byte[] all = baos.toByteArray();
+            return new String(all, StandardCharsets.UTF_8);
         }
     }
 

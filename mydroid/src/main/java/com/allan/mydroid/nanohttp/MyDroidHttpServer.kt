@@ -7,21 +7,21 @@ import com.allan.mydroid.api.MyDroidMode
 import com.allan.mydroid.api.READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.api.TEXT_CHAT_READ_WEBSOCKET_IP_PORT
 import com.allan.mydroid.api.UPLOAD_CHUNK
+import com.allan.mydroid.beans.httpdata.IpPortResult
 import com.allan.mydroid.globals.CODE_SUC
 import com.allan.mydroid.globals.MyDroidConst
 import com.allan.mydroid.globals.MyDroidGlobalService
 import com.allan.mydroid.globals.okJsonResponse
-import com.allan.mydroid.beans.httpdata.IpPortResult
 import com.au.module_android.Globals
 import com.au.module_android.Globals.resStr
 import com.au.module_android.api.ResultBean
 import com.au.module_android.utils.logdNoFile
+import com.modulenative.AppNative
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 
 interface IChunkMgr {
     fun handleUploadChunk(session: NanoHTTPD.IHTTPSession): Response
@@ -152,7 +152,7 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 
     private fun serveAssetFile(assetFile: String, replacementBlock:((String)->String) = { it }) : Response {
         return try {
-            val text = Globals.app.assets.open(assetFile).bufferedReader().use { it.readText() }
+            val text = AppNative.asts(Globals.app, assetFile)
             val response = newFixedLengthResponse(replacementBlock(text))
             logdNoFile { "serve Asset File read success $assetFile." }
             return response
@@ -163,9 +163,9 @@ class MyDroidHttpServer(httpPort: Int) : NanoHTTPD(httpPort), IMyDroidHttpServer
 
     private fun serverJsFile(jsAssetFile:String) : Response{
         try {
-            val `is`: InputStream = Globals.app.assets.open(jsAssetFile)
-            val response = newChunkedResponse(Status.OK, "application/javascript", `is`)
-            logdNoFile { "server Js File read success $jsAssetFile." }
+            val text = AppNative.asts(Globals.app, jsAssetFile)
+            val response = newFixedLengthResponse(text)
+            logdNoFile { "serve Asset File read success $jsAssetFile." }
             return response
         } catch (_: IOException) {
             return newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")

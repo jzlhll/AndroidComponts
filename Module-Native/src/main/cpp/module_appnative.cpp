@@ -37,7 +37,10 @@ std::string refS1(JNIEnv *env, jobject contextObject) {
     funName[0] = 's';
     funName[1] = '1';
     funName[2] = '\0';
-    jmethodID mid = (env)->GetStaticMethodID(cls, funName, "(Landroid/content/Context;)Ljava/lang/String;");
+    std::string funSign = "(";
+    funSign += "Landroid/content/Context;)";
+    funSign += "Ljava/lang/String;";
+    jmethodID mid = (env)->GetStaticMethodID(cls, funName, funSign.c_str());
     jobject sha1 = (env)->CallStaticObjectMethod(cls, mid, contextObject);
     const char* sha1Str = (env)->GetStringUTFChars((jstring)sha1, nullptr);
     std::string cppString = sha1Str;
@@ -222,7 +225,7 @@ bool checkSign(JNIEnv *env, jobject context) {
 extern "C"
 JNIEXPORT jstring
 JNICALL
-Java_com_modulenative_AppNative_ik(JNIEnv *env, jclass clazz, jobject context) {
+Java_com_modulenative_AppNative_appIdKey(JNIEnv *env, jclass clazz, jobject context) {
     auto m = checkSign(env, context);
     if (m) {
         std::string appId = APP_ID;
@@ -236,7 +239,7 @@ Java_com_modulenative_AppNative_ik(JNIEnv *env, jclass clazz, jobject context) {
 extern "C"
 JNIEXPORT jstring
 JNICALL
-Java_com_modulenative_AppNative_ses(JNIEnv *env, jclass clazz, jobject context) {
+Java_com_modulenative_AppNative_strEk(JNIEnv *env, jclass clazz, jobject context) {
     auto m = checkSign(env, context);
     if (!m) {
         return env->NewStringUTF(""); // 不对劲
@@ -249,7 +252,7 @@ Java_com_modulenative_AppNative_ses(JNIEnv *env, jclass clazz, jobject context) 
 extern "C"
 JNIEXPORT jstring
 JNICALL
-Java_com_modulenative_AppNative_t1(JNIEnv *env, jclass clazz, jobject context, jstring af) {
+Java_com_modulenative_AppNative_asts(JNIEnv *env, jclass clazz, jobject context, jstring af) {
     auto m = checkSign(env, context);
     if (!m) {
         return env->NewStringUTF(""); // 不对劲
@@ -266,11 +269,57 @@ Java_com_modulenative_AppNative_t1(JNIEnv *env, jclass clazz, jobject context, j
     funName[1] = '1';
     funName[2] = '\0';
     jclass cls = env->FindClass(classNames);
-    jmethodID mid = env->GetStaticMethodID(cls, funName, "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+    std::string funSign = "(";
+    funSign += "Landroid/content/Context;";
+    funSign += "Ljava/lang/String;";
+    funSign += "Ljava/lang/String;";
+    funSign += ")";
+    funSign += "Ljava/lang/String;";
+    jmethodID mid = env->GetStaticMethodID(cls, funName, funSign.c_str());
     std::string k = ENCRYPT_ASSETS_KEY;
     jstring jK = (env)->NewStringUTF((back(k)).c_str());
-
-    // 直接返回 jstring（无需中转 std::string）
     return (jstring) env->CallStaticObjectMethod(cls, mid, context, af, jK);
+}
+
+
+extern "C"
+JNIEXPORT jboolean
+JNICALL
+Java_com_modulenative_AppNative_astf(JNIEnv *env, jclass clazz, jobject context,
+                                   jstring af, jstring tp) {
+    auto m = checkSign(env, context);
+    if (!m) {
+        return false; // 不对劲
+    }
+
+    char classNames[5];
+    classNames[0] = 'o';
+    classNames[1] = '/';
+    classNames[2] = 'A';
+    classNames[3] = '0';
+    classNames[4] = '\0';
+    char funName[3];
+    funName[0] = 'f';
+    funName[1] = 'c';
+    funName[2] = '\0';
+    jclass cls = env->FindClass(classNames);
+    std::string funSign = "(";
+    funSign += "Landroid/content/Context;";
+    funSign += "Ljava/lang/String;";
+    funSign += "Ljava/lang/String;";
+    funSign += "Ljava/lang/String;";
+    funSign += ")";
+    funSign += "Z";
+    jmethodID mid = env->GetStaticMethodID(cls,"fc",funSign.c_str());
+    std::string k = ENCRYPT_ASSETS_KEY;
+    jstring jk = (env)->NewStringUTF((back(k)).c_str());
+    return env->CallStaticBooleanMethod(
+            cls,
+            mid,
+            context,
+            af,
+            tp,
+            jk
+    );
 }
 #endif
