@@ -55,6 +55,7 @@ dependencies {
     implementation libs.androidx.navigation.ui.ktx
     implementation libs.androidx.swiperefreshlayout
     testImplementation libs.junit
+    testImplementation 'org.apache.poi:poi-ooxml:5.4.0'
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
     implementation libs.gson
