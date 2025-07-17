@@ -52,12 +52,12 @@ class WebUploadFragment : BindingFragment<ActivityJsHtmlBinding>(), TakePhotoAct
             val capture = fileChooserParams?.isCaptureEnabled
             val mode = fileChooserParams?.mode
             val isMultiple = mode == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE
-            logd{"web: capture $capture mode " + mode + " isMultiple " + isMultiple}
+            logd{ "web: capture $capture mode $mode isMultiple $isMultiple" }
             var hasImage = false
             var hasVideo = false
             if (!acceptTypes.isNullOrEmpty()) {
                 for (type in acceptTypes) {
-                    logd("web: acceptTypes $type")
+                    logd{"web: acceptTypes $type"}
                     if (type.contains("image/")) {
                         hasImage = true
                     }
@@ -80,7 +80,6 @@ class WebUploadFragment : BindingFragment<ActivityJsHtmlBinding>(), TakePhotoAct
                 }
             }
 
-            //takeAndSelectMediaHelper.changeMultiPickerForResultMaxNum(picMaxSize - currentCount) //todo 个数限制调整
             if (capture == true || true) {
                 takeAndSelectMediaHelper.changeMultiPickerForResultMaxNum(
                     if (isMultiple) {
