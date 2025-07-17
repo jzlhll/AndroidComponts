@@ -1,7 +1,15 @@
 package com.au.module_imagecompressed
 
+import androidx.activity.result.ActivityResultCallback
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import com.au.module_android.permissions.systemTakePictureForResult
+import com.au.module_android.Globals
+import com.au.module_android.utils.ignoreError
+import com.au.module_android.utils.logd
+import com.au.module_android.utilsmedia.UriHelper
+import com.au.module_androidui.dialogs.TakePhotoActionDialog
+import java.io.File
 
 /**
  * @author allan
@@ -9,11 +17,14 @@ import com.au.module_android.permissions.systemTakePictureForResult
  * @description: 目前支持拍照和选择视频或者图片。
  */
 class TakeAndSelectMediaPermissionHelper(val f:Fragment,
+                                         val applicationId:String,
                                          val picMaxSize:Int = 3,
-                                         val maxPicFileLength:Int = 200 * 1024 * 1024,
-                                         val maxVideoFileLength:Long = 8 * 1024 * 1024 * 1024) {
+                                         val maxPicFileLength:Int = 5 * 1024 * 1024,
+                                         val maxVideoFileLength:Long = 100 * 1024 * 1024,
+                                         var pickerType:MultiPhotoPickerContractResult.PickerType
+                                            = MultiPhotoPickerContractResult.PickerType.IMAGE,)
+    : TakePhotoActionDialog.ITakePhotoActionDialogCallback{
     private val cameraHelper = CameraPermissionHelp(f)
-    private val sysTakePicResult = f.systemTakePictureForResult()
     private val multiPickerForResult = f.compatMultiPhotoPickerForResult(picMaxSize).apply {
         setNeedLubanCompress()
         setLimitImageSize(maxPicFileLength * 10, maxPicFileLength) //压缩前给大一些
@@ -26,53 +37,42 @@ class TakeAndSelectMediaPermissionHelper(val f:Fragment,
     fun changeMultiPickerForResultMaxNum(maxNum:Int) {
         multiPickerForResult.setCurrentMaxItems(maxNum)
     }
-//
-//    fun onClickTakePic() {//videoShare 是filePaths.xml定义的。用于给外部应用（这里是拍照程序）共享。
-//        cameraHelper.safeRun(doBlock = {
-//            val picture = File(BaseGlobalConst.goodCacheDir.path + "/videoShare")
-//            picture.mkdirs()
-//            val file = File(picture, "pic_" + System.currentTimeMillis() + ".jpg")
-//            val uri = FileProvider.getUriForFile(
-//                BaseGlobalConst.app,
-//                "${BuildConfig.APPLICATION_ID}.fileprovider",
-//                file
-//            )
-//            val fileUri = file.toUri()
-//
-//            sysTakePicResult.launch(uri, null) { suc->
-//                if (suc) {
-//                    LubanCompress().setResultCallback { srcPath, resultPath, isSuc ->
-//                        val r = if(isSuc) resultPath else srcPath
-//                        ignoreError {
-//                            val resultFile = File(r)
-//                            val resultUri = resultFile.toUri()
-//                            val uriWrap = UriUtil(resultUri, BaseGlobalConst.app.contentResolver).myFileConvertToUriWrap()
-//                            if (uriWrap.fileSize > maxPicFileLength) {
-//                                f.toast(getStringCompat(R.string.pic_too_lager))
-//                            } else {
-//                                if(allResultsAction != null) allResultsAction?.invoke(arrayOf(uriWrap)) else oneByOneResultAction?.invoke(uriWrap)
-//                            }
-//                        }
-//                    }.compress(f.requireContext(), fileUri) //必须是file的scheme。那个FileProvider提供的则不行。
-//                } else {
-//                    if (allResultsAction != null) {
-//                        allResultsAction?.invoke(arrayOf()) //没拍照也要回调。
-//                    }
-//                }
-//            }
-//        })
-//    }
 
-    fun onClickSelectVideo() {
-        val pickerType = MultiPhotoPickerContractResult.PickerType.VIDEO
-        onClickSelectPhoto(pickerType)
+    fun showPhotoAndCameraDialog() {
+        TakePhotoActionDialog.pop(f)
     }
 
-    fun onClickSelectPhotoAndVideo() {
-        onClickSelectPhoto(MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO)
+    override fun onClickTakePic() {
+        cameraHelper.safeRunTakePic(offerBlock = {
+            val picture = File(Globals.goodCacheDir.path)
+            picture.mkdirs()
+            val file = File(picture, "pic_" + System.currentTimeMillis() + ".jpg")
+            val uri = FileProvider.getUriForFile(
+                Globals.app,
+                "${applicationId}.fileprovider",
+                file
+            )
+
+            Pair(uri, object:ActivityResultCallback<Boolean> {
+                override fun onActivityResult(result: Boolean) {
+                    if (result) {
+                        LubanCompress().setResultCallback { srcPath, resultPath, isSuc ->
+                            val r = if(isSuc) resultPath else srcPath
+                            ignoreError {
+                                val resultFile = File(r)
+                                val resultUri = resultFile.toUri()
+                                val cvtUri = UriHelper(resultUri, Globals.app.contentResolver).imageFileConvertToUriWrap()
+                                logd { "cvtUri $cvtUri" }
+                            }
+                        }.compress(f.requireContext(), file.toUri()) //必须是file的scheme。那个FileProvider提供的则不行。
+                    }
+                }
+            })
+        })
+
     }
 
-    fun onClickSelectPhoto(pickerType: MultiPhotoPickerContractResult.PickerType = MultiPhotoPickerContractResult.PickerType.IMAGE) {
+    override fun onClickSelectPhoto() {
         if (allResultsAction != null) {
             multiPickerForResult.launchByAll(pickerType, null) { uriWraps->
                 val noLimitedUriWraps = uriWraps.filter { !it.beLimitedSize }
@@ -85,15 +85,21 @@ class TakeAndSelectMediaPermissionHelper(val f:Fragment,
             multiPickerForResult.launchOneByOne(pickerType, null) {
                     uriWrap ->
                 if (uriWrap.isImage && uriWrap.fileSize > maxPicFileLength) {
+                    //f.toast(getStringCompat(R.string.pic_too_lager))
                     return@launchOneByOne
                 }
 
                 if (!uriWrap.isImage && uriWrap.fileSize > maxVideoFileLength) {
+                    //f.toast(getStringCompat(R.string.vid_too_lager)) //todo toast
                     return@launchOneByOne
                 }
 
                 oneByOneResultAction?.invoke(uriWrap)
             }
         }
+    }
+
+    override fun onNothingClosed() {
+        //do nothing.
     }
 }

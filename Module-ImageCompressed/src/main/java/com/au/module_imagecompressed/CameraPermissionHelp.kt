@@ -67,7 +67,7 @@ class CameraPermissionHelp {
         return false
     }
 
-    fun safeRun(offerBlock:()->Pair<Uri, ActivityResultCallback<Boolean>?>, errorBlock:()->Unit = {
+    fun safeRunTakePic(offerBlock:()->Pair<Uri, ActivityResultCallback<Boolean>?>, errorBlock:()->Unit = {
         ToastBuilder().setOnTop().setIcon("info").setMessage("需要camera权限.").toast()
     }) {
         val sucBlock = {

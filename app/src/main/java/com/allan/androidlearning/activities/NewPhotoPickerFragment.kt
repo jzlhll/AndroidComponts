@@ -31,7 +31,7 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>() {
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         binding.takePic.onClick {
-            cameraHelper.safeRun(
+            cameraHelper.safeRunTakePic(
                 offerBlock = {
                     val picture = File(Globals.goodCacheDir.path)
                     picture.mkdirs()
