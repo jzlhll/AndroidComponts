@@ -22,6 +22,7 @@ import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utilsmedia.getRealInfo
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
+import com.au.module_imagecompressed.MultiPhotoPickerContractResult
 import com.au.module_imagecompressed.TakeAndSelectMediaPermissionHelper
 import kotlinx.coroutines.launch
 
@@ -37,7 +38,10 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         return bean.copyToHtml()
     }
 
-    private val photoVideoPicker = TakeAndSelectMediaPermissionHelper(f, 1).also {
+    private val photoVideoPicker = TakeAndSelectMediaPermissionHelper(f,
+        com.allan.mydroid.BuildConfig.APPLICATION_ID,
+        1,
+        pickerType = MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO).also {
         it.allResultsAction = { results->
             logd { "allan photoVideoPicker $results" }
             for (uri in results) {
@@ -81,7 +85,7 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         }
 
         binding.selectVideoBtn.onClick {
-            photoVideoPicker.onClickSelectVideo()
+            photoVideoPicker.onClickSelectPhoto()
         }
         binding.sendListBtn.onClick {
             val height = f.requireActivity().getScreenFullSize().second
