@@ -1,10 +1,11 @@
-package com.au.module_androidui.dialogs
+package com.au.module_imagecompressed
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Space
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -15,7 +16,9 @@ import com.au.module_android.click.onClick
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.dp
+import com.au.module_androidui.R
 import com.au.module_androidui.databinding.SimpleTextBinding
+import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
 
 /**
  * @author allan.jiang
@@ -43,15 +46,18 @@ class TakePhotoActionDialog : ViewFragment() {
                 throw IllegalArgumentException("pop owner must implement ITakePhotoActionDialogCallback")
             }
             val isFragment = owner is Fragment
-            val b = bundleOf("isFragment" to isFragment,
+            val b = bundleOf(
+                "isFragment" to isFragment,
                 "cameraText" to cameraText,
                 "photosText" to photosText
-                )
+            )
             if (isFragment) {
-                FragmentBottomSheetDialog.show<TakePhotoActionDialog>(owner.childFragmentManager, b)
+                FragmentBottomSheetDialog.Companion.show<TakePhotoActionDialog>(owner.childFragmentManager, b)
+                return
             }
             if (owner is AppCompatActivity) {
-                FragmentBottomSheetDialog.show<TakePhotoActionDialog>(owner.supportFragmentManager, b)
+                FragmentBottomSheetDialog.Companion.show<TakePhotoActionDialog>(owner.supportFragmentManager, b)
+                return
             }
             throw IllegalArgumentException("pop owner must be Fragment or AppCompatActivity")
         }
@@ -65,8 +71,8 @@ class TakePhotoActionDialog : ViewFragment() {
         get() = if(isFragment) parentFragment?.parentFragment.asOrNull()
                 else parentFragment?.activity?.asOrNull()
 
-    private fun createBottomSpace() : View{
-        val space = android.widget.Space(requireActivity())
+    private fun createBottomSpace() : View {
+        val space = Space(requireActivity())
         space.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 24.dp)
         return space
     }
@@ -124,7 +130,7 @@ class TakePhotoActionDialog : ViewFragment() {
             it.addView(createSelectPhotos(), layoutParams)
             it.addView(createBottomSpace())
             //监听界面被盖住立刻关闭本界面。避免宿主被系统回收后面报错
-            parentFragment?.lifecycle?.addObserver(object: DefaultLifecycleObserver{
+            parentFragment?.lifecycle?.addObserver(object: DefaultLifecycleObserver {
                 override fun onPause(owner: LifecycleOwner) {
                     super.onPause(owner)
                     dismiss()
@@ -134,6 +140,6 @@ class TakePhotoActionDialog : ViewFragment() {
     }
 
     fun bottomActionItemHeight(fragment: Fragment) : Float {
-        return fragment.resources.getDimension(com.au.module_androidui.R.dimen.action_dialog_item_height)
+        return fragment.resources.getDimension(R.dimen.action_dialog_item_height)
     }
 }

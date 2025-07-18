@@ -1,36 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>上传图片文件并回显</title>
-</head>
-
-<body>
-　　 <input type="file" id="#file" multiple>
-<div class="show-box"></div>
-<script>
-    var input = document.getElementsByTagName('input')[0];
-    var showBox = document.getElementsByClassName('show-box')[0];
-
-    input.onchange = function () {
-　　　　　　　var len = this.files.length; // 对于input上传的图片，使用dom.files可以获取图片信息
-        for(let i = 0; i < len; i++) {
-            let fileImg = new FileReader();
-            fileImg.readAsDataURL(this.files[i]); // readAsDataURL方法将图片转为base64格式存储于result中
-            fileImg.onload = function() {
-                let oImg = new Image();
-                oImg.src = this.result; // 使用FileReader的result属性获取图片base64信息
-                showBox.appendChild(oImg);
-            }
-　　　　　　　　　　fileImg.onerror = function(e) {
-　　　　　　　　　　　　console.log('error' + e);
-　　　　　　　　　　}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>移动端图片上传预览器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-    }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        header {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 90%;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .upload-container {
+            padding: 25px 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #4b6cb7;
+            border-radius: 15px;
+            padding: 30px 15px;
+            background: rgba(75, 108, 183, 0.05);
+            margin-bottom: 20px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            color: #4b6cb7;
+            margin-bottom: 15px;
+        }
+
+        .upload-area h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(75, 108, 183, 0.3);
+            width: 80%;
+            max-width: 280px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(75, 108, 183, 0.4);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #f8f9fa;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .remove-btn:active {
+            transform: scale(0.9);
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            min-height: 24px;
+            color: #e74c3c;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #777;
+        }
+
+        .empty-state .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        .instructions {
+            text-align: center;
+            padding: 15px 10px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 15px;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 500px) {
+            header {
+                padding: 20px 15px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .upload-container {
+                padding: 20px 15px;
+            }
+
+            .upload-area {
+                padding: 25px 10px;
+            }
+
+            .preview-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .counter {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 500;
+            color: #4b6cb7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>移动端图片预览器</h1>
+        <p>选择多张图片，将自动生成200×200的缩略图预览</p>
+    </header>
+
+    <div class="upload-container">
+        <div class="upload-area">
+            <div class="upload-icon">📷</div>
+            <h3>选择图片上传</h3>
+            <p>支持多张图片同时上传</p>
+            <button class="btn" id="selectBtn">选择图片</button>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+        </div>
+
+        <div class="counter" id="counter">已选择: 0 张图片</div>
+        <div class="status" id="status"></div>
+
+        <div class="preview-container" id="previewContainer">
+            <div class="empty-state">
+                <div class="icon">🖼️</div>
+                <p>尚未选择图片</p>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <p>提示: 支持JPG、PNG格式 | 点击图片右上角×可删除</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const selectBtn = document.getElementById('selectBtn');
+        const previewContainer = document.getElementById('previewContainer');
+        const statusText = document.getElementById('status');
+        const counter = document.getElementById('counter');
+
+        let imageCount = 0;
+
+        // 点击按钮触发文件选择
+        selectBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 文件选择处理
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+            this.value = ''; // 重置input，允许重复选择相同文件
+        });
+
+        // 处理上传的文件
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            console.log("web:----");
+            console.log("web: len:", files.length);
+            // 清除空状态
+            if (previewContainer.querySelector('.empty-state')) {
+                previewContainer.innerHTML = '';
+            }
+
+            // 检查文件类型
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!validImageTypes.includes(file.type)) {
+                    statusText.textContent = `错误：${file.name} 不是支持的图片格式`;
+                    console.log("web:err1");
+                    continue;
+                }
+
+                if (file.size > 5 * 1024 * 1024) { // 5MB限制
+                    statusText.textContent = `错误：${file.name} 超过5MB大小限制`;
+                    console.log("web:err2");
+                    continue;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    imageCount++;
+                    counter.textContent = `已选择: ${imageCount} 张图片`;
+
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    img.alt = '预览图片';
+
+                    const removeBtn = document.createElement('div');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.onclick = function() {
+                        previewContainer.removeChild(previewItem);
+                        imageCount--;
+                        counter.textContent = `已选择: ${imageCount} 张图片`;
+
+                        if (imageCount === 0) {
+                            previewContainer.innerHTML = '<div class="empty-state"><div class="icon">🖼️</div><p>尚未选择图片</p></div>';
+                        }
+                    };
+
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(removeBtn);
+                    previewContainer.appendChild(previewItem);
+
+                    statusText.textContent = `已添加: ${file.name}`;
+                    setTimeout(() => {
+                        statusText.textContent = '';
+                    }, 3000);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    });
 </script>
 </body>
-
 </html>

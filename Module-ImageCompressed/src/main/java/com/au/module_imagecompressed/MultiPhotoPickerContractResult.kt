@@ -247,8 +247,20 @@ class MultiPhotoPickerContractResult(
     fun launchOneByOne(type: PickerType, option: ActivityOptionsCompat?, oneByOneCallback:(UriWrap)->Unit) {
         this.oneByOneCallback = oneByOneCallback
         this.allCallback = null
+        launchCommon(type, option)
+    }
 
-        setResultCallback{
+    /**
+     * 可以使用。但推荐使用oneByOne。
+     */
+    fun launchByAll(type: PickerType, option: ActivityOptionsCompat?, callback:(Array<UriWrap>)->Unit) {
+        this.allCallback = callback
+        this.oneByOneCallback = null
+        launchCommon(type, option)
+    }
+
+    private fun launchCommon(type: PickerType, option: ActivityOptionsCompat?) {
+        setResultCallback {
             resultCallback(it)
         }
 
@@ -258,20 +270,6 @@ class MultiPhotoPickerContractResult(
             PickerType.VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
         }
 
-        launcher.launch(intent, option)
-    }
-
-    /**
-     * 可以使用。但推荐使用oneByOne。
-     */
-    fun launchByAll(type: PickerType, option: ActivityOptionsCompat?, callback:(Array<UriWrap>)->Unit) {
-        this.allCallback = callback
-        this.oneByOneCallback = null
-        val intent = when (type) {
-            PickerType.IMAGE -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            PickerType.IMAGE_AND_VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-            PickerType.VIDEO -> PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
-        }
         launcher.launch(intent, option)
     }
 }
