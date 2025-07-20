@@ -25,7 +25,7 @@ import com.au.module_imagecompressed.imageFileConvertToUriWrap
 import com.au.module_imagecompressed.photoPickerForResult
 import java.io.File
 
-@EntryFrgName(priority = 180)
+@EntryFrgName
 class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), TakePhotoActionDialog.ITakePhotoActionDialogCallback {
     val singleResult = photoPickerForResult().also { it.setNeedLubanCompress(100) }
 

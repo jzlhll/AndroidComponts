@@ -27,7 +27,7 @@ import java.io.File
  * @date :2024/12/5 9:40
  * @description:
  */
-@EntryFrgName(priority = 200)
+@EntryFrgName
 class WebUploadFragment : BindingFragment<ActivityJsHtmlBinding>(), TakePhotoActionDialog.ITakePhotoActionDialogCallback {
 
     private var selectValueCallback:(ValueCallback<Array<Uri>>)? = null
