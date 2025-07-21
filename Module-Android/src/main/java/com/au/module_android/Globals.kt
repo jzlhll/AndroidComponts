@@ -11,10 +11,15 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.utils.loge
 import com.au.module_android.utils.unsafeLazy
 //import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.plus
 import java.io.File
 
 object Globals {
@@ -26,7 +31,11 @@ object Globals {
     /**
      * 全局协程作用域
      */
-    val mainScope by lazy { MainScope() }
+    val mainScope by lazy { MainScope().also {
+        it.plus(CoroutineExceptionHandler { coroutineContext, throwable->
+            loge { "throwable" }
+        })
+    } }
 
     /**
      * 主线程的Handler
