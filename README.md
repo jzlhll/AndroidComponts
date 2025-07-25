@@ -12,6 +12,8 @@
 
 涵盖了activity，fragment，dialog等支持。
 
+兼容android15+沉浸式，从框架上进行约束开发。
+
 #### 大量基础Widget
 
 大量基础类。主要涉及文本封装类。自定义字体的需求。
@@ -66,7 +68,7 @@
 > ```
 > 通过自行追加Looper.loop()的方式来解决。网上会有很多帖子介绍该方案。
 
-#### 小数据缓存封装
+#### 小数据KV缓存property
 
 * `AppDataStore`
 * `SharedPreference`
@@ -83,15 +85,33 @@ lastCheckAndStartSystemTs = curTs
 
 #### Permissions框架
 
-对于拍照，拍视频，申请权限，和启动activity for Result等代码kotlin框架实现。参考module_android/permission。
+对于拍照，拍视频，申请权限，和启动activity for Result等代码kotlin框架实现。
+
+参考module_android/permission。
 
 #### 非粘性LiveData和状态
 
-实现了非粘性的LiveData分装`NoStickLiveData`， 实现原理参考我的帖子：https://blog.csdn.net/jzlhll123/article/details/133725302
+实现了非粘性的LiveData分装`NoStickLiveData`。
+
+ 实现原理参考我的帖子：https://blog.csdn.net/jzlhll123/article/details/133725302
+
+#### StateFlow
+
+StateFlow的最佳开发实践。
+
+参考：`simpleflow`和`FlowStudyFragment`。
 
 #### `ImeUtil/ImeHelper`
 
 键盘弹起的回调监听。总所周知，android上通过xml布局的属性设定的效果比较差。`View.onApplyWindowInsets, setOnApplyWindowInsetsListener`等函数提供了更可靠和兼容更强的方案。
+
+#### 黑夜模式&多语言&自选
+
+实现黑夜模式和自主选择。
+
+实现自主选择当前语言环境。
+
+参考:`AndroidUi2Fragment`
 
 #### 工具集
 
@@ -108,7 +128,7 @@ lastCheckAndStartSystemTs = curTs
 * `JSON/Bundle`扩展。kotlin扩展，辅助解析类。使用gson，解析json string。参考`JsonUtils`, `BundleUtil`。
 
 * `Html text`显示封装。参考`TextView.useSimpleHtmlText`扩展。
-* 通知实现。
+* 通知封装库。
 * 反射类。`ReflectionUtils`。
 * 状态栏沉浸式研究和总结最佳方案。`SystemBarUtil`。参考`Activity.transparentStatusBar`。
 
@@ -168,7 +188,9 @@ ViewPager2的框架。
 
 ### Module-AndroidLogSystem
 
-一个日志系统。基于FileLog实现。
+一个日志系统。
+
+基于单文件的自主实现FileLog。比较简化。
 
 
 
@@ -182,8 +204,10 @@ assets文件混淆方案脚本。
 
 内网下载文件脚本。方便减少集成仓库的大小。
 
+
+
 ### 其他
-几个主工程的实现。
+几个主工程的实现：
 
 学习自定义编译时注解的方案。
 

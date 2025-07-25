@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.allan.classnameanno.EntryFrgName
 import com.au.module_android.click.onClick
+import com.au.module_android.simpleflow.StatusState
 import com.au.module_android.ui.views.ViewFragment
 import com.au.module_android.utils.launchOnThread
 import com.au.module_android.utils.logd
@@ -82,6 +83,21 @@ class FlowStudyFragment : ViewFragment() {
             })
 
             lifecycleScope.launch {
+                viewModel.dataState.collect {
+                    it.parse(
+                        loading = {
+                        },
+                        success = { data->
+                            showInfoTv.text = data
+                        },
+                        error = { exMsg->
+                            ToastBuilder().setMessage(exMsg).setOnTop().toast()
+                        }
+                    )
+                }
+            }
+
+            lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
 //                    listOf(1, 2, 3, 4, 5).asFlow()
 //                        .onEach {
@@ -115,6 +131,8 @@ class FlowStudyFragment : ViewFragment() {
                     }
                     logt { "doing2..." }
                     logt { "doing3..." }
+
+
                 }
             }
         }
@@ -132,8 +150,8 @@ class FlowStudyViewModel : ViewModel() {
         }
     }
 
-    private val _dataState = MutableStateFlow<DataState<String>>(DataState.Loading)
-    val dataState: StateFlow<DataState<String>> = _dataState.asStateFlow()
+    private val _dataState = MutableStateFlow<StatusState<String>>(StatusState.Loading)
+    val dataState: StateFlow<StatusState<String>> = _dataState.asStateFlow()
 
     private val _eventFlow = MutableSharedFlow<MyEvent>()
     val eventFlow: SharedFlow<MyEvent> = _eventFlow.asSharedFlow()
@@ -188,24 +206,18 @@ class FlowStudyViewModel : ViewModel() {
                 delay(200) //模拟耗时
                 val r = Math.random()
                 if (r < 0.3) {
-                    DataState.Error("Server tell me error!")
+                    StatusState.Error("Server tell me error!")
                 } else if (r < 0.6) {
                     val data = "" + r * 10000
-                    DataState.Success(data)
+                    StatusState.Success(data)
                 } else {
                     throw RuntimeException("parse error")
                 }
             } catch (e: Exception) {
-                DataState.Error(e.message)
+                StatusState.Error(e.message)
             }
         }
     }
-}
-
-sealed class DataState<out T> {
-    object Loading : DataState<Nothing>()
-    data class Success<out T>(val data: T) : DataState<T>()
-    data class Error(val message: String?) : DataState<Nothing>()
 }
 
 sealed class MyEvent {
