@@ -9,6 +9,7 @@ import android.widget.Space
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
+import com.allan.androidlearning.activities2.HiltFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -18,10 +19,16 @@ import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
 import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import com.google.android.material.button.MaterialButton
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EntryActivity : BindingActivity<ActivityEntryBinding>() {
+
+    @Inject
+    lateinit var mHelper : EntryHelper
 
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
@@ -32,13 +39,18 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mHelper.test()
+
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val goto = intent?.getStringExtra("goto")
         logd { "goto $goto" }
 
-        EntryList().also {
-            it.getEntryList().forEach { fragmentClassTriple ->
+        val entry = EntryList()
+        val entryList = entry.getEntryList().toMutableList()
+        entryList.also {
+            it.forEach { fragmentClassTriple ->
                 val btn = MaterialButton(this)
                 btn.text = if(fragmentClassTriple.third != null) fragmentClassTriple.third else fragmentClassTriple.first.simpleName.replace("Fragment", "")
                 btn.onClick {
@@ -47,7 +59,7 @@ class EntryActivity : BindingActivity<ActivityEntryBinding>() {
                 binding.buttonsHost.addView(btn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
             }
 
-            it.getAutoEnterClass()?.let{ cls->
+            entry.getAutoEnterClass()?.let{ cls->
                 lifecycleScope.launch {
                     delay(500)
                     FragmentShellActivity.start(this@EntryActivity, cls)

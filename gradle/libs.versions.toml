@@ -3,6 +3,8 @@
 android_cn_oaid = "4.2.11"
 appcompat = "1.7.1"
 blurview = "version-2.0.4"
+hiltAndroid = "2.57"
+hiltAndroidCompiler = "2.57"
 lubanCompress = "v3.11.3"
 constraintlayout = "2.2.1"
 coreKtx = "1.16.0"
@@ -60,6 +62,8 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntimeKtx" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 lubanCompress = { module = "io.github.lucksiege:compress", version.ref = "lubanCompress" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

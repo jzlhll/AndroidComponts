@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -60,6 +61,10 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
     implementation libs.gson
 
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
 //    implementation project(":jsbridge")
     implementation libs.jsbridgev2
 
@@ -67,11 +72,14 @@ dependencies {
     implementation project(':Module-AndroidUi')
     implementation project(":Module-Nested")
     implementation project(":Module-ImageCompressed")
+
     //my apt
     implementation project(':ClassNameAnnotations')
     implementation project(':Module-AndroidLogSystem')
     ksp project(':ClassNameAnnotations-ksp')
 //    kapt project(':ClassNameAnnotations-compiler')
+
+
 }
 
 

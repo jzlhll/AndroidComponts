@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 import kotlin.jvm.Throws
 
-@EntryFrgName(priority = 200)
+@EntryFrgName
 class FlowStudyFragment : ViewFragment() {
     val viewModel by lazy { FlowStudyViewModel() }
     private lateinit var showInfoTv : CustomFontText

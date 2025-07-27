@@ -23,12 +23,14 @@ import com.au.module_android.utils.asOrNull
 import com.au.module_android.utils.serializableExtraCompat
 import com.au.module_android.utils.startActivityFix
 import com.au.module_android.utils.unsafeLazy
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * @author au
  * Date: 2023/8/29
  * Description 限制
  */
+@AndroidEntryPoint
 open class FragmentShellActivity : ViewActivity() {
     override fun toString(): String {
         val superStr = super.toString()
