@@ -8,9 +8,13 @@
 
 #### MVVM框架
 
-基于activity + Fragment + 泛型 + `viewBinding` + kotlin实现的一个快速开发的框架。
+基于activity + Fragment + 泛型 + `viewBinding` + kotlin+ `ShellFragmentActivity`实现的一个快速开发的框架。
 
-涵盖了activity，fragment，dialog等支持。
+> 大量的android界面需要使用Activity来承载显示和跳转，如果每一个界面都添加一个Activity就有点太多。因此使用一个壳Activity作为基础，通过Intent传递Fragment的Class和其他参数。
+>
+> 通过泛型将ViewBinding实现界面自动创建到Fragment/Activity上。
+
+涵盖了activity，fragment，dialog，dialogFragment等支持。
 
 兼容android15+沉浸式，从框架上进行约束开发。
 
@@ -159,6 +163,69 @@ style(多种常用文案的style，比如标题，二级文字等，输入框，
 ViewPager2的框架。
 
 提供组合RecyclerView，indicator等的Layout。
+
+#### 实现了MVVM的recyclerView框架
+
+* BindRcvAdapter
+
+```kotlin
+BindViewHolder<DATA:Any, BINDING: ViewBinding> : RecyclerView.ViewHolder(binding.root) 
+
+abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView.Adapter<VH>()
+abstract class BindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : BaseAdapter<DATA, VH>(), IBindAdapter<DATA>
+
+
+```
+
+在不改变我们传统的写法的前提下：
+
+`onCreateViewHolder` 和 `getItemViewType`的传统写法，避免框架使用者的不熟悉。
+
+不支持DiffUtil算法。
+
+
+
+* viewHolder
+
+同时，给出BindViewHolder必须实现的函数体：
+
+```kotlin
+override fun bindData(bean: XXXBean) {
+    super.bindData(bean)
+    //ui绑定编写
+}
+```
+
+* AutoLoadMoreBindRcvAdapter  
+
+  * 实现差异化更新
+
+    ```
+    override fun isSupportDiffer(): Boolean {
+        return true
+    }
+    
+    private class Differ(aList:List<Bean>?, bList:List<Bean>?) : DiffCallback<Bean>(aList, bList) {
+        override fun compareContent(a: Bean, b: Bean): Boolean {
+            return //todo a.index == b.index 
+        }
+    }
+    
+    override fun createDiffer(a: List<Bean>?, b: List<Bean>?): DiffCallback<Bean> {
+          return Differ(a, b)
+      }
+    ```
+
+    在adapter中，将isSupportDiffer()返回true，并实现createDiffer函数。就能在框架的指引下，进行解析。
+
+  * 实现分页加载
+
+    ```
+    initDatas(datas: List<DATA>?, hasMore: Boolean, isTraditionalUpdate: Boolean) 
+    appendDatas(appendList: List<DATA>?, hasMore: Boolean)
+    ```
+
+https://developer.android.google.cn/topic/libraries/architecture/paging/v3-overview?hl=zh-cn
 
 
 
