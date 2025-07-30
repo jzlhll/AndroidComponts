@@ -1,5 +1,7 @@
 package com.au.module_android.simpleflow
 
+import kotlinx.coroutines.flow.SharedFlow
+
 sealed class StatusState<out T> {
     object Loading : StatusState<Nothing>()
     data class Success<out T>(val data: T) : StatusState<T>()
@@ -31,5 +33,23 @@ suspend fun <T> flowStateApi(apiRequestBlock: suspend () -> T) : StatusState<T>{
         return StatusState.Success(data)
     } catch (e: Exception) {
         return StatusState.Error(e.message)
+    }
+}
+
+suspend fun <T> SharedFlow<StatusState<T>>.collectStatusState(loading: ()->Unit = {},
+                                                              success: (data:T) -> Unit,
+                                                              error: (exMsg:String?) -> Unit): Nothing {
+    collect {
+        when (it) {
+            is StatusState.Loading -> {
+                loading()
+            }
+            is StatusState.Success -> {
+                success(it.data)
+            }
+            is StatusState.Error -> {
+                error(it.message)
+            }
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.au.module_android.ui.base
 
-import com.au.module_android.BuildConfig
-
 /**
  * @author allan
  * @date :2024/8/27 10:38
@@ -10,18 +8,12 @@ import com.au.module_android.BuildConfig
  */
 interface IFullWindow {
     /**
-     * 由于新框架默认全面屏: 是否将顶部statusBar padding到合理的位置
-     *
-     *    所以子类不得再调用window.decorView
-     *    ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
+     * 是否将顶部statusBar padding到合理的位置
      */
     fun isPaddingStatusBar() = true
 
     /**
-     * 由于新框架默认全面屏: 是否将底部navigationBar padding到合理的位置
-     *
-     *    所以子类不得再调用window.decorView
-     *    ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
+     * 底部navigationBar padding到合理的位置
      */
     fun isPaddingNavBar() = true
 

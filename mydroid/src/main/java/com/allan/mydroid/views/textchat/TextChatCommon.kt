@@ -2,9 +2,11 @@ package com.allan.mydroid.views.textchat
 
 import android.net.Uri
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.allan.mydroid.BuildConfig
 import com.allan.mydroid.beans.WSChatMessageBean
 import com.allan.mydroid.beansinner.UriRealInfoEx
 import com.allan.mydroid.beansinner.UriRealInfoHtml
@@ -22,12 +24,25 @@ import com.au.module_android.utils.setMaxLength
 import com.au.module_android.utils.transparentStatusBar
 import com.au.module_android.utilsmedia.getRealInfo
 import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
+import com.au.module_imagecompressed.CameraAndSelectPhotosPermissionHelper
+import com.au.module_imagecompressed.CameraPermissionHelp
 import com.au.module_imagecompressed.MultiPhotoPickerContractResult
-import com.au.module_imagecompressed.TakeAndSelectMediaPermissionHelper
+import com.au.module_imagecompressed.TakePhotoActionDialog
 import kotlinx.coroutines.launch
+import java.io.File
 
-abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBinding) {
+abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBinding): TakePhotoActionDialog.ITakePhotoActionDialogCallback {
     private lateinit var adapter: TextChatRcvAdapter
+
+    override fun onClickSelectPhoto() {
+    }
+
+    override fun onClickTakePic() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onNothingClosed() {
+    }
 
     private fun cvtUri(uri: Uri): UriRealInfoHtml {
         val real = uri.getRealInfo(Globals.app)
@@ -38,18 +53,36 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         return bean.copyToHtml()
     }
 
-    private val photoVideoPicker = TakeAndSelectMediaPermissionHelper(f,
-        com.allan.mydroid.BuildConfig.APPLICATION_ID,
-        1,
-        pickerType = MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO).also {
-        it.allResultsAction = { results->
-            logd { "allan photoVideoPicker $results" }
-            for (uri in results) {
-                val uriRealInfoHtml = cvtUri(uri.uri)
-                buttonSend(createBean(WSChatMessageBean.Content("", uriRealInfoHtml)))
-            }
+    val cameraAndSelectHelper = CameraAndSelectPhotosPermissionHelper(f, object : CameraPermissionHelp.Supplier {
+        override fun createFileProvider(): Pair<File, Uri> {
+            return createFileProviderMine()
         }
+    })
+
+    private fun createFileProviderMine(): Pair<File, Uri> {
+        val picture = File(Globals.goodCacheDir.path + "/shared")
+        picture.mkdirs()
+        val file = File(picture, "pic_" + System.currentTimeMillis() + ".jpg")
+        val uri = FileProvider.getUriForFile(
+            Globals.app,
+            "${BuildConfig.APPLICATION_ID}.provider",
+            file
+        )
+        return file to uri
     }
+
+//    private val photoVideoPicker = CameraAndSelectPhotosPermissionHelper(f,
+//        com.allan.mydroid.BuildConfig.APPLICATION_ID,
+//        1,
+//        pickerType = MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO).also {
+//        it.allResultsAction = { results->
+//            logd { "allan photoVideoPicker $results" }
+//            for (uri in results) {
+//                val uriRealInfoHtml = cvtUri(uri.uri)
+//                buttonSend(createBean(WSChatMessageBean.Content("", uriRealInfoHtml)))
+//            }
+//        }
+//    }
 
     fun onCreate() {
         binding.edit.setMaxLength(Int.MAX_VALUE)
@@ -62,10 +95,6 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
                                    navigationBarHeight: Int ->
             //imeOffset 1087 imeMaxH 1090 stH 122 navH 0
             binding.bottomHost.translationY = -imeOffset.toFloat()
-        }
-        helper?.setOnImeMaxHeightListener { imeMaxHeight->
-            //imeOffset 1087 imeMaxH 1090 stH 122 navH 0
-            binding.bottomHost.translationY = -imeMaxHeight.toFloat()
         }
 
         ac.transparentStatusBar(statusBarTextDark = false) { insets, statusBarsHeight, _ ->
@@ -81,11 +110,23 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
         initRcv()
 
         binding.selectImagesBtn.onClick {
-            photoVideoPicker.onClickSelectPhoto()
+            cameraAndSelectHelper.showPhotoAndCameraDialog(1)
+            cameraAndSelectHelper.multiResult.launchByAll(MultiPhotoPickerContractResult.PickerType.IMAGE, null) {
+                for (uri in it) {
+                    val uriRealInfoHtml = cvtUri(uri.uri)
+                    buttonSend(createBean(WSChatMessageBean.Content("", uriRealInfoHtml)))
+                }
+            }
         }
 
         binding.selectVideoBtn.onClick {
-            photoVideoPicker.onClickSelectPhoto()
+            cameraAndSelectHelper.showPhotoAndCameraDialog(3)
+            cameraAndSelectHelper.multiResult.launchByAll(MultiPhotoPickerContractResult.PickerType.IMAGE, null) {
+                for (uri in it) {
+                    val uriRealInfoHtml = cvtUri(uri.uri)
+                    buttonSend(createBean(WSChatMessageBean.Content("", uriRealInfoHtml)))
+                }
+            }
         }
         binding.sendListBtn.onClick {
             val height = f.requireActivity().getScreenFullSize().second

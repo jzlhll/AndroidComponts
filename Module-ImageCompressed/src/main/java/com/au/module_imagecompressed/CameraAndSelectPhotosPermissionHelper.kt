@@ -4,8 +4,6 @@ import androidx.fragment.app.Fragment
 
 class CameraAndSelectPhotosPermissionHelper(val f: Fragment,
                                             supplier: CameraPermissionHelp.Supplier) {
-    var pickerType = MultiPhotoPickerContractResult.PickerType.IMAGE
-
     val multiResult = f.compatMultiPhotoPickerForResult(3).also {
         it.setNeedLubanCompress()
     }

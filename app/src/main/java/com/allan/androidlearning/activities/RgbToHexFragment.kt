@@ -15,6 +15,7 @@ import com.au.module_android.utils.ImeHelper
 import com.au.module_android.utils.hideImeNew
 import kotlinx.coroutines.flow.combine
 import okhttp3.internal.toHexString
+import kotlin.math.min
 
 @EntryFrgName(priority = 10)
 class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
@@ -23,8 +24,10 @@ class RgbToHexFragment : BindingFragment<FragmentRgb2HexBinding>() {
     override fun onBindingCreated(savedInstanceState: Bundle?) {
         requireActivity().title = "RGB to Hex"
         ImeHelper.assist(requireActivity())?.let {
-            it.setOnImeListener { imeOffset,_,statusBarHeight,_->
-                binding.root.translationY = -imeOffset.toFloat()
+            it.setOnImeListener { imeOffset,_,statusBarHeight,navigationBarHeight->
+                //最标准的做法
+                val tranY = min(0f, -imeOffset.toFloat() + navigationBarHeight)
+                binding.root.translationY = tranY
 
                 if (!doOncePaddingTop) {
                     requireActivity().window.decorView.updatePadding(top = statusBarHeight)

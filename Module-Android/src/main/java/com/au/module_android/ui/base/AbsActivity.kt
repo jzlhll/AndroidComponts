@@ -79,7 +79,7 @@ open class AbsActivity : AppCompatActivity(), IFullWindow, IAnim {
      * 进行全屏实现
      */
     open fun setEdge(contentView:View?) {
-        fullPaddingEdgeToEdge(this, this.window, contentView ?: findViewById(android.R.id.content))
+        fullPaddingEdgeToEdge(this, contentView ?: findViewById(android.R.id.content))
     }
 
     override fun setRequestedOrientation(requestedOrientation: Int) {

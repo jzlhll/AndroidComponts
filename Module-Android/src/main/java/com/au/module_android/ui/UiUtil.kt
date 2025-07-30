@@ -3,14 +3,12 @@ package com.au.module_android.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.viewbinding.ViewBinding
 import com.au.module_android.ui.base.IFullWindow
+import com.au.module_android.utils.currentStatusBarAndNavBarHeight
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -77,31 +75,29 @@ fun <T : ViewBinding> createViewBindingT2(self: Class<*>, inflater: LayoutInflat
 
 /**
  * 子类调用。
- * 所以子类不得再调用window.decorView
- * ViewCompat.setOnApplyWindowInsetsListener(window.decorView)
  */
-fun IFullWindow.fullPaddingEdgeToEdge(activity: ComponentActivity, window: Window, updatePaddingRoot: View) {
+fun IFullWindow.fullPaddingEdgeToEdge(activity: ComponentActivity, updatePaddingRoot: View) {
     val isPaddingNav = isPaddingNavBar()
     val isPaddingStatusBar = isPaddingStatusBar()
 
     if(fullWindowSetEdgeToEdge()) activity.enableEdgeToEdge()
 
     if (isPaddingNav || isPaddingStatusBar) {
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
-            val statusBarsHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            val bottomBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-
-            if (isPaddingStatusBar) {
-                if (isPaddingNav) {
-                    updatePaddingRoot.updatePadding(top = statusBarsHeight, bottom = bottomBarHeight)
+        updatePaddingRoot.post {
+            val pair = activity.currentStatusBarAndNavBarHeight()
+            if (pair != null) {
+                val statusBarsHeight = pair.first
+                val bottomBarHeight = pair.second
+                if (isPaddingStatusBar) {
+                    if (isPaddingNav) {
+                        updatePaddingRoot.updatePadding(top = statusBarsHeight, bottom = bottomBarHeight)
+                    } else {
+                        updatePaddingRoot.updatePadding(top = statusBarsHeight)
+                    }
                 } else {
-                    updatePaddingRoot.updatePadding(top = statusBarsHeight)
+                    updatePaddingRoot.updatePadding(bottom = bottomBarHeight)
                 }
-            } else {
-                updatePaddingRoot.updatePadding(bottom = bottomBarHeight)
             }
-
-            insets
         }
     }
 }

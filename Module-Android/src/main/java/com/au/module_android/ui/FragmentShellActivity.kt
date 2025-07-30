@@ -141,7 +141,7 @@ open class FragmentShellActivity : ViewActivity() {
         //根据fragment情况来实现
         if (instance is IFullWindow) {
             //精髓所在：通过fragment的接口函数来判断是否updatePadding StatusBar或者NavBar。
-            instance.fullPaddingEdgeToEdge(this, window, v)
+            instance.fullPaddingEdgeToEdge(this, v)
         } else {
             super.setEdge(v)
         }

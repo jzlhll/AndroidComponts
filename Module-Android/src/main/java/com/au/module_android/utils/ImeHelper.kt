@@ -1,5 +1,4 @@
 package com.au.module_android.utils
-import android.os.Build
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -41,10 +40,12 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
      * 第四个参数：navigationBarHeight
      */
     private var imeChangeListener: ((Int, Int, Int, Int)->Unit)? = null
-    private var onImeMaxHeightListener: ((Int)->Unit)? = null
 
     /**
      * 设置监听
+     *
+     * 推荐布局位移代码：
+     * transY = min(0f, -imeOffset.toFloat() + navigationBarHeight)
      */
     fun setOnImeListener(
         listener: ((
@@ -55,10 +56,6 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
         ) -> Unit)?
     ) {
         this.imeChangeListener = listener
-    }
-
-    fun setOnImeMaxHeightListener(listener: ((Int)->Unit)?) {
-        this.onImeMaxHeightListener = listener
     }
 
     fun calculate(rootHeight:Int,
@@ -105,20 +102,37 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
             animation: WindowInsetsAnimationCompat,
             bounds: WindowInsetsAnimationCompat.BoundsCompat
         ): WindowInsetsAnimationCompat.BoundsCompat {
+            if (!isApplyCallbackInit) {
+                isApplyCallbackInit = true
+                ViewCompat.setOnApplyWindowInsetsListener(decorView, getApplyCallback())
+            }
             _imeMaxHeight = bounds.upperBound.bottom //动画结束后键盘有多高
             return super.onStart(animation, bounds)
         }
     }
 
-    private val mApplyCallback = OnApplyWindowInsetsListener { v, insets ->
-        val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
-        val imeHeight = imeInsets.bottom
-        // 检测高度变化
-        if (imeHeight != _imeMaxHeight && imeHeight > 0) {
-            _imeMaxHeight = imeHeight
-            if(_currentOffsetY != 0) onImeMaxHeightListener?.invoke(_imeMaxHeight)
+    private var _applyCallback : OnApplyWindowInsetsListener? = null
+    private var isApplyCallbackInit = false
+    private fun getApplyCallback() : OnApplyWindowInsetsListener {
+        val c = _applyCallback
+        if (c != null) return c
+        val newC = OnApplyWindowInsetsListener { v, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val imeHeight = imeInsets.bottom
+            //状态栏高度
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            //导航栏高度
+            val navigationBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+
+            // 检测高度变化
+            if (imeHeight != _imeMaxHeight && imeHeight > 0) {
+                _imeMaxHeight = imeHeight
+                if(_currentOffsetY != 0) imeChangeListener?.invoke(imeHeight, imeHeight, statusBarHeight, navigationBarHeight)
+            }
+            ViewCompat.onApplyWindowInsets(v, insets)
         }
-        ViewCompat.onApplyWindowInsets(v, insets)
+        _applyCallback = newC
+        return newC
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -129,6 +143,5 @@ class ImeHelper private constructor(private val activity: ComponentActivity) : D
 
     init {
         ViewCompat.setWindowInsetsAnimationCallback(decorView, mAnimCallback)
-        ViewCompat.setOnApplyWindowInsetsListener(decorView, mApplyCallback)
     }
 }
