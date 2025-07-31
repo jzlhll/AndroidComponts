@@ -19,7 +19,7 @@ import androidx.lifecycle.LifecycleOwner
  */
 class ImeHelper private constructor(private val activity: ComponentActivity) : DefaultLifecycleObserver {
     companion object {
-        fun assist(activity: ComponentActivity) : ImeHelper? {
+        fun assist(activity: ComponentActivity) : ImeHelper {
             activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
             val instance = ImeHelper(activity)
             activity.lifecycle.addObserver(instance)

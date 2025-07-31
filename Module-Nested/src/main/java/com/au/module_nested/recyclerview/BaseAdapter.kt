@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import com.au.module_android.utils.unsafeLazy
+import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 
 /**
  * @author au
@@ -55,52 +55,44 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
     /**
      * 移除item
      */
-    fun removeItem(position: Int, notify: Boolean = true, shouldOnDatasChange:Boolean=true) {
+    fun removeItem(position: Int) {
         val oldDataSize = datas.size
         val newDataSize = if(oldDataSize > 0) oldDataSize - 1 else 0
         datas.removeAt(position)
-        if (notify) {
-            notifyItemRemoved(position)
-        }
-        if (shouldOnDatasChange) {
-            onDataChanged(DataChangeExtraInfo(oldDataSize, newDataSize))
-        }
-    }
-
-    /**
-     * 移除item
-     */
-    fun removeItem(data: DATA, notify: Boolean = true, shouldOnDatasChange:Boolean=true) {
-        val index = datas.indexOf(data)
-        if (index >= 0) {
-            removeItem(index, notify, shouldOnDatasChange)
-        }
-    }
-
-    /**
-     * 移除item
-     */
-    fun removeItems(startPosition: Int, count: Int, notify: Boolean = true) {
-        val oldDataSize = datas.size
-        val newDataSize = oldDataSize - count
-        repeat(count) {
-            datas.removeAt(startPosition + (count - it) - 1)
-        }
-        if (notify) {
-            notifyItemRangeRemoved(startPosition, count)
-        }
+        notifyItemRemoved(position)
         onDataChanged(DataChangeExtraInfo(oldDataSize, newDataSize))
     }
 
     /**
      * 移除item
      */
-    fun removeItems(data: List<DATA>?, notify: Boolean = true) {
+    fun removeItem(data: DATA) {
+        val index = datas.indexOf(data)
+        removeItem(index)
+    }
+
+    /**
+     * 移除item
+     */
+    fun removeItems(startPosition: Int, count: Int) {
+        val oldDataSize = datas.size
+        val newDataSize = oldDataSize - count
+        repeat(count) {
+            datas.removeAt(startPosition + (count - it) - 1)
+        }
+        notifyItemRangeRemoved(startPosition, count)
+        onDataChanged(DataChangeExtraInfo(oldDataSize, newDataSize))
+    }
+
+    /**
+     * 移除item
+     */
+    fun removeItems(data: List<DATA>?) {
         val oldDataSize = datas.size
         val newDataSize = oldDataSize - (data?.size ?: 0)
 
         data?.forEach {
-            removeItem(it, notify, false)
+            removeItem(it)
         }
 
         onDataChanged(DataChangeExtraInfo(oldDataSize, newDataSize))
@@ -109,36 +101,28 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
     /**
      * 更新item
      */
-    fun updateItem(index: Int, data: DATA, payload: Any? = null, notify: Boolean = true) {
+    fun updateItem(index: Int, data: DATA, payload: Any? = null) {
         datas[index] = data
-        if (notify) {
-            notifyItemChanged(index, payload)
-        }
-
+        notifyItemChanged(index, payload)
         onDataChanged(DataUpdateExtraInfo(index))
     }
 
     /**
      * 添加item
      */
-    fun addItem(data: DATA, index: Int? = null, notify: Boolean = true, shouldOnDatasChange: Boolean=true) {
+    fun addItem(data: DATA, index: Int? = null) {
         val insertIndex = index ?: datas.count()
         val oldDataSize = datas.size
         val newDataSize = oldDataSize + 1
         datas.add(insertIndex, data)
-        if (notify) {
-            notifyItemInserted(insertIndex)
-        }
-
-        if (shouldOnDatasChange) {
-            onDataChanged(DataChangeExtraInfoAppend(oldDataSize, newDataSize))
-        }
+        notifyItemInserted(insertIndex)
+        onDataChanged(DataChangeExtraInfoAppend(oldDataSize, newDataSize))
     }
 
     /**
      * 添加item
      */
-    fun addItems(data: List<DATA>?, index: Int? = null, notify: Boolean = true) {
+    fun addItems(data: List<DATA>?, index: Int? = null) {
         if (data.isNullOrEmpty()) {
             return
         }
@@ -148,10 +132,7 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
 
         val insertIndex = index ?: datas.count()
         datas.addAll(insertIndex, data)
-        if (notify) {
-            notifyItemRangeInserted(insertIndex, data.count())
-        }
-
+        notifyItemRangeInserted(insertIndex, data.count())
         onDataChanged(DataChangeExtraInfoAppend(oldDataSize, newDataSize))
     }
 
@@ -170,7 +151,7 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         holder.bindData(datas[position])
     }
 
-    internal fun submitTraditional(newList: List<DATA>?, shouldOnDatasChange: Boolean = true) {
+    internal fun submitTraditional(newList: List<DATA>?) {
         val oldDataSize = datas.size
         val newDataSize = newList?.size ?: 0
         if (newList.isNullOrEmpty()) {
@@ -180,10 +161,7 @@ abstract class BaseAdapter<DATA:Any, VH: BindViewHolder<DATA, *>> : RecyclerView
         }
 
         notifyDataSetChanged()
-
-        if (shouldOnDatasChange) {
-            onDataChanged(DataChangeExtraInfoInit(oldDataSize, newDataSize))
-        }
+        onDataChanged(DataChangeExtraInfoInit(oldDataSize, newDataSize))
     }
 
     /**

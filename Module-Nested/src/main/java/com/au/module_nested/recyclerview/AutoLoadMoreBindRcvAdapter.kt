@@ -8,7 +8,6 @@ import com.au.module_android.utils.launchOnThread
 import com.au.module_nested.recyclerview.page.PullRefreshStatus
 import com.au.module_nested.recyclerview.viewholder.BindViewHolder
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 /**
@@ -67,15 +66,8 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
             throw java.lang.IllegalStateException("You do not supportLoadMore!")
         }
         this.hasMore = hasMore
-
-        if (false) {
-            appendDatasOnly(appendList)
-            status = PullRefreshStatus.Normal
-        } else {
-            appendDatasOnlyV2(appendList) {
-                status = PullRefreshStatus.Normal
-            }
-        }
+        appendDatasOnly(appendList)
+        status = PullRefreshStatus.Normal
     }
 
     protected open fun appendDatasOnly(appendList: List<DATA>?) {
@@ -83,15 +75,6 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
             val realDatas = mutableListOf<DATA>()
             realDatas.addAll(appendList)
             addItems(realDatas)
-        }
-    }
-
-    protected open fun appendDatasOnlyV2(appendList: List<DATA>?, endCallback: () -> Unit) {
-        if (!appendList.isNullOrEmpty()) {
-            val realDatas = mutableListOf<DATA>()
-            realDatas.addAll(datas)
-            realDatas.addAll(appendList)
-            updateDataList(realDatas, isReplaceData = false, isTraditionalForce = false, endCallback)
         }
     }
 
@@ -112,38 +95,26 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
     }
 
     internal open fun initDatasOnly(datas: List<DATA>?, isTraditionalUpdate: Boolean, endCallback:()->Unit) {
-        if (datas.isNullOrEmpty()) {
-            updateDataList(null, false, isTraditionalUpdate, endCallback)
+        val newList = if (datas.isNullOrEmpty()) {
+            null
+        } else if (datas == this.datas) {
+            mutableListOf<DATA>().also { it.addAll(datas) }
         } else {
-            val fixDatas = if (datas == this.datas) { //防止跟本地list相同
-                mutableListOf<DATA>().also { it.addAll(datas) }
-            } else {
-                datas
-            }
-            updateDataList(fixDatas, false, isTraditionalUpdate, endCallback)
+            datas
         }
-    }
 
-    /**
-     * 主线程刷新 如果是占位图显示；则需要调用initWithPlacesHolder。替换的时候，不能做差异化更新。
-     */
-    internal fun updateDataList(
-        newList: List<DATA>?,
-        isReplaceData: Boolean,
-        isTraditionalForce:Boolean,
-        endCallback:()->Unit
-    ) {
-        if (!isSupportDiffer() || isPlacesHolder || isTraditionalForce) {
+        //如果是占位图显示；则需要调用initWithPlacesHolder。
+        if (newList == null || !isSupportDiffer() || isPlacesHolder || isTraditionalUpdate) {
             isPlacesHolder = false
-            submitTraditional(newList, false)
+            submitTraditional(newList)
             endCallback()
         } else {
-            Globals.mainScope.launchOnThread {
-                getDiffResult(newList, isReplaceData).let { result ->
-                    withContext(Dispatchers.Main) {
-                        result?.dispatchUpdatesTo(this@AutoLoadMoreBindRcvAdapter)
-                        endCallback()
-                    }
+            val isMain = diffCalculateInMainThread
+            if (isMain) {
+                getDiffResultMain(newList, false, endCallback)
+            } else {
+                Globals.mainScope.launchOnThread {
+                    getDiffResultAsync(newList, false, endCallback)
                 }
             }
         }
@@ -169,18 +140,47 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
      */
     protected abstract fun isSupportDiffer():Boolean
 
-    private suspend fun getDiffResult(
-        newList: List<DATA>?,
-        isReplaceDatas: Boolean,
-    ): DiffUtil.DiffResult? {
-        delay(0)
-        if (newList == null) {
-            val count = itemCount
-            datas.clear()
-            notifyItemRangeRemoved(0, count)
-            return null
-        }
+    // 1. 定义策略接口
+    private interface DiffUpdateStrategy<DATA:Any> {
+        fun updateList(
+            newList: List<DATA>,
+            isReplaceDatas: Boolean,
+            completion: () -> Unit
+        )
+    }
 
+    var diffCalculateInMainThread = false
+
+    private fun getDiffResultAsync(
+        newList: List<DATA>,
+        isReplaceDatas: Boolean,
+        endCallback:()->Unit
+    ) {
+        Globals.mainScope.launchOnThread {
+            val differ = createDiffer(datas, newList)
+                ?: throw RuntimeException("BindRcvAdapter: cannot call summitList without implement createDiffer()")
+
+            val result = DiffUtil.calculateDiff(differ, true)
+
+            withContext(Dispatchers.Main) {
+                //完事后，再更改本地list
+                if (isReplaceDatas && newList is MutableList<DATA>) {
+                    datas = newList
+                } else {
+                    datas.clear()
+                    datas.addAll(newList)
+                }
+                result.dispatchUpdatesTo(this@AutoLoadMoreBindRcvAdapter)
+                endCallback()
+            }
+        }
+    }
+
+    private fun getDiffResultMain(
+        newList: List<DATA>,
+        isReplaceDatas: Boolean,
+        endCallback:()->Unit
+    ) {
         val differ = createDiffer(datas, newList)
             ?: throw RuntimeException("BindRcvAdapter: cannot call summitList without implement createDiffer()")
 
@@ -192,7 +192,8 @@ abstract class AutoLoadMoreBindRcvAdapter<DATA:Any, VH: BindViewHolder<DATA, *>>
             datas.clear()
             datas.addAll(newList)
         }
-        return result
+        result.dispatchUpdatesTo(this@AutoLoadMoreBindRcvAdapter)
+        endCallback()
     }
 
 }
