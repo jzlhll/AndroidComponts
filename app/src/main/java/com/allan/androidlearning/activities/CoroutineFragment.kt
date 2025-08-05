@@ -10,13 +10,20 @@ import com.au.module_android.selectlist.SelectListFragment
 import com.au.module_android.selectlist.SelectListItem
 import com.au.module_android.utils.ALogJ
 import com.au.module_android.utils.dp
+import com.au.module_android.utils.logd
+import com.au.module_android.utils.logdNoFile
+import com.au.module_android.utils.logt
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 
 /**
@@ -31,8 +38,6 @@ class CoroutineFragment(override val title: String = "Coroutine")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
-    private val subScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     override fun itemHeight(): Int {
         return 48.dp
@@ -54,15 +59,33 @@ class CoroutineFragment(override val title: String = "Coroutine")
 
     }
 
-
-    private val testScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
     val testItem = KotlinCoroutineSelectListItem("测试") {
+
         lifecycleScope.launch {
+            ALogJ.t("start...")
+            val deferred1 = async {
+                delay(1000)
+                "1111"
+            }
+            val deferred2 = async {
+                delay(800)
+                "2222"
+            }
+            val data1 = deferred1.await()
+            val data2 = deferred2.await()
+            //等待他们完成
+            ALogJ.t("data1 $data1, data2 $data2")
+        }
+    }
+
+    val testItem2 = KotlinCoroutineSelectListItem("测试2") {
+        lifecycleScope.launch(CoroutineExceptionHandler {
+            e, t->
+            t.printStackTrace()
+        }) {
             val deferred = async(Dispatchers.IO) {
                 //指定运行到子线程
                 Thread.sleep(3000)
-                throw RuntimeException("error crash")
                 """ {"data":"request successfully."} """
             }
             ALogJ.t("运行在主线程")
@@ -83,6 +106,7 @@ class CoroutineFragment(override val title: String = "Coroutine")
 
         },
         testItem,
+        testItem2
     )
 
     override val initCur: KotlinCoroutineSelectListItem
