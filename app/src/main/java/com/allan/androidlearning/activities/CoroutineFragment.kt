@@ -15,7 +15,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * @author allan
@@ -56,8 +58,16 @@ class CoroutineFragment(override val title: String = "Coroutine")
     private val testScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     val testItem = KotlinCoroutineSelectListItem("测试") {
-        lifecycleScope.launch(Dispatchers.IO) {
-            ALogJ.t("test run1")
+        lifecycleScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                //指定运行到子线程
+                Thread.sleep(3000)
+                throw RuntimeException("error crash")
+                """ {"data":"request successfully."} """
+            }
+            ALogJ.t("运行在主线程")
+            val data = deferred.await()
+            ALogJ.t("运行在主线程得到结果 $data")
         }
     }
 
