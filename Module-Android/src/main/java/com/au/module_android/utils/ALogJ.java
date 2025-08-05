@@ -38,6 +38,19 @@ public final class ALogJ {
         }
     }
 
+    public static void t(String s) {
+        t(TAG, s);
+    }
+
+    public static void t(String tag, String s) {
+        var id = Thread.currentThread().getId();
+        if (id == Looper.getMainLooper().getThread().getId()) {
+            Log.d(tag," MainThread: " + s);
+        } else {
+            Log.d(tag," SubThread" + id + ": " + s);
+        }
+    }
+
     public static String log(String lvl, String s, String tag, Class<?> javaClass) {
         var log = javaClass.toString();
         return lvl + " " + log.substring(log.lastIndexOf('.') + 1) + ": " + tag + ": " + s;

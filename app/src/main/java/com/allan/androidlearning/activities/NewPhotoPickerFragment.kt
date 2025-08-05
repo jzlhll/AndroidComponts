@@ -3,7 +3,6 @@ package com.allan.androidlearning.activities
 import android.net.Uri
 import android.os.Bundle
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.allan.androidlearning.BuildConfig
 import com.allan.androidlearning.databinding.FragmentPhotoPickerBinding
 import com.allan.classnameanno.EntryFrgName
@@ -11,17 +10,13 @@ import com.au.module_android.Globals
 import com.au.module_android.click.onClick
 import com.au.module_android.glide.glideSetAny
 import com.au.module_android.ui.bindings.BindingFragment
-import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logd
-import com.au.module_android.utilsmedia.UriHelper
 import com.au.module_imagecompressed.CameraAndSelectPhotosPermissionHelper
 import com.au.module_imagecompressed.CameraPermissionHelp
-import com.au.module_imagecompressed.LubanCompress
 import com.au.module_imagecompressed.MultiPhotoPickerContractResult
 import com.au.module_imagecompressed.TakePhotoActionDialog
 import com.au.module_imagecompressed.UriWrap
 import com.au.module_imagecompressed.compatMultiPhotoPickerForResult
-import com.au.module_imagecompressed.imageFileConvertToUriWrap
 import com.au.module_imagecompressed.photoPickerForResult
 import java.io.File
 
@@ -37,7 +32,7 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), Ta
         }
     })
 
-    val cameraAndSelectHelper = CameraAndSelectPhotosPermissionHelper(this, object : CameraPermissionHelp.Supplier {
+    val cameraAndSelectHelper = CameraAndSelectPhotosPermissionHelper(this, supplier = object : CameraPermissionHelp.Supplier {
         override fun createFileProvider(): Pair<File, Uri> {
             return createFileProviderMine()
         }
@@ -52,28 +47,22 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), Ta
     }
 
     override fun onBindingCreated(savedInstanceState: Bundle?) {
-        binding.takeDialog3.onClick {
-            cameraAndSelectHelper.showPhotoAndCameraDialog(3)
+        binding.takeActionDialog1Btn.onClick {
+            cameraAndSelectHelper.showTakeActionDialog(1, MultiPhotoPickerContractResult.PickerType.IMAGE)
         }
-        binding.takeDialog1.onClick {
-            cameraAndSelectHelper.showPhotoAndCameraDialog(1)
+        binding.takeActionDialog3Btn.onClick {
+            cameraAndSelectHelper.showTakeActionDialog(3, MultiPhotoPickerContractResult.PickerType.VIDEO)
+        }
+        binding.takeActionDialog5Btn.onClick {
+            cameraAndSelectHelper.showTakeActionDialog(5, MultiPhotoPickerContractResult.PickerType.IMAGE_AND_VIDEO)
         }
 
-        binding.takePic.onClick {
-            cameraHelper.safeRunTakePic({result, createdTmpFile->
-                if (result) {
-                    LubanCompress().setResultCallback { srcPath, resultPath, isSuc ->
-                        val r = if(isSuc) resultPath else srcPath
-                        ignoreError {
-                            val resultFile = File(r)
-                            val resultUri = resultFile.toUri()
-                            val cvtUri = UriHelper(resultUri, Globals.app.contentResolver).imageFileConvertToUriWrap()
-                            logd { "cvtUri $cvtUri" }
-                            showPic(cvtUri)
-                        }
-                    }.compress(requireContext(), createdTmpFile.toUri()) //必须是file的scheme。那个FileProvider提供的则不行。
-                }
-            })
+        binding.directTakePicBtn.onClick {
+            cameraHelper.safeRunTakePicMust(requireContext())
+                {mode, uriWrap->
+                logd { "take pic mode $mode" }
+                showPic(uriWrap)
+            }
         }
 
         binding.singlePic.onClick {
@@ -147,7 +136,8 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), Ta
 
     var currentIndex = 1
     @Synchronized
-    private fun showPic(uriWrap: UriWrap) {
+    private fun showPic(uriWrap: UriWrap?) {
+        uriWrap ?: return
         val pic = when(currentIndex) {
             1 -> binding.pic1
             2 -> binding.pic2
@@ -163,25 +153,14 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), Ta
         pic?.glideSetAny(uriWrap.uri)
     }
 
-    override fun onClickTakePic() {
-        cameraAndSelectHelper.cameraHelper.safeRunTakePic( {result, createdTmpFile->
-            if (result) {
-                LubanCompress().setResultCallback { srcPath, resultPath, isSuc ->
-                    val r = if(isSuc) resultPath else srcPath
-                    ignoreError {
-                        val resultFile = File(r)
-                        val resultUri = resultFile.toUri()
-                        val cvtUri = UriHelper(resultUri, Globals.app.contentResolver).imageFileConvertToUriWrap()
-                        logd { "cvtUri $cvtUri" }
-                        showPic(cvtUri)
-                    }
-                }.compress(requireContext(), createdTmpFile.toUri()) //必须是file的scheme。那个FileProvider提供的则不行。
-            }
-        })
+    override fun onClickTakePic() : Boolean{
+        return cameraAndSelectHelper.cameraHelper.safeRunTakePicMust(requireContext()) { mode, uriWrap ->
+            showPic(uriWrap)
+        }
     }
 
     override fun onClickSelectPhoto() {
-        cameraAndSelectHelper.multiResult.launchByAll(MultiPhotoPickerContractResult.PickerType.IMAGE, null) {uris->
+        cameraAndSelectHelper.launchSelectPhotos {uris->
             for (uri in uris) {
                 logd { "uri: $uri" }
                 showPic(uri)
@@ -189,6 +168,6 @@ class NewPhotoPickerFragment : BindingFragment<FragmentPhotoPickerBinding>(), Ta
         }
     }
 
-    override fun onNothingClosed() {
+    override fun onTakeDialogClosed() {
     }
 }

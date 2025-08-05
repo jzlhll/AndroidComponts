@@ -27,13 +27,9 @@ import com.au.module_androidui.dialogs.FragmentBottomSheetDialog
  */
 class TakePhotoActionDialog : ViewFragment() {
     interface ITakePhotoActionDialogCallback {
-        fun onClickTakePic()
+        fun onClickTakePic() : Boolean
         fun onClickSelectPhoto()
-
-        /**
-         * 什么也没有点击，关闭了。
-         */
-        fun onNothingClosed()
+        fun onTakeDialogClosed()
     }
 
     companion object {
@@ -81,7 +77,6 @@ class TakePhotoActionDialog : ViewFragment() {
         parentFragment.asOrNull<DialogFragment>()?.dismissAllowingStateLoss()
     }
 
-    private var mIsClicked = false
     private val cameraText by lazy {
         arguments?.getString("cameraText") ?: "Camera"
     }
@@ -93,7 +88,6 @@ class TakePhotoActionDialog : ViewFragment() {
         return SimpleTextBinding.inflate(requireActivity().layoutInflater, null, false).also {
             it.root.text = cameraText
             it.root.onClick {
-                mIsClicked = true
                 clickCallback?.onClickTakePic()
             }
         }.root
@@ -103,7 +97,6 @@ class TakePhotoActionDialog : ViewFragment() {
         return SimpleTextBinding.inflate(requireActivity().layoutInflater, null, false).also {
             it.root.text = photosText
             it.root.onClick {
-                mIsClicked = true
                 clickCallback?.onClickSelectPhoto()
             }
         }.root
@@ -111,7 +104,7 @@ class TakePhotoActionDialog : ViewFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(!mIsClicked) clickCallback?.onNothingClosed()
+        clickCallback?.onTakeDialogClosed()
     }
 
     override fun onUiCreateView(

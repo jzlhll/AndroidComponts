@@ -5,31 +5,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
     android:layout_height="match_parent">
+    <Button
+        android:id="@+id/directTakePicBtn"
+        android:text="直接拍照"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <com.au.module_android.widget.FlowLayout
+        app:flChildSpacing="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/takePic"
-            android:text="takePicture"
-            android:layout_width="match_parent"
+            android:id="@+id/takeActionDialog5Btn"
+            android:text="actionDialog 5个图和视频"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/takeDialog1"
-            android:layout_marginStart="4dp"
-            android:text="Dialog1"
-            android:layout_width="match_parent"
+            android:id="@+id/takeActionDialog1Btn"
+            android:text="actionDialog 1个图"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
         <Button
-            android:id="@+id/takeDialog3"
+            android:id="@+id/takeActionDialog3Btn"
             android:layout_marginStart="4dp"
-            android:text="Dialog3"
-            android:layout_width="match_parent"
+            android:text="actionDialog 3个视频"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </com.au.module_android.widget.FlowLayout>
 
     <LinearLayout
         android:layout_marginTop="12dp"
