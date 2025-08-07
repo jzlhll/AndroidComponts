@@ -23,7 +23,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/audioPlayer"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -32,13 +32,65 @@
     <com.au.module_android.widget.CustomButton
         android:id="@+id/audioPlayer"
         style="@style/StyleButtonPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/audioRecorder"
+        app:layout_constraintBottom_toTopOf="@id/camera1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="12dp"
         android:text="Audio Player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/camera1"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@id/audioPlayer"
+        app:layout_constraintBottom_toTopOf="@id/camera2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="12dp"
+        android:text="Camera1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/camera2"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@id/camera1"
+        app:layout_constraintBottom_toTopOf="@id/camerax"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="12dp"
+        android:text="Camera2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/camerax"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@id/camera2"
+        app:layout_constraintBottom_toTopOf="@id/uvcCamera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="12dp"
+        android:text="CameraX"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.au.module_android.widget.CustomButton
+        android:id="@+id/uvcCamera"
+        style="@style/StyleButtonPrimary"
+        app:layout_constraintTop_toBottomOf="@id/camerax"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="12dp"
+        android:text="UVC Camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
