@@ -249,69 +249,81 @@ https://developer.android.google.cn/topic/libraries/architecture/paging/v3-overv
 
 
 
-### AppAudioRecordPlayer
+### AppMultiMedia
 
-* Recorder
+#### Audio Recorders 4种
 
-  * MediaRecorder 录制
+* MediaRecorder 录制
 
-    android api24支持pause/resume。推荐使用。已经编码，可直接播放。格式多种多样。
+  android api24支持pause/resume。推荐使用。已经编码，可直接播放。格式多种多样。
 
-    可以设置输出格式，编码格式，采样率等等。
+  可以设置输出格式，编码格式，采样率等等。
 
-    > 适用于简单录制，直接保存播放。
+  > 适用于简单录制，直接保存播放。
 
-  * AudioRecorder录制
+* AudioRecorder录制
 
-    录制纯PCM数据，适用于得到以后，进行加工，边录边播等场景。
+  录制纯PCM数据，适用于得到以后，进行加工，边录边播等场景。
 
-    > PCM是什么：
-    >
-    > 经过如下三步得到未经压缩的原始音频数据，音质最佳但体积较大：
-    >
-    > 采样：以固定时间间隔（如44.1kHz）采样率和声道数（单/双声道），捕获模拟信号的瞬时值，将其离散化。
-    >
-    > 量化：将采样值映射到最接近的数字层级（如16bit量化），引入量化噪声但保留信号特征。
-    >
-    > 编码：将量化后的数值转换为二进制码流，形成最终的数字音频数据。
+  > PCM是什么：
+  >
+  > 经过如下三步得到未经压缩的原始音频数据，音质最佳但体积较大：
+  >
+  > 采样：以固定时间间隔（如44.1kHz）采样率和声道数（单/双声道），捕获模拟信号的瞬时值，将其离散化。
+  >
+  > 量化：将采样值映射到最接近的数字层级（如16bit量化），引入量化噪声但保留信号特征。
+  >
+  > 编码：将量化后的数值转换为二进制码流，形成最终的数字音频数据。
 
-  ​	参数可以设置编码的ENCODING_PCM_16BIT, 8BIT等；单声道还是立体声；采样率。
+​	参数可以设置编码的ENCODING_PCM_16BIT, 8BIT等；单声道还是立体声；采样率。
 
-  ​	通过简单的PCMToWavUtil实现封装成可播放的wav文件。
+​	通过简单的PCMToWavUtil实现封装成可播放的wav文件。
 
-  * openSL ES
+* openSL ES
 
-    主要是JNI层，通过OpenSLES，slCreateEngine，开始录制。
+  主要是JNI层，通过OpenSLES，slCreateEngine，开始录制。
 
-    与java层AudioRecoder类似，最终都是产出PCM数据，都是调用android的AudioFlinger服务。
+  与java层AudioRecoder类似，最终都是产出PCM数据，都是调用android的AudioFlinger服务。
 
-    适用于一些低延迟，实时要求更高，对接音频处理c/c++库更方便。
+  适用于一些低延迟，实时要求更高，对接音频处理c/c++库更方便。
 
-  * tinyalsa
+* tinyalsa
 
-    有些厂商有特定的4mic，6mic音频输入。通过集成tinyalsa的JNI代码，实现采样PCM数据。
+  有些厂商有特定的4mic，6mic音频输入。通过集成tinyalsa的JNI代码，实现采样PCM数据。
 
-* Player
+#### Audio Player 3种
 
-  1. `SoundPool` 适用于简短的音效播放, 比如游戏声音、按键声、铃声片段等等；
+1. `SoundPool` 适用于简短的音效播放, 比如游戏声音、按键声、铃声片段等等；
 
-  2. `MediaPlayer` 实现了简单的监听完成，监听拖动，暂停，恢复等基本使用；
+2. `MediaPlayer` 实现了简单的监听完成，监听拖动，暂停，恢复等基本使用；
 
-     支持多种媒体类型；wav和各种压缩音频都能轻松播放；适合在后台长时间播放本地音乐文件或者在线的流式资源。（推荐）
+   支持多种媒体类型；wav和各种压缩音频都能轻松播放；适合在后台长时间播放本地音乐文件或者在线的流式资源。（推荐）
 
-     > MediaPlayer可以播放多种格式MP3，AAC，WAV，OGG，MIDI等。MediaPlayer会在framework层创建对应的音频解码器。MediaPlayer在framework层还是会创建AudioTrack，把解码后的PCM数流传递给AudioTrack，再传递给AudioFlinger进行混音，然后才传递给硬件播放，所以是MediaPlayer包含了AudioTrack。
+   > MediaPlayer可以播放多种格式MP3，AAC，WAV，OGG，MIDI等。MediaPlayer会在framework层创建对应的音频解码器。MediaPlayer在framework层还是会创建AudioTrack，把解码后的PCM数流传递给AudioTrack，再传递给AudioFlinger进行混音，然后才传递给硬件播放，所以是MediaPlayer包含了AudioTrack。
 
-  3. `AudioTrack` 
+3. `AudioTrack` 
 
-     AudioTrack不创建解码器，只能播放已解码的PCM流，wav文件一般就是PCM原始数据；支持低延迟播放，适合流媒体和VoIP语音电话等场景。
+   AudioTrack不创建解码器，只能播放已解码的PCM流，wav文件一般就是PCM原始数据；支持低延迟播放，适合流媒体和VoIP语音电话等场景。
 
-     MyAudioTracker.java的定义中有详细说明。
+   MyAudioTracker.java的定义中有详细说明。
 
-     static模式：先全部导入buffer，再播放;
+   static模式：先全部导入buffer，再播放;
 
-     stream模式：一边播放一边导入buffer。（可以玩一玩，目前可以做到暂停恢复。）
+   stream模式：一边播放一边导入buffer。（可以玩一玩，目前可以做到暂停恢复。）
 
-  
+#### Camera1
+
+
+
+#### Camera2
+
+
+
+#### CameraX
+
+
+
+
 
 ### Module-Native
 
