@@ -70,6 +70,6 @@ public class PcmInfo {
     @NonNull
     @Override
     public String toString() {
-        return mask + " :sampleRate=" + sampleRate + ",channelIn/out=" + inChannelConfig + "/" + outChannelConfig + ",fmt=" + encodingFmt;
+        return "mask:" + mask + " :sampleRate=" + sampleRate + ",channelIn/out=" + inChannelConfig + "/" + outChannelConfig + ",fmt=" + encodingFmt;
     }
 }

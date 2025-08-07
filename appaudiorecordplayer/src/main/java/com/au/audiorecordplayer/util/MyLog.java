@@ -51,7 +51,7 @@ public class MyLog {
         if(DEBUG_LEVEL_W) Log.w(TAG, log);
     }
     
-    public static void ex(Exception e) {
+    public static void ex(Throwable e) {
         e(ALogJ.ex(e));
     }
 }

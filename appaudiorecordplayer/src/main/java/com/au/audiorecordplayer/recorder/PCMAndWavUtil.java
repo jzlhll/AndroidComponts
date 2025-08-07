@@ -3,6 +3,8 @@ package com.au.audiorecordplayer.recorder;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 
+import androidx.annotation.NonNull;
+
 import com.au.audiorecordplayer.util.MyLog;
 
 import java.io.File;
@@ -10,9 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * 将pcm音频文件转换为wav音频文件
@@ -219,13 +218,11 @@ public class PCMAndWavUtil {
         }
     }
 
-    public static PcmInfo getInfo(@Nullable String filePath) {
-        assert filePath != null;
+    public static PcmInfo getInfo(@NonNull String filePath) {
         return getInfo(new File(filePath));
     }
 
-    public static PcmInfo getInfo(@Nullable File file) {
-        assert file != null;
+    public static PcmInfo getInfo(@NonNull File file) {
         try(FileInputStream fileInputStream = new FileInputStream(file)) {
             byte[] bytes = new byte[44];
             if (fileInputStream.read(bytes, 0, 44) == -1) {

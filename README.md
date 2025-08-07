@@ -299,27 +299,19 @@ https://developer.android.google.cn/topic/libraries/architecture/paging/v3-overv
 
      支持多种媒体类型；wav和各种压缩音频都能轻松播放；适合在后台长时间播放本地音乐文件或者在线的流式资源。（推荐）
 
+     > MediaPlayer可以播放多种格式MP3，AAC，WAV，OGG，MIDI等。MediaPlayer会在framework层创建对应的音频解码器。MediaPlayer在framework层还是会创建AudioTrack，把解码后的PCM数流传递给AudioTrack，再传递给AudioFlinger进行混音，然后才传递给硬件播放，所以是MediaPlayer包含了AudioTrack。
+
   3. `AudioTrack` 
 
-     只支持PCM的wav，支持低延迟播放，适合流媒体和VoIP语音电话等场景。
+     AudioTrack不创建解码器，只能播放已解码的PCM流，wav文件一般就是PCM原始数据；支持低延迟播放，适合流媒体和VoIP语音电话等场景。
 
-      MyAudioTracker.java的定义中有详细说明。
+     MyAudioTracker.java的定义中有详细说明。
 
-     static  模式：先全部导入buffer，再播放;
+     static模式：先全部导入buffer，再播放;
 
      stream模式：一边播放一边导入buffer。（可以玩一玩，目前可以做到暂停恢复。）
 
-     > > 区别
-     >
-     > MediaPlayer可以播放多种格式MP3，AAC，WAV，OGG，MIDI等。MediaPlayer会在framework层创建对应的音频解码器。而AudioTrack只能播放已解码的PCM流，只支持wav(大部分wav是PCM流)格式的音频文件。AudioTrack不创建解码器，只能播放不需要解码的wav文件。
-     >
-     > > 联系
-     >
-     > MediaPlayer在framework层还是会创建AudioTrack，把解码后的PCM数流传递给AudioTrack，再传递给AudioFlinger进行混音，然后才传递给硬件播放，所以是MediaPlayer包含了AudioTrack。
-
   
-
-
 
 ### Module-Native
 

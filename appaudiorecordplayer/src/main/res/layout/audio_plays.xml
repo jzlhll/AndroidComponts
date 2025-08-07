@@ -93,16 +93,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/audioTrackPlayStreamBtn"
+                    android:id="@+id/audioTrackPlayBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="play(stream)" />
+                    android:text="play(stream/static)" />
 
-                <Button
-                    android:id="@+id/audioTrackPlayStaticBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="play(static)" />
             </LinearLayout>
         </LinearLayout>
 
@@ -147,5 +142,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="play" />
+
+        <View
+            android:layout_marginTop="32dp"
+            android:layout_width="wrap_content"
+            android:background="@color/color_line"
+            android:layout_height="1dp"/>
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/fileListTextView"
+            style="@style/StyleFontSecondaryText"
+            android:layout_marginTop="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/selectedFileTextView"
+            style="@style/StyleFontText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            style="@style/StyleButtonSecondary"
+            android:id="@+id/roundOneAudioFileBtn"
+            android:layout_marginTop="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="random select audio file" />
     </LinearLayout>
 </ScrollView>
