@@ -19,7 +19,7 @@ suspend fun <T> SharedFlow<StatusState<T>>.collectStatusState(loading: ()->Unit 
     }
 }
 
-suspend fun <T> stateRequest(requestBlock: suspend () -> T) : StatusState<T>{
+suspend fun <T> stateRunCatching(requestBlock: suspend () -> T) : StatusState<T>{
     try {
         val data = requestBlock()
         return StatusState.Success(data)

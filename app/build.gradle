@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
-    id 'dagger.hilt.android.plugin'
+//    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -62,8 +62,8 @@ dependencies {
     implementation libs.gson
 
     //hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+//    implementation(libs.hilt.android)
+//    ksp(libs.hilt.android.compiler)
 
 //    implementation project(":jsbridge")
     implementation libs.jsbridgev2

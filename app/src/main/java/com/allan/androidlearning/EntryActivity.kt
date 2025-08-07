@@ -19,12 +19,10 @@ import com.au.module_android.utils.getScreenFullSize
 import com.au.module_android.utils.logd
 import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import com.google.android.material.button.MaterialButton
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
     @Inject

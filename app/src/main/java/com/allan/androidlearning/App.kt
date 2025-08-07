@@ -5,7 +5,6 @@ import com.allan.androidlearning.crashtest.debugApplicationPostMainThreadCrash
 import com.allan.androidlearning.crashtest.debugSubThreadCrash
 import com.au.module_android.DarkModeAndLocalesConst
 import com.au.module_android.InitApplication
-import dagger.hilt.android.HiltAndroidApp
 import java.util.Locale
 
 /**
@@ -13,7 +12,6 @@ import java.util.Locale
  * @date :2024/9/29 16:42
  * @description:
  */
-@HiltAndroidApp
 class App : InitApplication() {
     override fun initBeforeAttachBaseContext() {
         DarkModeAndLocalesConst.supportLocales = mapOf(
