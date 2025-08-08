@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.bluetooth).onClick {
             FragmentShellActivity.start(this@MainActivity, BleTestFragment::class.java)
+        findViewById<View>(R.id.camera2).onClick {
+            FragmentShellActivity.start(this@MainActivity, AudioPlayerTestFragment2::class.java)
         }
     }
 }
