@@ -6,6 +6,8 @@ import com.au.module_okhttp.OkhttpGlobal.okHttpClient
 import com.au.module_okhttp.beans.ParamsStrRequestBody
 import com.au.module_okhttp.exceptions.AuNoNetworkException
 import com.au.module_okhttp.exceptions.AuResponseErrorException
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -64,6 +66,20 @@ suspend fun Request.awaitHttpResultStr(
     callBlock: ((Call) -> Unit) = { },
 ): String? {
     return awaitHttpResponse(client, callBlock).bodyString()
+}
+
+fun httpResponseCallbackFlow(request:Request, client: OkHttpClient = okHttpClient()) = callbackFlow {
+    val call = client.newCall(request)
+    try {
+        val response = call.execute()
+        send(response.body?.string())
+    } catch (e: Throwable) {
+        val ne = if (e is UnknownHostException) {
+            AuNoNetworkException()
+        } else e
+        close(ne)
+    }
+    awaitClose { call.cancel() }
 }
 
 /**

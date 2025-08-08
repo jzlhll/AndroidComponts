@@ -26,9 +26,9 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
             activityList[index] = activityList[size - 1]
             activityList[size - 1] = activity
         }
-        logdNoFile {
-            val n = activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName ?: ""
-            "onActivityStarted $activity $n" }
+//        logdNoFile {
+//            val n = activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName ?: ""
+//            "onActivityStarted $activity $n" }
     }
 
     override fun onActivityResumed(activity: Activity) {

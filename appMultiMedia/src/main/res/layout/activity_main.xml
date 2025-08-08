@@ -1,96 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_marginHorizontal="@dimen/ui_padding_edge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.au.module_android.widget.CustomFontText
-        style="@style/StyleFontMText"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="24dp"
-        android:text="Audio Recorder and Player Demos"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <com.au.module_android.widget.CustomFontText
+            style="@style/StyleFontMText"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp"
+            android:text="Audio Recorder and Player Demos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/audioRecorder"
-        style="@style/StyleButtonPrimary"
-        android:text="Audio Recorder"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/audioPlayer"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/audioRecorder"
+            style="@style/StyleButtonPrimary"
+            android:text="Audio Recorder"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/audioPlayer"
-        style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@id/audioRecorder"
-        app:layout_constraintBottom_toTopOf="@id/camera1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="12dp"
-        android:text="Audio Player"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/audioPlayer"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="Audio Player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/camera1"
-        style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@id/audioPlayer"
-        app:layout_constraintBottom_toTopOf="@id/camera2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="12dp"
-        android:text="Camera1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/bluetooth"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="BLE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/camera2"
-        style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@id/camera1"
-        app:layout_constraintBottom_toTopOf="@id/camerax"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="12dp"
-        android:text="Camera2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/camera1"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="Camera1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/camerax"
-        style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@id/camera2"
-        app:layout_constraintBottom_toTopOf="@id/uvcCamera"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="12dp"
-        android:text="CameraX"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/camera2"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="Camera2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <com.au.module_android.widget.CustomButton
-        android:id="@+id/uvcCamera"
-        style="@style/StyleButtonPrimary"
-        app:layout_constraintTop_toBottomOf="@id/camerax"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="12dp"
-        android:text="UVC Camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/camerax"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="CameraX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/uvcCamera"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="UVC Camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

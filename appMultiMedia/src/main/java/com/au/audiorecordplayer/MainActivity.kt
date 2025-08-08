@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.au.audiorecordplayer.ble.BleTestFragment
 import com.au.audiorecordplayer.databinding.AudioRecordsBinding
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.audioPlayer).onClick {
             FragmentShellActivity.start(this@MainActivity, AudioPlayerTestFragment::class.java)
+        }
+        findViewById<View>(R.id.bluetooth).onClick {
+            FragmentShellActivity.start(this@MainActivity, BleTestFragment::class.java)
         }
     }
 }
