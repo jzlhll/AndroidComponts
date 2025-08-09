@@ -3,6 +3,7 @@ package com.au.module_android.permissions.permission
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityOptionsCompat
 import com.au.module_android.permissions.hasPermission
+import com.au.module_android.utils.logd
 
 internal class PermissionsForResult(cxt:Any,
                                     permissions: Array<String>)
@@ -15,6 +16,7 @@ internal class PermissionsForResult(cxt:Any,
             setResultCallback {
                 var hasPermission = false
                 for (entry in it) {
+                    logd { "safe run entry $entry" }
                     if (!entry.value) {
                         hasPermission = false
                         break

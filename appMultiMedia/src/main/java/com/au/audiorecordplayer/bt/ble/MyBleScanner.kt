@@ -1,4 +1,4 @@
-package com.au.audiorecordplayer.ble
+package com.au.audiorecordplayer.bt.ble
 
 import android.annotation.SuppressLint
 import android.bluetooth.le.BluetoothLeScanner
@@ -6,12 +6,12 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import android.os.ParcelUuid
+import com.au.audiorecordplayer.bt.BtUtil
+import com.au.audiorecordplayer.bt.bean.ScannedInfo
 import com.au.audiorecordplayer.util.MyLog
 import com.au.module_android.simpleflow.StatusState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.UUID
 
 class MyBleScanner {
     private val _uiState : MutableStateFlow<StatusState<ScannedInfo>> = MutableStateFlow(StatusState.Loading)
@@ -25,7 +25,7 @@ class MyBleScanner {
 
     init {
         //添加扫描过滤广播
-        setCustomFilter(createFilter(UUID_SERVICE.toString()))
+        setCustomFilter(BtUtil.Companion.createFilter(BtUtil.Companion.UUID_SERVICE.toString()))
     }
 
     fun getScanSettings() : ScanSettings {
@@ -43,6 +43,7 @@ class MyBleScanner {
     @SuppressLint("MissingPermission")
     fun startLeScan(leScanner: BluetoothLeScanner?) {
         leScanner?:return
+        MyLog.d("start le scan $scanFilterList")
         if (scanFilterList.isEmpty()) {
             leScanner.startScan(scanCallback)
         } else {
@@ -53,6 +54,7 @@ class MyBleScanner {
     @SuppressLint("MissingPermission")
     fun stopLeScan(leScanner: BluetoothLeScanner?) {
         leScanner?:return
+        MyLog.d("stop le scan")
         leScanner.stopScan(scanCallback)
     }
 
@@ -88,23 +90,6 @@ class MyBleScanner {
         scanFilterList.clear()
         filter.forEach {
             scanFilterList.add(it)
-        }
-    }
-
-    companion object {
-        /**
-         * 服务发现的UUID
-         */
-        val UUID_SERVICE: UUID = UUID.fromString("0000ffff-0000-1000-8000-00805f9b34fb")
-        val UUID_WRITE_CHARACTERISTIC: UUID = UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb")
-        val UUID_NOTIFICATION_CHARACTERISTIC: UUID = UUID.fromString("0000ff02-0000-1000-8000-00805f9b34fb")
-        val UUID_NOTIFICATION_DESCRIPTOR: UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
-
-        fun createFilter(uuid: String): ScanFilter {
-            val builder = ScanFilter.Builder().also {
-                it.setServiceUuid(ParcelUuid.fromString(uuid))
-            }
-            return builder.build()
         }
     }
 }

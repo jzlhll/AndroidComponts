@@ -21,22 +21,48 @@
             android:layout_height="wrap_content"/>
 
         <com.au.module_android.widget.CustomButton
-            android:id="@+id/scanDevices"
+            android:id="@+id/startScan"
             style="@style/StyleButtonPrimary"
-            android:text="BluetoothAdapter Scan Devices"
+            android:text="Start Scan"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <com.au.module_android.widget.CustomButton
-            android:id="@+id/bleScanDevices"
+            android:id="@+id/stopScan"
             style="@style/StyleButtonPrimary"
-            android:text="BLE Scan Devices"
+            android:text="Stop Scan"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/classicStartTransferBtn"
+            style="@style/StyleButtonPrimary"
+            android:text="client开始通信"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/classicStartServerBtn"
+            style="@style/StyleButtonPrimary"
+            android:text="server准备通信"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/classicCloseTransferBtn"
+            style="@style/StyleButtonPrimary"
+            android:text="关闭通信"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </ScrollView>

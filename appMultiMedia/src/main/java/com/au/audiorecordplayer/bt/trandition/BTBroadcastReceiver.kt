@@ -1,4 +1,4 @@
-package com.au.audiorecordplayer.ble
+package com.au.audiorecordplayer.bt.trandition
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.au.audiorecordplayer.bt.bean.ScannedInfo
 import com.au.audiorecordplayer.util.MyLog
 import com.au.module_android.simpleflow.StatusState
 import com.au.module_android.utils.parcelableExtraCompat
@@ -32,19 +33,16 @@ class BtBroadcastReceiver : BroadcastReceiver() {
 //    var cancelScan:()->Unit = {}
 
     companion object {
-        fun createAndRegister(context: Context) : BtBroadcastReceiver {
+        fun BtBroadcastReceiver.register(context: Context) {
             val intentFilter = IntentFilter()
             intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
             intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
             intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-//            intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
+            intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
             intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
 //            intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)
 //            intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
-            val receiver = BtBroadcastReceiver()
-            context.registerReceiverFix(receiver, intentFilter)
-            MyLog.d("register ed")
-            return receiver
+            context.registerReceiverFix(this, intentFilter)
         }
 
         fun BtBroadcastReceiver.unRegister(context: Context) {

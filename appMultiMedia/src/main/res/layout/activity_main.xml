@@ -44,6 +44,15 @@
             style="@style/StyleButtonPrimary"
             android:layout_marginBottom="0dp"
             android:layout_marginTop="18dp"
+            android:text="bluetooth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/bluetoothBle"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
             android:text="BLE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

@@ -1,4 +1,4 @@
-package com.au.audiorecordplayer.ble
+package com.au.audiorecordplayer.bt
 
 import android.Manifest
 import android.os.Build
@@ -16,14 +16,13 @@ import com.au.module_cached.AppDataStore
  *   private val blePermissionHelp = BlePermissionHelp(this)
  * }
  */
-class BlePermissionHelp(private val f: Fragment) {
+class BtPermissionHelp(private val f: Fragment) {
     //android12上下高低版本的不同权限类型
     val blePermissions =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION)
+                Manifest.permission.BLUETOOTH_CONNECT)
         else
             arrayOf(
                 Manifest.permission.BLUETOOTH,
@@ -58,7 +57,7 @@ class BlePermissionHelp(private val f: Fragment) {
         block: () -> Unit
     ) {
         multiPermissionHelp.safeRun(block, notGivePermissionBlock = {
-            MainUIManager.get().toastSnackbar(f.view, "需要蓝牙相关的一系列权限!")
+            MainUIManager.get().toastSnackbar(f.view, "需要蓝牙相关的权限!")
         })
     }
 

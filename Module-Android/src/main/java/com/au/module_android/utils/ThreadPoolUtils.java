@@ -11,7 +11,7 @@ public class ThreadPoolUtils {
 
     private static final class MThreadPollProxyHolder {
         //通过ThreadPoolExecutor的代理类来对线程池的管理
-        private static final ThreadPollProxy mThreadPollProxy = new ThreadPollProxy(4, 8, 1000); //单列对象
+        private static final ThreadPollProxy mThreadPollProxy = new ThreadPollProxy(4, 8, 20_000); //单列对象
     }
 
     public static ThreadPollProxy getThreadPollProxy() {
