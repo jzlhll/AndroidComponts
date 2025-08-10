@@ -1,55 +1,77 @@
 ### Camera1
 
-* Camera:
+涉及的类和主要函数作用：
 
-​	 Camera.open(id)打开摄像头；可以设置方向；设置params比如图像大小，预览大小，自动对焦等；
+#### Camera
 
-​	startPreview() 进行预览。
+ Camera.open(id)打开摄像头；可以设置方向；设置params比如图像大小，预览大小，自动对焦等；
 
-​	takePicture() 进行拍照。
+startPreview() 进行预览。
 
-* SurfaceView:
+takePicture() 进行拍照。
 
-​	提供画布，用于预览camera。监听显示变化,surfaceCreated, surfaceChanged, surfaceDestroyed;
+#### SurfaceView/TextureView
 
-​	将surface传入到camera中：
+SurfaceView: 提供画布，用于预览camera。监听显示变化,surfaceCreated, surfaceChanged, surfaceDestroyed;
 
-​	camera.setPreviewDisplay(surfaceView.holder) /setPreviewSurface(surface)
+将surface传入到camera中：camera.setPreviewDisplay(surfaceView.holder) /setPreviewSurface(surface)
 
-* TextureView：
+另外一个选择是TextureView做显示，能够提供给多的View的属性，比如旋转缩放平移等。但是到了android7，SurfaceView解决了位置移动的黑边撕裂问题。性能也大幅优化，推荐使用SurfaceView。
 
-  另外一个选择是TextureView做显示，能够提供给多的View的属性，比如旋转缩放平移等。但是到了android7，SurfaceView解决了位置移动的黑边撕裂问题。性能也大幅优化，推荐使用SurfaceView。
+代码区别就是把surfaceTexture包裹成Surface传递给MediaRecorder。surface texture传递给其实在camera的JNI层，仍然转换成了Surface。殊途同归。
 
-  代码区别就是把surfaceTexture包裹成Surface传递给MediaRecorder。surface texture传递给其实在camera的JNI层，仍然转换成了Surface。
+#### MediaRecorder
 
-* MediaRecorder：
+录像前需要camera.unlock()
 
-​	录像前需要camera.unlock()
+将camera设置给MediaRecorder；
 
-​	将camera设置给MediaRecorder；
+设置setAudioSource音频源，setVideoSource视频源；
 
-​	设置setAudioSource音频源，setVideoSource视频源；
+setProfile设置质量；
 
-​	setProfile设置质量；
+setOutputFile设置录制文件；
 
-​	setOutputFile设置录制文件；
+此时将surface传递给mediaRecorder.setPreviewDisplay(mHolder.surface) ,目的就是让现在的view交给mediaRecorder一边录制一边渲染；
 
-​	此时将surface传递给mediaRecorder.setPreviewDisplay(mHolder.surface) ,目的就是让现在的view交给mediaRecorder一边录制一边渲染；
+最后prepare()/start()就开始录制了。
 
-​	最后prepare()/start()就开始录制了。
+- 自动循环录制：setNextOutputFile 设置切换自动最大文件的下一个文件(配合setMaxDuration和setMaxFileSize，和MediaRecorder.OnInfoListener)；
 
-​	- 自动循环录制：setNextOutputFile 设置切换自动最大文件的下一个文件(配合setMaxDuration和setMaxFileSize，和MediaRecorder.OnInfoListener)；
+### Camera2
 
+涉及的类和函数主要作用：
 
+### android.media.Image
 
-​	
+直接图像缓冲区对象。直接访问编解码器、相机的原始像素缓冲区。
 
+基本上都是通过ImageReader.acquireLatestImage()得到并必须close()释放。
 
+ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();byte[] bytes = new byte[buffer.remaining()];通过这2个代码得到一个可以保存成图像文件的数据。
+
+ ##### Planes 多平面结构
+
+| 图像格式                  | 平面数 | 平面索引                           | 数据内容         |
+| :------------------------ | :----- | :--------------------------------- | :--------------- |
+| `ImageFormat.JPEG`        | 1      | Plane[0]                           | 完整JPEG压缩数据 |
+| `ImageFormat.YUV_420_888` | 3      | Plane[0]=Y, Plane[1]=U, Plane[2]=V | YUV分量数据      |
+| `ImageFormat.RAW_SENSOR`  | 1      | Plane[0]                           | 原始传感器数据   |
+
+```
+ByteBuffer buffer = planes[0].getBuffer();
+int pixelStride = planes[0].getPixelStride(); // 像素步长
+int rowStride   = planes[0].getRowStride();   // 行步长
+```
+
+根据ImageReader设置的不同的参数，
 
 
 
 https://juejin.cn/post/7354922285092847668
 https://blog.csdn.net/ItJavawfc/article/details/146088044
+
+usbcamera和camera1
 
 https://www.nxrte.com/jishu/50169.html 架构讲的好camerax
 
@@ -62,6 +84,8 @@ https://www.nxrte.com/tag/camerax camerax
 ### 官方文档
 https://developer.android.google.cn/media/camera/get-started-with-camera?hl=zh-cn
 https://developer.android.google.cn/media/camera/camera-intents?hl=zh-cn
+
+https://developer.android.google.cn/media/camera/camera2/capture-sessions-requests?hl=hr
 
 https://developers.google.cn/codelabs/camerax-getting-started?hl=zh_cn#1
 

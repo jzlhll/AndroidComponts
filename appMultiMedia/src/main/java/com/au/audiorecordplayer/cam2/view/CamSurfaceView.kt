@@ -1,0 +1,46 @@
+package com.au.audiorecordplayer.cam2.view
+
+import android.content.Context
+import android.util.AttributeSet
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import com.au.audiorecordplayer.util.CamLog
+
+class CamSurfaceView : SurfaceView, SurfaceHolder.Callback {
+    private var mCallback: IViewStatusChangeCallback? = null
+
+    fun setCallback(mCallback: IViewStatusChangeCallback?) {
+        this.mCallback = mCallback
+    }
+
+    constructor(context: Context?) : super(context) {
+        init()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init()
+    }
+
+    private fun init() {
+        holder.addCallback(this)
+    }
+
+    override fun surfaceCreated(holder: SurfaceHolder) {
+        CamLog.d("SurfaceCreated")
+        mCallback?.onSurfaceCreated()
+    }
+
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        CamLog.d("SurfaceChanged")
+        mCallback?.onSurfaceChanged()
+    }
+
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        CamLog.d("surfaceDestroyed")
+        mCallback?.onSurfaceDestroyed()
+    }
+}
