@@ -62,7 +62,16 @@
             style="@style/StyleButtonPrimary"
             android:layout_marginBottom="0dp"
             android:layout_marginTop="18dp"
-            android:text="Camera1"
+            android:text="Camera1SurfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomButton
+            android:id="@+id/camera1TextureView"
+            style="@style/StyleButtonPrimary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="18dp"
+            android:text="Camera1TextureView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

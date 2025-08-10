@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.au.audiorecordplayer.bt.BleTestFragment
+import com.au.audiorecordplayer.cam1.Camera1Fragment
+import com.au.audiorecordplayer.camx.CameraXFragment
 import com.au.module_android.click.onClick
 import com.au.module_android.ui.FragmentShellActivity
 
@@ -33,8 +35,17 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.bluetoothBle).onClick {
             BleTestFragment.start(this@MainActivity, true)
         }
+        findViewById<View>(R.id.camera1).onClick {
+            FragmentShellActivity.start(this@MainActivity, Camera1Fragment::class.java)
+        }
+        findViewById<View>(R.id.camera1TextureView).onClick {
+            FragmentShellActivity.start(this@MainActivity, Camera1Fragment::class.java)
+        }
         findViewById<View>(R.id.camera2).onClick {
             //FragmentShellActivity.start(this@MainActivity, AudioPlayerTestFragment2::class.java)
+        }
+        findViewById<View>(R.id.camerax).onClick {
+            FragmentShellActivity.start(this@MainActivity, CameraXFragment::class.java)
         }
     }
 }
