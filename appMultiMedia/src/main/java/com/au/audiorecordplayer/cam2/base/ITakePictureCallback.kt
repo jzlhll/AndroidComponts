@@ -9,4 +9,5 @@ interface ITakePictureCallback {
      * 拍照成功的回调
      */
     fun onPictureToken(path: String)
+    fun onPictureTokenFail(err: Int)
 }

@@ -21,6 +21,8 @@ class Cam2PreviewView : FrameLayout {
     private var mIsInit = false
     private var mCallback: IViewStatusChangeCallback? = null
     private var mRealView: View? = null
+    val realView: View?
+        get() = mRealView
 
     fun setCallback(mCallback: IViewStatusChangeCallback?) {
         this.mCallback = mCallback

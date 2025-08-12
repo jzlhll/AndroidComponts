@@ -1,6 +1,6 @@
 package com.au.audiorecordplayer.cam2.base
 
-import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
+import android.view.Surface
 
 /**
  * MyCameraManager的方法抽象
@@ -8,7 +8,7 @@ import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
  * @code MyCamera
  */
 interface ICameraMgr {
-    fun openCamera()
+    fun openCamera(surface: Surface)
 
     fun showPreview()
 
@@ -19,9 +19,11 @@ interface ICameraMgr {
 
     fun closeCamera()
 
-    fun startRecord(callback: IRecordCallback)
+    fun startRecord()
 
     fun stopRecord()
 
-    fun takePicture(bean: TakePictureCallbackWrap)
+    fun takePicture(dir:String, name:String)
+
+    fun switchFontBackCam()
 }

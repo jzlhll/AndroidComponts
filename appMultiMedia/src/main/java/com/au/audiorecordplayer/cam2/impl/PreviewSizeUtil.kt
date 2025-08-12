@@ -1,14 +1,17 @@
 package com.au.audiorecordplayer.cam2.impl
 
 import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.hardware.camera2.params.StreamConfigurationMap
 import android.util.Size
 import com.au.audiorecordplayer.util.MyLog
 import java.lang.Long
+import kotlin.Any
 import kotlin.Array
 import kotlin.Comparator
 import kotlin.Int
 import kotlin.RuntimeException
+import kotlin.String
 
 class PreviewSizeUtil {
     class CompareSizesByArea : Comparator<Size> {
@@ -20,8 +23,8 @@ class PreviewSizeUtil {
         }
     }
 
-    fun needSize(from:String, fmt:Any, cameraManager: MyCamManager, wishWidth: Int, wishHeight: Int): Size {
-        val camCharacteristics = cameraManager.systemCameraManager.getCameraCharacteristics("" + cameraManager.cameraId)
+    fun needSize(from:String, fmt:Any, cameraManager: CameraManager, cameraIdStr: String, wishWidth: Int, wishHeight: Int): Size {
+        val camCharacteristics = cameraManager.getCameraCharacteristics(cameraIdStr)
         var sizes: Array<Size>? = null
         var needSize: Size? = null
         val map: StreamConfigurationMap? = camCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)

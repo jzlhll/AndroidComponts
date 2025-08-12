@@ -1,10 +1,8 @@
 package com.au.audiorecordplayer.cam2.impl
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraAccessException
-import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
@@ -13,50 +11,40 @@ import android.os.Looper
 import android.os.Message
 import android.view.Surface
 import android.view.SurfaceHolder
-import androidx.activity.ComponentActivity
 import com.au.audiorecordplayer.cam2.base.IActionRecord
 import com.au.audiorecordplayer.cam2.base.IActionTakePicture
 import com.au.audiorecordplayer.cam2.base.ICameraMgr
-import com.au.audiorecordplayer.cam2.base.IRecordCallback
+import com.au.audiorecordplayer.cam2.base.ITakePictureCallback
 import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
+import com.au.audiorecordplayer.cam2.bean.UiNeedSwitchToCamIdBean
+import com.au.audiorecordplayer.cam2.bean.UiPictureBean
+import com.au.audiorecordplayer.cam2.bean.UiRecordBean
+import com.au.audiorecordplayer.cam2.bean.UiStateBean
+import com.au.audiorecordplayer.cam2.bean.UiToastBean
 import com.au.audiorecordplayer.cam2.impl.states.StateDied
 import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndPreview
 import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndRecordAndPreview
 import com.au.audiorecordplayer.cam2.impl.states.StatePreview
-import com.au.audiorecordplayer.cam2.view.Cam2PreviewView
-import com.au.audiorecordplayer.cam2.view.IViewStatusChangeCallback
 import com.au.audiorecordplayer.util.MyLog
-import com.au.module_android.simplelivedata.NoStickLiveData
-import com.au.module_android.utils.getScreenFullSize
+import com.au.module_android.Globals
+import com.au.module_android.simpleflow.StatusState
+import com.au.module_android.utils.asOrNull
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class MyCamManager(context: ComponentActivity,
-                   private val cameraView: Cam2PreviewView,
-                   var mDefaultTransmitIndex:Int = TRANSMIT_TO_MODE_PREVIEW,
-                   looper: Looper) : Handler(looper), ICameraMgr {
-    val constStateDied = "StateDied"
-    val constStatePreview = "StatePreview"
-    val constStatePictureAndPreview = "StatePictureAndPreview"
-    val constStatePictureAndRecordAndPreview = "StatePictureAndRecordAndPreview"
-
-    val systemCameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-
-    private val previewNeedSize : android.util.Size
-    init {
-        val clz = if (isSurfaceView()) SurfaceHolder::class.java else SurfaceTexture::class.java
-        val pair = context.getScreenFullSize()
-        var wishW: Int = pair.first
-        var wishH: Int = pair.second
-        if (wishW < wishH) {
-            val h = wishW
-            wishW = wishH
-            wishH = h
-        }
-        MyLog.d("StatePreview: wishSize $wishW*$wishH")
-        previewNeedSize = PreviewSizeUtil().needSize("State Preview", clz, this@MyCamManager, wishW, wishH)
-        MyLog.d("StatePreview: needSize " + previewNeedSize.width + " * " + previewNeedSize.height)
-    }
+class MyCamManager(var mDefaultTransmitIndex:Int = TRANSMIT_TO_MODE_PREVIEW,
+                   looper: Looper) : Handler(looper), ICameraMgr, ITakePictureCallback {
 
     companion object {
+        const val constStateNone = "StateCameraClosed"
+        const val constStateDied = "StateCameraOpened"
+        const val constStatePreview = "StatePreview"
+        const val constStatePictureAndPreview = "StatePictureAndPreview"
+        const val constStatePictureAndRecordAndPreview = "StatePictureAndRecordAndPreview"
+
         const val ACTION_CAMERA_OPEN: Int = 11
         const val ACTION_CAMERA_CLOSE: Int = 12
 
@@ -67,63 +55,21 @@ class MyCamManager(context: ComponentActivity,
         const val TRANSMIT_TO_MODE_RECORD_PICTURE_PREVIEW: Int = 103 //其实就是将其他状态升级到录制状态去
     }
 
-    /**
-     * 可以设置的参数：
-     * UI提醒的问题
-     */
-    var toastCallback:((String)->Unit)? = null
+    private val _uiState = MutableStateFlow<StatusState<UiStateBean>>(StatusState.Loading)
+    val uiState: StateFlow<StatusState<UiStateBean>> = _uiState.asStateFlow()
 
-    val modeLiveData = NoStickLiveData<String>()
-
-    /**
-     * 必须设置的参数
-     */
-    var openCameraSafety:()->Unit = {}
-
-    val previewViewCallback = object : IViewStatusChangeCallback {
-        override fun onSurfaceCreated(holder: SurfaceHolder?, surfaceTexture: SurfaceTexture?) {
-            MyLog.d("onSurface Created")
-            val needSize = previewNeedSize
-            holder?.setFixedSize(needSize.width, needSize.height)
-            surfaceTexture?.setDefaultBufferSize(needSize.width, needSize.height)
-
-            val orientation = context.resources.configuration.orientation
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                cameraView.setAspectRatio(needSize.width, needSize.height)
-            } else {
-                cameraView.setAspectRatio(needSize.height, needSize.width)
-            }
-            openCameraSafety()
-        }
-
-        override fun onSurfaceDestroyed() {
-            closeSession()
-        }
-
-        override fun onSurfaceChanged() {
-        }
-    }
-
-    /**
-     * 拿到当前View的Surface
-     */
-    fun getRealViewSurface(): Surface {
-        return cameraView.surface
-    }
-
-    fun isSurfaceView() : Boolean {
-        return Cam2PreviewView.isSurfaceView
-    }
+    private val _toastState = MutableSharedFlow<UiToastBean>(extraBufferCapacity = 1)
+    val toastState = _toastState.asSharedFlow()
 
     var currentState: AbstractStateBase? = null //当前preview的状态
     var cameraDevice: CameraDevice? = null //camera device
-    var cameraId = 0
+    var cameraId = CameraCharacteristics.LENS_FACING_BACK
 
-    //todo 删除
-    var camSession: CameraCaptureSession? = null
+    var surface : Surface? = null
 
-    override fun openCamera() {
+    override fun openCamera(surface: Surface) {
         MyLog.d("open Camera in manage!");
+        this.surface = surface
         sendEmptyMessage(ACTION_CAMERA_OPEN)
     }
 
@@ -141,32 +87,36 @@ class MyCamManager(context: ComponentActivity,
         sendEmptyMessage(ACTION_CAMERA_CLOSE)
     }
 
-    fun closeCameraDirectly() {
+    fun closeCameraDirectly(removeAll: Boolean) {
         MyLog.d("close Camera directly in manage!")
-        removeCallbacksAndMessages(null)
+        if(removeAll) removeCallbacksAndMessages(null)
+        currentState?.closeSession()
         currentState = null
         cameraDevice?.close()
         cameraDevice = null
-        camSession?.close()
-        camSession = null
-        modeLiveData.setValueSafe("Camera Closed")
     }
 
-    override fun startRecord(callback: IRecordCallback) {
-        sendMessage(obtainMessage(TRANSMIT_TO_MODE_RECORD_PICTURE_PREVIEW, callback))
+    override fun startRecord() {
+        sendMessage(obtainMessage(TRANSMIT_TO_MODE_RECORD_PICTURE_PREVIEW))
     }
 
     override fun stopRecord() {
         sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
     }
 
-    override fun takePicture(bean : TakePictureCallbackWrap) {
+    override fun takePicture(dir: String, name: String) {
         val curState = currentState
         if (curState is IActionTakePicture) {
-            curState.takePicture(bean)
+            curState.takePicture(TakePictureCallbackWrap(dir, name, this))
         } else {
-            toastCallback?.invoke("当前模式不支持拍照")
+            MyLog.d("current mode not support take picture" + (_toastState.tryEmit(UiToastBean("当前模式不支持拍照", "info"))))
+
         }
+    }
+
+    override fun switchFontBackCam() {
+        sendMessage(obtainMessage(ACTION_CAMERA_CLOSE, "switchFontBackCam"))
+        cameraId = if (cameraId == CameraCharacteristics.LENS_FACING_FRONT) CameraCharacteristics.LENS_FACING_BACK else CameraCharacteristics.LENS_FACING_FRONT
     }
 
     //Camera打开回调
@@ -190,7 +140,7 @@ class MyCamManager(context: ComponentActivity,
     private fun ifCurrentStNullOpenCameraFirst(msg: Message) {
         val thisMsg = obtainMessage()
         thisMsg.copyFrom(msg)
-        sendMessageAtFrontOfQueue(msg) //拷贝一次 发出去
+        sendMessageAtFrontOfQueue(thisMsg) //拷贝一次 发出去
         sendMessageAtFrontOfQueue(obtainMessage(ACTION_CAMERA_OPEN)) //再将开启消息传递到前面去。这样的话，就优先开启
     }
 
@@ -199,6 +149,8 @@ class MyCamManager(context: ComponentActivity,
 
         when (msg.what) {
             ACTION_CAMERA_OPEN -> {
+                val systemCameraManager = Globals.app.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+
                 try {
                     val list = systemCameraManager.cameraIdList
                     list.forEach { cameraId->
@@ -207,13 +159,13 @@ class MyCamManager(context: ComponentActivity,
                 } catch (e: CameraAccessException) {
                     e.printStackTrace()
                 }
-                MyLog.d("ACTION Camera OPEN")
-                cameraId = CameraCharacteristics.LENS_FACING_FRONT
-                val cameraIdStr = cameraId.toString()
+                val cameraIdStr = "$cameraId"
+                MyLog.d("ACTION Camera OPEN $cameraIdStr")
                 currentState = StateDied(this)
-                modeLiveData.setValueSafe(constStateDied)
+
                 try {
                     systemCameraManager.openCamera(cameraIdStr, mCameraStateCallback, this)
+                    _uiState.value = StatusState.Success(UiStateBean(cameraIdStr, constStateDied))
                 } catch (e: CameraAccessException) {
                     e.printStackTrace()
                 } catch (e: NullPointerException) {
@@ -224,19 +176,24 @@ class MyCamManager(context: ComponentActivity,
             }
 
             ACTION_CAMERA_CLOSE -> {
-                closeCameraDirectly()
+                val isSwitchFrontAndBack = msg.obj == "switchFontBackCam"
+                closeCameraDirectly(!isSwitchFrontAndBack)
+                if (isSwitchFrontAndBack) {
+                    _uiState.value = StatusState.Success(UiStateBean("$cameraId", constStateNone,
+                        needSwitchToCamIdBean = UiNeedSwitchToCamIdBean(cameraIdStr = "$cameraId")))
+                }
             }
 
             ACTION_CLOSE_SESSION -> {
                 MyLog.d("close Camera in ACTION_CAMERA _CLOSE!")
                 currentState?.closeSession()
                 currentState = StateDied(this)
-                modeLiveData.setValueSafe(constStateDied)
+                _uiState.value = StatusState.Success(UiStateBean("$cameraId", constStateDied))
             }
 
             TRANSMIT_TO_MODE_PREVIEW -> {
                 if (curSt == null) {
-                    MyLog.d("Goto TRANSMIT_TO_MODE_PREVIEW mode error cause it's deed")
+                    MyLog.d("Goto TRANSMIT_2_MODE_PREVIEW mode error cause it's deed")
                     ifCurrentStNullOpenCameraFirst(msg)
                     return
                 }
@@ -246,7 +203,7 @@ class MyCamManager(context: ComponentActivity,
                 }
 
                 if (curSt.javaClass.simpleName == constStatePreview) {
-                    toastCallback?.invoke("Already in this mod")
+                    _toastState.tryEmit(UiToastBean("当前模式已处于预览模式"))
                     return
                 }
 
@@ -263,7 +220,7 @@ class MyCamManager(context: ComponentActivity,
                             MyLog.d("onPreview Failed in myCam Manager")
                         }
                     })
-                    modeLiveData.setValueSafe(constStatePreview)
+                    _uiState.value = StatusState.Success(UiStateBean("$cameraId", constStatePreview))
                 } catch (e: Exception) {
                     MyLog.e("start preview err0")
                     e.printStackTrace()
@@ -272,13 +229,13 @@ class MyCamManager(context: ComponentActivity,
 
             TRANSMIT_TO_MODE_PICTURE_PREVIEW -> {
                 if (curSt == null) {
-                    MyLog.d("Goto TRANSMIT_TO_MODE_PICTURE_PREVIEW mode error cause it's deed")
+                    MyLog.d("Goto TRANSMIT_ TO_MODE_PICTURE_PREVIEW mode error cause it's deed")
                     ifCurrentStNullOpenCameraFirst(msg)
                     return
                 }
 
                 if (curSt.javaClass.simpleName == constStatePictureAndPreview) {
-                    toastCallback?.invoke("已经在拍照预览模式下")
+                    _toastState.tryEmit(UiToastBean("已处于拍照预览模式"))
                     return
                 }
 
@@ -299,7 +256,7 @@ class MyCamManager(context: ComponentActivity,
                             MyLog.d("onPreview Failed in myCam Manager")
                         }
                     })
-                    modeLiveData.setValueSafe(constStatePictureAndPreview)
+                    _uiState.value = StatusState.Success(UiStateBean("$cameraId", constStatePictureAndPreview))
                 } catch (e: Exception) {
                     MyLog.e("start preview err0")
                     e.printStackTrace()
@@ -314,31 +271,44 @@ class MyCamManager(context: ComponentActivity,
                     return
                 }
                 if (curSt.javaClass.simpleName == constStatePictureAndRecordAndPreview) {
-                    toastCallback?.invoke("Already in this mode")
+                    _toastState.tryEmit(UiToastBean("当前模式已处于录制模式"))
                     return
                 }
 
                 curSt.closeSession() //关闭session
 
-                val callback = msg.obj as IRecordCallback
                 MyLog.d("setRecordPath ")
                 val newState = StatePictureAndRecordAndPreview(this)
                 currentState = newState
                 try {
                     newState.createSession(object : IStateTakePictureRecordCallback {
                         override fun onRecordStart(suc: Boolean) {
-                            callback.onRecordStart(suc)
+                            val curValue = _uiState.value.asOrNull<StatusState.Success<UiStateBean>>()
+                            if (curValue != null) {
+                                _uiState.value = StatusState.Success(UiStateBean(curValue.data.cameraIdStr, curValue.data.currentMode,
+                                    recordBean = UiRecordBean.RecordStart(suc)
+                                ))
+                            }
                         }
 
                         override fun onRecordError(err: Int) {
-                            //TODO 完成后，退回之前的state，这里直接回到PreviewAndPicture
-                            callback.onRecordFailed(err)
+                            val curValue = _uiState.value.asOrNull<StatusState.Success<UiStateBean>>()
+                            if (curValue != null) {
+                                _uiState.value = StatusState.Success(UiStateBean(curValue.data.cameraIdStr, curValue.data.currentMode,
+                                    recordBean = UiRecordBean.RecordFailed(err)
+                                ))
+                            }
+
                             sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
                         }
 
                         override fun onRecordEnd(path: String) {
-                            //TODO 完成后，退回之前的state，这里直接回到PreviewAndPicture
-                            callback.onRecordEnd(path)
+                            val curValue = _uiState.value.asOrNull<StatusState.Success<UiStateBean>>()
+                            if (curValue != null) {
+                                _uiState.value = StatusState.Success(UiStateBean(curValue.data.cameraIdStr, curValue.data.currentMode,
+                                    recordBean = UiRecordBean.RecordEnd(path)
+                                ))
+                            }
                             sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
                         }
 
@@ -350,12 +320,30 @@ class MyCamManager(context: ComponentActivity,
                             MyLog.d("rec:onPreviewFailed in myacmera")
                         }
                     })
-                    modeLiveData.setValueSafe(constStatePictureAndRecordAndPreview)
+                    _uiState.value = StatusState.Success(UiStateBean("$cameraId", constStatePictureAndRecordAndPreview))
                 } catch (e: Exception) {
                     MyLog.e("rec:start preview err0")
                     e.printStackTrace()
                 }
             }
+        }
+    }
+
+    override fun onPictureToken(path: String) {
+        val curValue = _uiState.value.asOrNull<StatusState.Success<UiStateBean>>()
+        if (curValue != null) {
+            _uiState.value = StatusState.Success(UiStateBean(curValue.data.cameraIdStr, curValue.data.currentMode,
+                pictureTokenBean = UiPictureBean.PictureToken(path)
+            ))
+        }
+    }
+
+    override fun onPictureTokenFail(err: Int) {
+        val curValue = _uiState.value.asOrNull<StatusState.Success<UiStateBean>>()
+        if (curValue != null) {
+            _uiState.value = StatusState.Success(UiStateBean(curValue.data.cameraIdStr, curValue.data.currentMode,
+                pictureTokenBean = UiPictureBean.PictureFailed(err)
+            ))
         }
     }
 }

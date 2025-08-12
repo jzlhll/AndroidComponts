@@ -4,6 +4,7 @@ import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.media.ImageReader;
@@ -15,20 +16,22 @@ import com.au.audiorecordplayer.cam2.base.IActionTakePicture;
 import com.au.audiorecordplayer.cam2.base.ITakePictureCallback;
 import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap;
 import com.au.audiorecordplayer.cam2.impl.MyCamManager;
-import com.au.audiorecordplayer.util.MyLog;
+import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndPreview;
 import com.au.audiorecordplayer.util.MyLog;
 
 import java.io.File;
 
 public class TakePictureWorker implements IActionTakePicture, ImageReader.OnImageAvailableListener {
-    private MyCamManager cameraManager;
+    private final MyCamManager cameraManager;
+    private final StatePictureAndPreview state;
     private final ImageReader picImgReader;
 
     private File mNextFile; //TODO 注意看这个代码，需要takePicture传入，生成的；
                             //// 然后onImageAvailable再使用的。可能会有低概率在快速连续2张出现覆盖名字问题
 
-    public TakePictureWorker(MyCamManager cameraManager, int width, int height) {
+    public TakePictureWorker(StatePictureAndPreview state, MyCamManager cameraManager, int width, int height) {
         this.cameraManager = cameraManager;
+        this.state = state;
         picImgReader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1); //最大的图片的个数
         picImgReader.setOnImageAvailableListener(this, cameraManager);
     }
@@ -39,7 +42,6 @@ public class TakePictureWorker implements IActionTakePicture, ImageReader.OnImag
 
     public final void release() {
         picImgReader.close();
-        cameraManager = null;
         mNextFile = null;
     }
 
@@ -55,7 +57,7 @@ public class TakePictureWorker implements IActionTakePicture, ImageReader.OnImag
 
         mNextFile = new File(dir + File.separator + name);
         var cameraDevice = cameraManager.getCameraDevice();
-        var cameraSession = cameraManager.getCamSession();
+        var cameraSession = state.getCameraSession();
 
         if (cameraDevice != null && cameraSession != null) {
             try {
@@ -81,6 +83,11 @@ public class TakePictureWorker implements IActionTakePicture, ImageReader.OnImag
                                                    @NonNull CaptureRequest request,
                                                    @NonNull TotalCaptureResult result) {
                         callback.onPictureToken(mNextFile.getPath());
+                    }
+
+                    @Override
+                    public void onCaptureFailed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureFailure failure) {
+                        callback.onPictureTokenFail(failure.getReason());
                     }
                 };
 

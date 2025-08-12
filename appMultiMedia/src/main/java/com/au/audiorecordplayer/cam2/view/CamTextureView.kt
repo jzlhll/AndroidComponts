@@ -32,7 +32,7 @@ class CamTextureView : TextureView, SurfaceTextureListener {
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         MyLog.d("SurfaceCreated")
-        mCallback?.onSurfaceCreated(null, surface)
+        mCallback?.onSurfaceCreated()
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {

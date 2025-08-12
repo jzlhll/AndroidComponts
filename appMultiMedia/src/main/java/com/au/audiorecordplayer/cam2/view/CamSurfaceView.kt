@@ -31,7 +31,7 @@ class CamSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         MyLog.d("SurfaceCreated")
-        mCallback?.onSurfaceCreated(holder, null)
+        mCallback?.onSurfaceCreated()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
