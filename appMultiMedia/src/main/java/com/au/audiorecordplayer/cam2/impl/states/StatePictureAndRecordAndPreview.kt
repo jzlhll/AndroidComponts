@@ -80,7 +80,7 @@ class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPrevie
         MyLog.d("State3： allIncludePictureSurfaces.size=" + allIncludePictureSurfaces!!.size)
     }
 
-    override fun createCameraCaptureSessionStateCallback(captureRequestBuilder: CaptureRequest.Builder): CameraCaptureSession.StateCallback? {
+    override fun createCameraCaptureSessionStateCallback(captureRequestBuilder: CaptureRequest.Builder): CameraCaptureSession.StateCallback {
         return object : CameraCaptureSession.StateCallback() {
             override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
                 camSession = cameraCaptureSession
@@ -114,11 +114,12 @@ class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPrevie
 
     @Synchronized
     override fun stopRecord() {
-        if (mMediaRecorder == null) return
-        mMediaRecorder!!.setOnErrorListener(null)
-        mMediaRecorder!!.setOnInfoListener(null)
-        mMediaRecorder!!.stop()
-        mMediaRecorder!!.release()
+        val mediaRecorder = mMediaRecorder
+        if (mediaRecorder == null) return
+        mediaRecorder.setOnErrorListener(null)
+        mediaRecorder.setOnInfoListener(null)
+        mediaRecorder.stop()
+        mediaRecorder.release()
         mMediaRecorder = null
         val statePPRCB = mStateBaseCb as IStateTakePictureRecordCallback?
         statePPRCB!!.onRecordEnd(mLastMp4)

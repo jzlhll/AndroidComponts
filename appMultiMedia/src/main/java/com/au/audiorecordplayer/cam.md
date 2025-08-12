@@ -54,7 +54,17 @@ if (ratioWidth > 0 && ratioHeight > 0) {
     setMeasuredDimension(width, height)
 }
 ```
+#### surfaces个数问题
+createCaptureSession(outputs)：
+定义会话生命周期内可用的所有输出 Surface 的固定集合（管道配置）。
+相当于声明："本次会话只允许使用这些 Surface 作为输出目标"
 
+requestBuilder.addTarget(surface)：
+指定单个捕获请求实际输出到的 Surface（请求级配置）。
+相当于命令："本次拍照/预览请求要输出到哪个/哪些 Surface"
+
+所有通过 addTarget() 添加的 Surface 必须是 createCaptureSession() 的 outputs 列表中的成员
+如果尝试添加不在 outputs 列表中的 Surface，会导致请求提交时抛出异常。
 
 
 #### 涉及的类和函数主要作用

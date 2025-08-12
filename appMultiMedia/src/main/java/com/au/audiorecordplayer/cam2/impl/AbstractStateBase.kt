@@ -37,21 +37,16 @@ abstract class AbstractStateBase protected constructor(protected var cameraManag
     protected abstract fun step0_createSurfaces()
 
     open fun closeSession() {
-        if (camSession != null) {
-            MyLog.d("close session")
-            camSession!!.close()
-            camSession = null
-        } else {
+        MyLog.d("close session")
+        if (camSession == null) {
             MyLog.d("$javaClass no camera cam session")
         }
-        if (addTargetSurfaces != null) {
-            addTargetSurfaces!!.clear()
-        }
+        camSession?.close()
+        camSession = null
+        addTargetSurfaces?.clear()
         addTargetSurfaces = null
 
-        if (allIncludePictureSurfaces != null) {
-            allIncludePictureSurfaces!!.clear()
-        }
+        allIncludePictureSurfaces?.clear()
         allIncludePictureSurfaces = null
         mStateBaseCb = null
     }
@@ -60,7 +55,7 @@ abstract class AbstractStateBase protected constructor(protected var cameraManag
      * 不同的session下有不同的模式
      * 子类可以根据需要覆写该方法。
      */
-    protected open fun step1_getTemplateType(): Int {
+    protected open fun step1_getTemplateType() : Int {
         return CameraDevice.TEMPLATE_PREVIEW
     }
 
@@ -68,15 +63,13 @@ abstract class AbstractStateBase protected constructor(protected var cameraManag
      * 子类必须实现，而不应该调用
      * 创建一个监听完成session的回调信息，并将StateBaseCb外部监听处理
      */
-    protected open fun createCameraCaptureSessionStateCallback(captureRequestBuilder: CaptureRequest.Builder): CameraCaptureSession.StateCallback? {
-        return null
-    }
+    protected abstract fun createCameraCaptureSessionStateCallback(captureRequestBuilder: CaptureRequest.Builder): CameraCaptureSession.StateCallback
 
     /**
      * 该方法用于camera opened以后，创建preview、picture和record等的会话
      * 且session只有一个
      */
-    fun createSession(cb: IStateBaseCallback?): Boolean {
+    open fun createSession(cb: IStateBaseCallback?): Boolean {
         mStateBaseCb = cb
         val cameraDevice = cameraManager.cameraDevice
         if (cameraDevice != null) {
@@ -88,7 +81,7 @@ abstract class AbstractStateBase protected constructor(protected var cameraManag
                 //todo 可不能只做图片的surface即可
                 cameraManager.cameraDevice!!.createCaptureSession(
                     allIncludePictureSurfaces!!,
-                    createCameraCaptureSessionStateCallback(captureRequestBuilder)!!, cameraManager
+                    createCameraCaptureSessionStateCallback(captureRequestBuilder), cameraManager
                 )
             } catch (e: Exception) {
                 MyLog.ex(e)
