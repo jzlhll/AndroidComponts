@@ -22,6 +22,7 @@ import android.os.Process
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.au.module_android.Globals
 import com.au.module_android.Globals.app
@@ -353,4 +354,14 @@ fun findCustomFragmentGetActivity(customFragment: Class<*>): Activity? {
         it.javaClass == FragmentShellActivity::class.java && (it as FragmentShellActivity).fragmentClass == customFragment
     }
     return found
+}
+
+fun displayRotation(context: Context) : Int {
+    val rotation = if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        context.display.rotation
+    } else {
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.rotation
+    }
+    return rotation
 }

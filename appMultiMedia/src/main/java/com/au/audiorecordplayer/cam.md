@@ -40,9 +40,26 @@ setOutputFile设置录制文件；
 
 ### Camera2
 
-涉及的类和函数主要作用：
+#### PreviewSize不拉伸
 
-### android.media.Image
+提前根据screenFullSize选择合适的previewNeedSize；
+
+在SurfaceView/TextureView onSurfaceCreated的时候，设置setFixedSize/setDefaultBufferSize；同时，修改view的尺寸setAspectRatio，
+
+```
+super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+if (ratioWidth > 0 && ratioHeight > 0) {
+    val width = MeasureSpec.getSize(widthMeasureSpec)
+    val height = (width * ratioHeight.toFloat() / ratioWidth).toInt()
+    setMeasuredDimension(width, height)
+}
+```
+
+
+
+#### 涉及的类和函数主要作用
+
+##### android.media.Image
 
 直接图像缓冲区对象。直接访问编解码器、相机的原始像素缓冲区。
 
@@ -64,7 +81,24 @@ int pixelStride = planes[0].getPixelStride(); // 像素步长
 int rowStride   = planes[0].getRowStride();   // 行步长
 ```
 
-根据ImageReader设置的不同的参数，
+根据ImageReader设置的不同的参数。
+
+
+
+##### StreamConfigurationMap.getOutputSizes()
+
+| **参数类型**              | **适用场景**      | **获取尺寸用途**       | **示例值**           |
+| :------------------------ | :---------------- | :--------------------- | :------------------- |
+| `SurfaceTexture.class`    | TextureView 预览  | 相机预览输出尺寸       | 1920x1080, 1280x720  |
+| `SurfaceHolder.class`     | SurfaceView 预览  | 相机预览输出尺寸       | 1920x1080, 1280x720  |
+| `MediaRecorder.class`     | 视频录制          | 视频录制支持的尺寸     | 3840x2160, 1920x1080 |
+| `MediaCodec.class`        | 视频编码器        | 视频编码支持的尺寸     | 1920x1080, 1280x720  |
+| `Allocation.class`        | RenderScript 处理 | GPU处理支持的尺寸      | 取决于设备           |
+| `ImageFormat.JPEG`        | 静态照片拍摄      | JPEG 图片捕获尺寸      | 4032x3024, 3264x2448 |
+| `ImageFormat.YUV_420_888` | YUV 数据处理      | YUV 图像处理尺寸       | 与预览尺寸相同       |
+| `ImageFormat.RAW_SENSOR`  | RAW 格式拍摄      | RAW 传感器原始数据尺寸 | 取决于传感器能力     |
+
+入参，一种是用于预览，一种是用于拍照，还有录像等。
 
 
 

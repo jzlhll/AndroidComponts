@@ -2,13 +2,12 @@ package com.au.audiorecordplayer.cam2.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Surface
 import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.widget.FrameLayout
-import kotlin.math.abs
+
 
 class Cam2PreviewView : FrameLayout {
     companion object {
@@ -54,6 +53,8 @@ class Cam2PreviewView : FrameLayout {
     }
 
     private var mSurface: Surface? = null
+    private var ratioWidth = 0
+    private var ratioHeight = 0
 
     val surface: Surface
         get() {
@@ -72,86 +73,21 @@ class Cam2PreviewView : FrameLayout {
             return newSurface
         }
 
-//    fun setPreviewSize(width: Int, height: Int) {
-//        CamLog.d("Size: setPreviewSize previewSize $width*$height")
-//        CamLog.d("Size: setPreviewSizeInit camView " + mRealView?.width + "*" + mRealView?.height)
-//        mRealView?.post { //Camera2介绍的知识都比较少，介绍surfaceView+cam2就更少。
-//            // http://book2s.com/java/src/package/android/hardware/camera2/cts/testcases/camera2surfaceviewtestcase.html#ee5c9b91de5483feb8b8f4ecb4f0691b
-//            //找了很久，才从国外网站找到这个api，注意它的描述，可能需要换到主线程
-//            //mViewSurface.getHolder().setFixedSize(width, height);
-//            //一般地，推荐使用TextureView
-//            //从上述来看，并不需要设置fixSize，只需要搞正确view的大小即可
-//           //setAspectRatio(view.height * height / width, view.height)
-//        }
-//    }
-
     /**
      * Sets the desired aspect ratio.  The value is `width / height`.
      */
-    fun setAspectRatio(aspectRatio: Double) {
-        require(!(aspectRatio < 0))
-        Log.d(TAG, "Setting aspect ratio to $aspectRatio (was $mTargetAspect)")
-        if (mTargetAspect != aspectRatio) {
-            mTargetAspect = aspectRatio
-            requestLayout()
-        }
+    fun setAspectRatio(width: Int, height: Int) {
+        ratioWidth = width
+        ratioHeight = height
+        requestLayout()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
-        Log.d(
-            TAG, "onMeasure target=" + mTargetAspect +
-                    " width=[" + MeasureSpec.toString(widthMeasureSpec) +
-                    "] height=[" + MeasureSpec.toString(heightMeasureSpec) + "]"
-        )
-
-        // Target aspect ratio will be < 0 if it hasn't been set yet.  In that case,
-        // we just use whatever we've been handed.
-        if (mTargetAspect > 0) {
-            var initialWidth = MeasureSpec.getSize(widthMeasureSpec)
-            var initialHeight = MeasureSpec.getSize(heightMeasureSpec)
-
-            // factor the padding out
-            val horizPadding = getPaddingLeft() + getPaddingRight()
-            val vertPadding = paddingTop + paddingBottom
-            initialWidth -= horizPadding
-            initialHeight -= vertPadding
-
-            val viewAspectRatio = initialWidth.toDouble() / initialHeight
-            val aspectDiff: Double = mTargetAspect / viewAspectRatio - 1
-
-            if (abs(aspectDiff) < 0.01) {
-                // We're very close already.  We don't want to risk switching from e.g. non-scaled
-                // 1280x720 to scaled 1280x719 because of some floating-point round-off error,
-                // so if we're really close just leave it alone.
-                Log.d(
-                    TAG, "aspect ratio is good (target=" + mTargetAspect +
-                            ", view=" + initialWidth + "x" + initialHeight + ")"
-                )
-            } else {
-                if (aspectDiff > 0) {
-                    // limited by narrow width; restrict height
-                    initialHeight = (initialWidth / mTargetAspect).toInt()
-                } else {
-                    // limited by short height; restrict width
-                    initialWidth = (initialHeight * mTargetAspect).toInt()
-                }
-                Log.d(
-                    TAG, "new size=" + initialWidth + "x" + initialHeight + " + padding " +
-                            horizPadding + "x" + vertPadding
-                )
-                initialWidth += horizPadding
-                initialHeight += vertPadding
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec(initialWidth, MeasureSpec.EXACTLY)
-                heightMeasureSpec = MeasureSpec.makeMeasureSpec(initialHeight, MeasureSpec.EXACTLY)
-            }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (ratioWidth > 0 && ratioHeight > 0) {
+            val width = MeasureSpec.getSize(widthMeasureSpec)
+            val height = (width * ratioHeight.toFloat() / ratioWidth).toInt()
+            setMeasuredDimension(width, height)
         }
-
-        //Log.d(TAG, "set width=[" + MeasureSpec.toString(widthMeasureSpec) +
-        //        "] height=[" + View.MeasureSpec.toString(heightMeasureSpec) + "]");
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
-
-    private var mTargetAspect = -1.0 // initially use default window size
 }

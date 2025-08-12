@@ -2,7 +2,7 @@ package com.au.audiorecordplayer.cam2.impl.picture;
 
 import android.media.Image;
 
-import com.au.audiorecordplayer.util.CamLog;
+import com.au.audiorecordplayer.util.MyLog;
 import com.au.audiorecordplayer.util.MyLog;
 
 import java.io.File;
@@ -35,10 +35,10 @@ public class JpegImageSaverRunnable implements Runnable{
         ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
-        CamLog.d("Image save buffers " + bytes.length);
+        MyLog.d("Image save buffers " + bytes.length);
         try (FileOutputStream output = new FileOutputStream(mFile)) {
             output.write(bytes);
-            CamLog.d("Image save buffers File " + mFile);
+            MyLog.d("Image save buffers File " + mFile);
         } catch (IOException e) {
             MyLog.ex(e);
         } finally {

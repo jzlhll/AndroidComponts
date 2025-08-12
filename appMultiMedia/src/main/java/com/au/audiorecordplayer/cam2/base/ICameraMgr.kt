@@ -1,6 +1,5 @@
 package com.au.audiorecordplayer.cam2.base
 
-import com.au.audiorecordplayer.cam2.bean.RecordCallbackWrap
 import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
 
 /**
@@ -8,18 +7,21 @@ import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
  *
  * @code MyCamera
  */
-interface ICameraManager {
+interface ICameraMgr {
     fun openCamera()
 
+    fun showPreview()
+
+    /**
+     * 关闭预览，关闭录像等。但是没有关闭Camera
+     */
     fun closeSession()
 
     fun closeCamera()
 
-    fun transmitModById(transmitId: Int)
-
-    fun startRecord(wrap: RecordCallbackWrap)
+    fun startRecord(callback: IRecordCallback)
 
     fun stopRecord()
 
-    fun takePicture(wrap: TakePictureCallbackWrap)
+    fun takePicture(bean: TakePictureCallbackWrap)
 }

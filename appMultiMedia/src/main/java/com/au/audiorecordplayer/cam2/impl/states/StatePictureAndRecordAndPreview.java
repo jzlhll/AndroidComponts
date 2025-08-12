@@ -6,35 +6,28 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.util.Size;
 
 import androidx.annotation.NonNull;
 
-import com.au.audiorecordplayer.cam2.base.FeatureUtil;
 import com.au.audiorecordplayer.cam2.base.IActionRecord;
+import com.au.audiorecordplayer.cam2.impl.IStateTakePictureRecordCallback;
 import com.au.audiorecordplayer.cam2.impl.MyCamManager;
-import com.au.audiorecordplayer.util.CamLog;
+import com.au.audiorecordplayer.cam2.impl.PreviewSizeUtil;
+import com.au.audiorecordplayer.util.FileUtil;
 import com.au.audiorecordplayer.util.MyLog;
 
 public class StatePictureAndRecordAndPreview extends StatePictureAndPreview implements MediaRecorder.OnErrorListener,
         MediaRecorder.OnInfoListener, IActionRecord {
-
-    public interface IStateTakePictureRecordCallback extends StatePictureAndPreview.IStatePreviewCallback {
-        void onRecordStart(boolean suc);
-
-        void onRecordError(int err);
-
-        void onRecordEnd(String path);
-    }
 
     private MediaRecorder mMediaRecorder;
 
     public StatePictureAndRecordAndPreview(MyCamManager mgr) {
         super(mgr);
     }
+
+    private String mLastMp4;
 
     @Override
     protected void step0_createSurfaces() {
@@ -43,51 +36,35 @@ public class StatePictureAndRecordAndPreview extends StatePictureAndPreview impl
             mMediaRecorder = new MediaRecorder();
             mMediaRecorder.setOnErrorListener(this);
             mMediaRecorder.setOnInfoListener(this);
-
-            if (true) { //TODO 是否支持音频
-                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            }
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            StreamConfigurationMap map = cameraManager.getCamCharacters().get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            Size[] sizes = map.getOutputSizes(MediaRecorder.class);
-
-            Size needSize = null;
-
-            for (Size si : sizes) { //挑选录制分辨率
-                if (needSize == null) {
-                    needSize = si;
-                }
-
-                if (cameraManager.getCameraId() == CameraCharacteristics.LENS_FACING_FRONT
-                        && (si.getHeight() == 1080 || si.getHeight() == 1920)) {
-                    needSize = si;
-                    break;
-                } else if (cameraManager.getCameraId() == CameraCharacteristics.LENS_FACING_BACK
-                        && (si.getHeight() == 720 || si.getHeight() == 1280)) {
-                    needSize = si;
-                    break;
-                }
+            var wishWidth = 1920;
+            var wishHeight = 1080;
+            if (cameraManager.getCameraId() == CameraCharacteristics.LENS_FACING_FRONT) {
+                wishHeight = 1280;
+                wishWidth = 720;
             }
-
+            var needSize = new PreviewSizeUtil().needSize("StatePictureAndRecordAndPreview",
+                    MediaRecorder.class, cameraManager, wishWidth, wishHeight);
             mMediaRecorder.setVideoSize(needSize.getWidth(), needSize.getHeight());
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             CamcorderProfile camPro = CamcorderProfile.get(cameraManager.getCameraId(),
                     cameraManager.getCameraId() == CameraCharacteristics.LENS_FACING_FRONT ?
                             CamcorderProfile.QUALITY_1080P : CamcorderProfile.QUALITY_720P);
-            if (true) {
-                mMediaRecorder.setAudioEncoder(camPro.audioCodec);
-                mMediaRecorder.setAudioChannels(camPro.audioChannels);
-                // mMediaRecorder.setAudioSamplingRate(camPro.audioSampleRate);
-                mMediaRecorder.setAudioSamplingRate(16000);
-                mMediaRecorder.setAudioEncodingBitRate(camPro.audioBitRate);
-            }
+            mMediaRecorder.setAudioEncoder(camPro.audioCodec);
+            mMediaRecorder.setAudioChannels(camPro.audioChannels);
+            // mMediaRecorder.setAudioSamplingRate(camPro.audioSampleRate);
+            mMediaRecorder.setAudioSamplingRate(16000);
+            mMediaRecorder.setAudioEncodingBitRate(camPro.audioBitRate);
             mMediaRecorder.setVideoEncodingBitRate(camPro.videoBitRate / 2); //码率，自行调节，我希望录制小一点码率
             mMediaRecorder.setVideoFrameRate(camPro.videoFrameRate);
-            CamLog.d("Video frame " + camPro.videoFrameRate + " bitRate " + camPro.videoBitRate / 2);
+            MyLog.d("Video frame " + camPro.videoFrameRate + " bitRate " + camPro.videoBitRate / 2);
             // mMediaRecorder.setMaxDuration(video.duration);
             // mMediaRecorder.setMaxDuration(30000/*video.duration*/);
-            mMediaRecorder.setOutputFile(cameraManager.getRecordFilePath());
+            var lastMp4 = FileUtil.getNextRecordFilePath(".mp4");
+            mLastMp4 = lastMp4;
+            mMediaRecorder.setOutputFile(lastMp4);
             mMediaRecorder.prepare();
         } catch (Exception e) {
             MyLog.ex(e);
@@ -100,22 +77,23 @@ public class StatePictureAndRecordAndPreview extends StatePictureAndPreview impl
         assert mMediaRecorder != null;
         addTargetSurfaces.add(mMediaRecorder.getSurface());
         allIncludePictureSurfaces.add(mMediaRecorder.getSurface());
+        MyLog.d("State3： allIncludePictureSurfaces.size=" + allIncludePictureSurfaces.size());
     }
 
     @Override
-    protected CameraCaptureSession.StateCallback createCameraCaptureSessionStateCallback() {
+    protected CameraCaptureSession.StateCallback createCameraCaptureSessionStateCallback(@NonNull CaptureRequest.Builder captureRequestBuilder) {
         return new CameraCaptureSession.StateCallback() {
             @Override
             public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                 cameraManager.setCamSession(cameraCaptureSession);
-                cameraManager.getPreviewBuilder().set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+                captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
                 try {
-                    cameraManager.getCamSession().setRepeatingRequest( cameraManager.getPreviewBuilder().build(),
+                    cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),
                             null, cameraManager);
                     if (mMediaRecorder != null) {
                         mMediaRecorder.start();
                     } else {
-                        CamLog.e("error!!!! mediaRecord is null");
+                        MyLog.e("error!!!! mediaRecord is null");
                     }
                     IStateTakePictureRecordCallback statePPRCB = (IStateTakePictureRecordCallback) mStateBaseCb;
                     statePPRCB.onRecordStart(true);
@@ -145,7 +123,7 @@ public class StatePictureAndRecordAndPreview extends StatePictureAndPreview impl
         mMediaRecorder.release();
         mMediaRecorder = null;
         IStateTakePictureRecordCallback statePPRCB = (IStateTakePictureRecordCallback) mStateBaseCb;
-        statePPRCB.onRecordEnd(cameraManager.getRecordFilePath());
+        statePPRCB.onRecordEnd(mLastMp4);
     }
 
     @Override

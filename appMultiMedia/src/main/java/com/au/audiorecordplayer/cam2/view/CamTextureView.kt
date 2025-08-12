@@ -5,7 +5,7 @@ import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
-import com.au.audiorecordplayer.util.CamLog
+import com.au.audiorecordplayer.util.MyLog
 
 class CamTextureView : TextureView, SurfaceTextureListener {
     private var mCallback: IViewStatusChangeCallback? = null
@@ -31,17 +31,17 @@ class CamTextureView : TextureView, SurfaceTextureListener {
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-        CamLog.d("SurfaceCreated")
-        mCallback?.onSurfaceCreated()
+        MyLog.d("SurfaceCreated")
+        mCallback?.onSurfaceCreated(null, surface)
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-        CamLog.d("SurfaceChanged")
+        MyLog.d("SurfaceChanged")
         mCallback?.onSurfaceChanged()
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-        CamLog.d("surfaceDestroyed")
+        MyLog.d("surfaceDestroyed")
         mCallback?.onSurfaceDestroyed()
         return false
     }

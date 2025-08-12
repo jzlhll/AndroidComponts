@@ -41,10 +41,10 @@ class GlobalActivityCallback : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityStopped(activity: Activity) {
-        logdNoFile {
-            val n = activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName ?: ""
-            "onActivityStopped $activity $n"
-        }
+//        logdNoFile {
+//            val n = activity.asOrNull<FragmentShellActivity>()?.fragmentClass?.simpleName ?: ""
+//            "onActivityStopped $activity $n"
+//        }
         //onConfigChange 会导致混乱。某些手机在切换darkMode和lightMode的时候，多层Activity会错乱。
         // 如果在最上面的activity出现了onStop，就证明他主动退让了一层。我们就处理一下
         val size = activityList.size

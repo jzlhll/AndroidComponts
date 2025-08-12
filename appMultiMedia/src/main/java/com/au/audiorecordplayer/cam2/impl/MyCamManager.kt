@@ -1,39 +1,60 @@
 package com.au.audiorecordplayer.cam2.impl
 
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
-import android.hardware.camera2.CaptureRequest
-import android.hardware.camera2.params.StreamConfigurationMap
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.Surface
-import com.au.audiorecordplayer.cam2.base.FeatureUtil
+import android.view.SurfaceHolder
+import androidx.activity.ComponentActivity
 import com.au.audiorecordplayer.cam2.base.IActionRecord
 import com.au.audiorecordplayer.cam2.base.IActionTakePicture
-import com.au.audiorecordplayer.cam2.bean.RecordCallbackWrap
+import com.au.audiorecordplayer.cam2.base.ICameraMgr
+import com.au.audiorecordplayer.cam2.base.IRecordCallback
 import com.au.audiorecordplayer.cam2.bean.TakePictureCallbackWrap
 import com.au.audiorecordplayer.cam2.impl.states.StateDied
 import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndPreview
 import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndRecordAndPreview
-import com.au.audiorecordplayer.cam2.impl.states.StatePictureAndRecordAndPreview.IStateTakePictureRecordCallback
 import com.au.audiorecordplayer.cam2.impl.states.StatePreview
-import com.au.audiorecordplayer.cam2.impl.states.StatePreview.IStatePreviewCallback
 import com.au.audiorecordplayer.cam2.view.Cam2PreviewView
-import com.au.audiorecordplayer.util.CamLog
+import com.au.audiorecordplayer.cam2.view.IViewStatusChangeCallback
 import com.au.audiorecordplayer.util.MyLog
-import java.io.File
+import com.au.module_android.simplelivedata.NoStickLiveData
+import com.au.module_android.utils.getScreenFullSize
 
-class MyCamManager(context: Context,
+class MyCamManager(context: ComponentActivity,
                    private val cameraView: Cam2PreviewView,
                    var mDefaultTransmitIndex:Int = TRANSMIT_TO_MODE_PREVIEW,
-                   looper: Looper) : Handler(looper) {
+                   looper: Looper) : Handler(looper), ICameraMgr {
+    val constStateDied = "StateDied"
+    val constStatePreview = "StatePreview"
+    val constStatePictureAndPreview = "StatePictureAndPreview"
+    val constStatePictureAndRecordAndPreview = "StatePictureAndRecordAndPreview"
 
     val systemCameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+
+    private val previewNeedSize : android.util.Size
+    init {
+        val clz = if (isSurfaceView()) SurfaceHolder::class.java else SurfaceTexture::class.java
+        val pair = context.getScreenFullSize()
+        var wishW: Int = pair.first
+        var wishH: Int = pair.second
+        if (wishW < wishH) {
+            val h = wishW
+            wishW = wishH
+            wishH = h
+        }
+        MyLog.d("StatePreview: wishSize $wishW*$wishH")
+        previewNeedSize = PreviewSizeUtil().needSize("State Preview", clz, this@MyCamManager, wishW, wishH)
+        MyLog.d("StatePreview: needSize " + previewNeedSize.width + " * " + previewNeedSize.height)
+    }
 
     companion object {
         const val ACTION_CAMERA_OPEN: Int = 11
@@ -52,6 +73,37 @@ class MyCamManager(context: Context,
      */
     var toastCallback:((String)->Unit)? = null
 
+    val modeLiveData = NoStickLiveData<String>()
+
+    /**
+     * 必须设置的参数
+     */
+    var openCameraSafety:()->Unit = {}
+
+    val previewViewCallback = object : IViewStatusChangeCallback {
+        override fun onSurfaceCreated(holder: SurfaceHolder?, surfaceTexture: SurfaceTexture?) {
+            MyLog.d("onSurface Created")
+            val needSize = previewNeedSize
+            holder?.setFixedSize(needSize.width, needSize.height)
+            surfaceTexture?.setDefaultBufferSize(needSize.width, needSize.height)
+
+            val orientation = context.resources.configuration.orientation
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                cameraView.setAspectRatio(needSize.width, needSize.height)
+            } else {
+                cameraView.setAspectRatio(needSize.height, needSize.width)
+            }
+            openCameraSafety()
+        }
+
+        override fun onSurfaceDestroyed() {
+            closeSession()
+        }
+
+        override fun onSurfaceChanged() {
+        }
+    }
+
     /**
      * 拿到当前View的Surface
      */
@@ -59,29 +111,62 @@ class MyCamManager(context: Context,
         return cameraView.surface
     }
 
-    var currentState: AbstractStateBase? = null //当前preview的状态
-    var camCharacters: CameraCharacteristics? = null //特性
-    var cameraDevice: CameraDevice? = null //camera device
-    var cameraId = 0
-    var previewBuilder: CaptureRequest.Builder? = null
-    var camSession: CameraCaptureSession? = null
-
-    fun destroy() {
-        cameraDevice?.close()
-        camSession?.close()
+    fun isSurfaceView() : Boolean {
+        return Cam2PreviewView.isSurfaceView
     }
 
-    fun takePicture(bean : TakePictureCallbackWrap) {
+    var currentState: AbstractStateBase? = null //当前preview的状态
+    var cameraDevice: CameraDevice? = null //camera device
+    var cameraId = 0
+
+    //todo 删除
+    var camSession: CameraCaptureSession? = null
+
+    override fun openCamera() {
+        MyLog.d("open Camera in manage!");
+        sendEmptyMessage(ACTION_CAMERA_OPEN)
+    }
+
+    override fun showPreview() {
+        sendEmptyMessage(TRANSMIT_TO_MODE_PREVIEW)
+    }
+
+    override fun closeSession() {
+        MyLog.d("close Session in manage!");
+        sendEmptyMessage(ACTION_CLOSE_SESSION)
+    }
+
+    override fun closeCamera() {
+        removeCallbacksAndMessages(null)
+        sendEmptyMessage(ACTION_CAMERA_CLOSE)
+    }
+
+    fun closeCameraDirectly() {
+        MyLog.d("close Camera directly in manage!")
+        removeCallbacksAndMessages(null)
+        currentState = null
+        cameraDevice?.close()
+        cameraDevice = null
+        camSession?.close()
+        camSession = null
+        modeLiveData.setValueSafe("Camera Closed")
+    }
+
+    override fun startRecord(callback: IRecordCallback) {
+        sendMessage(obtainMessage(TRANSMIT_TO_MODE_RECORD_PICTURE_PREVIEW, callback))
+    }
+
+    override fun stopRecord() {
+        sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
+    }
+
+    override fun takePicture(bean : TakePictureCallbackWrap) {
         val curState = currentState
         if (curState is IActionTakePicture) {
             curState.takePicture(bean)
         } else {
             toastCallback?.invoke("当前模式不支持拍照")
         }
-    }
-
-    fun setPreviewSize(width: Int, height: Int) {
-        cameraView.setAspectRatio(width * 1.0 / height)
     }
 
     //Camera打开回调
@@ -110,35 +195,24 @@ class MyCamManager(context: Context,
     }
 
     override fun handleMessage(msg: Message) {
-        var curSt: AbstractStateBase? = currentState
+        val curSt = currentState
 
         when (msg.what) {
             ACTION_CAMERA_OPEN -> {
-                if (curSt != null) {
-                    CamLog.e("Error if state machine is not null!")
-                    return
-                }
-
                 try {
                     val list = systemCameraManager.cameraIdList
-                    MyLog.d("systemCameraManger list : $list")
+                    list.forEach { cameraId->
+                        MyLog.d("systemCameraManger list : $cameraId")
+                    }
                 } catch (e: CameraAccessException) {
                     e.printStackTrace()
                 }
                 MyLog.d("ACTION Camera OPEN")
-                //TODO 其实如果这里不设置，系统会camera显示的区域更多。我认为谷歌在camera的显示区域这块这些不够好
-                //setPreviewSize(1920, 1080)
-
                 cameraId = CameraCharacteristics.LENS_FACING_FRONT
                 val cameraIdStr = cameraId.toString()
                 currentState = StateDied(this)
+                modeLiveData.setValueSafe(constStateDied)
                 try {
-                    camCharacters = systemCameraManager.getCameraCharacteristics(cameraIdStr)
-                    val map: StreamConfigurationMap? = camCharacters?.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                    if (map == null) {
-                        CamLog.e("map = null")
-                        return
-                    }
                     systemCameraManager.openCamera(cameraIdStr, mCameraStateCallback, this)
                 } catch (e: CameraAccessException) {
                     e.printStackTrace()
@@ -150,23 +224,19 @@ class MyCamManager(context: Context,
             }
 
             ACTION_CAMERA_CLOSE -> {
-                CamLog.d("close Camera in ACTION_CAMERA _CLOSE!")
-                currentState?.closeSession()
-                currentState = null
-
-                cameraDevice?.close()
-                cameraDevice = null
+                closeCameraDirectly()
             }
 
             ACTION_CLOSE_SESSION -> {
-                CamLog.d("close Camera in ACTION_CAMERA _CLOSE!")
+                MyLog.d("close Camera in ACTION_CAMERA _CLOSE!")
                 currentState?.closeSession()
                 currentState = StateDied(this)
+                modeLiveData.setValueSafe(constStateDied)
             }
 
             TRANSMIT_TO_MODE_PREVIEW -> {
                 if (curSt == null) {
-                    CamLog.d("Goto TRANSMIT_TO_MODE_PREVIEW mode error cause it's deed")
+                    MyLog.d("Goto TRANSMIT_TO_MODE_PREVIEW mode error cause it's deed")
                     ifCurrentStNullOpenCameraFirst(msg)
                     return
                 }
@@ -175,38 +245,39 @@ class MyCamManager(context: Context,
                     curSt.stopRecord()
                 }
 
-                if (curSt.javaClass.simpleName == "StatePreview") {
+                if (curSt.javaClass.simpleName == constStatePreview) {
                     toastCallback?.invoke("Already in this mod")
                     return
                 }
 
                 curSt.closeSession() //关闭session
-                currentState = StatePreview(this)
-
+                val newState = StatePreview(this)
+                currentState = newState
                 try {
-                    curSt.createSession(object : IStatePreviewCallback {
+                    newState.createSession(object : IStatePreviewCallback {
                         override fun onPreviewSucceeded() {
-                            CamLog.d("onPreview Succeeded in myCam Manager")
+                            MyLog.d("onPreview Succeeded in myCam Manager")
                         }
 
                         override fun onPreviewFailed() {
-                            CamLog.d("onPreview Failed in myCam Manager")
+                            MyLog.d("onPreview Failed in myCam Manager")
                         }
                     })
+                    modeLiveData.setValueSafe(constStatePreview)
                 } catch (e: Exception) {
-                    CamLog.e("start preview err0")
+                    MyLog.e("start preview err0")
                     e.printStackTrace()
                 }
             }
 
             TRANSMIT_TO_MODE_PICTURE_PREVIEW -> {
                 if (curSt == null) {
-                    CamLog.d("Goto TRANSMIT_TO_MODE_PICTURE_PREVIEW mode error cause it's deed")
+                    MyLog.d("Goto TRANSMIT_TO_MODE_PICTURE_PREVIEW mode error cause it's deed")
                     ifCurrentStNullOpenCameraFirst(msg)
                     return
                 }
 
-                if (curSt.javaClass.simpleName == "StatePictureAndPreview") {
+                if (curSt.javaClass.simpleName == constStatePictureAndPreview) {
                     toastCallback?.invoke("已经在拍照预览模式下")
                     return
                 }
@@ -216,20 +287,21 @@ class MyCamManager(context: Context,
                 }
 
                 curSt.closeSession() //关闭session
-                curSt = StatePictureAndPreview(this)
-
+                val newState = StatePictureAndPreview(this)
+                currentState = newState
                 try {
-                    curSt.createSession(object : IStatePreviewCallback {
+                    newState.createSession(object : IStatePreviewCallback {
                         override fun onPreviewSucceeded() {
-                            CamLog.d("onPreview Succeeded in myCam Manager")
+                            MyLog.d("onPreview Succeeded in myCam Manager")
                         }
 
                         override fun onPreviewFailed() {
-                            CamLog.d("onPreview Failed in myCam Manager")
+                            MyLog.d("onPreview Failed in myCam Manager")
                         }
                     })
+                    modeLiveData.setValueSafe(constStatePictureAndPreview)
                 } catch (e: Exception) {
-                    CamLog.e("start preview err0")
+                    MyLog.e("start preview err0")
                     e.printStackTrace()
                 }
             }
@@ -237,52 +309,50 @@ class MyCamManager(context: Context,
             TRANSMIT_TO_MODE_RECORD_PICTURE_PREVIEW -> {
                 //其实就是将其他状态升级到录制状态去
                 if (curSt == null) {
-                    CamLog.d("Goto (ACTION_START_REC / transmit to RECORD) mode error cause it's deed")
+                    MyLog.d("Goto (ACTION_START_REC / transmit to RECORD) mode error cause it's deed")
                     ifCurrentStNullOpenCameraFirst(msg)
                     return
                 }
-                if (curSt.javaClass.simpleName == "StatePictureAndRecordAndPreview") {
+                if (curSt.javaClass.simpleName == constStatePictureAndRecordAndPreview) {
                     toastCallback?.invoke("Already in this mode")
                     return
                 }
 
                 curSt.closeSession() //关闭session
 
-                val func = msg.obj as RecordCallbackWrap
-                val callback = func.callback
-                CamLog.d("setRecordPath ")
-                setRecordFilePath(func.path + File.separator + func.name) //TODO 由于createSurfaces是在构造函数中调用，没法直接传递参数
-                curSt = StatePictureAndRecordAndPreview(mManager)
-                mManager.setCurrentState(curSt)
+                val callback = msg.obj as IRecordCallback
+                MyLog.d("setRecordPath ")
+                val newState = StatePictureAndRecordAndPreview(this)
+                currentState = newState
                 try {
-                    curSt.createSession(object : IStateTakePictureRecordCallback {
+                    newState.createSession(object : IStateTakePictureRecordCallback {
                         override fun onRecordStart(suc: Boolean) {
-                            mManager.notifyModChange(FirstActivity.MODE_PicturePreviewVideo)
                             callback.onRecordStart(suc)
                         }
 
                         override fun onRecordError(err: Int) {
                             //TODO 完成后，退回之前的state，这里直接回到PreviewAndPicture
                             callback.onRecordFailed(err)
-                            camHandler.sendEmptyMessage(MyCameraManager.TRANSMIT_TO_MODE_PICTURE_PREVIEW)
+                            sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
                         }
 
                         override fun onRecordEnd(path: String) {
                             //TODO 完成后，退回之前的state，这里直接回到PreviewAndPicture
                             callback.onRecordEnd(path)
-                            camHandler.sendEmptyMessage(MyCameraManager.TRANSMIT_TO_MODE_PICTURE_PREVIEW)
+                            sendEmptyMessage(TRANSMIT_TO_MODE_PICTURE_PREVIEW)
                         }
 
                         override fun onPreviewSucceeded() {
-                            CamLog.d("rec:onPreviewSucceeded in myacmera")
+                            MyLog.d("rec:onPreviewSucceeded in myacmera")
                         }
 
                         override fun onPreviewFailed() {
-                            CamLog.d("rec:onPreviewFailed in myacmera")
+                            MyLog.d("rec:onPreviewFailed in myacmera")
                         }
                     })
+                    modeLiveData.setValueSafe(constStatePictureAndRecordAndPreview)
                 } catch (e: Exception) {
-                    CamLog.e("rec:start preview err0")
+                    MyLog.e("rec:start preview err0")
                     e.printStackTrace()
                 }
             }
