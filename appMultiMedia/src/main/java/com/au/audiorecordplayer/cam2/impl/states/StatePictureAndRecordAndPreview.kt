@@ -10,6 +10,7 @@ import android.hardware.camera2.CameraMetadata
 import android.hardware.camera2.CaptureRequest
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
+import android.view.Surface
 import com.au.audiorecordplayer.cam2.base.IActionRecord
 import com.au.audiorecordplayer.cam2.impl.IStateTakePictureRecordCallback
 import com.au.audiorecordplayer.cam2.impl.MyCamManager
@@ -17,14 +18,21 @@ import com.au.audiorecordplayer.cam2.impl.PreviewSizeUtil
 import com.au.audiorecordplayer.util.FileUtil
 import com.au.audiorecordplayer.util.MyLog
 import com.au.module_android.Globals
+import com.au.module_android.utils.ignoreError
 
 class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPreview(mgr), MediaRecorder.OnErrorListener, MediaRecorder.OnInfoListener, IActionRecord {
     private var mMediaRecorder: MediaRecorder? = null
 
     private var mLastMp4: String? = null
 
-    override fun step0_createSurfaces() {
-        super.step0_createSurfaces()
+    override fun allIncludePictureSurfaces(): List<Surface> {
+        if (mMediaRecorder == null) {
+            return super.allIncludePictureSurfaces()
+        }
+        return listOf(mTakePic!!.surface, cameraManager.surface!!, mMediaRecorder?.surface!!)
+    }
+
+    init {
         try {
             mMediaRecorder = MediaRecorder().also {
                 it.setOnErrorListener(this)
@@ -64,9 +72,6 @@ class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPrevie
                 mLastMp4 = lastMp4
                 it.setOutputFile(lastMp4)
                 it.prepare()
-
-                addTargetSurfaces!!.add(it.surface)
-                allIncludePictureSurfaces!!.add(it.surface)
             }
         } catch (e: Exception) {
             MyLog.ex(e)
@@ -75,21 +80,22 @@ class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPrevie
                 mMediaRecorder = null
             }
         }
-        //由于super中有添加了preview和拍照的surface。这里处理好录像surface即可
-        checkNotNull(mMediaRecorder)
-        MyLog.d("State3： allIncludePictureSurfaces.size=" + allIncludePictureSurfaces!!.size)
     }
 
-    override fun createCameraCaptureSessionStateCallback(captureRequestBuilder: CaptureRequest.Builder): CameraCaptureSession.StateCallback {
+    override fun createCaptureBuilder(cameraDevice: CameraDevice): CaptureRequest.Builder {
+        val captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
+        captureRequestBuilder.addTarget(cameraManager.surface!!)
+        captureRequestBuilder.addTarget(mMediaRecorder!!.surface)
+        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+        return captureRequestBuilder
+    }
+
+    override fun s1_createCaptureSessionStateCallback(cameraDevice: CameraDevice): CameraCaptureSession.StateCallback {
         return object : CameraCaptureSession.StateCallback() {
             override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
                 camSession = cameraCaptureSession
-                captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+                s2_camCaptureSessionSetRepeatingRequest(cameraDevice, cameraCaptureSession)
                 try {
-                    cameraCaptureSession.setRepeatingRequest(
-                        captureRequestBuilder.build(),
-                        null, cameraManager
-                    )
                     if (mMediaRecorder != null) {
                         mMediaRecorder!!.start()
                     } else {
@@ -108,24 +114,22 @@ class StatePictureAndRecordAndPreview(mgr: MyCamManager) : StatePictureAndPrevie
         }
     }
 
-    override fun step1_getTemplateType(): Int {
-        return CameraDevice.TEMPLATE_RECORD
-    }
-
     @Synchronized
     override fun stopRecord() {
         val mediaRecorder = mMediaRecorder
         if (mediaRecorder == null) return
         mediaRecorder.setOnErrorListener(null)
         mediaRecorder.setOnInfoListener(null)
-        mediaRecorder.stop()
-        mediaRecorder.release()
+        ignoreError {
+            mediaRecorder.stop()
+            mediaRecorder.release()
+        }
         mMediaRecorder = null
         val statePPRCB = mStateBaseCb as IStateTakePictureRecordCallback?
         statePPRCB!!.onRecordEnd(mLastMp4)
     }
 
-    public override fun closeSession() {
+    override fun closeSession() {
         stopRecord()
         super.closeSession()
     }
