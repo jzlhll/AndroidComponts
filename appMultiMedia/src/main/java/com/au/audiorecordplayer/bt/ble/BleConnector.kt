@@ -7,52 +7,102 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
-import com.au.audiorecordplayer.bt.BtUtil.Companion.UUID_NOTIFICATION_DESCRIPTOR
+import com.au.audiorecordplayer.bt.BtUtil
 import com.au.audiorecordplayer.util.MyLog
 
-@SuppressLint("MissingPermission")
-class BleConnector(private val context: android.content.Context,
-    private val bluetoothDevice: BluetoothDevice) {
-    // GATT连接对象
-    private var bluetoothGatt: BluetoothGatt? = null
-    // 连接状态回调
-    var connectionStateCallback: ((state: Int) -> Unit)? = null
-    // 数据接收回调 (特征值变化)
-    var dataReceivedCallback: ((characteristic: BluetoothGattCharacteristic, data: ByteArray) -> Unit)? = null
-    // 添加MTU变更回调
-    var mtuChangedCallback: ((newMtu: Int, status: Int) -> Unit)? = null
 
-    private var mValidMtu = -1
+@SuppressLint("MissingPermission")
+class BleConnector private constructor(private val context: android.content.Context,
+                   private val expectMtu:Int,
+    val bluetoothDevice: BluetoothDevice) {
+    val address:String = bluetoothDevice.address!!
+
+    // GATT连接对象
+    private var mGatt: BluetoothGatt? = null
+    private var mWriteChar: BluetoothGattCharacteristic? = null
+    private var mNotifyChar: BluetoothGattCharacteristic? = null
+
+    // 连接状态回调
+    var connectionStateCallback: ((addressTag:String, state: Int) -> Unit)? = null
+    // 接收到了数据回调
+    var onDataCharChangedCallback: ((addressTag:String, data: ByteArray) -> Unit)? = null
+    // 数据read回调 (特征值变化)
+    var onDataCharReadCallback: ((addressTag:String, data: ByteArray) -> Unit)? = null
+    // 添加MTU变更回调
+    var mtuChangedCallback: ((addressTag:String, newMtu: Int, status: Int) -> Unit)? = null
+
+    private var mConnectState = BluetoothGatt.STATE_DISCONNECTED
+    private var mValidMtu = 0
 
     /**
      * 连接设备
      */
     fun connect() {
         MyLog.d("Connecting to ${bluetoothDevice.address}")
-        bluetoothGatt = bluetoothDevice.connectGatt(context, false, gattCallback)
+        mGatt = bluetoothDevice.connectGatt(context, false, gattCallback)
     }
 
     /**
      * 断开连接
      * 清理资源
      */
-    fun disConnectAndRelease() {
+    fun disconnectAndRelease() {
         mConnectState = BluetoothGatt.STATE_DISCONNECTED
         release()
     }
 
-    fun release() {
-        bluetoothGatt?.disconnect()
-        bluetoothGatt?.close()
-        bluetoothGatt = null
+    private fun release() {
+        mGatt?.let { gatt ->
+            gatt.disconnect()
+            gatt.close()
+            mGatt = null
+        }
+        mNotifyChar = null
+        mWriteChar = null
+
+        onDataCharChangedCallback = null
+        onDataCharReadCallback = null
+        mtuChangedCallback = null
+        connectionStateCallback = null
+    }
+
+    /**
+     * 发送内容
+     *
+     *  writeType
+     *    int WRITE_TYPE_DEFAULT      = 2; // 需要对方设备确认（可靠）
+     *    int WRITE_TYPE_NO_RESPONSE  = 1; // 不要求对方响应（快速）
+     *    int WRITE_TYPE_SIGNED       = 4; // 带签名的写入（需配对）
+     */
+    fun gattWrite(data: ByteArray,
+                  writeType: Int? = null) : Boolean{
+        if (!isConnected()) {
+            return false
+        }
+        val gatt = mGatt
+        val writeChar = mWriteChar
+        if (gatt == null || writeChar == null) {
+            MyLog.e("gattWrite:: mGatt =  " + mGatt + "m WriteChar =  " + writeChar)
+            return false
+        }
+
+        //todo write delay
+
+        if(!writeChar.setValue(data)) {
+            return false
+        }
+        if (writeType != null) {
+            writeChar.writeType = writeType
+        }
+        return gatt.writeCharacteristic(writeChar)
     }
 
     /**
      * 请求MTU大小 (Android 5.0+)
      * @param mtu 请求的MTU大小 (23-517)
      */
-    fun requestMtu(mtu: Int) {
-        if (bluetoothGatt == null) {
+    private fun requestMtu(mtu: Int) {
+        if (mGatt == null) {
             MyLog.d("Cannot request MTU: not connected")
             return
         }
@@ -64,78 +114,63 @@ class BleConnector(private val context: android.content.Context,
         }
 
         // 发起MTU请求
-        val success = bluetoothGatt?.requestMtu(validMtu) ?: false
+        val success = mGatt?.requestMtu(validMtu) ?: false
         if (!success) {
             MyLog.e("Failed to initiate MTU request")
         } else {
             mValidMtu = validMtu
         }
     }
-    
-    /**
-     * 写入特征值
-     * @param characteristic 目标特征
-     * @param data 要写入的数据
-     * @param writeType 写入类型 (默认写入请求)
-     */
-    fun writeCharacteristic(
-        characteristic: BluetoothGattCharacteristic,
-        data: ByteArray,
-        writeType: Int = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-    ) {
-        if (bluetoothGatt == null) {
-            MyLog.d("GATT not connected")
-            return
-        }
-
-        characteristic.writeType = writeType
-        characteristic.value = data
-        bluetoothGatt?.writeCharacteristic(characteristic)
-    }
 
     /**
      * 读取特征值
      */
     fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
-        bluetoothGatt?.readCharacteristic(characteristic)
+        mGatt?.readCharacteristic(characteristic)
     }
 
     /**
      * 启用/禁用特征通知
      */
-    fun setCharacteristicNotification(
-        characteristic: BluetoothGattCharacteristic,
+    private fun setCharacteristicNotification(
+        characteristic: BluetoothGattCharacteristic?,
         enable: Boolean
     ) {
-        if (bluetoothGatt == null) return
+        val gatt = mGatt
+        if (gatt == null) return
+        if (characteristic == null) return
 
         // 1. 设置本地通知
-        bluetoothGatt?.setCharacteristicNotification(characteristic, enable)
+        gatt.setCharacteristicNotification(characteristic, enable)
 
         // 2. 写入描述器启用通知
-        val descriptor = characteristic.getDescriptor(UUID_NOTIFICATION_DESCRIPTOR)
+        val descriptor = characteristic.getDescriptor(BtUtil.UUID_NOTIFICATION_DESCRIPTOR)
         descriptor?.value = if (enable) {
             BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
         } else {
             BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
         }
-        bluetoothGatt?.writeDescriptor(descriptor)
+        gatt.writeDescriptor(descriptor)
     }
 
-    private var mConnectState = BluetoothGatt.STATE_DISCONNECTED
+
     fun isConnected(): Boolean {
         return mConnectState == BluetoothGatt.STATE_CONNECTED && mGatt != null
     }
-    public boolean isPrepared() {
-        return isConnected() && mClient != null && mWriteChar != null && mNotifyChar != null;
-    }
 
+    fun isPrepared() : Boolean {
+        return isConnected() && mWriteChar != null && mNotifyChar != null
+    }
 
     // GATT回调处理
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            mConnectState = newState
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+                    }
                     MyLog.d("Connected to ${bluetoothDevice.address}")
                     gatt.discoverServices() // 开始发现服务
                 }
@@ -144,13 +179,20 @@ class BleConnector(private val context: android.content.Context,
                     release()
                 }
             }
-            connectionStateCallback?.invoke(newState)
+            connectionStateCallback?.invoke(address, newState)
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 MyLog.d("Services discovered")
                 // 这里可以获取服务列表：gatt.services
+                val service = gatt.getService(BtUtil.UUID_SERVICE)
+                var writeChar = service?.getCharacteristic(BtUtil.UUID_WRITE_CHARACTERISTIC)
+                var notifyChar = service?.getCharacteristic(BtUtil.UUID_NOTIFICATION_CHARACTERISTIC)
+                setCharacteristicNotification(notifyChar, true)
+                mWriteChar = writeChar
+                mNotifyChar = notifyChar
+                MyLog.d("onServicesDiscovered writeChar = $mWriteChar mNotifyChar = $mNotifyChar")
             } else {
                 MyLog.e("Service discovery failed: $status")
             }
@@ -162,7 +204,7 @@ class BleConnector(private val context: android.content.Context,
         ) {
             // 收到通知数据
             val data = characteristic.value
-            dataReceivedCallback?.invoke(characteristic, data)
+            onDataCharChangedCallback?.invoke(address, data)
             MyLog.d("Received data: ${data?.toHexString()}")
         }
 
@@ -185,15 +227,35 @@ class BleConnector(private val context: android.content.Context,
         ) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 val data = characteristic.value
-                dataReceivedCallback?.invoke(characteristic, data)
+                onDataCharReadCallback?.invoke(address, data)
                 MyLog.d("Characteristic read: ${data?.toHexString()}")
             } else {
                 MyLog.d("Characteristic read failed: $status")
             }
         }
 
+        override fun onDescriptorRead(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int, value: ByteArray) {
+            super.onDescriptorRead(gatt, descriptor, status, value)
+            MyLog.d("on Descriptor Read: $status")
+        }
+
         override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
             super.onDescriptorWrite(gatt, descriptor, status)
+            MyLog.d("on Descriptor Write: $status")
+            if (descriptor?.uuid == BtUtil.UUID_NOTIFICATION_DESCRIPTOR &&
+                descriptor.characteristic.uuid == BtUtil.UUID_NOTIFICATION_CHARACTERISTIC) {
+                requestMtu(expectMtu)
+            }
+        }
+
+        override fun onReliableWriteCompleted(gatt: BluetoothGatt?, status: Int) {
+            super.onReliableWriteCompleted(gatt, status)
+            MyLog.d("onReliable Write Completed: $status")
+        }
+
+        override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
+            super.onReadRemoteRssi(gatt, rssi, status)
+            MyLog.d("on Read RemoteRssi: rssi $rssi, $status")
         }
 
         override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
@@ -204,8 +266,8 @@ class BleConnector(private val context: android.content.Context,
                 MyLog.d("MTU change failed: $status")
             }
             // 触发MTU变更回调
-            //兼容android14的返回错误
-            mtuChangedCallback?.invoke(if(mValidMtu >= 0) mValidMtu else mtu, status)
+            //兼容android14的返回错误,这里返回的mtu可能是设备端不准确
+            mtuChangedCallback?.invoke(address, if(mValidMtu > 0) mValidMtu else mtu, status)
         }
     }
     

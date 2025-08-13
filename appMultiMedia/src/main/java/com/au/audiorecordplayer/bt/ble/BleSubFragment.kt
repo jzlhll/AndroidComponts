@@ -62,6 +62,7 @@ class BleSubFragment : AbsSubBleTestFragment() {
                 val address = "48:27:E2:C9:63:22"
                 val bluetoothDevice = bluetoothAdapter?.getRemoteDevice(address)
                 logd { "bluetoothDevice $bluetoothDevice" }
+
             }
             "disconnect"-> {
 
