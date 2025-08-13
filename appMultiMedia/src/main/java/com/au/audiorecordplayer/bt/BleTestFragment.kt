@@ -8,8 +8,8 @@ import android.os.Bundle
 import androidx.annotation.EmptySuper
 import androidx.annotation.MainThread
 import androidx.core.os.bundleOf
-import com.au.audiorecordplayer.bt.ble.BleFragment
-import com.au.audiorecordplayer.bt.trandition.BtClassicFragment
+import com.au.audiorecordplayer.bt.ble.BleSubFragment
+import com.au.audiorecordplayer.bt.trandition.BtClassicSubFragment
 import com.au.audiorecordplayer.databinding.BtBleBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -49,10 +49,21 @@ class BleTestFragment : BindingFragment<BtBleBinding>() {
         subFragment = AbsSubBleTestFragment.build(isBle)
 
         if (isBle) {
+            binding.bleConnectHost.visible()
             binding.classicStartServerBtn.gone()
             binding.classicCloseTransferBtn.gone()
             binding.classicStartTransferBtn.gone()
+            binding.bleReadBtn.onClick {
+                subFragment.onBleClick("read")
+            }
+            binding.bleConnectBtn.onClick {
+                subFragment.onBleClick("connect")
+            }
+            binding.bleDisConnectBtn.onClick {
+                subFragment.onBleClick("disconnect")
+            }
         } else {
+            binding.bleConnectHost.gone()
             binding.classicStartServerBtn.visible()
             binding.classicCloseTransferBtn.visible()
             binding.classicStartTransferBtn.visible()
@@ -81,7 +92,7 @@ class BleTestFragment : BindingFragment<BtBleBinding>() {
 abstract class AbsSubBleTestFragment : androidx.fragment.app.Fragment() {
     companion object {
         fun build(isBle: Boolean) : AbsSubBleTestFragment {
-            return if (isBle) BleFragment() else BtClassicFragment()
+            return if (isBle) BleSubFragment() else BtClassicSubFragment()
         }
     }
 
@@ -101,4 +112,6 @@ abstract class AbsSubBleTestFragment : androidx.fragment.app.Fragment() {
 
     @EmptySuper
     open fun onClassicClick(buttonType:String) {}
+
+    open fun onBleClick(buttonType:String) {}
 }

@@ -14,12 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.au.module_android.widget.CustomFontText
-            android:id="@+id/textView"
-            android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
         <com.au.module_android.widget.CustomButton
             android:id="@+id/startScan"
             style="@style/StyleButtonPrimary"
@@ -36,6 +30,12 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.au.module_android.widget.CustomFontText
+            android:id="@+id/textView"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <com.au.module_android.widget.CustomButton
@@ -64,5 +64,40 @@
             android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+
+        <com.au.module_android.widget.FlowLayout
+            app:flChildSpacing="12dp"
+            android:id="@+id/bleConnectHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.au.module_android.widget.CustomButton
+                android:id="@+id/bleConnectBtn"
+                style="@style/StyleButtonPrimary"
+                android:paddingHorizontal="12dp"
+                android:text="BLE连接"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <com.au.module_android.widget.CustomButton
+                android:id="@+id/bleDisConnectBtn"
+                style="@style/StyleButtonPrimary"
+                android:paddingHorizontal="12dp"
+                android:text="BLE断开"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <com.au.module_android.widget.CustomButton
+                android:id="@+id/bleReadBtn"
+                style="@style/StyleButtonPrimary"
+                android:paddingHorizontal="12dp"
+                android:text="BLE读状态"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </com.au.module_android.widget.FlowLayout>
     </LinearLayout>
 </ScrollView>

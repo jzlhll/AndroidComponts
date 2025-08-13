@@ -1,7 +1,6 @@
 package com.au.audiorecordplayer.cam2.impl
 
 import android.content.Context
-import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
@@ -10,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.Surface
-import android.view.SurfaceHolder
 import com.au.audiorecordplayer.cam2.base.IActionRecord
 import com.au.audiorecordplayer.cam2.base.IActionTakePicture
 import com.au.audiorecordplayer.cam2.base.ICameraMgr

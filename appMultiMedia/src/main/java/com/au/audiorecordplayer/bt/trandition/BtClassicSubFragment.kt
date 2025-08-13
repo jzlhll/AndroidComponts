@@ -15,7 +15,7 @@ import com.au.audiorecordplayer.util.MyLog
 import com.au.module_android.simpleflow.collectStatusState
 import kotlinx.coroutines.launch
 
-class BtClassicFragment : AbsSubBleTestFragment() {
+class BtClassicSubFragment : AbsSubBleTestFragment() {
     private var mReceiver : BtBroadcastReceiver = BtBroadcastReceiver()
     private var clientConnector: ClientConnector?=null
     private var serverConnector: ServerConnector?=null
