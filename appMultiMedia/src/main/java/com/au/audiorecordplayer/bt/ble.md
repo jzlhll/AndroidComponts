@@ -47,6 +47,10 @@ if (scanFilterList.isEmpty()) {
 GATT：通用属性配置文件，定义了设备间数据交互的规则；
 Service：服务，包含多个特征（如 “心率服务” 包含 “心率测量特征”）；
 Characteristic：特征，数据的最小单元（可读写、通知）；
+    service?.getCharacteristic(UUID_WRITE_CHARACTERISTIC)
+    service?.getCharacteristic(UUID_NOTIFICATION_CHARACTERISTIC)
+    mNotifyChar 用于接收数据
+    mWriteChar 用于发送数据
 UUID：服务和特征的唯一标识（如心率测量特征 UUID：00002a37-0000-1000-8000-00805f9b34fb）；
 Advertising：BLE 设备广播自身信息（如名称、服务 UUID），供其他设备扫描。
 核心 API：
