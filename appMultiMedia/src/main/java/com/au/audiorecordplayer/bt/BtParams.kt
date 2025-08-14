@@ -4,8 +4,9 @@ import android.bluetooth.le.ScanFilter
 import android.os.ParcelUuid
 import java.util.UUID
 
-class BtUtil {
+class BtParams {
     companion object {
+        const val DEFAULT_MTU_LENGTH = 251
         /**
          * 服务发现的UUID
          */

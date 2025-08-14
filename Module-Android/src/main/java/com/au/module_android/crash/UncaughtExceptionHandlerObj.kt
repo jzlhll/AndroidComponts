@@ -88,6 +88,7 @@ object UncaughtExceptionHandlerObj : Thread.UncaughtExceptionHandler {
     }
 
     private fun crashAction(t: Thread, e: Throwable, isThrowableMainThreadAndInOnCreate:Boolean) {
+        logd { "crash action $e" }
         val isEntryCreateCrash = if (isThrowableMainThreadAndInOnCreate) {
             val startActivityName = getAppIntent(Globals.app, Globals.app.packageName)?.component?.className
             logt(TAG) { "crashed in an activity create: ${e.message}"}

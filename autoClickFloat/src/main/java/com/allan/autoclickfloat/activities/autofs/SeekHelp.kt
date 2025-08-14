@@ -100,7 +100,6 @@ class SeekHelp(val f:Fragment) {
     private fun getCurrentScreenBrightness(): Int {
         try {
             val anInt = Settings.System.getInt(context.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
-            logd { "allan getCurrentScreenBrightness $anInt" }
             return anInt
         } catch (e: SettingNotFoundException) {
             e.printStackTrace()
@@ -117,7 +116,6 @@ class SeekHelp(val f:Fragment) {
         try {
             val mode = Settings.System.getInt(context.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
             ans = mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-            logd { "allan isAutoScreenBrightness $ans" }
         } catch (e: SettingNotFoundException) {
             e.printStackTrace()
         }

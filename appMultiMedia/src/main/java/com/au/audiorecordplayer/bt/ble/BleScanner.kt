@@ -6,7 +6,7 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import com.au.audiorecordplayer.bt.BtUtil
+import com.au.audiorecordplayer.bt.BtParams
 import com.au.audiorecordplayer.bt.bean.BleScannedDevice
 import com.au.audiorecordplayer.util.MyLog
 import com.au.module_android.simpleflow.StatusState
@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap
 class BleScanner {
     private val _uiState : MutableStateFlow<StatusState<String>> = MutableStateFlow(StatusState.Loading)
     val uiState: StateFlow<StatusState<String>> = _uiState
+
+    private var isScanning = false
 
     /**
      * key 是 address。
@@ -31,7 +33,7 @@ class BleScanner {
 
     init {
         //添加扫描过滤广播
-        setCustomFilter(BtUtil.createFilter(BtUtil.UUID_SERVICE.toString()))
+        setCustomFilter(BtParams.createFilter(BtParams.UUID_SERVICE.toString()))
     }
 
     fun getScanSettings() : ScanSettings {
@@ -48,6 +50,8 @@ class BleScanner {
 
     @SuppressLint("MissingPermission")
     fun startLeScan(leScanner: BluetoothLeScanner?) {
+        if(isScanning) return
+        isScanning = true
         leScanner?:return
         MyLog.d("start le scan $scanFilterList")
         if (scanFilterList.isEmpty()) {
@@ -60,6 +64,8 @@ class BleScanner {
     @SuppressLint("MissingPermission")
     fun stopLeScan(leScanner: BluetoothLeScanner?) {
         leScanner?:return
+        if(!isScanning) return
+        isScanning = false
         MyLog.d("stop le scan")
         leScanner.stopScan(scanCallback)
         allBleDevices.clear()

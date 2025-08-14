@@ -3,7 +3,7 @@ package com.au.audiorecordplayer.bt.trandition;
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothSocket
-import com.au.audiorecordplayer.bt.BtUtil
+import com.au.audiorecordplayer.bt.BtParams
 import com.au.module_android.utils.ignoreError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,7 +19,7 @@ class ClientConnector(val adapter: BluetoothAdapter) : IConnector {
         withContext(Dispatchers.IO) {
             runCatching {
                 val device = adapter.getRemoteDevice(address)
-                val socket = device.createRfcommSocketToServiceRecord(BtUtil.SERIAL_UUID)
+                val socket = device.createRfcommSocketToServiceRecord(BtParams.SERIAL_UUID)
                 mSocket = socket
                 // 建立连接（阻塞操作，需在子线程）
                 socket.connect()

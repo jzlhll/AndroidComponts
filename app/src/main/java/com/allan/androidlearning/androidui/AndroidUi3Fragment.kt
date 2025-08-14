@@ -124,7 +124,6 @@ class AndroidUi3Fragment : BindingFragment<FragmentAndroidUi3Binding>() {
     }
 
     fun initNumberPicker(picker: NumberPickerCompat, max: Int, min: Int, def: Int, changeToDef: Boolean) {
-        logd { "allan initNumberPickerNew" }
         picker.setMaxValue(max)
         picker.setMinValue(min)
         if(changeToDef) picker.setValue(def)

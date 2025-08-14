@@ -243,7 +243,7 @@ object AutoFsObj {
         //开始最近一个闹钟
 
         if (changeList.isEmpty()) {
-            logd { "allan >>startNextAlarm<< time: no alarms." }
+            logd { ">>startNextAlarm<< time: no alarms." }
         } else {
             var offsetMinute = 0
             var ts = 0L
@@ -254,7 +254,7 @@ object AutoFsObj {
             if (ts > 0L) {
                 startAlarmByTs(ts, offsetMinute, context)
             } else {
-                logd { "allan >>startNextAlarm<< time: alarm all isClose." }
+                logd { ">>startNextAlarm<< time: alarm all isClose." }
             }
         }
     }

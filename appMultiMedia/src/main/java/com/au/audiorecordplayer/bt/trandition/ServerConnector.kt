@@ -4,17 +4,15 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import com.au.audiorecordplayer.bt.BtUtil
+import com.au.audiorecordplayer.bt.BtParams
 import com.au.module_android.utils.ignoreError
 import com.au.module_android.utils.logt
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import kotlin.onFailure
 
 @SuppressLint("MissingPermission")
 class ServerConnector(val adapter: BluetoothAdapter) : IConnector{
@@ -59,7 +57,7 @@ class ServerConnector(val adapter: BluetoothAdapter) : IConnector{
         withContext(Dispatchers.IO) {
             try {
                 // 创建服务器socket（UUID需与客户端一致）
-                val serverSocket = adapter.listenUsingRfcommWithServiceRecord("ClassicBT_Server", BtUtil.SERIAL_UUID)
+                val serverSocket = adapter.listenUsingRfcommWithServiceRecord("ClassicBT_Server", BtParams.SERIAL_UUID)
                 mServerSocket = serverSocket
                 logt { "classic BT server preparing..." }
                 // 阻塞等待客户端连接（只处理一次连接，如需多连接需循环）

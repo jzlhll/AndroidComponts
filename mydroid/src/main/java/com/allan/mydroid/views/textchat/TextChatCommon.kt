@@ -47,7 +47,7 @@ abstract class TextChatCommon(val f: Fragment, val binding: FragmentTextChatBind
     private fun cvtUri(uri: Uri): UriRealInfoHtml {
         val real = uri.getRealInfo(Globals.app)
         if (real.goodPath() == null) {
-            logd { "allan no good path? $real" }
+            logd { "no good path? $real" }
         }
         val bean = UriRealInfoEx.Companion.copyFrom(real)
         return bean.copyToHtml()

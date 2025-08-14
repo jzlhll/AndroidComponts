@@ -4,8 +4,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.util.concurrent.Executors
 
 class SingleCoroutineTaskExecutor(threadName: String) {
@@ -28,6 +30,18 @@ class SingleCoroutineTaskExecutor(threadName: String) {
         scope.launch {
             block()
         }
+    }
+
+    /**
+     * 添加任务到队列（按添加顺序执行）
+     * @param block 要执行的任务代码块
+     * 会得到执行结果
+     */
+    suspend fun <T> submitWithResult(block: suspend () -> T) : T{
+        val deferred = scope.async {
+            block()
+        }
+        return deferred.await()
     }
 
     /**

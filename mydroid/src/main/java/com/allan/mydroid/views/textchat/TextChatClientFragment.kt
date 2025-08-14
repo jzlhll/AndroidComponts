@@ -71,7 +71,6 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
 
     override fun onStart() {
         super.onStart()
-        logd { "allan onStart" }
         showLoadingAndInputDialog()
     }
 
@@ -87,7 +86,6 @@ class TextChatClientFragment : BindingFragment<FragmentTextChatBinding>() {
 
     override fun onStop() {
         super.onStop()
-        logd { "allan onStop" }
         viewModel.shutdownWSClient()
     }
 

@@ -63,14 +63,9 @@ class App : InitApplication() {
 
         //一上来直接强制移除所有临时import的文件。
         Globals.mainScope.launchOnIOThread {
-            logd { "alland delayed" }
             AppNative.strEk(this@App)
             clearDirOldFiles(cacheImportCopyDir(), 0)
-
-            delay(5000)
-            logd { "alland delayed atsf 5s" }
             //AppNative.astf(this@App, "device_test.zip", Globals.goodCacheDir.absolutePath + "/cached.zip")
-            logd { "alland delayed atsf success!" }
         }
     }
 }
