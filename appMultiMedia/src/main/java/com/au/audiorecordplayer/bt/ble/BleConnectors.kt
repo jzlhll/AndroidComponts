@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
-import android.os.Build
 import com.au.audiorecordplayer.bt.BtParams
 import com.au.audiorecordplayer.bt.ble.BleUtil.PACKAGE_VALUE
 import com.au.audiorecordplayer.bt.ble.BleUtil.SUBTYPE_CUSTOM_DATA
