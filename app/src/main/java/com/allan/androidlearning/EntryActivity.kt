@@ -9,7 +9,6 @@ import android.widget.Space
 import androidx.lifecycle.lifecycleScope
 import com.allan.androidlearning.activities.FontTestFragment
 import com.allan.androidlearning.activities.LiveDataFragment
-import com.allan.androidlearning.activities2.HiltFragment
 import com.allan.androidlearning.databinding.ActivityEntryBinding
 import com.au.module_android.Globals
 import com.au.module_android.click.onClick
@@ -21,12 +20,10 @@ import com.au.module_androidui.toast.ToastUtil.toastOnTop
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class EntryActivity : BindingActivity<ActivityEntryBinding>() {
 
-    @Inject
-    lateinit var mHelper : EntryHelper
+    var mHelper : EntryHelper = EntryHelper(AnotherData(), this)
 
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {

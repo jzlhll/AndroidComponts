@@ -1,9 +1,7 @@
 package com.allan.androidlearning;
 
-import javax.inject.Inject;
-
 public class AnotherData {
-    @Inject public AnotherData() {}
+    public AnotherData() {}
 
     public String getData() {
         return data;

@@ -2,11 +2,9 @@ package com.allan.androidlearning
 
 import android.content.Context
 import com.au.module_android.utils.logd
-import dagger.hilt.android.qualifiers.ActivityContext
-import javax.inject.Inject
 
-class EntryHelper @Inject constructor(private val data:AnotherData,
-                                      @ActivityContext private val context: Context
+class EntryHelper constructor(private val data:AnotherData,
+                                     private val context: Context
 ) {
     private val activity get() = context as EntryActivity
 
